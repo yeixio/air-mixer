@@ -41,6 +41,14 @@ func main() {
 		{
 			Name:    "start",
 			Aliases: []string{"s"},
+			Usage:   "Starts single airmixer instance.",
+			Action: func(c *cli.Context) {
+				svrctl.StartServer(publishName)
+			},
+		},
+		{
+			Name:    "server",
+			Aliases: []string{"d"},
 			Usage:   "Starts airmixer server",
 			Action: func(c *cli.Context) {
 				svrctl.StartServer(publishName)
