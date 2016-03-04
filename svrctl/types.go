@@ -6,6 +6,17 @@ type serverobj struct {
 	iface    string
 }
 
+type clientobj struct {
+	clientType  string
+	name        string
+	destination string
+}
+
 type servers struct {
 	server map[string]serverobj
+}
+
+type routes struct {
+	server  serverobj
+	clients map[string]clientobj
 }
