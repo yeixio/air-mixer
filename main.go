@@ -5,6 +5,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/spankenstein/airmixer/svrctl"
+	"github.com/spankenstein/airmixer/webui"
 )
 
 func main() {
@@ -51,7 +52,7 @@ func main() {
 			Aliases: []string{"d"},
 			Usage:   "Starts airmixer server",
 			Action: func(c *cli.Context) {
-				svrctl.StartServer(publishName)
+				webui.LaunchWebUI()
 			},
 		},
 	}
