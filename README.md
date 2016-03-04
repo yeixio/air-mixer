@@ -39,4 +39,5 @@ i.e. Airplay to a airplay, ChromeCast target at the same time.
 - Client objects: The ability to define a target.
 - Cache object: for a client to be able to read a stream from a mismatched server.
 - WebInterface to manage server objects and link servers with targets.
-- Move off of the C libs for CoreAudio interface. 
+- Move off of the C libs for CoreAudio interface.
+- TESTS.. Need to get some tests going up in here. 
