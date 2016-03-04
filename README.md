@@ -2,6 +2,30 @@
 
 ## Current State:
 Right now this will simply configure a single airplay server.  
+`go get github.com/spankenstein/air-mixer`
+
+
+```
+NAME:
+   airmixer - A tool to convert one streaming type to another.
+
+USAGE:
+   airmixer [global options] command [command options] [arguments...]
+
+VERSION:
+   0.0.1
+
+COMMANDS:
+   start, s	Starts airmixer server
+   help, h	Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --name, -n "airmixer"	Network publish name of mixer.
+   --listener, -l ":49152"	Listener for server. Default (:49152)
+   --interface, -i "auto"	Airmixer will automatically try to find the main interface. It will alert if it finds more then one.
+   --help, -h			show help
+   --version, -v		print the version
+```
 
 ## Goal
 The plan with this project is to build a translator app that can convert various
