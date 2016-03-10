@@ -1,4 +1,4 @@
-package server
+package player
 
 import (
 	"crypto/aes"
@@ -6,7 +6,7 @@ import (
 	"net"
 )
 
-func writeUdp(aesiv, aeskey []byte, fmtp []int) {
+func WriteUdp(aesiv, aeskey []byte, fmtp []int) {
 	udpaddr, err := net.ResolveUDPAddr("udp", ":6000")
 	if err != nil {
 		panic(err)

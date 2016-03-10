@@ -1,4 +1,4 @@
-package server
+package player
 
 // #cgo LDFLAGS: -framework AudioToolbox
 // #include <stdio.h>

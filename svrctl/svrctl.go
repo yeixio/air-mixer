@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/spankenstein/airmixer/server"
+	"github.com/spankenstein/airmixer/apserver"
 )
 
 func getMainInterface() (string, error) {
@@ -39,15 +39,19 @@ func getMainInterface() (string, error) {
 	return interfaceName, nil
 }
 
-func StartServer(publishName string) {
+func New(publishName string) *Serverobj {
+	srvr := Serverobj{name: publishName}
+	return &srvr
+}
+func (s *Serverobj) StartServer() {
 	address := ":49152"
 	insterfaceName, err := getMainInterface()
 	if err != nil {
 		log.Fatalln(err)
 	}
 	log.Println("Main interface detected:", insterfaceName)
-	log.Println("Starting server with name:", publishName)
-	err = server.ServeAirPlay(publishName, insterfaceName, address)
+	log.Println("Starting server with name:", s.name)
+	err = apserver.ServeAirPlay(s.name, insterfaceName, address)
 	if err != nil {
 		log.Println(err)
 	}

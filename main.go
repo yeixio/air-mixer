@@ -44,7 +44,8 @@ func main() {
 			Aliases: []string{"s"},
 			Usage:   "Starts single airmixer instance.",
 			Action: func(c *cli.Context) {
-				svrctl.StartServer(publishName)
+				srvr := svrctl.New(publishName)
+				srvr.StartServer()
 			},
 		},
 		{

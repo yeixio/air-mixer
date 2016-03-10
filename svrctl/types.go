@@ -1,22 +1,22 @@
 package svrctl
 
-type serverobj struct {
+type Serverobj struct {
 	listener string
 	name     string
 	iface    string
 }
 
-type clientobj struct {
+type Clientobj struct {
 	clientType  string
 	name        string
 	destination string
 }
 
-type servers struct {
-	server map[string]serverobj
+type Servers struct {
+	server map[string]Serverobj
 }
 
-type routes struct {
-	server  serverobj
-	clients map[string]clientobj
+type Routes struct {
+	server  Serverobj
+	clients map[string]Clientobj
 }

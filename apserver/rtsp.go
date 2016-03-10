@@ -1,4 +1,4 @@
-package server
+package apserver
 
 import (
 	"bytes"
@@ -11,6 +11,8 @@ import (
 	"net"
 	"strconv"
 	"strings"
+
+	"github.com/spankenstein/airmixer/player"
 )
 
 // This bundles up a request from the client. Once this has been created, it is
@@ -166,7 +168,7 @@ func rtspSession(id string, conn net.Conn, playerfn func(chan string)) {
 			resp.headers["Session"] = "1" // This is necessary (why?)
 		case "RECORD":
 			resp.headers["Audio-Latency"] = "2205"
-			go writeUdp(aesiv, aeskey, fmtp)
+			go player.WriteUdp(aesiv, aeskey, fmtp)
 		case "TEARDOWN":
 			resp.headers["Session"] = "1" // Is _this_ necessary?
 		case "FLUSH":

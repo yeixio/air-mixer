@@ -1,4 +1,4 @@
-package server
+package apserver
 
 // #include <dns_sd.h>
 // #include <arpa/inet.h>
