@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// Get the bytes of an IP address from a net.Conn
+// GetIP the bytes of an IP address from a net.Conn
 func GetIP(addr net.Addr) net.IP {
 	straddr := addr.String()
 	host, _, _ := net.SplitHostPort(straddr)
