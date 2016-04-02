@@ -4,8 +4,8 @@ import (
 	"os"
 
 	"github.com/codegangsta/cli"
-	"github.com/spankenstein/airmixer/svrctl"
-	"github.com/spankenstein/airmixer/webui"
+	"github.com/spankenstein/air-mixer/svrctl"
+	"github.com/spankenstein/air-mixer/webui"
 )
 
 func main() {
