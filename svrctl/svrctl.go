@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/spankenstein/airmixer/apserver"
+	"github.com/spankenstein/air-mixer/apserver"
 )
 
 func getMainInterface() (string, error) {

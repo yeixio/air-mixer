@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/spankenstein/airmixer/player"
+	"github.com/spankenstein/air-mixer/player"
 )
 
 // This bundles up a request from the client. Once this has been created, it is
