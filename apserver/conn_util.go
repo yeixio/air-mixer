@@ -26,7 +26,7 @@ func GetIP(addr net.Addr) net.IP {
 	return ip
 }
 
-// Get the bytes of a MAC address from a net.Conn
+// GetMAC the bytes of a MAC address from a net.Conn
 func GetMAC(addr net.Addr) net.HardwareAddr {
 	ifaces, err := net.Interfaces()
 	ip := GetIP(addr)
