@@ -1,0 +1,46 @@
+# Air-Mixer Configuration File
+# Copy this to config.yaml and customize as needed
+
+server:
+  # Server host (0.0.0.0 for all interfaces, 127.0.0.1 for localhost only)
+  host: "0.0.0.0"
+  
+  # Web UI port
+  web_port: 9001
+  
+  # AirPlay server port
+  airplay_port: 49152
+  
+  # Data directory (relative paths are relative to working directory)
+  data_dir: "./data"
+  
+  # Network publish name for mDNS/Bonjour
+  publish_name: "airmixer"
+  
+  # Network interface (use "auto" to auto-detect)
+  interface: "auto"
+
+database:
+  # SQLite database path (relative to data_dir if not absolute)
+  path: "./data/airmixer.db"
+
+audio:
+  # Default sample rate (Hz)
+  sample_rate: 44100
+  
+  # Default channel count (1=mono, 2=stereo, etc.)
+  channels: 2
+  
+  # Audio buffer size in samples
+  buffer_size: 4096
+  
+  # Default volume (0.0 to 1.0)
+  default_volume: 1.0
+
+logging:
+  # Log level: debug, info, warn, error
+  level: "info"
+  
+  # Log format: text or json
+  format: "text"
+
