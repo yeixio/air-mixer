@@ -2,10 +2,11 @@ package svrctl
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net"
 
-	"github.com/spankenstein/air-mixer/apserver"
+	"github.com/gopherstein/air-mixer/apserver"
 )
 
 func getMainInterface() (string, error) {
@@ -43,17 +44,17 @@ func New(publishName string) *Serverobj {
 	srvr := Serverobj{name: publishName}
 	return &srvr
 }
-func (s *Serverobj) StartServer() {
+func (s *Serverobj) StartServer() error {
 	address := ":49152"
 	insterfaceName, err := getMainInterface()
 	if err != nil {
-		log.Fatalln(err)
+		return fmt.Errorf("failed to get main interface: %w", err)
 	}
 	log.Println("Main interface detected:", insterfaceName)
 	log.Println("Starting server with name:", s.name)
-	err = apserver.ServeAirPlay(s.name, insterfaceName, address)
+	_, err = apserver.ServeAirPlay(s.name, insterfaceName, address)
 	if err != nil {
-		log.Println(err)
+		return fmt.Errorf("failed to start AirPlay server: %w", err)
 	}
-
+	return nil
 }

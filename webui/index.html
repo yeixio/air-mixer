@@ -1,0 +1,2171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air-Mixer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #4a9eff;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .status.running {
+            background: #4caf50;
+            color: white;
+        }
+
+        .status.stopped {
+            background: #f44336;
+            color: white;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #555;
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #4caf50;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-switch input:disabled + .toggle-slider {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .section h2 {
+            color: #4a9eff;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #3a3a3a;
+            padding-bottom: 10px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            flex: 1;
+        }
+
+        .section-title h2 {
+            margin-bottom: 5px;
+        }
+
+        .section-doc {
+            background: #1e1e1e;
+            border-left: 3px solid #4a9eff;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        .section-doc strong {
+            color: #4a9eff;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            background: #4a9eff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #3a8eef;
+        }
+
+        .btn-danger {
+            background: #f44336;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        th {
+            background: #3a3a3a;
+            color: #4a9eff;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #333;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            background: #3a3a3a;
+            border: 1px solid #4a4a4a;
+            border-radius: 4px;
+            color: #e0e0e0;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4a9eff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #2a2a2a;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .close:hover {
+            color: #fff;
+        }
+
+        .discovered-device {
+            padding: 10px;
+            margin: 5px 0;
+            background: #3a3a3a;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .discovered-device:hover {
+            background: #4a4a4a;
+            border-color: #4a9eff;
+        }
+
+        .discovered-device.selected {
+            background: #2a4a6a;
+            border-color: #4a9eff;
+        }
+
+        .device-name {
+            font-weight: bold;
+            color: #4a9eff;
+            margin-bottom: 5px;
+        }
+
+        .device-details {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .discovery-loading {
+            color: #4a9eff;
+        }
+
+        .discovery-error {
+            color: #f44336;
+        }
+
+        .discovery-success {
+            color: #4caf50;
+        }
+
+        /* Notification System */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+
+        .notification {
+            background: #2a2a2a;
+            border-left: 4px solid #4a9eff;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification.error {
+            border-left-color: #f44336;
+        }
+
+        .notification.success {
+            border-left-color: #4caf50;
+        }
+
+        .notification.warning {
+            border-left-color: #ff9800;
+        }
+
+        .notification.info {
+            border-left-color: #4a9eff;
+        }
+
+        .notification.confirm {
+            border-left-color: #ff9800;
+        }
+
+        .notification-icon {
+            font-size: 20px;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .notification-btn {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .notification-btn-confirm {
+            background: #f44336;
+            color: white;
+        }
+
+        .notification-btn-confirm:hover {
+            background: #d32f2f;
+        }
+
+        .notification-btn-cancel {
+            background: #555;
+            color: white;
+        }
+
+        .notification-btn-cancel:hover {
+            background: #666;
+        }
+
+        .notification-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #e0e0e0;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        .notification-close {
+            cursor: pointer;
+            color: #888;
+            font-size: 18px;
+            line-height: 1;
+            padding: 0 5px;
+        }
+
+        .notification-close:hover {
+            color: #fff;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .notification.hiding {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+
+        /* Icon System - Clean CSS-based icons */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: middle;
+            margin-right: 0.3em;
+        }
+
+        .icon-input::before {
+            content: "↓";
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        .icon-output::before {
+            content: "↑";
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        .icon-route::before {
+            content: "⇄";
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        .icon-search::before {
+            content: "○";
+            color: #4a9eff;
+        }
+
+        .icon-edit::before {
+            content: "✎";
+            color: #4a9eff;
+        }
+
+        .icon-success::before {
+            content: "✓";
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .icon-error::before {
+            content: "✕";
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .icon-warning::before {
+            content: "!";
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .icon-info::before {
+            content: "i";
+            color: #4a9eff;
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        /* Discovery Loading Animation */
+        .discovery-loader {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #3a3a3a;
+            border-top: 2px solid #4a9eff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .pulse-dots {
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: #4a9eff;
+            border-radius: 50%;
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+
+        .pulse-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .pulse-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Collapsible Section */
+        .collapsible-header {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: #3a3a3a;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            transition: background 0.2s;
+        }
+
+        .collapsible-header:hover {
+            background: #4a4a4a;
+        }
+
+        .collapsible-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .collapsible-icon {
+            transition: transform 0.3s;
+            font-size: 18px;
+            color: #888;
+        }
+
+        .collapsible-header.expanded .collapsible-icon {
+            transform: rotate(90deg);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .collapsible-content.expanded {
+            max-height: 2000px;
+            transition: max-height 0.5s ease-in;
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <div class="container">
+        <header>
+            <h1>Air-Mixer <span id="status" class="status stopped">Stopped</span></h1>
+            <p>Universal Audio Protocol Translator & Mixer</p>
+            <div style="margin-top: 15px; padding: 12px; background: #1e1e1e; border-radius: 4px; font-size: 13px; color: #aaa;">
+                <strong style="color: #4a9eff;">How it works:</strong> 
+                Add Input Servers to receive audio → Create Routes to connect sources to destinations → 
+                Add Output Clients to send audio to your speakers. Audio flows from inputs through routes to outputs.
+            </div>
+        </header>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">
+                    <h2><span class="icon icon-input"></span> Input Servers</h2>
+                    <div class="section-doc">
+                        <strong>What are Input Servers?</strong><br>
+                        Input Servers receive audio from external sources on your network. When you add an AirPlay server, 
+                        it appears as an AirPlay speaker that other devices can connect to. Audio sent to these servers 
+                        becomes available for routing to your output devices. For example, create an AirPlay server to receive 
+                        audio from your iPhone, iPad, or Mac.
+                    </div>
+                </div>
+                <div class="section-actions">
+                    <button class="btn" onclick="showAddServerModal()">Add Server</button>
+                </div>
+            </div>
+            <table id="serversTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Protocol</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="serversBody">
+                    <tr><td colspan="4" class="empty">No servers configured</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">
+                    <h2><span class="icon icon-output"></span> Output Clients</h2>
+                    <div class="section-doc">
+                        <strong>What are Output Clients?</strong><br>
+                        Output Clients are destinations where audio is sent. These represent physical or network speakers 
+                        that you want to play audio on. Add an output client for each speaker or audio device you want to 
+                        control. When you create a route, you'll connect input servers to these output clients to define 
+                        where audio should play.
+                    </div>
+                </div>
+                <div class="section-actions">
+                    <button class="btn" onclick="showAddClientModal()">Add Client</button>
+                </div>
+            </div>
+            <table id="clientsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Protocol</th>
+                        <th>Address</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="clientsBody">
+                    <tr><td colspan="5" class="empty">No clients configured</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">
+                    <h2><span class="icon icon-route"></span> Audio Routes</h2>
+                    <div class="section-doc">
+                        <strong>What are Routes?</strong><br>
+                        Routes connect your Input Servers to Output Clients, defining how audio flows through the system. 
+                        A route specifies which input source (like an AirPlay connection) should send audio to which output 
+                        destinations (like speakers). You can route one source to multiple outputs, or mix multiple sources 
+                        together. Routes must be enabled to be active.
+                    </div>
+                </div>
+                <div class="section-actions">
+                    <button class="btn" onclick="showAddRouteModal()">Add Route</button>
+                </div>
+            </div>
+            <table id="routesTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Source</th>
+                        <th>Destinations</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="routesBody">
+                    <tr><td colspan="5" class="empty">No routes configured</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add Server Modal -->
+    <div id="serverModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('serverModal')">&times;</span>
+            <h2>Add Input Server</h2>
+            <div class="section-doc" style="margin-bottom: 20px;">
+                Create an input server to receive audio from external devices. For example, an AirPlay server will appear 
+                as an AirPlay speaker that your iPhone, iPad, or Mac can connect to.
+            </div>
+            <form id="serverForm" onsubmit="addServer(event)">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Protocol</label>
+                    <select name="protocol" required>
+                        <option value="airplay">AirPlay - Receive audio from iOS/macOS devices</option>
+                        <option value="bluetooth" disabled>Bluetooth - Receive audio via Bluetooth (Coming Soon)</option>
+                        <option value="chromecast" disabled>Google Cast - Receive audio from Cast devices (Coming Soon)</option>
+                        <option value="upnp" disabled>UPnP/DLNA - Receive audio via UPnP (Coming Soon)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Network Interface (optional)</label>
+                    <input type="text" name="interface" placeholder="auto (auto-detect)" id="serverInterface">
+                    <small style="color: #888; font-size: 12px; display: block; margin-top: 5px;">
+                        Leave empty or use "auto" to auto-detect. Specify interface name (e.g., "en0", "eth0") if auto-detection fails.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label>ID <span style="color: #888; font-size: 12px;">(optional, auto-generated if empty)</span></label>
+                    <input type="text" name="id" placeholder="Leave empty for auto-generation">
+                </div>
+                <button type="submit" class="btn">Add Server</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Client Modal -->
+    <div id="clientModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="close" onclick="closeModal('clientModal')">&times;</span>
+            <h2>Add Output Client</h2>
+            <div class="section-doc" style="margin-bottom: 20px;">
+                Create an output client to send audio to a speaker or audio device. Use auto-discovery to find devices 
+                on your network, or manually configure if the device isn't found.
+            </div>
+            
+            <!-- Discovery Section -->
+            <div style="margin-bottom: 20px; padding: 15px; background: #1e1e1e; border-radius: 4px;">
+                <h3 style="color: #4a9eff; margin-bottom: 10px; font-size: 16px;"><span class="icon icon-search"></span> Auto-Discovery</h3>
+                <button type="button" class="btn" id="discoverBtn" onclick="startDiscovery()" style="margin-bottom: 10px;">
+                    Discover Devices
+                </button>
+                <div id="discoveryStatus" style="font-size: 13px; color: #888; margin-bottom: 10px;"></div>
+                <div id="discoveredDevices" style="max-height: 200px; overflow-y: auto;"></div>
+            </div>
+            
+            <!-- Manual Configuration (Collapsible) -->
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #3a3a3a;">
+                <div class="collapsible-header" id="manualConfigHeader" onclick="toggleManualConfig()">
+                    <h3 style="color: #4a9eff; margin: 0; font-size: 16px;"><span class="icon icon-edit"></span> Manual Configuration</h3>
+                    <span class="collapsible-icon">▶</span>
+                </div>
+                <div class="collapsible-content" id="manualConfigContent">
+                    <p style="font-size: 13px; color: #888; margin-bottom: 15px;">Use this if auto-discovery didn't find your device</p>
+                    <form id="clientForm" onsubmit="addClient(event)">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Protocol</label>
+                            <select name="protocol" required>
+                                <option value="airplay">AirPlay - Send audio to AirPlay speakers</option>
+                                <option value="bluetooth" disabled>Bluetooth - Send audio via Bluetooth (Coming Soon)</option>
+                                <option value="chromecast" disabled>Google Cast - Send audio to Cast devices (Coming Soon)</option>
+                                <option value="upnp" disabled>UPnP/DLNA - Send audio via UPnP (Coming Soon)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Address <span style="color: #888; font-size: 12px;">(IP:port or device identifier)</span></label>
+                            <input type="text" name="address" required placeholder="192.168.1.100:49152">
+                        </div>
+                        <div class="form-group">
+                            <label>ID <span style="color: #888; font-size: 12px;">(optional, auto-generated if empty)</span></label>
+                            <input type="text" name="id" placeholder="Leave empty for auto-generation">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Add Client Button - Always visible outside collapsible section -->
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #3a3a3a; text-align: right;">
+                <button type="button" class="btn" onclick="submitClientForm()" style="min-width: 120px;">
+                    Add Client
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pairing PIN Modal -->
+    <div id="pairingModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close" onclick="closeModal('pairingModal')">&times;</span>
+            <h2>AirPlay Pairing Required</h2>
+            <div class="section-doc" style="margin-bottom: 20px;">
+                <strong>Pairing Required</strong><br>
+                This Apple TV requires pairing before it can be used. Please enter the 4-digit PIN code displayed on your TV screen.
+            </div>
+            <div id="pairingMessage" style="margin-bottom: 20px; padding: 15px; background: #1e1e1e; border-radius: 4px; color: #4a9eff; font-weight: bold;">
+                Enter the PIN code displayed on your Apple TV
+            </div>
+            <form id="pairingForm" onsubmit="completePairing(event)">
+                <div class="form-group">
+                    <label>PIN Code <span style="color: #888; font-size: 12px;">(4 digits)</span></label>
+                    <input type="text" name="pin" id="pairingPinInput" required 
+                           maxlength="4" pattern="[0-9]{4}" 
+                           placeholder="0000" 
+                           style="font-size: 24px; text-align: center; letter-spacing: 8px; font-weight: bold;">
+                    <small style="color: #888; font-size: 12px; display: block; margin-top: 5px;">
+                        Enter the 4-digit code shown on your Apple TV screen
+                    </small>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn btn-danger" onclick="closeModal('pairingModal')" style="flex: 1;">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn" style="flex: 1;">
+                        Complete Pairing
+                    </button>
+                </div>
+            </form>
+            <div id="pairingStatus" style="margin-top: 15px; font-size: 13px; color: #888;"></div>
+        </div>
+    </div>
+
+    <!-- Add Route Modal -->
+    <div id="routeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('routeModal')">&times;</span>
+            <h2>Add Audio Route</h2>
+            <div class="section-doc" style="margin-bottom: 20px;">
+                Create a route to connect an input server (audio source) to one or more output clients (speakers). 
+                This defines how audio flows: from where it's received to where it should play. You can route one source 
+                to multiple outputs, or mix multiple sources together.
+            </div>
+            <form id="routeForm" onsubmit="addRoute(event)">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Source Server <span style="color: #888; font-size: 12px;">(where audio comes from)</span></label>
+                    <select name="source_name" id="routeSourceSelect" required>
+                        <option value="">-- Select an input server --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Destination Clients <span style="color: #888; font-size: 12px;">(where audio goes - hold Ctrl/Cmd to select multiple)</span></label>
+                    <select name="dest_names" id="routeDestSelect" multiple required size="4" style="min-height: 80px;">
+                        <option value="">-- Select one or more output clients --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Volume</label>
+                    <input type="range" name="volume" min="0" max="100" value="100">
+                    <span id="volumeValue">100%</span>
+                </div>
+                <button type="submit" class="btn">Add Route</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        // Notification System
+        function showNotification(type, title, message, duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            if (!container) {
+                console.error('Notification container not found');
+                return;
+            }
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icons = {
+                error: '<span class="icon icon-error"></span>',
+                success: '<span class="icon icon-success"></span>',
+                warning: '<span class="icon icon-warning"></span>',
+                info: '<span class="icon icon-info"></span>'
+            };
+
+            notification.innerHTML = `
+                <div class="notification-icon">${icons[type] || icons.info}</div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <div class="notification-close" onclick="this.parentElement.remove()">&times;</div>
+            `;
+
+            container.appendChild(notification);
+
+            // Auto-remove after duration
+            if (duration > 0) {
+                setTimeout(() => {
+                    notification.classList.add('hiding');
+                    setTimeout(() => notification.remove(), 300);
+                }, duration);
+            }
+
+            // Log to console
+            const logMethod = type === 'error' ? 'error' : type === 'warning' ? 'warn' : 'log';
+            console[logMethod](`[${type.toUpperCase()}] ${title}: ${message}`);
+        }
+
+        // Show confirmation notification and return a Promise
+        function showConfirmNotification(title, message) {
+            return new Promise((resolve) => {
+                const container = document.getElementById('notificationContainer');
+                if (!container) {
+                    console.warn('Notification container not found');
+                    resolve(false);
+                    return;
+                }
+
+                const notification = document.createElement('div');
+                notification.className = 'notification confirm';
+                
+                const confirmBtn = document.createElement('button');
+                confirmBtn.className = 'notification-btn notification-btn-confirm';
+                confirmBtn.textContent = 'Confirm';
+                confirmBtn.onclick = () => {
+                    notification.classList.add('hiding');
+                    setTimeout(() => notification.remove(), 300);
+                    resolve(true);
+                };
+
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'notification-btn notification-btn-cancel';
+                cancelBtn.textContent = 'Cancel';
+                cancelBtn.onclick = () => {
+                    notification.classList.add('hiding');
+                    setTimeout(() => notification.remove(), 300);
+                    resolve(false);
+                };
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'notification-actions';
+                actionsDiv.appendChild(confirmBtn);
+                actionsDiv.appendChild(cancelBtn);
+
+                notification.innerHTML = `
+                    <div class="notification-icon"><span class="icon icon-warning"></span></div>
+                    <div class="notification-content">
+                        <div class="notification-title">${escapeHtml(title)}</div>
+                        <div class="notification-message">${escapeHtml(message)}</div>
+                    </div>
+                `;
+
+                const contentDiv = notification.querySelector('.notification-content');
+                contentDiv.appendChild(actionsDiv);
+
+                const closeBtn = document.createElement('div');
+                closeBtn.className = 'notification-close';
+                closeBtn.innerHTML = '&times;';
+                closeBtn.onclick = () => {
+                    notification.classList.add('hiding');
+                    setTimeout(() => notification.remove(), 300);
+                    resolve(false);
+                };
+                notification.appendChild(closeBtn);
+
+                container.appendChild(notification);
+
+                // Auto-cancel after 30 seconds
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.classList.add('hiding');
+                        setTimeout(() => notification.remove(), 300);
+                        resolve(false);
+                    }
+                }, 30000);
+
+                console.log(`[CONFIRM] ${title}: ${message}`);
+            });
+        }
+
+        // Load data on page load
+        window.onload = function() {
+            // Load status first to check if server is ready
+            loadStatus().then(() => {
+                // If status loads successfully, load other data
+                loadServers();
+                loadClients();
+                loadRoutes();
+            }).catch(() => {
+                // If status fails, still try to load data (might be a status endpoint issue)
+                console.warn('[Page Load] Status check failed, attempting to load data anyway');
+                loadServers();
+                loadClients();
+                loadRoutes();
+            });
+            
+            setInterval(loadStatus, 5000); // Refresh status every 5 seconds
+        };
+
+        async function loadStatus() {
+            try {
+                const res = await fetch(`${API_BASE}/status`);
+                
+                if (!res.ok) {
+                    console.warn('[Load Status] API returned non-OK status:', res.status);
+                    return;
+                }
+                
+                const data = await res.json();
+                const statusEl = document.getElementById('status');
+                if (statusEl) {
+                    if (data.router_running) {
+                        statusEl.textContent = 'Running';
+                        statusEl.className = 'status running';
+                    } else {
+                        statusEl.textContent = 'Stopped';
+                        statusEl.className = 'status stopped';
+                    }
+                }
+            } catch (err) {
+                console.error('[Load Status] Error:', err);
+                // Don't show notification for status polling errors, but log them
+            }
+        }
+
+        async function loadServers() {
+            try {
+                const res = await fetch(`${API_BASE}/servers`);
+                
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({ error: `HTTP ${res.status}: ${res.statusText}` }));
+                    console.error('[Load Servers] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Load Servers', errorData.error || `Server returned ${res.status}. Please refresh the page.`);
+                    return;
+                }
+                
+                const servers = await res.json();
+                const tbody = document.getElementById('serversBody');
+                
+                if (!tbody) {
+                    console.error('[Load Servers] serversBody element not found');
+                    return;
+                }
+                
+                // Handle null/undefined response
+                if (!servers || !Array.isArray(servers)) {
+                    console.warn('[Load Servers] Invalid response format, expected array:', servers);
+                    tbody.innerHTML = '<tr><td colspan="4" class="empty">No servers configured</td></tr>';
+                    return;
+                }
+                
+                if (servers.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="empty">No servers configured</td></tr>';
+                    return;
+                }
+
+                // Clear and rebuild table using DOM methods to avoid escape character issues
+                tbody.innerHTML = '';
+                servers.forEach(s => {
+                    const row = document.createElement('tr');
+                    
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = s.name || '';
+                    row.appendChild(nameCell);
+                    
+                    const protocolCell = document.createElement('td');
+                    protocolCell.textContent = s.protocol || '';
+                    row.appendChild(protocolCell);
+                    
+                    const statusCell = document.createElement('td');
+                    const toggleSwitch = document.createElement('label');
+                    toggleSwitch.className = 'toggle-switch';
+                    toggleSwitch.innerHTML = `
+                        <input type="checkbox" ${s.enabled ? 'checked' : ''} onchange="toggleServer('${s.id}', this.checked)">
+                        <span class="toggle-slider"></span>
+                    `;
+                    statusCell.appendChild(toggleSwitch);
+                    row.appendChild(statusCell);
+                    
+                    const actionCell = document.createElement('td');
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'btn btn-danger';
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.onclick = () => deleteServer(s.id);
+                    actionCell.appendChild(deleteBtn);
+                    row.appendChild(actionCell);
+                    
+                    tbody.appendChild(row);
+                });
+            } catch (err) {
+                console.error('[Load Servers] Exception:', err);
+                console.error('[Load Servers] Stack:', err.stack);
+                showNotification('error', 'Failed to Load Servers', err.message || 'Could not fetch server list. Please check if the server is running and refresh the page.');
+            }
+        }
+
+        async function loadClients() {
+            try {
+                const res = await fetch(`${API_BASE}/clients`);
+                
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({ error: `HTTP ${res.status}: ${res.statusText}` }));
+                    console.error('[Load Clients] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Load Clients', errorData.error || `Server returned ${res.status}. Please refresh the page.`);
+                    return;
+                }
+                
+                const clients = await res.json();
+                const tbody = document.getElementById('clientsBody');
+                
+                if (!tbody) {
+                    console.error('[Load Clients] clientsBody element not found');
+                    return;
+                }
+                
+                // Handle null/undefined response
+                if (!clients || !Array.isArray(clients)) {
+                    console.warn('[Load Clients] Invalid response format, expected array:', clients);
+                    tbody.innerHTML = '<tr><td colspan="5" class="empty">No clients configured</td></tr>';
+                    return;
+                }
+                
+                if (clients.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="empty">No clients configured</td></tr>';
+                    return;
+                }
+
+                // Clear and rebuild table using DOM methods to avoid escape character issues
+                tbody.innerHTML = '';
+                clients.forEach(c => {
+                    const row = document.createElement('tr');
+                    
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = cleanDeviceName(c.name) || '';
+                    row.appendChild(nameCell);
+                    
+                    const protocolCell = document.createElement('td');
+                    protocolCell.textContent = c.protocol || '';
+                    row.appendChild(protocolCell);
+                    
+                    const addressCell = document.createElement('td');
+                    addressCell.textContent = c.address || '';
+                    row.appendChild(addressCell);
+                    
+                    const statusCell = document.createElement('td');
+                    const toggleSwitch = document.createElement('label');
+                    toggleSwitch.className = 'toggle-switch';
+                    toggleSwitch.innerHTML = `
+                        <input type="checkbox" ${c.enabled ? 'checked' : ''} onchange="toggleClient('${c.id}', this.checked)">
+                        <span class="toggle-slider"></span>
+                    `;
+                    statusCell.appendChild(toggleSwitch);
+                    row.appendChild(statusCell);
+                    
+                    const actionCell = document.createElement('td');
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'btn btn-danger';
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.onclick = () => deleteClient(c.id);
+                    actionCell.appendChild(deleteBtn);
+                    row.appendChild(actionCell);
+                    
+                    tbody.appendChild(row);
+                });
+            } catch (err) {
+                console.error('[Load Clients] Exception:', err);
+                console.error('[Load Clients] Stack:', err.stack);
+                showNotification('error', 'Failed to Load Clients', err.message || 'Could not fetch client list. Please check if the server is running and refresh the page.');
+            }
+        }
+
+        async function loadRoutes() {
+            try {
+                const res = await fetch(`${API_BASE}/routes`);
+                
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({ error: `HTTP ${res.status}: ${res.statusText}` }));
+                    console.error('[Load Routes] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Load Routes', errorData.error || `Server returned ${res.status}. Please refresh the page.`);
+                    return;
+                }
+                
+                const routes = await res.json();
+                console.log('[Load Routes] Received routes:', routes);
+                const tbody = document.getElementById('routesBody');
+                
+                if (!tbody) {
+                    console.error('[Load Routes] routesBody element not found');
+                    return;
+                }
+                
+                // Handle null/undefined response
+                if (!routes || !Array.isArray(routes)) {
+                    console.warn('[Load Routes] Invalid response format, expected array:', routes);
+                    tbody.innerHTML = '<tr><td colspan="5" class="empty">No routes configured</td></tr>';
+                    return;
+                }
+                
+                if (routes.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="empty">No routes configured</td></tr>';
+                    return;
+                }
+
+                // Clear and rebuild table using DOM methods to avoid escape character issues
+                tbody.innerHTML = '';
+                routes.forEach(r => {
+                    console.log('[Load Routes] Processing route:', r);
+                    const row = document.createElement('tr');
+                    
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = r.name || '';
+                    row.appendChild(nameCell);
+                    
+                    const sourceCell = document.createElement('td');
+                    sourceCell.textContent = r.source_name || '';
+                    row.appendChild(sourceCell);
+                    
+                    const destCell = document.createElement('td');
+                    const destNames = Array.isArray(r.dest_names) ? r.dest_names : (r.dest_names || '').split(',').map(s => s.trim());
+                    destCell.textContent = destNames.join(', ');
+                    row.appendChild(destCell);
+                    
+                    const statusCell = document.createElement('td');
+                    const toggleSwitch = document.createElement('label');
+                    toggleSwitch.className = 'toggle-switch';
+                    toggleSwitch.innerHTML = `
+                        <input type="checkbox" ${r.enabled ? 'checked' : ''} onchange="toggleRoute('${r.id}', this.checked)">
+                        <span class="toggle-slider"></span>
+                    `;
+                    statusCell.appendChild(toggleSwitch);
+                    row.appendChild(statusCell);
+                    
+                    const actionCell = document.createElement('td');
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'btn btn-danger';
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.onclick = () => deleteRoute(r.id);
+                    actionCell.appendChild(deleteBtn);
+                    row.appendChild(actionCell);
+                    
+                    tbody.appendChild(row);
+                });
+            } catch (err) {
+                console.error('[Load Routes] Exception:', err);
+                console.error('[Load Routes] Stack:', err.stack);
+                showNotification('error', 'Failed to Load Routes', err.message || 'Could not fetch route list. Please check if the server is running and refresh the page.');
+            }
+        }
+
+        function showAddServerModal() {
+            document.getElementById('serverModal').style.display = 'block';
+        }
+
+        function showAddClientModal() {
+            const modal = document.getElementById('clientModal');
+            modal.style.display = 'block';
+            
+            // Reset form
+            const form = document.getElementById('clientForm');
+            if (form) {
+                form.reset();
+            }
+            
+            // Reset discovery state
+            selectedDiscoveredDevice = null;
+            discoveredDevicesList = [];
+            document.getElementById('discoveryStatus').innerHTML = '';
+            document.getElementById('discoveredDevices').innerHTML = '';
+            
+            // Collapse manual configuration by default
+            const header = document.getElementById('manualConfigHeader');
+            const content = document.getElementById('manualConfigContent');
+            if (header && content) {
+                header.classList.remove('expanded');
+                content.classList.remove('expanded');
+            }
+            
+            // Automatically start discovery
+            console.log('[Client Modal] Auto-starting discovery...');
+            setTimeout(() => {
+                startDiscovery();
+            }, 100); // Small delay to ensure modal is fully rendered
+        }
+
+        function toggleManualConfig() {
+            const header = document.getElementById('manualConfigHeader');
+            const content = document.getElementById('manualConfigContent');
+            
+            if (header && content) {
+                const isExpanded = header.classList.contains('expanded');
+                
+                if (isExpanded) {
+                    header.classList.remove('expanded');
+                    content.classList.remove('expanded');
+                } else {
+                    header.classList.add('expanded');
+                    content.classList.add('expanded');
+                }
+            }
+        }
+
+        function submitClientForm() {
+            const form = document.getElementById('clientForm');
+            if (form) {
+                // Create a submit event with the form as target
+                const event = {
+                    preventDefault: () => {},
+                    target: form
+                };
+                addClient(event);
+            }
+        }
+
+        async function showAddRouteModal() {
+            // Reset form first
+            const form = document.getElementById('routeForm');
+            if (form) {
+                form.reset();
+            }
+            
+            // Reset volume slider display
+            const volumeValue = document.getElementById('volumeValue');
+            if (volumeValue) {
+                volumeValue.textContent = '100%';
+            }
+            
+            // Load servers and clients first
+            await Promise.all([loadServers(), loadClients()]);
+            
+            // Populate source select
+            const sourceSelect = document.getElementById('routeSourceSelect');
+            if (sourceSelect) {
+                sourceSelect.innerHTML = '<option value="">-- Select an input server --</option>';
+                const serversRes = await fetch(`${API_BASE}/servers`);
+                if (serversRes.ok) {
+                    const servers = await serversRes.json();
+                    if (servers && Array.isArray(servers)) {
+                        servers.forEach(s => {
+                            const option = document.createElement('option');
+                            option.value = s.name;
+                            option.textContent = `${s.name} (${s.protocol})`;
+                            sourceSelect.appendChild(option);
+                        });
+                    }
+                }
+            }
+            
+            // Populate destination select
+            const destSelect = document.getElementById('routeDestSelect');
+            if (destSelect) {
+                destSelect.innerHTML = '<option value="">-- Select one or more output clients --</option>';
+                const clientsRes = await fetch(`${API_BASE}/clients`);
+                if (clientsRes.ok) {
+                    const clients = await clientsRes.json();
+                    if (clients && Array.isArray(clients)) {
+                        clients.forEach(c => {
+                            const option = document.createElement('option');
+                            option.value = c.name;
+                            option.textContent = `${c.name} (${c.protocol}) - ${c.address}`;
+                            destSelect.appendChild(option);
+                        });
+                    }
+                }
+            }
+            
+            document.getElementById('routeModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+                
+                // Reset form when closing route modal
+                if (modalId === 'routeModal') {
+                    const form = document.getElementById('routeForm');
+                    if (form) {
+                        form.reset();
+                    }
+                    // Reset volume slider display
+                    const volumeValue = document.getElementById('volumeValue');
+                    if (volumeValue) {
+                        volumeValue.textContent = '100%';
+                    }
+                }
+                
+                // Reset pairing modal
+                if (modalId === 'pairingModal') {
+                    currentPairingClientId = null;
+                    const form = document.getElementById('pairingForm');
+                    if (form) {
+                        form.reset();
+                    }
+                    const statusDiv = document.getElementById('pairingStatus');
+                    if (statusDiv) {
+                        statusDiv.innerHTML = '';
+                    }
+                }
+            }
+        }
+
+        async function addServer(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            if (!data.id || data.id.trim() === '') {
+                data.id = 'server-' + Date.now();
+            }
+            
+            // Ensure enabled is set to true for new servers
+            data.enabled = true;
+            
+            // Handle interface field - if empty or "auto", set to empty string (backend will auto-detect)
+            if (!data.interface || data.interface.trim() === '' || data.interface.trim().toLowerCase() === 'auto') {
+                data.interface = '';
+            }
+            
+            // Build config object if interface is specified
+            if (data.interface && data.interface.trim() !== '') {
+                data.config = JSON.stringify({ interface: data.interface.trim() });
+            }
+            delete data.interface; // Remove from top level since it goes in config
+
+            try {
+                const res = await fetch(`${API_BASE}/servers`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (res.ok) {
+                    closeModal('serverModal');
+                    loadServers();
+                    showNotification('success', 'Server Added', 'Input server created successfully');
+                } else {
+                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Add Server] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Add Server', errorData.error || 'Server creation failed');
+                }
+            } catch (err) {
+                console.error('[Add Server] Exception:', err);
+                console.error('[Add Server] Stack:', err.stack);
+                showNotification('error', 'Error Adding Server', err.message || 'An unexpected error occurred');
+            }
+        }
+
+        async function addClient(e) {
+            e.preventDefault();
+            
+            // If a discovered device was selected, use its data
+            let data;
+            if (selectedDiscoveredDevice) {
+                const nameValue = selectedDiscoveredDevice.name || document.querySelector('input[name="name"]').value;
+                data = {
+                    name: cleanDeviceName(nameValue),
+                    protocol: selectedDiscoveredDevice.protocol,
+                    address: selectedDiscoveredDevice.address,
+                    id: 'client-' + Date.now()
+                };
+            } else {
+                const formData = new FormData(e.target);
+                data = Object.fromEntries(formData);
+                
+                if (!data.id || data.id.trim() === '') {
+                    data.id = 'client-' + Date.now();
+                }
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/clients`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (res.status === 202) {
+                    // Pairing required (202 Accepted) - check this FIRST before res.ok
+                    const responseData = await res.json().catch(() => ({}));
+                    console.log('[Add Client] Got 202 response:', responseData);
+                    if (responseData.pairing_required) {
+                        // Close the add client modal
+                        closeModal('clientModal');
+                        // Store client data for pairing (client not yet in DB)
+                        const clientData = {
+                            id: responseData.id || data.id,
+                            name: responseData.name || data.name,
+                            protocol: responseData.protocol || data.protocol,
+                            address: responseData.address || data.address
+                        };
+                        // Show PIN input dialog with client data
+                        showPairingDialog(responseData.id || data.id, responseData.message || 'Enter the PIN code displayed on your Apple TV', clientData);
+                        selectedDiscoveredDevice = null; // Reset selection
+                    } else {
+                        // Unexpected 202 response
+                        const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                        showNotification('error', 'Failed to Add Client', errorData.error || 'Client creation failed');
+                    }
+                } else if (res.ok) {
+                    closeModal('clientModal');
+                    loadClients();
+                    showNotification('success', 'Client Added', 'Output client created successfully');
+                    selectedDiscoveredDevice = null; // Reset selection
+                } else {
+                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Add Client] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Add Client', errorData.error || 'Client creation failed');
+                }
+            } catch (err) {
+                console.error('[Add Client] Exception:', err);
+                console.error('[Add Client] Stack:', err.stack);
+                console.error('[Add Client] Data being sent:', data);
+                showNotification('error', 'Error Adding Client', err.message || 'An unexpected error occurred');
+            }
+        }
+
+        async function addRoute(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            // Get form values
+            const name = formData.get('name');
+            const sourceName = formData.get('source_name');
+            const destNames = Array.from(formData.getAll('dest_names')).filter(name => name && name.trim() !== '');
+            const volume = formData.get('volume');
+            
+            console.log('[Add Route] Form data:', {
+                name: name,
+                source_name: sourceName,
+                dest_names: destNames,
+                volume: volume
+            });
+            
+            if (!name || !name.trim()) {
+                showNotification('warning', 'Validation Error', 'Please enter a route name');
+                return;
+            }
+            
+            if (!sourceName || sourceName.trim() === '') {
+                showNotification('warning', 'Validation Error', 'Please select a source server');
+                return;
+            }
+            
+            if (destNames.length === 0) {
+                showNotification('warning', 'Validation Error', 'Please select at least one destination client');
+                return;
+            }
+            
+            const data = {
+                name: name.trim(),
+                source_name: sourceName,
+                dest_names: destNames,
+                mix_mode: 'replace',
+                volume: parseFloat(volume || '100') / 100.0, // Convert 0-100 to 0.0-1.0
+                enabled: true,
+                priority: 0
+            };
+            
+            console.log('[Add Route] Data being sent:', data);
+
+            try {
+                const res = await fetch(`${API_BASE}/routes`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (res.ok) {
+                    closeModal('routeModal');
+                    loadRoutes();
+                    showNotification('success', 'Route Added', 'Audio route created successfully');
+                } else {
+                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Add Route] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Add Route', errorData.error || 'Route creation failed');
+                }
+            } catch (err) {
+                console.error('[Add Route] Exception:', err);
+                console.error('[Add Route] Stack:', err.stack);
+                console.error('[Add Route] Data being sent:', data);
+                showNotification('error', 'Error Adding Route', err.message || 'An unexpected error occurred');
+            }
+        }
+
+        async function deleteServer(id) {
+            const confirmed = await showConfirmNotification(
+                'Delete Server',
+                'Are you sure you want to delete this input server? This action cannot be undone.'
+            );
+            
+            if (!confirmed) {
+                console.log('[Delete Server] Deletion cancelled by user');
+                return;
+            }
+            
+            try {
+                console.log('[Delete Server] Deleting server:', id);
+                const res = await fetch(`${API_BASE}/servers/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    loadServers();
+                    showNotification('success', 'Server Deleted', 'Input server removed successfully');
+                } else {
+                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Delete Server] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Delete Server', errorData.error || 'Server deletion failed');
+                }
+            } catch (err) {
+                console.error('[Delete Server] Exception:', err);
+                console.error('[Delete Server] Stack:', err.stack);
+                showNotification('error', 'Error Deleting Server', err.message || 'An unexpected error occurred');
+            }
+        }
+
+        async function deleteClient(id) {
+            const confirmed = await showConfirmNotification(
+                'Delete Client',
+                'Are you sure you want to delete this output client? This action cannot be undone.'
+            );
+            
+            if (!confirmed) {
+                console.log('[Delete Client] Deletion cancelled by user');
+                return;
+            }
+            
+            try {
+                console.log('[Delete Client] Deleting client:', id);
+                const res = await fetch(`${API_BASE}/clients/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    loadClients();
+                    showNotification('success', 'Client Deleted', 'Output client removed successfully');
+                } else {
+                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Delete Client] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Delete Client', errorData.error || 'Client deletion failed');
+                }
+            } catch (err) {
+                console.error('[Delete Client] Exception:', err);
+                console.error('[Delete Client] Stack:', err.stack);
+                showNotification('error', 'Error Deleting Client', err.message || 'An unexpected error occurred');
+            }
+        }
+
+        async function toggleServer(id, enabled) {
+            try {
+                console.log(`[Toggle Server] ${id}: ${enabled ? 'enabling' : 'disabling'}`);
+                
+                // First get the current server data
+                const getRes = await fetch(`${API_BASE}/servers/${id}`);
+                if (!getRes.ok) {
+                    const errorData = await getRes.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Toggle Server] Failed to get server:', errorData);
+                    showNotification('error', 'Failed to Toggle Server', errorData.error || 'Could not fetch server data');
+                    loadServers(); // Reload to reset toggle
+                    return;
+                }
+                
+                const server = await getRes.json();
+                server.enabled = enabled;
+                
+                const res = await fetch(`${API_BASE}/servers/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(server)
+                });
+                
+                if (res.ok) {
+                    loadServers();
+                    showNotification('success', 'Server Updated', `Server ${enabled ? 'enabled' : 'disabled'} successfully`);
+                } else {
+                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Toggle Server] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Toggle Server', errorData.error || 'Server update failed');
+                    loadServers(); // Reload to reset toggle
+                }
+            } catch (err) {
+                console.error('[Toggle Server] Exception:', err);
+                showNotification('error', 'Error Toggling Server', err.message || 'An unexpected error occurred');
+                loadServers(); // Reload to reset toggle
+            }
+        }
+
+        async function toggleClient(id, enabled) {
+            try {
+                console.log(`[Toggle Client] ${id}: ${enabled ? 'enabling' : 'disabling'}`);
+                
+                // First get the current client data
+                const getRes = await fetch(`${API_BASE}/clients/${id}`);
+                if (!getRes.ok) {
+                    const errorData = await getRes.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Toggle Client] Failed to get client:', errorData);
+                    showNotification('error', 'Failed to Toggle Client', errorData.error || 'Could not fetch client data');
+                    loadClients(); // Reload to reset toggle
+                    return;
+                }
+                
+                const client = await getRes.json();
+                client.enabled = enabled;
+                
+                const res = await fetch(`${API_BASE}/clients/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(client)
+                });
+                
+                if (res.ok) {
+                    loadClients();
+                    showNotification('success', 'Client Updated', `Client ${enabled ? 'enabled' : 'disabled'} successfully`);
+                } else {
+                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Toggle Client] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Toggle Client', errorData.error || 'Client update failed');
+                    loadClients(); // Reload to reset toggle
+                }
+            } catch (err) {
+                console.error('[Toggle Client] Exception:', err);
+                showNotification('error', 'Error Toggling Client', err.message || 'An unexpected error occurred');
+                loadClients(); // Reload to reset toggle
+            }
+        }
+
+        async function toggleRoute(id, enabled) {
+            try {
+                console.log(`[Toggle Route] ${id}: ${enabled ? 'enabling' : 'disabling'}`);
+                
+                // First get the current route data
+                const getRes = await fetch(`${API_BASE}/routes/${id}`);
+                if (!getRes.ok) {
+                    const errorData = await getRes.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Toggle Route] Failed to get route:', errorData);
+                    showNotification('error', 'Failed to Toggle Route', errorData.error || 'Could not fetch route data');
+                    loadRoutes(); // Reload to reset toggle
+                    return;
+                }
+                
+                const route = await getRes.json();
+                
+                // Format request to match createRouteRequest structure
+                const updateData = {
+                    name: route.name,
+                    source_name: route.source_name,
+                    dest_names: Array.isArray(route.dest_names) ? route.dest_names : (route.dest_names ? route.dest_names.split(',') : []),
+                    mix_mode: route.mix_mode || 'replace',
+                    volume: route.volume || 1.0,
+                    enabled: enabled,
+                    priority: route.priority || 0
+                };
+                
+                const res = await fetch(`${API_BASE}/routes/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+                
+                if (res.ok) {
+                    loadRoutes();
+                    showNotification('success', 'Route Updated', `Route ${enabled ? 'enabled' : 'disabled'} successfully`);
+                } else {
+                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Toggle Route] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Toggle Route', errorData.error || 'Route update failed');
+                    loadRoutes(); // Reload to reset toggle
+                }
+            } catch (err) {
+                console.error('[Toggle Route] Exception:', err);
+                showNotification('error', 'Error Toggling Route', err.message || 'An unexpected error occurred');
+                loadRoutes(); // Reload to reset toggle
+            }
+        }
+
+        async function deleteRoute(id) {
+            const confirmed = await showConfirmNotification(
+                'Delete Route',
+                'Are you sure you want to delete this audio route? This action cannot be undone.'
+            );
+            
+            if (!confirmed) {
+                console.log('[Delete Route] Deletion cancelled by user');
+                return;
+            }
+            
+            try {
+                console.log('[Delete Route] Deleting route:', id);
+                const res = await fetch(`${API_BASE}/routes/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    loadRoutes();
+                    showNotification('success', 'Route Deleted', 'Audio route removed successfully');
+                } else {
+                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    console.error('[Delete Route] API error:', res.status, errorData);
+                    showNotification('error', 'Failed to Delete Route', errorData.error || 'Route deletion failed');
+                }
+            } catch (err) {
+                console.error('[Delete Route] Exception:', err);
+                console.error('[Delete Route] Stack:', err.stack);
+                showNotification('error', 'Error Deleting Route', err.message || 'An unexpected error occurred');
+            }
+        }
+
+        // Volume slider and PIN input formatting
+        document.addEventListener('DOMContentLoaded', function() {
+            const volumeSlider = document.querySelector('input[name="volume"]');
+            if (volumeSlider) {
+                volumeSlider.addEventListener('input', function(e) {
+                    document.getElementById('volumeValue').textContent = e.target.value + '%';
+                });
+            }
+            
+            // PIN input formatting - only allow digits
+            const pinInput = document.getElementById('pairingPinInput');
+            if (pinInput) {
+                pinInput.addEventListener('input', function(e) {
+                    // Remove any non-digit characters
+                    e.target.value = e.target.value.replace(/\D/g, '');
+                    // Limit to 4 digits
+                    if (e.target.value.length > 4) {
+                        e.target.value = e.target.value.slice(0, 4);
+                    }
+                });
+                
+                // Auto-focus when modal opens
+                const pairingModal = document.getElementById('pairingModal');
+                if (pairingModal) {
+                    const observer = new MutationObserver(function(mutations) {
+                        if (pairingModal.style.display === 'block') {
+                            setTimeout(() => pinInput.focus(), 100);
+                        }
+                    });
+                    observer.observe(pairingModal, { attributes: true, attributeFilter: ['style'] });
+                }
+            }
+        });
+
+        let selectedDiscoveredDevice = null;
+        let discoveredDevicesList = []; // Store discovered devices in memory
+
+        // Helper function to safely escape HTML (prevents XSS and double-escaping)
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Clean device name - remove backslashes that are just escaping spaces
+        function cleanDeviceName(name) {
+            if (!name) return '';
+            // Replace "\ " (backslash-space) with just space
+            // Replace any remaining standalone backslashes
+            return name.replace(/\\ /g, ' ').replace(/\\/g, '');
+        }
+
+        async function startDiscovery() {
+            const btn = document.getElementById('discoverBtn');
+            const status = document.getElementById('discoveryStatus');
+            const devicesDiv = document.getElementById('discoveredDevices');
+            
+            btn.disabled = true;
+            btn.textContent = 'Discovering...';
+            status.innerHTML = `
+                <div class="discovery-loader">
+                    <div class="spinner"></div>
+                    <span class="discovery-loading">Searching for devices on your network</span>
+                    <div class="pulse-dots">
+                        <div class="pulse-dot"></div>
+                        <div class="pulse-dot"></div>
+                        <div class="pulse-dot"></div>
+                    </div>
+                </div>
+            `;
+            devicesDiv.innerHTML = '';
+            selectedDiscoveredDevice = null;
+            discoveredDevicesList = []; // Reset the list
+
+            try {
+                const res = await fetch(`${API_BASE}/discovery?timeout=5s`);
+                const data = await res.json();
+                
+                if (data.devices && data.devices.length > 0) {
+                    status.innerHTML = `<span class="discovery-success"><span class="icon icon-success"></span> Found ${data.devices.length} device(s)</span>`;
+                    
+                    // Store devices in memory array
+                    discoveredDevicesList = data.devices;
+                    
+                    // Render devices using index instead of JSON in onclick
+                    devicesDiv.innerHTML = data.devices.map((device, index) => {
+                        // Clean device name first, then escape HTML
+                        const cleanedName = cleanDeviceName(device.name || 'Unknown Device');
+                        const cleanedDescription = device.description ? cleanDeviceName(device.description) : '';
+                        const safeName = escapeHtml(cleanedName);
+                        const safeDescription = cleanedDescription ? escapeHtml(cleanedDescription) : '';
+                        const safeAddress = escapeHtml(device.address || '');
+                        const safeProtocol = escapeHtml(device.protocol || '');
+                        
+                        return `
+                        <div class="discovered-device" data-device-index="${index}" onclick="selectDiscoveredDeviceByIndex(event, ${index})">
+                            <div class="device-name">${safeName}</div>
+                            <div class="device-details">
+                                Protocol: ${safeProtocol} | Address: ${safeAddress}
+                                ${safeDescription ? '<br>' + safeDescription : ''}
+                            </div>
+                        </div>
+                    `;
+                    }).join('');
+                } else {
+                    status.innerHTML = '<span class="discovery-error"><span class="icon icon-warning"></span> No devices found. Try manual configuration.</span>';
+                    devicesDiv.innerHTML = '<p style="color: #888; font-size: 13px; padding: 10px;">No devices discovered. Make sure your devices are on the same network and try again, or use manual configuration below.</p>';
+                }
+            } catch (err) {
+                console.error('[Discovery] Error:', err);
+                console.error('[Discovery] Error stack:', err.stack);
+                const errorMsg = err.message || 'Discovery failed';
+                status.innerHTML = '<span class="discovery-error"><span class="icon icon-error"></span> Discovery failed. Use manual configuration.</span>';
+                devicesDiv.innerHTML = '<p style="color: #888; font-size: 13px; padding: 10px;">Discovery encountered an error. Please use manual configuration below.</p>';
+                showNotification('error', 'Discovery Failed', errorMsg);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Discover Devices';
+            }
+        }
+
+        let currentPairingClientId = null;
+        let currentPairingClientData = null; // Store client data for pairing
+
+        function showPairingDialog(clientId, message, clientData) {
+            currentPairingClientId = clientId;
+            currentPairingClientData = clientData; // Store client data
+            const modal = document.getElementById('pairingModal');
+            const messageDiv = document.getElementById('pairingMessage');
+            const pinInput = document.getElementById('pairingPinInput');
+            const statusDiv = document.getElementById('pairingStatus');
+            const form = document.getElementById('pairingForm');
+            
+            if (messageDiv) {
+                messageDiv.textContent = message || 'Enter the PIN code displayed on your Apple TV';
+            }
+            if (statusDiv) {
+                statusDiv.innerHTML = '';
+            }
+            if (pinInput) {
+                pinInput.value = '';
+                pinInput.focus();
+            }
+            if (form) {
+                form.reset();
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        async function completePairing(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const pin = formData.get('pin');
+            const statusDiv = document.getElementById('pairingStatus');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            
+            if (!pin || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+                if (statusDiv) {
+                    statusDiv.innerHTML = '<span style="color: #f44336;">Please enter a valid 4-digit PIN code</span>';
+                }
+                return;
+            }
+            
+            if (!currentPairingClientId) {
+                showNotification('error', 'Pairing Error', 'No client ID available for pairing');
+                return;
+            }
+            
+            // Disable submit button
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Pairing...';
+            }
+            
+            if (statusDiv) {
+                statusDiv.innerHTML = '<span style="color: #4a9eff;">Pairing in progress...</span>';
+            }
+            
+            try {
+                // Prepare request body - include client data if client not yet in DB
+                const requestBody = { pin: pin };
+                if (currentPairingClientData) {
+                    requestBody.client_data = currentPairingClientData;
+                }
+                
+                const res = await fetch(`${API_BASE}/clients/${currentPairingClientId}/pair`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                const responseData = await res.json().catch(() => ({}));
+                
+                if (res.ok && responseData.success) {
+                    // Pairing successful
+                    closeModal('pairingModal');
+                    loadClients();
+                    showNotification('success', 'Pairing Complete', 'Device paired successfully. Client is now ready to use.');
+                    currentPairingClientId = null;
+                    currentPairingClientData = null; // Clear client data
+                } else {
+                    // Pairing failed
+                    const errorMsg = responseData.message || responseData.error || 'Pairing failed';
+                    if (statusDiv) {
+                        statusDiv.innerHTML = `<span style="color: #f44336;">${escapeHtml(errorMsg)}</span>`;
+                    }
+                    showNotification('error', 'Pairing Failed', errorMsg);
+                    
+                    // Re-enable submit button
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Complete Pairing';
+                    }
+                }
+            } catch (err) {
+                console.error('[Complete Pairing] Exception:', err);
+                const errorMsg = err.message || 'An unexpected error occurred';
+                if (statusDiv) {
+                    statusDiv.innerHTML = `<span style="color: #f44336;">${escapeHtml(errorMsg)}</span>`;
+                }
+                showNotification('error', 'Pairing Error', errorMsg);
+                
+                // Re-enable submit button
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Complete Pairing';
+                }
+            }
+        }
+
+        function selectDiscoveredDeviceByIndex(event, deviceIndex) {
+            console.log('[Device Selection] Starting device selection process');
+            console.log('[Device Selection] Device index:', deviceIndex);
+            console.log('[Device Selection] Available devices:', discoveredDevicesList);
+            console.log('[Device Selection] Event:', event);
+            
+            try {
+                // Get device from stored array
+                if (!discoveredDevicesList || discoveredDevicesList.length === 0) {
+                    throw new Error('No discovered devices available. Please run discovery again.');
+                }
+                
+                if (deviceIndex < 0 || deviceIndex >= discoveredDevicesList.length) {
+                    throw new Error(`Invalid device index: ${deviceIndex}. Available devices: ${discoveredDevicesList.length}`);
+                }
+                
+                const device = discoveredDevicesList[deviceIndex];
+                console.log('[Device Selection] Step 1: Retrieved device from array:', device);
+                
+                if (!device) {
+                    throw new Error('Device at index is null or undefined');
+                }
+                
+                // Validate device object
+                if (!device.protocol) {
+                    console.warn('[Device Selection] Device missing protocol, defaulting to airplay');
+                    device.protocol = 'airplay';
+                }
+                if (!device.address) {
+                    throw new Error('Device missing address field');
+                }
+                
+                selectedDiscoveredDevice = device;
+                console.log('[Device Selection] Step 2: Device stored in selectedDiscoveredDevice');
+                
+                // Update UI to show selection
+                console.log('[Device Selection] Step 3: Updating UI selection state');
+                document.querySelectorAll('.discovered-device').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                if (event && event.currentTarget) {
+                    event.currentTarget.classList.add('selected');
+                    console.log('[Device Selection] Step 4: Added selected class to clicked element');
+                } else {
+                    console.warn('[Device Selection] Event or currentTarget missing, cannot highlight selection');
+                }
+                
+                // Auto-fill form with discovered device info (scoped to client modal)
+                console.log('[Device Selection] Step 5: Finding form elements');
+                const modal = document.getElementById('clientModal');
+                if (!modal) {
+                    throw new Error('Client modal not found');
+                }
+                console.log('[Device Selection] Modal found:', modal);
+                
+                const nameInput = modal.querySelector('input[name="name"]');
+                const protocolSelect = modal.querySelector('select[name="protocol"]');
+                const addressInput = modal.querySelector('input[name="address"]');
+                
+                console.log('[Device Selection] Form elements found:', {
+                    nameInput: !!nameInput,
+                    protocolSelect: !!protocolSelect,
+                    addressInput: !!addressInput
+                });
+                
+                if (nameInput) {
+                    const cleanedName = cleanDeviceName(device.name || '');
+                    nameInput.value = cleanedName;
+                    console.log('[Device Selection] Set name to:', cleanedName);
+                } else {
+                    console.warn('[Device Selection] Name input not found');
+                }
+                
+                if (protocolSelect) {
+                    protocolSelect.value = device.protocol || 'airplay';
+                    console.log('[Device Selection] Set protocol to:', device.protocol || 'airplay');
+                } else {
+                    console.warn('[Device Selection] Protocol select not found');
+                }
+                
+                if (addressInput) {
+                    addressInput.value = device.address || '';
+                    console.log('[Device Selection] Set address to:', device.address || '');
+                } else {
+                    console.warn('[Device Selection] Address input not found');
+                }
+                
+                // Show success message
+                const status = document.getElementById('discoveryStatus');
+                if (status) {
+                    const cleanedName = cleanDeviceName(device.name || 'Device');
+                    const deviceName = escapeHtml(cleanedName);
+                    status.innerHTML = `<span class="discovery-success"><span class="icon icon-success"></span> Selected: ${deviceName}</span>`;
+                }
+                
+                console.log('[Device Selection] Step 6: Selection complete successfully');
+                showNotification('success', 'Device Selected', `Selected ${device.name || 'device'} - form fields populated`);
+            } catch (err) {
+                console.error('[Device Selection] Error occurred:', err);
+                console.error('[Device Selection] Error stack:', err.stack);
+                console.error('[Device Selection] Device index that failed:', deviceIndex);
+                console.error('[Device Selection] Available devices count:', discoveredDevicesList ? discoveredDevicesList.length : 0);
+                console.error('[Device Selection] Event object:', event);
+                
+                const errorMessage = err.message || 'Unknown error occurred';
+                showNotification('error', 'Device Selection Failed', 
+                    `Failed to select device: ${errorMessage}. Please try manual configuration.`);
+            }
+        }
+    </script>
+</body>
+</html>
+

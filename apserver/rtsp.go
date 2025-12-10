@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/spankenstein/air-mixer/player"
+	"github.com/gopherstein/air-mixer/player"
 )
 
 // This bundles up a request from the client. Once this has been created, it is
@@ -162,13 +162,28 @@ func rtspSession(id string, conn net.Conn, playerfn func(chan string)) {
 				return
 			}
 
+			// Call global handler if set (for protocol adapter integration)
+			if globalANNOUNCEHandler != nil {
+				if err := globalANNOUNCEHandler(id, fmtp, aesiv, aeskey); err != nil {
+					log.Printf("ANNOUNCE handler error: %v", err)
+					return
+				}
+			}
+
 		case "SETUP":
 			resp.headers["Transport"] = "RTP/AVP/UDP;unicast;interleaved=0-1;mode=record;"
 			resp.headers["Transport"] += "server_port=6000;control_port=6001;timing_port=6002"
 			resp.headers["Session"] = "1" // This is necessary (why?)
 		case "RECORD":
 			resp.headers["Audio-Latency"] = "2205"
-			go player.WriteUdp(aesiv, aeskey, fmtp)
+			// If we have a global handler, use it instead of the old player
+			if globalANNOUNCEHandler != nil {
+				// Handler was already called in ANNOUNCE, just start UDP listener
+				// The handler should have set up the decoder
+			} else {
+				// Fallback to old player for backward compatibility
+				go player.WriteUdp(aesiv, aeskey, fmtp)
+			}
 		case "TEARDOWN":
 			resp.headers["Session"] = "1" // Is _this_ necessary?
 		case "FLUSH":

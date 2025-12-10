@@ -4,9 +4,13 @@ package apserver
 // #include <arpa/inet.h>
 import "C"
 
-import "errors"
-import "fmt"
-import "unsafe"
+import (
+	"errors"
+	"fmt"
+	"unsafe"
+
+	"github.com/gopherstein/air-mixer/internal/logger"
+)
 
 // Keep this around so we can deregister them at the end.
 var services []C.DNSServiceRef
@@ -17,15 +21,22 @@ var services []C.DNSServiceRef
 // causes the socket connection to mDNSResponder to be closed, which will also deregister
 // the services.
 func ServiceRegister(name, stype string, txt map[string]string, port uint16) error {
+	log := logger.GetLogger()
+	log.Debugf("ServiceRegister called - name: %s, type: %s, port: %d", name, stype, port)
+	
 	txtblob, err := mapToBytes(txt)
 	if err != nil {
+		log.Errorf("Failed to convert TXT record to bytes: %v", err)
 		return err
 	}
+	log.Debugf("TXT record blob length: %d bytes", len(txtblob))
 
 	// Network order is big-endian
 	bport := (port&0xff)<<8 + port>>8
+	log.Debugf("Port in network byte order: %d (original: %d)", bport, port)
 
 	var ref C.DNSServiceRef
+	log.Debugf("Calling DNSServiceRegister with name='%s', type='%s', port=%d", name, stype, port)
 	dnserr := C.DNSServiceRegister(
 		&ref,                        // DNSServiceRegister
 		0,                           // DNSServiceFlags
@@ -39,19 +50,27 @@ func ServiceRegister(name, stype string, txt map[string]string, port uint16) err
 		unsafe.Pointer(&txtblob[0]), // TXT Record
 		nil, // Callback on register/fail (TODO: do something here)
 		nil) // Application Context
+	
 	if dnserr != C.kDNSServiceErr_NoError {
+		log.Errorf("DNSServiceRegister failed with error code: %d", int(dnserr))
 		return errors.New("Could not register service")
 	}
 
 	services = append(services, ref)
+	log.Infof("✓ mDNS service '%s' registered successfully (type: %s, port: %d)", name, stype, port)
 	return nil
 }
 
 // Deregister all previously allocated services.
 func ServiceDeregister() {
-	for _, ref := range services {
+	log := logger.GetLogger()
+	log.Debugf("Deregistering %d mDNS services", len(services))
+	for i, ref := range services {
+		log.Debugf("Deregistering service %d", i+1)
 		C.DNSServiceRefDeallocate(ref)
 	}
+	services = []C.DNSServiceRef{}
+	log.Debug("All mDNS services deregistered")
 }
 
 // Convert a map to the TXT record format: 1 byte (length) followed by
