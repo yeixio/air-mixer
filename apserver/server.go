@@ -6,7 +6,7 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/gopherstein/air-mixer/internal/logger"
+	"github.com/yeixio/air-mixer/internal/logger"
 )
 
 var txt map[string]string = map[string]string{

@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/gopherstein/air-mixer/internal/logger"
+	"github.com/yeixio/air-mixer/internal/logger"
 )
 
 // Keep this around so we can deregister them at the end.

@@ -1,4 +1,4 @@
-module github.com/gopherstein/air-mixer
+module github.com/yeixio/air-mixer
 
 go 1.25.5
 

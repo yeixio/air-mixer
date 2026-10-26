@@ -9,14 +9,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gopherstein/air-mixer/internal/api"
-	"github.com/gopherstein/air-mixer/internal/config"
-	"github.com/gopherstein/air-mixer/internal/db"
-	"github.com/gopherstein/air-mixer/internal/logger"
-	"github.com/gopherstein/air-mixer/internal/protocols"
-	"github.com/gopherstein/air-mixer/internal/protocols/airplay"
-	"github.com/gopherstein/air-mixer/internal/protocols/local"
-	"github.com/gopherstein/air-mixer/internal/router"
+	"github.com/yeixio/air-mixer/internal/api"
+	"github.com/yeixio/air-mixer/internal/config"
+	"github.com/yeixio/air-mixer/internal/db"
+	"github.com/yeixio/air-mixer/internal/logger"
+	"github.com/yeixio/air-mixer/internal/protocols"
+	"github.com/yeixio/air-mixer/internal/protocols/airplay"
+	"github.com/yeixio/air-mixer/internal/protocols/local"
+	"github.com/yeixio/air-mixer/internal/router"
 )
 
 // App represents the main application

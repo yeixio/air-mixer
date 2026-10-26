@@ -22,9 +22,9 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/gopherstein/air-mixer/internal/audio"
-	"github.com/gopherstein/air-mixer/internal/audio/alac"
-	"github.com/gopherstein/air-mixer/internal/protocols"
+	"github.com/yeixio/air-mixer/internal/audio"
+	"github.com/yeixio/air-mixer/internal/audio/alac"
+	"github.com/yeixio/air-mixer/internal/protocols"
 	"howett.net/plist"
 )
 

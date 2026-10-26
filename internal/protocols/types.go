@@ -1,7 +1,7 @@
 package protocols
 
 import (
-	"github.com/gopherstein/air-mixer/internal/audio"
+	"github.com/yeixio/air-mixer/internal/audio"
 )
 
 // AudioPacket represents a packet of audio data from a protocol

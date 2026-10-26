@@ -6,7 +6,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/gopherstein/air-mixer/apserver"
+	"github.com/yeixio/air-mixer/apserver"
 )
 
 func getMainInterface() (string, error) {

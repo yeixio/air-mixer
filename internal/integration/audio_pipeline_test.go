@@ -8,10 +8,10 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/gopherstein/air-mixer/internal/audio"
-	"github.com/gopherstein/air-mixer/internal/db"
-	"github.com/gopherstein/air-mixer/internal/protocols"
-	"github.com/gopherstein/air-mixer/internal/router"
+	"github.com/yeixio/air-mixer/internal/audio"
+	"github.com/yeixio/air-mixer/internal/db"
+	"github.com/yeixio/air-mixer/internal/protocols"
+	"github.com/yeixio/air-mixer/internal/router"
 )
 
 // MockProtocolServer is a test implementation of ProtocolServer
