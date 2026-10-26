@@ -1,0 +1,34 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: devices
+    attributes:
+      label: Devices involved
+      description: Senders and speakers, with models and firmware if you know them (for example "iPhone 15, iOS 26 → AirPort Express 2nd gen").
+  - type: input
+    id: version
+    attributes:
+      label: Air-Mixer version
+      description: Output of `airmixer version`.
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Platform
+      description: Operating system and how you run it (binary, Docker, ...).
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Run with `AIRMIXER_LOGGING_LEVEL=debug` and paste the relevant part.
+      render: text

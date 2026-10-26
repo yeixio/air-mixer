@@ -1,46 +1,38 @@
-# Air-Mixer Configuration File
-# Copy this to config.yaml and customize as needed
+# Air-Mixer configuration. Copy to config.yaml and edit as needed.
+# Every setting can also be set with an environment variable: the key path
+# in upper case with dots replaced by underscores and an AIRMIXER_ prefix,
+# for example AIRMIXER_SERVER_WEB_PORT=8080.
+#
+# Servers, clients and routes are not configured here: they are stored in
+# the database and managed through the web UI or the REST API.
 
 server:
-  # Server host (0.0.0.0 for all interfaces, 127.0.0.1 for localhost only)
+  # Address the web UI and API listen on. Use 127.0.0.1 to allow local
+  # access only. The API has no authentication yet, so do not expose it to
+  # untrusted networks.
   host: "0.0.0.0"
-  
-  # Web UI port
+
+  # Web UI and API port.
   web_port: 9001
-  
-  # AirPlay server port
+
+  # Default RTSP port for AirPlay receivers that do not set their own
+  # address. Give each additional receiver its own address in its config,
+  # for example {"address": ":49153"}.
   airplay_port: 49152
-  
-  # Data directory (relative paths are relative to working directory)
+
+  # Directory for the database and other state.
   data_dir: "./data"
-  
-  # Network publish name for mDNS/Bonjour
-  publish_name: "airmixer"
-  
-  # Network interface (use "auto" to auto-detect)
+
+  # Network interface AirPlay receivers are advertised on, or "auto" to
+  # pick the first physical interface with an IPv4 address.
   interface: "auto"
 
 database:
-  # SQLite database path (relative to data_dir if not absolute)
-  path: "./data/airmixer.db"
-
-audio:
-  # Default sample rate (Hz)
-  sample_rate: 44100
-  
-  # Default channel count (1=mono, 2=stereo, etc.)
-  channels: 2
-  
-  # Audio buffer size in samples
-  buffer_size: 4096
-  
-  # Default volume (0.0 to 1.0)
-  default_volume: 1.0
+  # SQLite database file. Empty means airmixer.db inside data_dir.
+  path: ""
 
 logging:
-  # Log level: debug, info, warn, error
+  # debug, info, warn or error.
   level: "info"
-  
-  # Log format: text or json
+  # text or json.
   format: "text"
-
