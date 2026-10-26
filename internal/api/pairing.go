@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/gopherstein/air-mixer/internal/db"
-	"github.com/gopherstein/air-mixer/internal/protocols/airplay"
+	"github.com/yeixio/air-mixer/internal/db"
+	"github.com/yeixio/air-mixer/internal/protocols/airplay"
 )
 
 // pairClientRequest represents a pairing request

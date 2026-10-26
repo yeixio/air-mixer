@@ -3,7 +3,7 @@ package logger
 import (
 	"os"
 
-	"github.com/gopherstein/air-mixer/internal/config"
+	"github.com/yeixio/air-mixer/internal/config"
 	"github.com/sirupsen/logrus"
 )
 

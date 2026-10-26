@@ -7,8 +7,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/gopherstein/air-mixer/internal/audio"
-	"github.com/gopherstein/air-mixer/internal/db"
+	"github.com/yeixio/air-mixer/internal/audio"
+	"github.com/yeixio/air-mixer/internal/db"
 )
 
 // AudioRouter implements the Router interface

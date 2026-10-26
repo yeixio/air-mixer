@@ -7,9 +7,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/gopherstein/air-mixer/internal/config"
-	"github.com/gopherstein/air-mixer/internal/db"
-	"github.com/gopherstein/air-mixer/internal/protocols/airplay"
+	"github.com/yeixio/air-mixer/internal/config"
+	"github.com/yeixio/air-mixer/internal/db"
+	"github.com/yeixio/air-mixer/internal/protocols/airplay"
 )
 
 // listServers lists all servers

@@ -44,7 +44,7 @@ This package provides cross-platform audio processing capabilities for Air-Mixer
 package main
 
 import (
-    "github.com/gopherstein/air-mixer/internal/audio"
+    "github.com/yeixio/air-mixer/internal/audio"
 )
 
 func main() {

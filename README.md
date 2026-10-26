@@ -57,7 +57,7 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed architecture docum
 
 ```bash
 # Clone the repository
-git clone https://github.com/gopherstein/air-mixer.git
+git clone https://github.com/yeixio/air-mixer.git
 cd air-mixer
 
 # Build and run with docker-compose
@@ -72,7 +72,7 @@ docker run --network host -v $(pwd)/data:/app/data airmixer
 
 ```bash
 # Clone the repository
-git clone https://github.com/gopherstein/air-mixer.git
+git clone https://github.com/yeixio/air-mixer.git
 cd air-mixer
 
 # Install dependencies
@@ -283,8 +283,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 - 📖 [Documentation](ARCHITECTURE.md)
-- 🐛 [Issue Tracker](https://github.com/gopherstein/air-mixer/issues)
-- 💬 [Discussions](https://github.com/gopherstein/air-mixer/discussions)
+- 🐛 [Issue Tracker](https://github.com/yeixio/air-mixer/issues)
+- 💬 [Discussions](https://github.com/yeixio/air-mixer/discussions)
 
 ---
 

@@ -11,10 +11,10 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/gopherstein/air-mixer/internal/audio"
-	"github.com/gopherstein/air-mixer/internal/audio/alac"
-	"github.com/gopherstein/air-mixer/internal/protocols"
-	"github.com/gopherstein/air-mixer/apserver"
+	"github.com/yeixio/air-mixer/internal/audio"
+	"github.com/yeixio/air-mixer/internal/audio/alac"
+	"github.com/yeixio/air-mixer/internal/protocols"
+	"github.com/yeixio/air-mixer/apserver"
 )
 
 // Server implements ProtocolServer for AirPlay

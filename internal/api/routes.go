@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/gopherstein/air-mixer/internal/db"
-	"github.com/gopherstein/air-mixer/internal/router"
+	"github.com/yeixio/air-mixer/internal/db"
+	"github.com/yeixio/air-mixer/internal/router"
 )
 
 // listRoutes lists all routes

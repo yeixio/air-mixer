@@ -7,8 +7,8 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/gopherstein/air-mixer/internal/audio"
-	"github.com/gopherstein/air-mixer/internal/router"
+	"github.com/yeixio/air-mixer/internal/audio"
+	"github.com/yeixio/air-mixer/internal/router"
 )
 
 // Manager manages protocol adapters and connects them to the router

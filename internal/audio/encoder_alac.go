@@ -3,7 +3,7 @@ package audio
 import (
 	"fmt"
 
-	"github.com/gopherstein/air-mixer/internal/audio/alac"
+	"github.com/yeixio/air-mixer/internal/audio/alac"
 )
 
 // ALACEncoder encodes PCM samples into ALAC format

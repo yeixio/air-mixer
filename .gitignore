@@ -1,55 +1,29 @@
-# Binaries
-airmixer
-airmixer.exe
-*.exe
-*.dll
-*.so
-*.dylib
+# Build output (anchored so cmd/airmixer is not ignored)
+/airmixer
+/airmixer.exe
+/build/
+/dist/
+/tmp/
 
-# Build directory
-build/
-dist/
-
-# Test binary
+# Test and coverage output
 *.test
-
-# Output of the go coverage tool
 *.out
+coverage.html
 
-# Dependency directories
-vendor/
+# Local data and configuration
+/data/
+/config.yaml
+*.db
+*.db-shm
+*.db-wal
 
-# Go workspace file
-go.work
-
-# IDE
+# Editors and OS files
 .idea/
 .vscode/
 *.swp
-*.swo
 *~
-
-# OS
 .DS_Store
 Thumbs.db
 
-# Build artifacts
-webui/dist/
-*.db
-*.sqlite
-*.sqlite3
-coverage.out
-coverage.html
-
-# Configuration (if contains secrets)
-config.yaml
-config.json
-*.key
-*.pem
-
 # Logs
 *.log
-
-# Docker
-.dockerignore
-

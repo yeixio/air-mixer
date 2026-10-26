@@ -5,8 +5,8 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/gopherstein/air-mixer/internal/audio"
-	"github.com/gopherstein/air-mixer/internal/protocols"
+	"github.com/yeixio/air-mixer/internal/audio"
+	"github.com/yeixio/air-mixer/internal/protocols"
 )
 
 // Client implements ProtocolClient for local audio output (using Oto)
