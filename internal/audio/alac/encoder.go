@@ -1,97 +1,66 @@
 package alac
 
-import (
-	"fmt"
-)
+import "fmt"
 
-// Encoder encodes PCM samples into ALAC format
+const elementEnd = 7
+
+// Encoder produces uncompressed ALAC frames ("escape" frames). These are
+// valid ALAC that every receiver must accept; skipping compression keeps the
+// encoder simple and cheap at the cost of bandwidth, which is irrelevant on a
+// LAN. This is what most open-source AirPlay senders do.
 type Encoder struct {
-	magicCookie *MagicCookie
-	bitstream   *BitstreamWriter
-	riceEncoder *RiceEncoder
-	predictor   *Predictor
+	cfg Config
 }
 
-// NewEncoder creates a new ALAC encoder
-func NewEncoder(magicCookie *MagicCookie) *Encoder {
-	return &Encoder{
-		magicCookie: magicCookie,
-		predictor:   NewPredictor(),
+// NewEncoder returns an encoder for cfg. Only 16-bit audio is supported.
+func NewEncoder(cfg Config) (*Encoder, error) {
+	if err := cfg.Validate(); err != nil {
+		return nil, err
 	}
+	if cfg.BitDepth != 16 {
+		return nil, fmt.Errorf("alac: encoder supports 16-bit audio, got %d-bit", cfg.BitDepth)
+	}
+	return &Encoder{cfg: cfg}, nil
 }
 
-// EncodeFrame encodes a single frame of PCM samples into ALAC format
-// samples should be int32 PCM samples, channel-interleaved
-func (e *Encoder) EncodeFrame(samples []int32) ([]byte, error) {
-	if len(samples) == 0 {
-		return nil, fmt.Errorf("empty samples")
+// Config returns the stream configuration to advertise to receivers.
+func (e *Encoder) Config() Config { return e.cfg }
+
+// Encode encodes interleaved 16-bit samples as one frame. len(pcm) must be a
+// multiple of the channel count and hold at most FrameLength samples per
+// channel; shorter frames carry an explicit sample count.
+func (e *Encoder) Encode(pcm []int16) ([]byte, error) {
+	channels := int(e.cfg.NumChannels)
+	if len(pcm)%channels != 0 {
+		return nil, fmt.Errorf("alac: %d samples is not a multiple of %d channels", len(pcm), channels)
 	}
-
-	// Initialize bitstream writer
-	e.bitstream = NewBitstreamWriter()
-	e.riceEncoder = NewRiceEncoder(e.bitstream)
-
-	// Reset predictor for new frame
-	e.predictor.Reset()
-
-	// Calculate number of samples per channel
-	samplesPerChannel := len(samples) / int(e.magicCookie.NumChannels)
-	if samplesPerChannel == 0 {
-		return nil, fmt.Errorf("invalid sample count")
+	n := len(pcm) / channels
+	if n == 0 || n > int(e.cfg.FrameLength) {
+		return nil, fmt.Errorf("alac: frame of %d samples, want 1..%d", n, e.cfg.FrameLength)
 	}
+	hasSize := n != int(e.cfg.FrameLength)
 
-	// Encode samples
-	// ALAC encodes channel-interleaved samples
-	for i := 0; i < samplesPerChannel; i++ {
-		for ch := 0; ch < int(e.magicCookie.NumChannels); ch++ {
-			sampleIdx := i*int(e.magicCookie.NumChannels) + ch
-			if sampleIdx >= len(samples) {
-				break
-			}
-			
-			sample := samples[sampleIdx]
-
-			// Predict next sample
-			predicted := e.predictor.Predict()
-			
-			// Calculate residual (prediction error)
-			residual := sample - predicted
-			
-			// Update predictor with actual sample
-			e.predictor.Update(sample)
-
-			// Encode residual using Rice coding
-			k := int(e.magicCookie.KB)
-			e.riceEncoder.EncodeRice(residual, k)
-		}
+	w := &bitWriter{buf: make([]byte, 0, 8+len(pcm)*2)}
+	element := uint32(elementMono)
+	if channels == 2 {
+		element = elementStereo
 	}
-
-	// Align to byte boundary
-	e.bitstream.Align()
-
-	return e.bitstream.Bytes(), nil
+	w.write(element, 3)
+	w.write(0, 4)  // element instance tag
+	w.write(0, 12) // unused header bits
+	if hasSize {
+		w.write(1, 1)
+	} else {
+		w.write(0, 1)
+	}
+	w.write(0, 2) // uncompressed bytes
+	w.write(1, 1) // not compressed
+	if hasSize {
+		w.write(uint32(n), 32)
+	}
+	for _, s := range pcm {
+		w.write(uint32(uint16(s)), 16)
+	}
+	w.write(elementEnd, 3)
+	return w.buf, nil
 }
-
-// EncodeFrameFromFloat32 encodes float32 samples to ALAC
-// Converts float32 [-1.0, 1.0] to int32 PCM first
-func (e *Encoder) EncodeFrameFromFloat32(samples []float32) ([]byte, error) {
-	// Convert float32 to int32
-	bitDepth := int(e.magicCookie.BitDepth)
-	maxValue := int32((1 << (bitDepth - 1)) - 1)
-	
-	intSamples := make([]int32, len(samples))
-	for i, sample := range samples {
-		// Clamp to [-1.0, 1.0]
-		if sample > 1.0 {
-			sample = 1.0
-		} else if sample < -1.0 {
-			sample = -1.0
-		}
-		
-		// Convert to int32
-		intSamples[i] = int32(sample * float32(maxValue))
-	}
-	
-	return e.EncodeFrame(intSamples)
-}
-
