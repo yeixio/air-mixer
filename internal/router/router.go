@@ -1,532 +1,372 @@
 package router
 
 import (
-	"context"
-	"fmt"
-	"log"
-	"strings"
+	"cmp"
+	"log/slog"
+	"slices"
 	"sync"
+	"sync/atomic"
 
-	"github.com/gopherstein/air-mixer/internal/audio"
-	"github.com/gopherstein/air-mixer/internal/db"
+	"github.com/yeixio/air-mixer/internal/audio"
 )
 
-// AudioRouter implements the Router interface
-type AudioRouter struct {
-	db            *db.DB
-	routes        map[string]*Route
-	activeRoutes  map[string]*activeRoute
-	mu            sync.RWMutex
-	running       bool
-	ctx           context.Context
-	cancel        context.CancelFunc
-	serverStreams map[string]<-chan []float32 // Source streams (keyed by server ID)
-	clientSinks   map[string]chan<- []float32 // Destination sinks (keyed by client ID)
-	serverNames   map[string]string // Map server name -> server ID
-	clientNames   map[string]string // Map client name -> client ID
+// defaultMaxLag is how far, in samples, one route into a destination may run
+// ahead of another before the late one is treated as silent: 250 ms.
+const defaultMaxLag = audio.SampleRate * audio.Channels / 4
+
+// Router routes audio from registered sources to registered sinks. All
+// audio is in the internal format (see package audio). Methods are safe for
+// concurrent use.
+type Router struct {
+	log *slog.Logger
+
+	mu       sync.Mutex
+	running  bool
+	routes   map[string]*routeState
+	sources  map[string]*source
+	sinks    map[string]*sink
+	maxLag   int
+	sequence int64 // registration order, to resolve duplicate names
 }
 
-// activeRoute represents a route that's currently processing audio
-type activeRoute struct {
-	route  Route
-	mixer  audio.AudioMixer
-	cancel context.CancelFunc
+type routeState struct {
+	route   Route
+	samples atomic.Int64
 }
 
-// NewRouter creates a new audio router
-func NewRouter(database *db.DB) *AudioRouter {
-	ctx, cancel := context.WithCancel(context.Background())
-	return &AudioRouter{
-		db:            database,
-		routes:        make(map[string]*Route),
-		activeRoutes:  make(map[string]*activeRoute),
-		ctx:           ctx,
-		cancel:        cancel,
-		serverStreams: make(map[string]<-chan []float32),
-		clientSinks:   make(map[string]chan<- []float32),
-		serverNames:   make(map[string]string),
-		clientNames:   make(map[string]string),
+type source struct {
+	id, name string
+	seq      int64
+	hub      *hub
+}
+
+type sink struct {
+	id, name string
+	seq      int64
+	ch       chan<- []float32
+	mixer    *audio.Mixer
+	fwdDone  chan struct{}
+	links    map[string]*link // by route ID
+}
+
+type link struct {
+	sourceID string
+	hub      *hub
+	sub      *subscription
+	volume   float32
+}
+
+// New returns a stopped router.
+func New(logger *slog.Logger) *Router {
+	if logger == nil {
+		logger = slog.Default()
+	}
+	return &Router{
+		log:     logger.With("component", "router"),
+		routes:  make(map[string]*routeState),
+		sources: make(map[string]*source),
+		sinks:   make(map[string]*sink),
+		maxLag:  defaultMaxLag,
 	}
 }
 
-// AddRoute adds a new route
-func (r *AudioRouter) AddRoute(route Route) error {
-	r.mu.Lock()
-
-	if route.ID == "" {
-		r.mu.Unlock()
-		return fmt.Errorf("route ID cannot be empty")
-	}
-
-	if _, exists := r.routes[route.ID]; exists {
-		r.mu.Unlock()
-		return fmt.Errorf("route with ID %s already exists", route.ID)
-	}
-
-	// Validate route
-	if err := r.validateRoute(route); err != nil {
-		r.mu.Unlock()
-		return err
-	}
-
-	r.routes[route.ID] = &route
-	routeCopy := route // Copy for use outside the lock
-	running := r.running
-	enabled := route.Enabled
-	r.mu.Unlock() // Release lock before potentially blocking operations
-
-	// If router is running and route is enabled, try to activate it
-	// Note: If source stream doesn't exist yet, route will be activated when stream becomes available
-	if running && enabled {
-		if err := r.activateRoute(&routeCopy); err != nil {
-			// Check if error is due to source not being available (OK - will activate later)
-			// vs destination/client errors (should be reported)
-			if strings.Contains(err.Error(), "source") && strings.Contains(err.Error(), "not available") {
-				// Source stream not available yet - this is OK, route will activate when stream becomes available
-				log.Printf("Route %s created but not yet active (source '%s' not available): %v", routeCopy.ID, routeCopy.SourceName, err)
-				// Don't return error - allow route to be created and activated later
-			} else {
-				// Real error (e.g., destinations not found) - return it
-				return fmt.Errorf("failed to activate route: %w", err)
-			}
-		}
-	}
-
-	return nil
-}
-
-// RemoveRoute removes a route by ID
-func (r *AudioRouter) RemoveRoute(routeID string) error {
+// Start activates routes.
+func (r *Router) Start() {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-
-	if _, exists := r.routes[routeID]; !exists {
-		return fmt.Errorf("route %s not found", routeID)
-	}
-
-	// Deactivate if active
-	if active, ok := r.activeRoutes[routeID]; ok {
-		r.deactivateRoute(active)
-		delete(r.activeRoutes, routeID)
-	}
-
-	delete(r.routes, routeID)
-	return nil
-}
-
-// UpdateRoute updates an existing route
-func (r *AudioRouter) UpdateRoute(routeID string, route Route) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	if _, exists := r.routes[routeID]; !exists {
-		return fmt.Errorf("route %s not found", routeID)
-	}
-
-	// Validate route
-	if err := r.validateRoute(route); err != nil {
-		return err
-	}
-
-	route.ID = routeID // Ensure ID matches
-	r.routes[routeID] = &route
-
-	// If router is running, update active route
-	if r.running {
-		// Deactivate old route if it was active
-		if active, ok := r.activeRoutes[routeID]; ok {
-			r.deactivateRoute(active)
-			delete(r.activeRoutes, routeID)
-		}
-
-		// Activate new route if enabled
-		// Note: If source stream doesn't exist yet, route will be activated when stream becomes available
-		if route.Enabled {
-			if err := r.activateRoute(&route); err != nil {
-				// Source stream not available yet - this is OK, route will activate when stream becomes available
-				log.Printf("Route %s updated but not yet active (source '%s' not available): %v", routeID, route.SourceName, err)
-				// Don't return error - allow route to be updated and activated later
-			}
-		}
-	}
-
-	return nil
-}
-
-// GetRoute retrieves a route by ID
-func (r *AudioRouter) GetRoute(routeID string) (*Route, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	route, exists := r.routes[routeID]
-	if !exists {
-		return nil, fmt.Errorf("route %s not found", routeID)
-	}
-
-	// Return a copy
-	routeCopy := *route
-	return &routeCopy, nil
-}
-
-// ListRoutes returns all routes
-func (r *AudioRouter) ListRoutes() []Route {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	routes := make([]Route, 0, len(r.routes))
-	for _, route := range r.routes {
-		routes = append(routes, *route)
-	}
-
-	return routes
-}
-
-// ListRouteStatus returns all routes with status information
-func (r *AudioRouter) ListRouteStatus() []RouteStatus {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	statuses := make([]RouteStatus, 0, len(r.routes))
-	for _, route := range r.routes {
-		status := RouteStatus{
-			Route:  *route,
-			Active: r.activeRoutes[route.ID] != nil,
-		}
-		statuses = append(statuses, status)
-	}
-
-	return statuses
-}
-
-// Start starts the router
-func (r *AudioRouter) Start() error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	if r.running {
-		return fmt.Errorf("router is already running")
-	}
-
 	r.running = true
-
-	// Activate all enabled routes that have available source streams
-	for _, route := range r.routes {
-		if route.Enabled {
-			if err := r.activateRoute(route); err != nil {
-				// Source stream not available yet - this is OK, route will activate when stream becomes available
-				log.Printf("Route %s enabled but not yet active (source '%s' not available): %v", route.ID, route.SourceName, err)
-				// Continue - route will be activated when source stream becomes available
-			}
-		}
-	}
-
-	return nil
+	r.reconcile()
 }
 
-// Stop stops the router
-func (r *AudioRouter) Stop() error {
+// Stop deactivates every route. Routes and registrations are kept.
+func (r *Router) Stop() {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-
-	if !r.running {
-		return nil
-	}
-
 	r.running = false
-
-	// Deactivate all active routes
-	for _, active := range r.activeRoutes {
-		r.deactivateRoute(active)
-	}
-	r.activeRoutes = make(map[string]*activeRoute)
-
-	return nil
+	r.reconcile()
 }
 
-// IsRunning returns whether the router is running
-func (r *AudioRouter) IsRunning() bool {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
+// Running reports whether the router is started.
+func (r *Router) Running() bool {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	return r.running
 }
 
-// RegisterSourceStream registers an audio source stream
-// serverID is the server's ID, serverName is the server's name (for name-based routing)
-func (r *AudioRouter) RegisterSourceStream(serverID, serverName string, stream <-chan []float32) {
-	r.mu.Lock()
-	r.serverStreams[serverID] = stream
-	if serverName != "" {
-		r.serverNames[serverName] = serverID
-		log.Printf("Router: registered server name mapping: %s -> %s", serverName, serverID)
+// AddRoute adds a route. It becomes active once its source and at least one
+// destination are registered.
+func (r *Router) AddRoute(route Route) error {
+	if err := route.Validate(); err != nil {
+		return err
 	}
-	
-	// Collect routes that might be waiting for this source
-	var waitingRoutes []*Route
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if _, ok := r.routes[route.ID]; ok {
+		return ErrExists
+	}
+	r.routes[route.ID] = &routeState{route: route.clone()}
+	r.reconcile()
+	return nil
+}
+
+// UpdateRoute replaces the route with the same ID.
+func (r *Router) UpdateRoute(route Route) error {
+	if err := route.Validate(); err != nil {
+		return err
+	}
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	st, ok := r.routes[route.ID]
+	if !ok {
+		return ErrNotFound
+	}
+	st.route = route.clone()
+	r.reconcile()
+	return nil
+}
+
+// RemoveRoute deletes a route and stops its audio.
+func (r *Router) RemoveRoute(id string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if _, ok := r.routes[id]; !ok {
+		return ErrNotFound
+	}
+	delete(r.routes, id)
+	r.reconcile()
+	return nil
+}
+
+// Route returns the route with the given ID.
+func (r *Router) Route(id string) (RouteStatus, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	st, ok := r.routes[id]
+	if !ok {
+		return RouteStatus{}, ErrNotFound
+	}
+	return r.status(st), nil
+}
+
+// Routes returns every route with its status, highest priority first.
+func (r *Router) Routes() []RouteStatus {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	out := make([]RouteStatus, 0, len(r.routes))
+	for _, st := range r.routes {
+		out = append(out, r.status(st))
+	}
+	slices.SortFunc(out, func(a, b RouteStatus) int {
+		return cmp.Or(cmp.Compare(b.Priority, a.Priority), cmp.Compare(a.Name, b.Name), cmp.Compare(a.ID, b.ID))
+	})
+	return out
+}
+
+// ActiveRoutes returns the number of routes currently delivering audio.
+func (r *Router) ActiveRoutes() int {
+	n := 0
+	for _, st := range r.Routes() {
+		if st.Active {
+			n++
+		}
+	}
+	return n
+}
+
+func (r *Router) status(st *routeState) RouteStatus {
+	s := RouteStatus{
+		Route:         st.route.clone(),
+		ActiveDests:   []string{},
+		SamplesRouted: st.samples.Load(),
+	}
+	s.SourceAvailable = r.sourceByName(st.route.SourceName) != nil
+	for _, sk := range r.sinks {
+		if _, ok := sk.links[st.route.ID]; ok {
+			s.ActiveDests = append(s.ActiveDests, sk.name)
+		}
+	}
+	slices.Sort(s.ActiveDests)
+	s.Active = len(s.ActiveDests) > 0
+	return s
+}
+
+// RegisterSource makes a source stream available under a name. The router
+// stops reading when the channel is closed.
+func (r *Router) RegisterSource(id, name string, stream <-chan []float32) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if old, ok := r.sources[id]; ok {
+		r.log.Warn("source registered twice, replacing", "source", id)
+		r.dropSource(old)
+	}
+	r.sequence++
+	r.sources[id] = &source{id: id, name: name, seq: r.sequence, hub: newHub(stream)}
+	r.log.Debug("source registered", "source", id, "name", name)
+	r.reconcile()
+}
+
+// UnregisterSource removes a source. Routes from it become inactive.
+func (r *Router) UnregisterSource(id string) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if src, ok := r.sources[id]; ok {
+		r.dropSource(src)
+		r.reconcile()
+	}
+}
+
+func (r *Router) dropSource(src *source) {
+	delete(r.sources, src.id)
+	for _, sk := range r.sinks {
+		for routeID, l := range sk.links {
+			if l.sourceID == src.id {
+				r.unlink(sk, routeID)
+			}
+		}
+	}
+}
+
+// RegisterSink makes a destination channel available under a name. The
+// router never blocks on ch: when it is full, audio is dropped.
+func (r *Router) RegisterSink(id, name string, ch chan<- []float32) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if old, ok := r.sinks[id]; ok {
+		r.log.Warn("sink registered twice, replacing", "sink", id)
+		r.dropSink(old)
+	}
+	r.sequence++
+	r.sinks[id] = &sink{id: id, name: name, seq: r.sequence, ch: ch, links: make(map[string]*link)}
+	r.log.Debug("sink registered", "sink", id, "name", name)
+	r.reconcile()
+}
+
+// UnregisterSink removes a destination. When it returns, the router will
+// not send on the sink's channel again, so the caller may close it.
+func (r *Router) UnregisterSink(id string) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if sk, ok := r.sinks[id]; ok {
+		r.dropSink(sk)
+	}
+}
+
+func (r *Router) dropSink(sk *sink) {
+	for routeID := range sk.links {
+		r.unlink(sk, routeID)
+	}
+	delete(r.sinks, sk.id)
+}
+
+// sourceByName returns the most recently registered source with name.
+func (r *Router) sourceByName(name string) *source {
+	var found *source
+	for _, s := range r.sources {
+		if s.name == name && (found == nil || s.seq > found.seq) {
+			found = s
+		}
+	}
+	return found
+}
+
+func (r *Router) sinkByName(name string) *sink {
+	var found *sink
+	for _, s := range r.sinks {
+		if s.name == name && (found == nil || s.seq > found.seq) {
+			found = s
+		}
+	}
+	return found
+}
+
+// reconcile makes the active links match the routes and registrations. The
+// caller holds r.mu.
+func (r *Router) reconcile() {
+	type want struct {
+		src    *source
+		volume float32
+	}
+	desired := make(map[string]map[string]want) // sink ID -> route ID -> link
 	if r.running {
-		for _, route := range r.routes {
-			// Skip if route is not enabled or already active
-			if !route.Enabled {
+		for _, st := range r.routes {
+			rt := st.route
+			if !rt.Enabled {
 				continue
 			}
-			if _, isActive := r.activeRoutes[route.ID]; isActive {
+			src := r.sourceByName(rt.SourceName)
+			if src == nil {
 				continue
 			}
-			
-			// If this route uses this source (by name), mark it for activation
-			if route.SourceName == serverName {
-				waitingRoutes = append(waitingRoutes, route)
+			for _, name := range rt.DestNames {
+				sk := r.sinkByName(name)
+				if sk == nil {
+					continue
+				}
+				if desired[sk.id] == nil {
+					desired[sk.id] = make(map[string]want)
+				}
+				desired[sk.id][rt.ID] = want{src, rt.Volume}
 			}
 		}
 	}
-	r.mu.Unlock()
-	
-	// Activate waiting routes (without holding the lock)
-	for _, route := range waitingRoutes {
-		if err := r.activateRoute(route); err != nil {
-			log.Printf("Failed to activate waiting route %s when source %s (%s) became available: %v", route.ID, serverName, serverID, err)
-		} else {
-			log.Printf("Activated waiting route %s when source %s (%s) became available", route.ID, serverName, serverID)
-		}
-	}
-}
 
-// UnregisterSourceStream unregisters an audio source stream
-func (r *AudioRouter) UnregisterSourceStream(sourceID string) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	delete(r.serverStreams, sourceID)
-}
-
-// RegisterClientSink registers an audio destination sink
-// clientID is the client's ID, clientName is the client's name (for name-based routing)
-func (r *AudioRouter) RegisterClientSink(clientID, clientName string, sink chan<- []float32) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.clientSinks[clientID] = sink
-	if clientName != "" {
-		r.clientNames[clientName] = clientID
-		log.Printf("Router: registered client name mapping: %s -> %s", clientName, clientID)
-	}
-	log.Printf("Router: registered client sink %s (name: %s, total sinks: %d)", clientID, clientName, len(r.clientSinks))
-}
-
-// UnregisterClientSink unregisters an audio destination sink
-func (r *AudioRouter) UnregisterClientSink(clientID string) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	delete(r.clientSinks, clientID)
-}
-
-// getClientSinkIDs returns a list of registered client sink IDs (for logging)
-func (r *AudioRouter) getClientSinkIDs() []string {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-	ids := make([]string, 0, len(r.clientSinks))
-	for id := range r.clientSinks {
-		ids = append(ids, id)
-	}
-	return ids
-}
-
-// validateRoute validates a route configuration
-func (r *AudioRouter) validateRoute(route Route) error {
-	if route.SourceName == "" {
-		return fmt.Errorf("source name cannot be empty")
-	}
-	if len(route.DestNames) == 0 {
-		return fmt.Errorf("at least one destination name required")
-	}
-	if route.Volume < 0.0 || route.Volume > 1.0 {
-		return fmt.Errorf("volume must be between 0.0 and 1.0")
-	}
-	return nil
-}
-
-// resolveSourceName resolves a server name to its ID
-func (r *AudioRouter) resolveSourceName(serverName string) (string, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-	
-	serverID, exists := r.serverNames[serverName]
-	if !exists {
-		return "", fmt.Errorf("server name '%s' not found (not registered)", serverName)
-	}
-	return serverID, nil
-}
-
-// resolveDestNames resolves client names to their IDs
-func (r *AudioRouter) resolveDestNames(clientNames []string) ([]string, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-	
-	clientIDs := make([]string, 0, len(clientNames))
-	missing := make([]string, 0)
-	
-	for _, clientName := range clientNames {
-		clientID, exists := r.clientNames[clientName]
-		if !exists {
-			missing = append(missing, clientName)
-			continue
-		}
-		clientIDs = append(clientIDs, clientID)
-	}
-	
-	if len(missing) > 0 {
-		return nil, fmt.Errorf("client names not found (not registered): %v", missing)
-	}
-	
-	if len(clientIDs) == 0 {
-		return nil, fmt.Errorf("none of the destination names were found: %v", clientNames)
-	}
-	
-	return clientIDs, nil
-}
-
-// activateRoute activates a route and starts routing audio
-func (r *AudioRouter) activateRoute(route *Route) error {
-	// Resolve source name to ID
-	sourceID, err := r.resolveSourceName(route.SourceName)
-	if err != nil {
-		return fmt.Errorf("failed to resolve source name '%s': %w", route.SourceName, err)
-	}
-	
-	// Check if source stream exists (need lock to access serverStreams)
-	r.mu.RLock()
-	sourceStream, exists := r.serverStreams[sourceID]
-	r.mu.RUnlock()
-	if !exists {
-		return fmt.Errorf("source stream for '%s' (ID: %s) not found", route.SourceName, sourceID)
-	}
-
-	// Create mixer if mixing multiple sources to same destination
-	mixer := audio.NewMixer(4096)
-	if err := mixer.Start(); err != nil {
-		return fmt.Errorf("failed to start mixer: %w", err)
-	}
-
-	// Add source to mixer (use sourceID for mixer, but route.SourceName for logging)
-	if err := mixer.AddSource(sourceID, sourceStream); err != nil {
-		mixer.Close()
-		return fmt.Errorf("failed to add source to mixer: %w", err)
-	}
-
-	// Set source volume
-	if err := mixer.SetSourceVolume(sourceID, route.Volume); err != nil {
-		mixer.Close()
-		return fmt.Errorf("failed to set source volume: %w", err)
-	}
-
-	// Get mixed output
-	outputChan := mixer.Output()
-
-	// Create context for this route
-	routeCtx, routeCancel := context.WithCancel(r.ctx)
-
-	// Resolve destination names to IDs
-	destIDs, err := r.resolveDestNames(route.DestNames)
-	if err != nil {
-		mixer.Close()
-		return fmt.Errorf("failed to resolve destination names: %w", err)
-	}
-	
-	// Start routing goroutine for each destination
-	log.Printf("Router: activating route %s with %d destinations: %v (resolved to IDs: %v)", route.ID, len(route.DestNames), route.DestNames, destIDs)
-	activeDestinations := 0
-	
-	// Get client sinks (need lock to access clientSinks)
-	r.mu.RLock()
-	destSinks := make(map[string]chan<- []float32)
-	missingSinks := make([]string, 0)
-	for _, destID := range destIDs {
-		if sink, exists := r.clientSinks[destID]; exists {
-			destSinks[destID] = sink
-		} else {
-			// Find the name for this ID
-			var destName string
-			for name, id := range r.clientNames {
-				if id == destID {
-					destName = name
-					break
+	for _, sk := range r.sinks {
+		for routeID, l := range sk.links {
+			w, ok := desired[sk.id][routeID]
+			switch {
+			case !ok || w.src.id != l.sourceID:
+				r.unlink(sk, routeID)
+			case w.volume != l.volume:
+				l.volume = w.volume
+				if err := sk.mixer.SetVolume(routeID, w.volume); err != nil {
+					r.log.Debug("set volume", "route", routeID, "sink", sk.id, "err", err)
 				}
 			}
-			if destName == "" {
-				destName = destID
+		}
+		for routeID, w := range desired[sk.id] {
+			if _, ok := sk.links[routeID]; !ok {
+				r.link(sk, routeID, w.src, w.volume)
 			}
-			missingSinks = append(missingSinks, destName)
 		}
 	}
-	availableSinkIDs := r.getClientSinkIDs()
-	r.mu.RUnlock()
-	
-	// Return error if any destinations are missing
-	if len(missingSinks) > 0 {
-		return fmt.Errorf("client sinks not found (clients may not be connected): %v (available sinks: %v)", missingSinks, availableSinkIDs)
-	}
-	
-	// Verify we have the same number of destinations
-	if len(destIDs) != len(route.DestNames) {
-		return fmt.Errorf("destination count mismatch: expected %d, resolved %d", len(route.DestNames), len(destIDs))
-	}
-	
-	// Start routing to all destinations
-	for i, destName := range route.DestNames {
-		destID := destIDs[i]
-		destSink := destSinks[destID]
-		activeDestinations++
-		log.Printf("Router: ✓ client sink for '%s' (ID: %s) found, starting audio routing from source '%s' to client '%s' via route %s", destName, destID, route.SourceName, destName, route.ID)
-
-		go r.routeAudio(routeCtx, route.ID, outputChan, destSink, destID)
-	}
-
-	// Store active route (need lock to write to activeRoutes)
-	r.mu.Lock()
-	r.activeRoutes[route.ID] = &activeRoute{
-		route:  *route,
-		mixer:  mixer,
-		cancel: routeCancel,
-	}
-	r.mu.Unlock()
-
-	return nil
 }
 
-// deactivateRoute deactivates a route
-func (r *AudioRouter) deactivateRoute(active *activeRoute) {
-	active.cancel()
-	if active.mixer != nil {
-		active.mixer.Close()
+func (r *Router) link(sk *sink, routeID string, src *source, volume float32) {
+	if sk.mixer == nil {
+		sk.mixer = audio.NewMixer(r.maxLag)
+		sk.fwdDone = make(chan struct{})
+		go forward(sk.mixer.Output(), sk.ch, sk.fwdDone)
+	}
+	sub := src.hub.subscribe(&r.routes[routeID].samples)
+	if err := sk.mixer.AddInput(routeID, sub.ch, volume); err != nil {
+		src.hub.unsubscribe(sub)
+		r.log.Error("link route", "route", routeID, "sink", sk.id, "err", err)
+		return
+	}
+	sk.links[routeID] = &link{sourceID: src.id, hub: src.hub, sub: sub, volume: volume}
+	r.log.Info("route active", "route", routeID, "source", src.name, "dest", sk.name)
+}
+
+func (r *Router) unlink(sk *sink, routeID string) {
+	l := sk.links[routeID]
+	delete(sk.links, routeID)
+	l.hub.unsubscribe(l.sub)
+	_ = sk.mixer.RemoveInput(routeID) // already gone if the source ended
+	r.log.Info("route inactive", "route", routeID, "dest", sk.name)
+	if len(sk.links) == 0 {
+		sk.mixer.Close()
+		<-sk.fwdDone
+		sk.mixer, sk.fwdDone = nil, nil
 	}
 }
 
-// routeAudio routes audio from source to destination
-func (r *AudioRouter) routeAudio(ctx context.Context, routeID string, source <-chan []float32, dest chan<- []float32, destID string) {
-	log.Printf("Router: started routing audio for route %s to client %s", routeID, destID)
-	defer log.Printf("Router: stopped routing audio for route %s to client %s", routeID, destID)
-	
-	sampleCount := 0
-	for {
+// forward copies mixed audio to a sink without ever blocking the mixer.
+func forward(in <-chan []float32, out chan<- []float32, done chan<- struct{}) {
+	defer close(done)
+	for buf := range in {
 		select {
-		case <-ctx.Done():
-			return
-		case samples, ok := <-source:
-			if !ok {
-				return
-			}
-			sampleCount++
-
-			// Send to destination (non-blocking)
-			select {
-			case dest <- samples:
-				if sampleCount == 1 || sampleCount%1000 == 0 {
-					log.Printf("Router: routed %d samples to client %s (batch #%d)", len(samples), destID, sampleCount)
-				}
-			case <-ctx.Done():
-				return
-			default:
-				// Destination buffer full, skip this sample
-				log.Printf("Router: WARNING - client %s buffer full for route %s, dropping %d samples", destID, routeID, len(samples))
-			}
+		case out <- buf:
+		default:
 		}
 	}
 }
-

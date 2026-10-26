@@ -1,193 +1,100 @@
 package api
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
-	"strings"
-	"time"
 
-	"github.com/gorilla/mux"
-	"github.com/gopherstein/air-mixer/internal/db"
-	"github.com/gopherstein/air-mixer/internal/router"
+	"github.com/yeixio/air-mixer/internal/router"
 )
 
-// listRoutes lists all routes
-func (s *Server) listRoutes(w http.ResponseWriter, r *http.Request) {
-	// Get route statuses (includes active status)
-	statuses := s.audioRouter.ListRouteStatus()
-
-	// Ensure we return an empty array instead of null
-	if statuses == nil {
-		statuses = []router.RouteStatus{}
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(statuses)
+// routeRequest is the body of a route create or update request. Omitted
+// fields keep their current value on update; on create, volume defaults
+// to 1 and enabled to true.
+type routeRequest struct {
+	ID         string    `json:"id"`
+	Name       *string   `json:"name"`
+	SourceName *string   `json:"source_name"`
+	DestNames  *[]string `json:"dest_names"`
+	MixMode    *string   `json:"mix_mode"`
+	Volume     *float32  `json:"volume"`
+	Enabled    *bool     `json:"enabled"`
+	Priority   *int      `json:"priority"`
 }
 
-// getRoute gets a single route
-func (s *Server) getRoute(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
+func (q *routeRequest) apply(r *router.Route) {
+	if q.Name != nil {
+		r.Name = *q.Name
+	}
+	if q.SourceName != nil {
+		r.SourceName = *q.SourceName
+	}
+	if q.DestNames != nil {
+		r.DestNames = *q.DestNames
+	}
+	if q.MixMode != nil {
+		r.MixMode = router.MixMode(*q.MixMode)
+	}
+	if q.Volume != nil {
+		r.Volume = *q.Volume
+	}
+	if q.Enabled != nil {
+		r.Enabled = *q.Enabled
+	}
+	if q.Priority != nil {
+		r.Priority = *q.Priority
+	}
+}
 
-	route, err := s.audioRouter.GetRoute(id)
+func (a *API) listRoutes(w http.ResponseWriter, r *http.Request) {
+	writeJSON(w, http.StatusOK, a.svc.Routes())
+}
+
+func (a *API) getRoute(w http.ResponseWriter, r *http.Request) {
+	st, err := a.svc.Route(r.PathValue("id"))
 	if err != nil {
-		s.writeError(w, http.StatusNotFound, err.Error())
+		a.fail(w, r, err)
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(route)
+	writeJSON(w, http.StatusOK, st)
 }
 
-// createRouteRequest represents a route creation request
-type createRouteRequest struct {
-	Name      string   `json:"name"`
-	SourceName string   `json:"source_name"`
-	DestNames  []string `json:"dest_names"`
-	MixMode   string   `json:"mix_mode"`
-	Volume    float32  `json:"volume"`
-	Enabled   bool     `json:"enabled"`
-	Priority  int      `json:"priority"`
+func (a *API) createRoute(w http.ResponseWriter, r *http.Request) {
+	var req routeRequest
+	if !decode(w, r, &req) {
+		return
+	}
+	route := router.Route{ID: req.ID, Volume: 1, Enabled: true}
+	req.apply(&route)
+	route, err := a.svc.CreateRoute(r.Context(), route)
+	if err != nil {
+		a.fail(w, r, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, route)
 }
 
-// createRoute creates a new route
-func (s *Server) createRoute(w http.ResponseWriter, r *http.Request) {
-	var req createRouteRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		s.writeError(w, http.StatusBadRequest, "Invalid request body")
+func (a *API) updateRoute(w http.ResponseWriter, r *http.Request) {
+	var req routeRequest
+	if !decode(w, r, &req) {
 		return
 	}
-
-	// Generate ID if not provided (in real app, use UUID)
-	routeID := generateID()
-
-	route := router.Route{
-		ID:         routeID,
-		Name:       req.Name,
-		SourceName: req.SourceName,
-		DestNames:  req.DestNames,
-		MixMode:    router.MixMode(req.MixMode),
-		Volume:     req.Volume,
-		Enabled:    req.Enabled,
-		Priority:   req.Priority,
-	}
-
-	if route.MixMode == "" {
-		route.MixMode = router.MixModeReplace
-	}
-	if route.Volume == 0 {
-		route.Volume = 1.0
-	}
-
-	// Save to database first
-	routeRepo := db.NewRouteRepository(s.db)
-	dbRoute := &db.Route{
-		ID:         route.ID,
-		Name:       route.Name,
-		SourceName: route.SourceName,
-		DestNames:  strings.Join(route.DestNames, ","), // Convert []string to comma-separated string
-		MixMode:    string(route.MixMode),
-		Volume:     float64(route.Volume),
-		Enabled:    route.Enabled,
-		Priority:   route.Priority,
-	}
-	if err := routeRepo.Create(dbRoute); err != nil {
-		s.writeError(w, http.StatusInternalServerError, fmt.Sprintf("failed to save route to database: %v", err))
+	st, err := a.svc.Route(r.PathValue("id"))
+	if err != nil {
+		a.fail(w, r, err)
 		return
 	}
-
-	// Add to router (will activate if enabled and source stream is available)
-	if err := s.audioRouter.AddRoute(route); err != nil {
-		// If router add fails, try to delete from database to keep consistency
-		routeRepo.Delete(route.ID)
-		s.writeError(w, http.StatusBadRequest, err.Error())
+	route := st.Route
+	req.apply(&route)
+	if route, err = a.svc.UpdateRoute(r.Context(), route); err != nil {
+		a.fail(w, r, err)
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(route)
+	writeJSON(w, http.StatusOK, route)
 }
 
-// updateRoute updates an existing route
-func (s *Server) updateRoute(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
-
-	var req createRouteRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		s.writeError(w, http.StatusBadRequest, "Invalid request body")
+func (a *API) deleteRoute(w http.ResponseWriter, r *http.Request) {
+	if err := a.svc.DeleteRoute(r.Context(), r.PathValue("id")); err != nil {
+		a.fail(w, r, err)
 		return
 	}
-
-	route := router.Route{
-		ID:         id,
-		Name:       req.Name,
-		SourceName: req.SourceName,
-		DestNames:  req.DestNames,
-		MixMode:    router.MixMode(req.MixMode),
-		Volume:     req.Volume,
-		Enabled:    req.Enabled,
-		Priority:   req.Priority,
-	}
-
-	if route.MixMode == "" {
-		route.MixMode = router.MixModeReplace
-	}
-
-	// Update in database
-	routeRepo := db.NewRouteRepository(s.db)
-	dbRoute := &db.Route{
-		ID:         route.ID,
-		Name:       route.Name,
-		SourceName: route.SourceName,
-		DestNames:  strings.Join(route.DestNames, ","), // Convert []string to comma-separated string
-		MixMode:    string(route.MixMode),
-		Volume:     float64(route.Volume),
-		Enabled:    route.Enabled,
-		Priority:   route.Priority,
-	}
-	if err := routeRepo.Update(dbRoute); err != nil {
-		s.writeError(w, http.StatusInternalServerError, fmt.Sprintf("failed to update route in database: %v", err))
-		return
-	}
-
-	// Update in router
-	if err := s.audioRouter.UpdateRoute(id, route); err != nil {
-		s.writeError(w, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(route)
-}
-
-// deleteRoute deletes a route
-func (s *Server) deleteRoute(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
-
-	// Remove from router first
-	if err := s.audioRouter.RemoveRoute(id); err != nil {
-		s.writeError(w, http.StatusNotFound, err.Error())
-		return
-	}
-
-	// Delete from database
-	routeRepo := db.NewRouteRepository(s.db)
-	if err := routeRepo.Delete(id); err != nil {
-		// Log error but don't fail the request since router removal succeeded
-		fmt.Printf("Warning: failed to delete route %s from database: %v\n", id, err)
-	}
-
 	w.WriteHeader(http.StatusNoContent)
 }
-
-// generateID generates a simple ID (in production, use UUID)
-func generateID() string {
-	// Simple implementation - in production use github.com/google/uuid
-	return strings.ReplaceAll(fmt.Sprintf("%d", time.Now().UnixNano()), "-", "")
-}
-
