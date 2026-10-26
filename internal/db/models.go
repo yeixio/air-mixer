@@ -82,16 +82,20 @@ func (db *DB) GetServer(ctx context.Context, id string) (*Server, error) {
 	return v, notFound(err)
 }
 
-// CreateServer inserts a server and sets its timestamps.
+// CreateServer inserts a server and, on success, sets its timestamps.
 func (db *DB) CreateServer(ctx context.Context, v *Server) error {
-	v.CreatedAt, v.UpdatedAt = now(), now()
+	ts := now()
 	_, err := db.conn.ExecContext(ctx,
 		`INSERT INTO servers (id, name, protocol, enabled, config, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-		v.ID, v.Name, v.Protocol, v.Enabled, v.Config, v.CreatedAt, v.UpdatedAt)
+		v.ID, v.Name, v.Protocol, v.Enabled, v.Config, ts, ts)
 	if isConstraint(err) {
 		return ErrConflict
 	}
-	return err
+	if err != nil {
+		return err
+	}
+	v.CreatedAt, v.UpdatedAt = ts, ts
+	return nil
 }
 
 // UpdateServer saves every field except the creation time.
@@ -143,14 +147,18 @@ func (db *DB) GetClient(ctx context.Context, id string) (*Client, error) {
 
 // CreateClient inserts a client and sets its timestamps.
 func (db *DB) CreateClient(ctx context.Context, v *Client) error {
-	v.CreatedAt, v.UpdatedAt = now(), now()
+	ts := now()
 	_, err := db.conn.ExecContext(ctx,
 		`INSERT INTO clients (id, name, protocol, address, enabled, config, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-		v.ID, v.Name, v.Protocol, v.Address, v.Enabled, v.Config, v.CreatedAt, v.UpdatedAt)
+		v.ID, v.Name, v.Protocol, v.Address, v.Enabled, v.Config, ts, ts)
 	if isConstraint(err) {
 		return ErrConflict
 	}
-	return err
+	if err != nil {
+		return err
+	}
+	v.CreatedAt, v.UpdatedAt = ts, ts
+	return nil
 }
 
 // UpdateClient saves every field except the creation time.
@@ -221,14 +229,18 @@ func (db *DB) CreateRoute(ctx context.Context, v *Route) error {
 	if err != nil {
 		return err
 	}
-	v.CreatedAt, v.UpdatedAt = now(), now()
+	ts := now()
 	_, err = db.conn.ExecContext(ctx,
 		`INSERT INTO routes (`+routeCols+`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-		v.ID, v.Name, v.SourceName, dests, v.MixMode, v.Volume, v.Enabled, v.Priority, v.CreatedAt, v.UpdatedAt)
+		v.ID, v.Name, v.SourceName, dests, v.MixMode, v.Volume, v.Enabled, v.Priority, ts, ts)
 	if isConstraint(err) {
 		return ErrConflict
 	}
-	return err
+	if err != nil {
+		return err
+	}
+	v.CreatedAt, v.UpdatedAt = ts, ts
+	return nil
 }
 
 // UpdateRoute saves every field except the creation time.
