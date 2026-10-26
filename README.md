@@ -1,291 +1,131 @@
-# Air-Mixer 🎵
+# Air-Mixer
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8.svg)](https://golang.org)
+[![CI](https://github.com/yeixio/air-mixer/actions/workflows/ci.yml/badge.svg)](https://github.com/yeixio/air-mixer/actions/workflows/ci.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/yeixio/air-mixer.svg)](https://pkg.go.dev/github.com/yeixio/air-mixer)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Universal Audio Protocol Translator & Mixer**
+**One home for every speaker you own.**
 
-Air-Mixer is a home server application that translates between different audio streaming protocols, allowing you to mix and route audio from multiple sources (AirPlay, Bluetooth, Google Cast, UPnP/DLNA) to multiple destinations. All your speakers appear as a unified set of AirPlay speakers on your network.
+Air-Mixer is a small self-hosted server that unifies speakers from different
+ecosystems behind one web UI and one REST API. It receives audio from your
+devices, mixes it, and plays it on any combination of speakers, whatever
+protocol they speak.
 
-## Features
+Today it speaks classic AirPlay in both directions and plays on the
+machine's own sound card. Google Cast, UPnP/DLNA, Bluetooth and AirPlay 2
+are on the [roadmap](ROADMAP.md).
 
-- 🔄 **Protocol Translation**: Convert between AirPlay, Bluetooth, Google Cast, and UPnP/DLNA
-- 🎚️ **Audio Mixing**: Mix multiple audio sources into a single output
-- 🔀 **Flexible Routing**: Route one source to many destinations, or mix many sources to one
-- 🌐 **Web UI**: Modern web interface for easy configuration and management
-- 🐳 **Docker Support**: Easy deployment with Docker
-- 📦 **Single Binary**: Standalone executable with embedded web UI
-- 🔒 **Cross-Platform**: Works on macOS, Linux, and Windows
+## What it does
 
-## Architecture
+- **AirPlay receiver.** Each input you create appears on iPhones and Macs as
+  an AirPlay speaker. Pick it in Control Center and play.
+- **AirPlay sender.** Plays to AirPort Express, shairport-sync, most
+  AV receivers and other classic AirPlay (RAOP) speakers.
+- **Local output.** Plays on the server's own default audio device.
+- **Routing and mixing.** A route sends one input to any number of
+  outputs. Several routes into one output are mixed, each with its own
+  volume. Routes refer to devices by name, so they survive a device being
+  removed and added again.
+- **Discovery.** Finds AirPlay speakers on your network.
+- **Web UI and REST API.** Everything the UI does is available over a
+  [documented JSON API](docs/API.md).
+- **Single static binary.** Pure Go, no cgo: the web UI, SQLite and the
+  ALAC codec are all built in. Cross-compiles to Linux, macOS and Windows.
 
-Air-Mixer acts as a central hub for audio streaming:
+## Quick start
 
-```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│  AirPlay    │     │  Bluetooth  │     │ Google Cast │
-│   Source    │────▶│   Source    │────▶│   Source    │
-└─────────────┘     └─────────────┘     └─────────────┘
-       │                  │                    │
-       └──────────────────┼────────────────────┘
-                         │
-                  ┌──────▼──────┐
-                  │  Air-Mixer  │
-                  │   Router    │
-                  └──────┬──────┘
-                         │
-       ┌─────────────────┼─────────────────┐
-       │                 │                 │
-┌──────▼──────┐   ┌──────▼──────┐   ┌──────▼──────┐
-│  AirPlay    │   │  Bluetooth  │   │ Google Cast │
-│ Destination │   │ Destination │   │ Destination │
-└─────────────┘   └─────────────┘   └─────────────┘
-```
-
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed architecture documentation.
-
-## Quick Start
-
-### Prerequisites
-
-- Go 1.21 or later (for building from source)
-- Docker (for Docker deployment)
-
-### Installation
-
-#### Using Docker (Recommended)
+### Docker
 
 ```bash
-# Clone the repository
-git clone https://github.com/gopherstein/air-mixer.git
+git clone https://github.com/yeixio/air-mixer.git
 cd air-mixer
-
-# Build and run with docker-compose
-docker-compose up -d
-
-# Or build and run manually
-docker build -t airmixer .
-docker run --network host -v $(pwd)/data:/app/data airmixer
+docker compose up -d
 ```
 
-#### Building from Source
+Open <http://localhost:9001>. The container uses host networking because
+AirPlay discovery relies on multicast DNS.
+
+### From source
+
+Requires Go 1.26 or later.
 
 ```bash
-# Clone the repository
-git clone https://github.com/gopherstein/air-mixer.git
+git clone https://github.com/yeixio/air-mixer.git
 cd air-mixer
-
-# Install dependencies
-go mod download
-
-# Build
 make build
-# Or manually:
-go build -o airmixer ./cmd/airmixer
-
-# Run
-./airmixer start
+./build/airmixer server
 ```
 
-#### Using Make
+Or install straight from the module:
 
 ```bash
-# Build
-make build
-
-# Run
-make run
-
-# Run tests
-make test
-
-# Build for all platforms
-make build-all
-
-# See all available commands
-make help
+go install github.com/yeixio/air-mixer/cmd/airmixer@latest
+airmixer server
 ```
 
-### Configuration
+On Linux, local playback goes through PulseAudio or PipeWire's PulseAudio
+service. Headless servers that only bridge AirPlay devices do not need one.
 
-1. Start the application: `./airmixer start`
-2. Open your browser: `http://localhost:9001`
-3. Configure input servers (AirPlay, Bluetooth, etc.)
-4. Configure output clients (speakers, devices)
-5. Create routes to connect sources to destinations
+### First steps
 
-## Usage
+1. Open the web UI at <http://localhost:9001>.
+2. Add an **input server** (protocol `airplay`). It shows up as a speaker
+   on your Apple devices.
+3. Add one or more **output clients**: AirPlay speakers (use Discover to
+   find them) or `local` for the server's sound card.
+4. Create a **route** from the input to the outputs, then play something.
 
-### Command Line
+## Configuration
 
-```bash
-# Start the server
-airmixer start
+Air-Mixer reads `config.yaml` from the working directory, `~/.airmixer/` or
+`/etc/airmixer/`, or the file given with `--config`. Every setting can also
+be set through an environment variable such as `AIRMIXER_SERVER_WEB_PORT`.
+See [config.yaml.example](config.yaml.example) for all settings and their
+defaults.
 
-# Start with custom port
-airmixer start --web-port 8080
+Servers, clients and routes are stored in SQLite under `data_dir` and are
+managed through the UI or the API, not the config file.
 
-# Show version
-airmixer version
+## Command line
 
-# Show help
-airmixer help
+```text
+airmixer server     Run the server (aliases: start, serve)
+airmixer version    Print version information
+  -c, --config      Path to a config file
 ```
 
-### Web Interface
+## Current limitations
 
-Once running, access the web UI at `http://localhost:9001` (default port).
-
-The web interface allows you to:
-- Add/remove input servers (AirPlay, Bluetooth, etc.)
-- Add/remove output clients (speakers, devices)
-- Create and manage routing rules
-- Monitor active audio streams
-- Adjust volume and mixing settings
-
-## Supported Protocols
-
-### Input Protocols (Sources)
-- ✅ **AirPlay** - Receive audio from iOS/macOS devices
-- 🚧 **Bluetooth** - A2DP audio input (in progress)
-- 🚧 **Google Cast** - Receive from Cast-enabled apps (in progress)
-- 🚧 **UPnP/DLNA** - Media server input (in progress)
-
-### Output Protocols (Destinations)
-- ✅ **AirPlay** - Send to AirPlay speakers
-- 🚧 **Bluetooth** - Send to Bluetooth speakers (in progress)
-- 🚧 **Google Cast** - Send to Chromecast devices (in progress)
-- 🚧 **UPnP/DLNA** - Send to DLNA renderers (in progress)
-- 🚧 **Local Audio** - Play on system audio output (in progress)
-
-## Development
-
-### Project Structure
-
-```
-air-mixer/
-├── cmd/airmixer/          # Main application entry point
-├── internal/               # Internal packages
-│   ├── audio/             # Audio engine (decoders, mixer, output)
-│   ├── protocols/         # Protocol adapters
-│   ├── router/            # Routing engine
-│   ├── api/               # REST API handlers
-│   ├── config/            # Configuration management
-│   └── db/                # Database layer
-├── webui/                 # Web UI source and assets
-├── migrations/            # Database migrations
-└── docs/                  # Documentation
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-make test
-
-# Run tests with coverage
-make test-coverage
-
-# Run specific package tests
-go test ./internal/router/...
-```
-
-For comprehensive testing instructions, see [docs/TESTING.md](docs/TESTING.md).
-
-### Code Style
-
-```bash
-# Format code
-make fmt
-
-# Run linter
-make lint
-```
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
+- **AirPlay 2.** Air-Mixer speaks classic AirPlay (RAOP). Devices that only
+  accept AirPlay 2, such as recent Apple TVs and HomePods, need HomeKit
+  pairing, which is not implemented yet; they show as `failed` in
+  `/api/status`. AirPlay 2 support is the top roadmap item.
+- **Synchronisation.** Each output plays with its own buffering, so
+  speakers in different rooms are not sample-aligned yet.
+- **Mix modes.** All routes into an output are mixed. The `mix_mode` field
+  is stored but exclusive and ducking modes are not implemented yet.
 
 ## Documentation
 
-All documentation is organized in the [docs/](docs/) folder:
-
-- [Architecture](docs/ARCHITECTURE.md) - System architecture and design
-- [Testing Guide](docs/TESTING.md) - Comprehensive testing instructions
-- [Implementation Plan](docs/PLAN.md) - Development roadmap
-- [Contributing](CONTRIBUTING.md) - How to contribute
-- [Completion Summary](docs/COMPLETION_SUMMARY.md) - Current implementation status
-
-## Roadmap
-
-### MVP (Current Focus)
-- [x] Basic AirPlay server
-- [x] Project structure and architecture
-- [ ] Cross-platform audio engine
-- [ ] Web UI for configuration
-- [ ] Routing engine
-- [ ] SQLite persistence
-- [ ] Docker support
-
-### Future Enhancements
-- [ ] Additional protocols (Spotify Connect, Sonos, etc.)
-- [ ] Audio effects (EQ, reverb, delay)
-- [ ] Multi-room synchronization
-- [ ] Scheduled routing rules
-- [ ] Audio recording and streaming
-- [ ] REST API for automation
-- [ ] Plugin system for custom protocols
-
-## Troubleshooting
-
-### mDNS/Bonjour Not Working
-
-On Linux, you may need to install Avahi:
-```bash
-# Ubuntu/Debian
-sudo apt-get install avahi-daemon avahi-utils
-
-# Fedora/RHEL
-sudo dnf install avahi avahi-tools
-```
-
-### Audio Not Playing
-
-- Check that audio devices are properly configured
-- Verify firewall settings allow traffic on required ports
-- Check logs for error messages: `./airmixer start --verbose`
-
-### Docker Network Issues
-
-Use `--network host` mode for mDNS/Bonjour to work properly:
-```bash
-docker run --network host airmixer
-```
+- [Architecture](docs/ARCHITECTURE.md): how audio flows through the system
+- [REST API](docs/API.md)
+- [Testing](docs/TESTING.md)
+- [Roadmap](ROADMAP.md)
+- [Contributing](CONTRIBUTING.md)
 
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome, from bug reports to new protocol adapters.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) to get started, and look for issues
+labelled `good first issue`. Please report security problems privately as
+described in [SECURITY.md](SECURITY.md).
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
+## Acknowledgements
+
+The ALAC decoder is a Go port of David Hammerton's ALAC decoder, and the
+AirPlay implementation follows the protocol work of the shairport and
+shairport-sync projects. See [NOTICE](NOTICE).
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Inspired by projects like Shairport, AirConnect, and others
-- Built with Go and modern web technologies
-- Thanks to all contributors!
-
-## Support
-
-- 📖 [Documentation](ARCHITECTURE.md)
-- 🐛 [Issue Tracker](https://github.com/gopherstein/air-mixer/issues)
-- 💬 [Discussions](https://github.com/gopherstein/air-mixer/discussions)
-
----
-
-**Note**: This project is in active development. Some features may not be fully implemented yet. See the roadmap above for current status.
+[MIT](LICENSE)

@@ -1,326 +1,342 @@
 package protocols
 
 import (
+	"cmp"
+	"context"
+	"errors"
 	"fmt"
-	"log"
+	"log/slog"
+	"slices"
 	"sync"
 	"time"
-	"unsafe"
 
-	"github.com/gopherstein/air-mixer/internal/audio"
-	"github.com/gopherstein/air-mixer/internal/router"
+	"github.com/yeixio/air-mixer/internal/audio"
 )
 
-// Manager manages protocol adapters and connects them to the router
+// Router is the part of router.Router the Manager uses.
+type Router interface {
+	RegisterSource(id, name string, stream <-chan []float32)
+	UnregisterSource(id string)
+	RegisterSink(id, name string, ch chan<- []float32)
+	UnregisterSink(id string)
+}
+
+// Adapter states reported by Manager.Status.
+const (
+	StateRunning    = "running"    // a server is accepting connections
+	StateConnecting = "connecting" // a client is trying to reach its device
+	StateConnected  = "connected"  // a client is playing
+	StateFailed     = "failed"     // a client gave up; see Status.Error
+)
+
+// Status describes a registered adapter.
+type Status struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Protocol string `json:"protocol"`
+	Kind     string `json:"kind"` // "server" or "client"
+	State    string `json:"state"`
+	Error    string `json:"error,omitempty"`
+}
+
+// ErrUnknownAdapter is returned when removing an adapter that is not
+// registered.
+var ErrUnknownAdapter = errors.New("adapter not registered")
+
+const (
+	streamBuffer      = 64
+	connectTimeout    = 10 * time.Second
+	minConnectBackoff = time.Second
+	maxConnectBackoff = 30 * time.Second
+)
+
+// Manager runs protocol adapters and connects them to the router: servers
+// become router sources and clients become router sinks. Clients that
+// cannot connect are retried in the background with backoff, so a speaker
+// that is switched off starts playing when it comes back.
 type Manager struct {
-	servers map[string]ProtocolServer
-	clients map[string]ProtocolClient
-	router  *router.AudioRouter
-	mu      sync.RWMutex
-	
-	// Stream converters: convert AudioPacket to float32 streams
-	serverStreams map[string]chan []float32
+	router Router
+	log    *slog.Logger
+
+	mu       sync.Mutex
+	adapters map[string]*adapter
+	closed   bool
 }
 
-// NewManager creates a new protocol adapter manager
-func NewManager(audioRouter *router.AudioRouter) *Manager {
-	return &Manager{
-		servers:       make(map[string]ProtocolServer),
-		clients:       make(map[string]ProtocolClient),
-		router:        audioRouter,
-		serverStreams: make(map[string]chan []float32),
+type adapter struct {
+	kind   string
+	server Server
+	client Client
+	cancel context.CancelFunc
+	done   chan struct{}
+
+	mu    sync.Mutex
+	state string
+	err   error
+}
+
+func (a *adapter) set(state string, err error) {
+	a.mu.Lock()
+	a.state, a.err = state, err
+	a.mu.Unlock()
+}
+
+// NewManager returns a Manager that registers adapters with r.
+func NewManager(r Router, logger *slog.Logger) *Manager {
+	if logger == nil {
+		logger = slog.Default()
 	}
+	return &Manager{router: r, log: logger.With("component", "protocols"), adapters: make(map[string]*adapter)}
 }
 
-// RegisterServer registers a protocol server (input)
-func (m *Manager) RegisterServer(server ProtocolServer) error {
+func (m *Manager) reserve(id string, a *adapter) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-
-	if server.ID() == "" {
-		return fmt.Errorf("server ID cannot be empty")
+	if m.closed {
+		return errors.New("protocols: manager closed")
 	}
-
-	if _, exists := m.servers[server.ID()]; exists {
-		return fmt.Errorf("server %s already registered", server.ID())
+	if _, ok := m.adapters[id]; ok {
+		return fmt.Errorf("protocols: %q is already registered", id)
 	}
+	m.adapters[id] = a
+	return nil
+}
 
-	m.servers[server.ID()] = server
+func (m *Manager) release(id string) {
+	m.mu.Lock()
+	delete(m.adapters, id)
+	m.mu.Unlock()
+}
 
-	// Create stream converter channel
-	streamChan := make(chan []float32, 100)
-	m.serverStreams[server.ID()] = streamChan
+// AddServer starts s and makes its audio available to routes under its
+// name. IDs are shared between servers and clients and must be unique.
+func (m *Manager) AddServer(ctx context.Context, s Server) error {
+	a := &adapter{kind: "server", server: s, done: make(chan struct{})}
+	if err := m.reserve(s.ID(), a); err != nil {
+		return err
+	}
+	if err := s.Start(ctx); err != nil {
+		m.release(s.ID())
+		return err
+	}
+	a.set(StateRunning, nil)
 
-	// Register with router (pass both ID and name for name-based routing)
-	m.router.RegisterSourceStream(server.ID(), server.Name(), streamChan)
+	pumpCtx, cancel := context.WithCancel(context.Background())
+	stream := make(chan []float32, streamBuffer)
+	m.router.RegisterSource(s.ID(), s.Name(), stream)
+	go func() {
+		defer close(a.done)
+		defer close(stream)
+		m.pumpServer(pumpCtx, s, stream)
+	}()
+	m.mu.Lock()
+	a.cancel = cancel // from now on the server can be removed
+	m.mu.Unlock()
+	m.log.Info("server added", "id", s.ID(), "name", s.Name(), "protocol", s.Protocol())
+	return nil
+}
 
-	// Start server if not already running
-	if !server.IsRunning() {
-		if err := server.Start(); err != nil {
-			return fmt.Errorf("failed to start server %s: %w", server.ID(), err)
+// pumpServer converts a server's audio to the internal format and passes
+// it to the router without blocking.
+func (m *Manager) pumpServer(ctx context.Context, s Server, out chan<- []float32) {
+	var (
+		conv   *audio.Converter
+		format audio.Format
+	)
+	for {
+		var p Packet
+		select {
+		case <-ctx.Done():
+			return
+		case p = <-s.Audio():
 		}
-	}
-
-	// Start stream converter goroutine
-	go m.convertServerStream(server, streamChan)
-
-	log.Printf("Registered server: %s (%s)", server.ID(), server.Protocol())
-	return nil
-}
-
-// UnregisterServer unregisters a protocol server
-// Returns nil if server is not registered (idempotent operation)
-func (m *Manager) UnregisterServer(serverID string) error {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	server, exists := m.servers[serverID]
-	if !exists {
-		// Server not registered - this is OK (idempotent operation)
-		// Return nil to indicate success (nothing to unregister)
-		return nil
-	}
-
-	// Stop server
-	if server.IsRunning() {
-		if err := server.Stop(); err != nil {
-			log.Printf("Error stopping server %s: %v", serverID, err)
-		}
-	}
-
-	// Unregister from router (name will be removed automatically)
-	m.router.UnregisterSourceStream(serverID)
-
-	// Close stream channel
-	if streamChan, ok := m.serverStreams[serverID]; ok {
-		close(streamChan)
-		delete(m.serverStreams, serverID)
-	}
-
-	delete(m.servers, serverID)
-	log.Printf("Unregistered server: %s", serverID)
-	return nil
-}
-
-// RegisterClient registers a protocol client (output)
-func (m *Manager) RegisterClient(client ProtocolClient) error {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	if client.ID() == "" {
-		return fmt.Errorf("client ID cannot be empty")
-	}
-
-	if _, exists := m.clients[client.ID()]; exists {
-		return fmt.Errorf("client %s already registered", client.ID())
-	}
-
-	m.clients[client.ID()] = client
-
-	// Create sink channel for router
-	sinkChan := make(chan []float32, 100)
-	m.router.RegisterClientSink(client.ID(), client.Name(), sinkChan)
-	log.Printf("Protocol manager: created sink channel for client %s (%s) and registered with router", client.ID(), client.Name())
-
-	// Start client output goroutine
-	go m.handleClientOutput(client, sinkChan)
-	log.Printf("Protocol manager: started client output handler goroutine for client %s", client.ID())
-
-	log.Printf("Protocol manager: ✓ registered client: %s (%s)", client.ID(), client.Protocol())
-	return nil
-}
-
-// UnregisterClient unregisters a protocol client
-// Returns nil if client is not registered (idempotent operation)
-func (m *Manager) UnregisterClient(clientID string) error {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	client, exists := m.clients[clientID]
-	if !exists {
-		// Client not registered - this is OK (idempotent operation)
-		// Return nil to indicate success (nothing to unregister)
-		return nil
-	}
-
-	// Disconnect client
-	if client.IsConnected() {
-		if err := client.Disconnect(); err != nil {
-			log.Printf("Error disconnecting client %s: %v", clientID, err)
-		}
-	}
-
-	// Unregister from router
-	m.router.UnregisterClientSink(clientID)
-
-	delete(m.clients, clientID)
-	log.Printf("Unregistered client: %s", clientID)
-	return nil
-}
-
-// GetServer gets a server by ID
-func (m *Manager) GetServer(serverID string) (ProtocolServer, error) {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-
-	server, exists := m.servers[serverID]
-	if !exists {
-		return nil, fmt.Errorf("server %s not found", serverID)
-	}
-
-	return server, nil
-}
-
-// GetClient gets a client by ID
-func (m *Manager) GetClient(clientID string) (ProtocolClient, error) {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-
-	client, exists := m.clients[clientID]
-	if !exists {
-		return nil, fmt.Errorf("client %s not found", clientID)
-	}
-
-	return client, nil
-}
-
-// ListServers returns all registered servers
-func (m *Manager) ListServers() []ProtocolServer {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-
-	servers := make([]ProtocolServer, 0, len(m.servers))
-	for _, server := range m.servers {
-		servers = append(servers, server)
-	}
-
-	return servers
-}
-
-// ListClients returns all registered clients
-func (m *Manager) ListClients() []ProtocolClient {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-
-	clients := make([]ProtocolClient, 0, len(m.clients))
-	for _, client := range m.clients {
-		clients = append(clients, client)
-	}
-
-	return clients
-}
-
-// convertServerStream converts AudioPacket to float32 stream
-func (m *Manager) convertServerStream(server ProtocolServer, streamChan chan<- []float32) {
-	audioStream := server.AudioStream()
-	
-	// Track decoders per format (in case format changes)
-	decoders := make(map[audio.Format]audio.AudioDecoder)
-	
-	for packet := range audioStream {
-		log.Printf("Protocol manager: received audio packet from server %s (format: %s, %d bytes, sample rate: %d, channels: %d)", 
-			server.ID(), packet.Format, len(packet.Data), packet.SampleRate, packet.Channels)
-		
-		// Handle different formats
-		var samples []float32
-
-		switch packet.Format {
-		case audio.FormatALAC:
-			// ALAC packets should be decoded by the server before sending
-			// If we receive ALAC format, it means decoder isn't set up yet
-			// Skip these packets - they'll be handled once decoder is ready
-			log.Printf("Protocol manager: skipping ALAC packet (should be decoded by server)")
-			continue
-		case audio.FormatPCM:
-			// The packet data contains float32 samples converted to bytes
-			// We need to convert them back to float32
-			if len(packet.Data)%4 != 0 {
-				log.Printf("Protocol manager: invalid PCM packet size (not multiple of 4): %d bytes", len(packet.Data))
+		samples := p.Samples
+		if p.Format != audio.Internal {
+			if conv == nil || p.Format != format {
+				c, err := audio.NewConverter(p.Format, audio.Internal)
+				if err != nil {
+					m.log.Warn("dropping audio in unsupported format", "server", s.ID(), "err", err)
+					continue
+				}
+				conv, format = c, p.Format
+			}
+			var err error
+			if samples, err = conv.Process(samples); err != nil {
+				m.log.Warn("dropping audio that failed to convert", "server", s.ID(), "err", err)
 				continue
 			}
-			sampleCount := len(packet.Data) / 4
-			samples = make([]float32, sampleCount)
-			for i := 0; i < sampleCount; i++ {
-				bits := uint32(packet.Data[i*4]) | 
-					uint32(packet.Data[i*4+1])<<8 | 
-					uint32(packet.Data[i*4+2])<<16 | 
-					uint32(packet.Data[i*4+3])<<24
-				samples[i] = *(*float32)(unsafe.Pointer(&bits))
-			}
-			log.Printf("Protocol manager: converted %d bytes to %d float32 samples", len(packet.Data), len(samples))
-		default:
-			log.Printf("Protocol manager: unsupported format: %s", packet.Format)
-			continue
 		}
-
-		// Send to router stream
 		select {
-		case streamChan <- samples:
-			log.Printf("Protocol manager: sent %d samples to router stream for server %s", len(samples), server.ID())
+		case out <- samples:
 		default:
-			log.Printf("Protocol manager: router stream buffer full, dropping packet from server %s", server.ID())
 		}
-	}
-
-	// Cleanup decoders
-	for _, decoder := range decoders {
-		decoder.Close()
 	}
 }
 
-// handleClientOutput handles audio output for a client
-func (m *Manager) handleClientOutput(client ProtocolClient, sinkChan <-chan []float32) {
-	log.Printf("Protocol manager: started client output handler for client %s (%s)", client.ID(), client.Protocol())
-	
-	// Ensure client is connected
-	if !client.IsConnected() {
-		log.Printf("Protocol manager: client %s is not connected, attempting to connect...", client.ID())
-		// TODO: Get target address from client config
-		// For now, we'll assume client is already connected or will connect automatically
+// RemoveServer stops a server and removes it from the router.
+func (m *Manager) RemoveServer(id string) error {
+	a, err := m.take(id, "server")
+	if err != nil {
+		return err
 	}
-	
-	sampleCount := 0
-	var sampleRate int = 44100 // Default, should get from router/stream
-	var channels int = 2        // Default, should get from router/stream
-	
-	for samples := range sinkChan {
-		sampleCount++
-		
-		// Log first sample and periodically
-		if sampleCount == 1 || sampleCount%1000 == 0 {
-			log.Printf("Protocol manager: client %s received %d samples (batch #%d)", client.ID(), len(samples), sampleCount)
-		}
-		
-		// Convert float32 samples to bytes (PCM format)
-		// Each float32 is 4 bytes
-		data := make([]byte, len(samples)*4)
-		for i, sample := range samples {
-			// Convert float32 to bytes (little-endian)
-			bits := *(*uint32)(unsafe.Pointer(&sample))
-			data[i*4] = byte(bits)
-			data[i*4+1] = byte(bits >> 8)
-			data[i*4+2] = byte(bits >> 16)
-			data[i*4+3] = byte(bits >> 24)
-		}
-		
-		// Create AudioPacket
-		packet := AudioPacket{
-			Data:       data,
-			SampleRate: sampleRate,
-			Channels:   channels,
-			Format:     audio.FormatPCM,
-			Timestamp:  time.Now().UnixNano(),
-		}
-		
-		// Send audio to client
-		if err := client.SendAudio(packet); err != nil {
-			log.Printf("Protocol manager: error sending audio to client %s: %v", client.ID(), err)
-			// Continue processing - don't stop on single error
-		} else if sampleCount == 1 || sampleCount%1000 == 0 {
-			log.Printf("Protocol manager: successfully sent %d bytes to client %s", len(data), client.ID())
-		}
-	}
-	
-	log.Printf("Protocol manager: client output handler stopped for client %s", client.ID())
+	a.cancel()
+	<-a.done
+	m.router.UnregisterSource(id)
+	err = a.server.Stop()
+	m.log.Info("server removed", "id", id)
+	return err
 }
 
+// AddClient registers c with the router and connects it in the background,
+// retrying until it connects, fails permanently or is removed.
+func (m *Manager) AddClient(c Client) error {
+	ctx, cancel := context.WithCancel(context.Background())
+	a := &adapter{kind: "client", client: c, cancel: cancel, done: make(chan struct{}), state: StateConnecting}
+	if err := m.reserve(c.ID(), a); err != nil {
+		cancel()
+		return err
+	}
+	sink := make(chan []float32, streamBuffer)
+	m.router.RegisterSink(c.ID(), c.Name(), sink)
+	go func() {
+		defer close(a.done)
+		if m.connect(ctx, a) {
+			m.pumpClient(ctx, c, sink)
+		}
+	}()
+	m.log.Info("client added", "id", c.ID(), "name", c.Name(), "protocol", c.Protocol())
+	return nil
+}
+
+// connect retries Connect with exponential backoff. It reports whether the
+// client connected.
+func (m *Manager) connect(ctx context.Context, a *adapter) bool {
+	c := a.client
+	backoff := minConnectBackoff
+	for {
+		attempt, cancel := context.WithTimeout(ctx, connectTimeout)
+		err := c.Connect(attempt)
+		cancel()
+		if err == nil {
+			a.set(StateConnected, nil)
+			return true
+		}
+		if ctx.Err() != nil {
+			return false
+		}
+		if errors.Is(err, ErrUnsupportedDevice) {
+			a.set(StateFailed, err)
+			m.log.Error("client cannot be used", "id", c.ID(), "err", err)
+			return false
+		}
+		a.set(StateConnecting, err)
+		m.log.Warn("client connection failed, will retry", "id", c.ID(), "err", err, "retry_in", backoff)
+		select {
+		case <-ctx.Done():
+			return false
+		case <-time.After(backoff):
+		}
+		backoff = min(backoff*2, maxConnectBackoff)
+	}
+}
+
+func (m *Manager) pumpClient(ctx context.Context, c Client, in <-chan []float32) {
+	// Audio queued while connecting is stale; start from now.
+	for len(in) > 0 {
+		<-in
+	}
+	var dropped int
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case buf := <-in:
+			err := c.Send(Packet{Samples: buf, Format: audio.Internal})
+			switch {
+			case errors.Is(err, ErrBufferFull):
+				if dropped++; dropped%100 == 1 {
+					m.log.Debug("client is behind, dropping audio", "id", c.ID(), "dropped_buffers", dropped)
+				}
+			case err != nil:
+				m.log.Warn("send failed", "id", c.ID(), "err", err)
+			}
+		}
+	}
+}
+
+// RemoveClient disconnects a client and removes it from the router.
+func (m *Manager) RemoveClient(id string) error {
+	a, err := m.take(id, "client")
+	if err != nil {
+		return err
+	}
+	a.cancel()
+	<-a.done
+	m.router.UnregisterSink(id)
+	err = a.client.Disconnect()
+	m.log.Info("client removed", "id", id)
+	return err
+}
+
+func (m *Manager) take(id, kind string) (*adapter, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	a, ok := m.adapters[id]
+	if !ok || a.kind != kind || a.cancel == nil {
+		return nil, fmt.Errorf("protocols: %s %q: %w", kind, id, ErrUnknownAdapter)
+	}
+	delete(m.adapters, id)
+	return a, nil
+}
+
+// Status returns every registered adapter, sorted by ID.
+func (m *Manager) Status() []Status {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	out := make([]Status, 0, len(m.adapters))
+	for id, a := range m.adapters {
+		st := Status{ID: id, Kind: a.kind}
+		if a.server != nil {
+			st.Name, st.Protocol = a.server.Name(), a.server.Protocol()
+		} else {
+			st.Name, st.Protocol = a.client.Name(), a.client.Protocol()
+		}
+		a.mu.Lock()
+		st.State = a.state
+		if a.err != nil {
+			st.Error = a.err.Error()
+		}
+		a.mu.Unlock()
+		if st.State == "" {
+			continue // a server still starting
+		}
+		out = append(out, st)
+	}
+	slices.SortFunc(out, func(a, b Status) int { return cmp.Compare(a.ID, b.ID) })
+	return out
+}
+
+// Close removes every adapter. The Manager cannot be used afterwards.
+func (m *Manager) Close() {
+	m.mu.Lock()
+	m.closed = true
+	var servers, clients []string
+	for id, a := range m.adapters {
+		if a.kind == "server" {
+			servers = append(servers, id)
+		} else {
+			clients = append(clients, id)
+		}
+	}
+	m.mu.Unlock()
+	for _, id := range clients {
+		if err := m.RemoveClient(id); err != nil && !errors.Is(err, ErrUnknownAdapter) {
+			m.log.Warn("disconnect client", "id", id, "err", err)
+		}
+	}
+	for _, id := range servers {
+		if err := m.RemoveServer(id); err != nil && !errors.Is(err, ErrUnknownAdapter) {
+			m.log.Warn("stop server", "id", id, "err", err)
+		}
+	}
+}

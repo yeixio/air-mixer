@@ -1,28 +1,13 @@
-version: '3.8'
-
 services:
   airmixer:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
+    image: airmixer:local
     container_name: airmixer
     restart: unless-stopped
-    network_mode: host  # Required for mDNS/Bonjour to work properly
+    # Host networking is required: AirPlay discovery uses multicast DNS and
+    # audio streams use dynamic UDP ports.
+    network_mode: host
     volumes:
-      - ./data:/app/data
-    ports:
-      - "9001:9001"  # Web UI
-      - "49152:49152"  # AirPlay (default)
+      - ./data:/data
     environment:
-      - AIRMIXER_DATA_DIR=/app/data
-    # Uncomment if you need additional capabilities
-    # cap_add:
-    #   - NET_ADMIN
-    #   - NET_RAW
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9001/api/status"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-      start_period: 10s
-
+      AIRMIXER_LOGGING_LEVEL: info
