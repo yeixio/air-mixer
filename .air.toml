@@ -7,8 +7,8 @@ tmp_dir = "tmp"
 
 [build]
   args_bin = ["server"]
-  bin = "./tmp/main"
-  cmd = "go build -o ./tmp/main ./cmd/airmixer"
+  bin = "./tmp/airmixer"
+  cmd = "go build -o ./tmp/airmixer ./cmd/airmixer"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata", "build", "dist", ".git"]
   exclude_file = []
