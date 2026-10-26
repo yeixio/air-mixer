@@ -1,201 +1,177 @@
 package audio
 
 import (
+	"errors"
 	"sync"
 )
 
-// Mixer implements AudioMixer interface
+// ErrInputExists is returned when adding an input whose ID is already in use.
+var ErrInputExists = errors.New("audio: mixer input already exists")
+
+// ErrInputNotFound is returned when an input ID is unknown.
+var ErrInputNotFound = errors.New("audio: mixer input not found")
+
+// ErrInvalidVolume is returned for volumes outside [0, 1].
+var ErrInvalidVolume = errors.New("audio: volume must be between 0 and 1")
+
+// Mixer sums any number of input streams into one output stream.
+//
+// Inputs rarely deliver buffers in lockstep, so the mixer queues samples per
+// input and emits as many samples as every input has ready. If an input falls
+// more than maxLag samples behind the others it is treated as silent for the
+// gap, so one stalled source never blocks the rest. With a single input the
+// mixer passes buffers through unchanged apart from volume.
+//
+// All inputs must share one sample format, and every buffer must hold whole
+// frames.
 type Mixer struct {
-	sources    map[string]<-chan []float32
-	volumes    map[string]float32
-	output     chan []float32
-	mu         sync.RWMutex
-	running    bool
-	done       chan struct{}
-	bufferSize int
+	maxLag int
+	out    chan []float32
+	events chan mixerEvent
+	done   chan struct{}
+	exited chan struct{}
+
+	mu     sync.Mutex
+	inputs map[string]*mixerInput
+	closed bool
 }
 
-// NewMixer creates a new audio mixer
-func NewMixer(bufferSize int) *Mixer {
-	return &Mixer{
-		sources:    make(map[string]<-chan []float32),
-		volumes:    make(map[string]float32),
-		output:     make(chan []float32, bufferSize),
-		done:       make(chan struct{}),
-		bufferSize: bufferSize,
+type mixerInput struct {
+	volume  float32
+	pending []float32
+	stop    chan struct{}
+}
+
+type mixerEvent struct {
+	id      string
+	in      *mixerInput
+	samples []float32
+	eof     bool
+}
+
+// NewMixer starts a mixer. maxLag is in samples (not frames); a quarter
+// second of internal audio is a reasonable value.
+func NewMixer(maxLag int) *Mixer {
+	m := &Mixer{
+		maxLag: maxLag,
+		out:    make(chan []float32, 16),
+		events: make(chan mixerEvent),
+		done:   make(chan struct{}),
+		exited: make(chan struct{}),
+		inputs: make(map[string]*mixerInput),
 	}
+	go m.loop()
+	return m
 }
 
-// AddSource adds an audio source to the mixer
-func (m *Mixer) AddSource(id string, source <-chan []float32) error {
-	m.mu.Lock()
-	defer m.mu.Unlock()
+// Output returns the mixed stream. It is closed after Close.
+func (m *Mixer) Output() <-chan []float32 { return m.out }
 
-	if _, exists := m.sources[id]; exists {
-		return ErrSourceExists
-	}
-
-	m.sources[id] = source
-	m.volumes[id] = 1.0 // Default volume
-
-	return nil
-}
-
-// RemoveSource removes an audio source from the mixer
-func (m *Mixer) RemoveSource(id string) error {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	if _, exists := m.sources[id]; !exists {
-		return ErrSourceNotFound
-	}
-
-	delete(m.sources, id)
-	delete(m.volumes, id)
-
-	return nil
-}
-
-// SetSourceVolume sets the volume for a specific source (0.0 to 1.0)
-func (m *Mixer) SetSourceVolume(id string, volume float32) error {
-	if volume < 0.0 || volume > 1.0 {
+// AddInput starts mixing samples from ch at the given volume. The input is
+// removed automatically when ch is closed.
+func (m *Mixer) AddInput(id string, ch <-chan []float32, volume float32) error {
+	if volume < 0 || volume > 1 {
 		return ErrInvalidVolume
 	}
-
 	m.mu.Lock()
 	defer m.mu.Unlock()
-
-	if _, exists := m.volumes[id]; !exists {
-		return ErrSourceNotFound
+	if m.closed {
+		return errors.New("audio: mixer is closed")
 	}
-
-	m.volumes[id] = volume
+	if _, ok := m.inputs[id]; ok {
+		return ErrInputExists
+	}
+	in := &mixerInput{volume: volume, stop: make(chan struct{})}
+	m.inputs[id] = in
+	go m.read(id, in, ch)
 	return nil
 }
 
-// Output returns the mixed audio stream
-func (m *Mixer) Output() <-chan []float32 {
-	return m.output
-}
-
-// Start starts the mixer
-func (m *Mixer) Start() error {
+// RemoveInput stops mixing an input and discards its queued samples.
+func (m *Mixer) RemoveInput(id string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-
-	if m.running {
-		return ErrAlreadyRunning
+	in, ok := m.inputs[id]
+	if !ok {
+		return ErrInputNotFound
 	}
-
-	m.running = true
-	go m.mixLoop()
-
+	delete(m.inputs, id)
+	close(in.stop)
 	return nil
 }
 
-// Stop stops the mixer
-func (m *Mixer) Stop() error {
+// SetVolume changes an input's volume.
+func (m *Mixer) SetVolume(id string, volume float32) error {
+	if volume < 0 || volume > 1 {
+		return ErrInvalidVolume
+	}
 	m.mu.Lock()
 	defer m.mu.Unlock()
-
-	if !m.running {
-		return nil
+	in, ok := m.inputs[id]
+	if !ok {
+		return ErrInputNotFound
 	}
-
-	m.running = false
-	close(m.done)
-
+	in.volume = volume
 	return nil
 }
 
-// Close closes the mixer and releases resources
-func (m *Mixer) Close() error {
-	if err := m.Stop(); err != nil {
-		return err
-	}
-	close(m.output)
-	return nil
+// Len returns the number of inputs.
+func (m *Mixer) Len() int {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	return len(m.inputs)
 }
 
-// mixLoop is the main mixing loop
-func (m *Mixer) mixLoop() {
-	// Create channels for each source with buffering
-	sourceChans := make(map[string]chan []float32)
-	
-	m.mu.RLock()
-	for id := range m.sources {
-		sourceChans[id] = make(chan []float32, m.bufferSize)
+// Close stops the mixer and closes the output channel. It is safe to call
+// more than once.
+func (m *Mixer) Close() {
+	m.mu.Lock()
+	if !m.closed {
+		m.closed = true
+		close(m.done)
 	}
-	m.mu.RUnlock()
+	m.mu.Unlock()
+	<-m.exited
+}
 
-	// Start goroutines to read from each source
-	var wg sync.WaitGroup
-	for id, source := range m.sources {
-		wg.Add(1)
-		go func(sourceID string, src <-chan []float32, dst chan<- []float32) {
-			defer wg.Done()
-			defer close(dst)
-			for {
-				select {
-				case <-m.done:
-					return
-				case samples, ok := <-src:
-					if !ok {
-						return
-					}
-					select {
-					case dst <- samples:
-					case <-m.done:
-						return
-					}
-				}
-			}
-		}(id, source, sourceChans[id])
+func (m *Mixer) read(id string, in *mixerInput, ch <-chan []float32) {
+	for {
+		var ev mixerEvent
+		select {
+		case <-in.stop:
+			return
+		case <-m.done:
+			return
+		case s, ok := <-ch:
+			ev = mixerEvent{id: id, in: in, samples: s, eof: !ok}
+		}
+		select {
+		case m.events <- ev:
+		case <-in.stop:
+			return
+		case <-m.done:
+			return
+		}
+		if ev.eof {
+			return
+		}
 	}
+}
 
-	// Mixing loop
+func (m *Mixer) loop() {
+	defer close(m.exited)
+	defer close(m.out)
 	for {
 		select {
 		case <-m.done:
-			wg.Wait()
 			return
-		default:
-			m.mu.RLock()
-			if len(sourceChans) == 0 {
-				m.mu.RUnlock()
-				// No sources, output silence
-				select {
-				case m.output <- make([]float32, m.bufferSize):
-				case <-m.done:
-					m.mu.RUnlock()
-					return
-				}
-				m.mu.RUnlock()
+		case ev := <-m.events:
+			buf := m.handle(ev)
+			if buf == nil {
 				continue
 			}
-
-			// Collect samples from all sources
-			samples := make(map[string][]float32)
-			allReady := true
-			for id, ch := range sourceChans {
-				select {
-				case s := <-ch:
-					samples[id] = s
-				default:
-					allReady = false
-				}
-			}
-			m.mu.RUnlock()
-
-			if !allReady || len(samples) == 0 {
-				// Not all sources have data, output silence or wait
-				continue
-			}
-
-			// Mix the samples
-			mixed := m.mixSamples(samples)
 			select {
-			case m.output <- mixed:
+			case m.out <- buf:
 			case <-m.done:
 				return
 			}
@@ -203,72 +179,50 @@ func (m *Mixer) mixLoop() {
 	}
 }
 
-// mixSamples mixes samples from multiple sources
-func (m *Mixer) mixSamples(samples map[string][]float32) []float32 {
-	if len(samples) == 0 {
-		return make([]float32, m.bufferSize)
+// handle queues an event's samples and returns the next mixed buffer, if
+// one is ready.
+func (m *Mixer) handle(ev mixerEvent) []float32 {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if m.inputs[ev.id] != ev.in {
+		return nil // removed or replaced since the event was read
+	}
+	if ev.eof {
+		delete(m.inputs, ev.id)
+	} else {
+		ev.in.pending = append(ev.in.pending, ev.samples...)
+	}
+	if len(m.inputs) == 0 {
+		return nil
 	}
 
-	// Find the maximum length
-	maxLen := 0
-	for _, s := range samples {
-		if len(s) > maxLen {
-			maxLen = len(s)
+	ready, most := -1, 0
+	for _, in := range m.inputs {
+		if ready < 0 || len(in.pending) < ready {
+			ready = len(in.pending)
+		}
+		most = max(most, len(in.pending))
+	}
+	n := ready
+	if n == 0 {
+		if most < m.maxLag {
+			return nil
+		}
+		n = most // a lagging input is silent for this stretch
+	}
+
+	out := make([]float32, n)
+	for _, in := range m.inputs {
+		k := min(n, len(in.pending))
+		for i, s := range in.pending[:k] {
+			out[i] += s * in.volume
+		}
+		in.pending = append(in.pending[:0], in.pending[k:]...)
+	}
+	if len(m.inputs) > 1 {
+		for i, s := range out {
+			out[i] = Clamp(s)
 		}
 	}
-
-	if maxLen == 0 {
-		return make([]float32, m.bufferSize)
-	}
-
-	// Mix samples
-	mixed := make([]float32, maxLen)
-	
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-
-	for id, s := range samples {
-		volume := m.volumes[id]
-		for i := 0; i < len(s) && i < maxLen; i++ {
-			mixed[i] += s[i] * volume
-		}
-	}
-
-	// Normalize to prevent clipping (simple approach)
-	// In production, you might want more sophisticated clipping prevention
-	maxVal := float32(0.0)
-	for _, v := range mixed {
-		if v > maxVal {
-			maxVal = v
-		}
-		if -v > maxVal {
-			maxVal = -v
-		}
-	}
-	if maxVal > 1.0 {
-		scale := 1.0 / maxVal
-		for i := range mixed {
-			mixed[i] *= scale
-		}
-	}
-
-	return mixed
+	return out
 }
-
-// Errors
-var (
-	ErrSourceExists    = &Error{Message: "source already exists"}
-	ErrSourceNotFound  = &Error{Message: "source not found"}
-	ErrInvalidVolume   = &Error{Message: "invalid volume (must be 0.0 to 1.0)"}
-	ErrAlreadyRunning  = &Error{Message: "mixer is already running"}
-)
-
-// Error represents an audio error
-type Error struct {
-	Message string
-}
-
-func (e *Error) Error() string {
-	return e.Message
-}
-
