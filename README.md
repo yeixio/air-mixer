@@ -126,6 +126,12 @@ The ALAC decoder is a Go port of David Hammerton's ALAC decoder, and the
 AirPlay implementation follows the protocol work of the shairport and
 shairport-sync projects. See [NOTICE](NOTICE).
 
+## Support Air-Mixer
+
+Air-Mixer is free and open source. If it's useful to you, you can [donate to Air-Mixer](https://yeix.io/donate/air-mixer), once or monthly, by card. Donations pay for its development. Nothing is held back for donors.
+
+[![Donate to Air-Mixer](https://img.shields.io/badge/Donate-Support_Air--Mixer-ff6a55?style=for-the-badge&logo=stripe&logoColor=white)](https://yeix.io/donate/air-mixer)
+
 ## License
 
 [MIT](LICENSE)
