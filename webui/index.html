@@ -712,6 +712,31 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="section" id="matineeSection">
+            <div class="section-header">
+                <div class="section-title">
+                    <h2><span class="icon icon-output"></span> Matinee</h2>
+                    <div class="section-doc">
+                        <strong>Matinee speakers and players</strong><br>
+                        Connect Air-Mixer to your Matinee server and its players become speakers here (add an output
+                        client; Discover lists them), and Matinee inputs show up in Matinee and Home Assistant as players
+                        that play into your routes. Sign in once, the way you sign in a TV: approve the code on Matinee's
+                        /link page as an admin.
+                    </div>
+                </div>
+            </div>
+            <form id="matineeForm" onsubmit="saveMatinee(event)" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                <div class="form-group" style="flex: 1; min-width: 240px; margin-bottom: 0;">
+                    <label>Matinee server</label>
+                    <input type="text" name="url" id="matineeURL" placeholder="http://192.168.1.20:7171">
+                </div>
+                <button type="submit" class="btn">Save</button>
+                <button type="button" class="btn" id="matineeSignIn" onclick="signInMatinee()">Sign in</button>
+                <button type="button" class="btn btn-danger" id="matineeSignOut" onclick="signOutMatinee()" style="display: none;">Sign out</button>
+            </form>
+            <div id="matineeStatus" style="margin-top: 12px; font-size: 13px; color: #aaa;"></div>
+        </div>
     </div>
 
     <!-- Add Server Modal -->
@@ -732,6 +757,7 @@
                     <label>Protocol</label>
                     <select name="protocol" required>
                         <option value="airplay">AirPlay - Receive audio from iOS/macOS devices</option>
+                        <option value="matinee">Matinee - Shows up in Matinee as a player and plays what it's sent</option>
                         <option value="bluetooth" disabled>Bluetooth - Receive audio via Bluetooth (Coming Soon)</option>
                         <option value="chromecast" disabled>Google Cast - Receive audio from Cast devices (Coming Soon)</option>
                         <option value="upnp" disabled>UPnP/DLNA - Receive audio via UPnP (Coming Soon)</option>
@@ -790,6 +816,9 @@
                             <label>Protocol</label>
                             <select name="protocol" required>
                                 <option value="airplay">AirPlay - Send audio to AirPlay speakers</option>
+                                <option value="matinee">Matinee - Play on a Matinee player (address: the player's id)</option>
+                                <option value="stream">Stream - A live WAV stream for VLC or a browser</option>
+                                <option value="local">Local - This machine's sound card</option>
                                 <option value="bluetooth" disabled>Bluetooth - Send audio via Bluetooth (Coming Soon)</option>
                                 <option value="chromecast" disabled>Google Cast - Send audio to Cast devices (Coming Soon)</option>
                                 <option value="upnp" disabled>UPnP/DLNA - Send audio via UPnP (Coming Soon)</option>
@@ -797,7 +826,7 @@
                         </div>
                         <div class="form-group">
                             <label>Address <span style="color: #888; font-size: 12px;">(IP:port or device identifier)</span></label>
-                            <input type="text" name="address" required placeholder="192.168.1.100:49152">
+                            <input type="text" name="address" placeholder="192.168.1.100:49152">
                         </div>
                         <div class="form-group">
                             <label>ID <span style="color: #888; font-size: 12px;">(optional, auto-generated if empty)</span></label>
@@ -1862,6 +1891,107 @@
         let discoveredDevicesList = []; // Store discovered devices in memory
 
         // Helper function to safely escape HTML (prevents XSS and double-escaping)
+        // ---- Matinee ----
+
+        let matineePoll = null;
+
+        async function loadMatinee() {
+            let st;
+            try {
+                const res = await fetch(`${API_BASE}/matinee`);
+                if (!res.ok) {
+                    document.getElementById('matineeSection').style.display = 'none';
+                    return;
+                }
+                st = await res.json();
+            } catch (err) {
+                return;
+            }
+            const urlInput = document.getElementById('matineeURL');
+            if (document.activeElement !== urlInput) urlInput.value = st.url || '';
+            const status = document.getElementById('matineeStatus');
+            document.getElementById('matineeSignOut').style.display = st.signed_in ? '' : 'none';
+            document.getElementById('matineeSignIn').textContent = st.signed_in ? 'Sign in again' : 'Sign in';
+            if (st.link && !st.link.error) {
+                const link = escapeHtml(st.link.verification_url_complete || st.link.verification_url);
+                status.innerHTML = `Open <a href="${link}" target="_blank" rel="noopener" style="color: #4a9eff;">${escapeHtml(st.link.verification_url)}</a>
+                    as a Matinee admin and enter <strong style="color: #fff; font-size: 16px; letter-spacing: 2px;">${escapeHtml(st.link.user_code)}</strong>.
+                    Waiting for approval…`;
+                if (!matineePoll) matineePoll = setInterval(loadMatinee, 2000);
+                return;
+            }
+            if (matineePoll) {
+                clearInterval(matineePoll);
+                matineePoll = null;
+                if (st.signed_in) showNotification('success', 'Signed in to Matinee', 'Matinee players are now in Discover');
+            }
+            if (st.link && st.link.error) {
+                status.innerHTML = `<span class="icon icon-warning"></span> ${escapeHtml(st.link.error)}`;
+            } else if (st.signed_in) {
+                status.innerHTML = `<span class="icon icon-success"></span> Signed in to ${escapeHtml(st.url)} as ${escapeHtml(st.user || 'Matinee')}.`;
+            } else if (st.url) {
+                status.textContent = 'Not signed in yet.';
+            } else {
+                status.textContent = 'Not connected to a Matinee server.';
+            }
+        }
+
+        async function saveMatinee(e) {
+            e.preventDefault();
+            const url = document.getElementById('matineeURL').value;
+            const res = await fetch(`${API_BASE}/matinee`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                showNotification('error', 'Matinee', err.error || 'Could not save the address');
+            }
+            loadMatinee();
+        }
+
+        async function signInMatinee() {
+            const url = document.getElementById('matineeURL').value;
+            if (url) {
+                await fetch(`${API_BASE}/matinee`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+            }
+            const res = await fetch(`${API_BASE}/matinee/link`, { method: 'POST' });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                showNotification('error', 'Matinee', err.error || 'Could not get a sign-in code');
+            }
+            loadMatinee();
+        }
+
+        async function signOutMatinee() {
+            await fetch(`${API_BASE}/matinee/link`, { method: 'DELETE' });
+            loadMatinee();
+        }
+
+        // Matinee players, shaped like discovered devices, for Discover.
+        async function matineePlayerDevices() {
+            try {
+                const res = await fetch(`${API_BASE}/matinee/players`);
+                if (!res.ok) return [];
+                const players = await res.json();
+                return players.map(p => ({
+                    name: p.name,
+                    protocol: 'matinee',
+                    address: p.id,
+                    description: `Matinee player (${p.platform || 'unknown'})${p.online ? '' : ', closed right now'}`
+                }));
+            } catch (err) {
+                return [];
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadMatinee);
+
         function escapeHtml(text) {
             if (!text) return '';
             const div = document.createElement('div');
@@ -1902,6 +2032,7 @@
             try {
                 const res = await fetch(`${API_BASE}/discovery?timeout=5s`);
                 const data = await res.json();
+                data.devices = (data.devices || []).concat(await matineePlayerDevices());
                 
                 if (data.devices && data.devices.length > 0) {
                     status.innerHTML = `<span class="discovery-success"><span class="icon icon-success"></span> Found ${data.devices.length} device(s)</span>`;

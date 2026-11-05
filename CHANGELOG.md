@@ -23,6 +23,12 @@ generated from its pull requests.
   text-to-speech and alarms.
 - A Home Assistant integration: a media player per output plus "All
   outputs", with `airmixer.announce` and `airmixer.stop` actions.
+- Matinee in both directions: a Matinee input shows up in Matinee and
+  Home Assistant as a player and plays what it's sent, and a Matinee output
+  plays on a Matinee player such as a TV. Sign in once with a code
+  approved on Matinee's /link page.
+- A stream output: any output as a live WAV at `/api/clients/{id}/stream`,
+  and `server.public_url` for the address other machines use to reach it.
 
 ### Changed
 
