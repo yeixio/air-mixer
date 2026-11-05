@@ -19,7 +19,7 @@ RUN GOOS=${TARGETOS:-$(go env GOOS)} GOARCH=${TARGETARCH:-$(go env GOARCH)} GOAR
     -ldflags="-s -w -X main.Version=${VERSION} -X main.GitCommit=${GIT_COMMIT} -X main.BuildTime=${BUILD_TIME}" \
     -o /out/airmixer ./cmd/airmixer
 
-FROM alpine:3.22
+FROM alpine:3.24
 RUN apk add --no-cache ca-certificates tzdata \
     && adduser -D -u 1000 airmixer \
     && mkdir -p /data && chown airmixer:airmixer /data
