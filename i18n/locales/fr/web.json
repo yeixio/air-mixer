@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay : recevoir l’audio de l’iPhone, l’iPad et du Mac",
-    "airplayClient": "AirPlay : envoyer l’audio vers des enceintes AirPlay"
+    "airplayClient": "AirPlay : envoyer l’audio vers des enceintes AirPlay",
+    "matineeServer": "Matinee : apparaît dans Matinee comme lecteur et lit ce qu'on lui envoie",
+    "matineeClient": "Matinee : lire sur un lecteur Matinee (adresse : l'identifiant du lecteur)",
+    "streamClient": "Flux : un flux WAV en direct pour VLC ou un navigateur",
+    "localClient": "Local : la carte son de cette machine"
   },
   "servers": {
     "title": "Serveurs d’entrée",
@@ -144,5 +148,26 @@
     "done": "Jumelé",
     "doneMessage": "L’appareil est jumelé et prêt à l’emploi.",
     "failed": "Le jumelage a échoué"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Enceintes et lecteurs Matinee",
+    "what": "Connectez Air-Mixer à votre serveur Matinee : ses lecteurs deviennent des enceintes ici (ajoutez un client de sortie ; la recherche les liste), et les entrées Matinee apparaissent dans Matinee et Home Assistant comme des lecteurs qui jouent dans vos routes. Connectez-vous une seule fois, comme sur une télévision : approuvez le code sur la page /link de Matinee en tant qu'administrateur.",
+    "server": "Serveur Matinee",
+    "save": "Enregistrer",
+    "signIn": "Se connecter",
+    "signInAgain": "Se reconnecter",
+    "signOut": "Se déconnecter",
+    "approve": "Ouvrez {{url}} en tant qu'administrateur Matinee et saisissez {{code}}. En attente d'approbation…",
+    "signedInTitle": "Connecté à Matinee",
+    "signedInMessage": "Les lecteurs Matinee sont maintenant dans la recherche d'appareils",
+    "signedInAs": "Connecté à {{url}} en tant que {{user}}.",
+    "notSignedIn": "Pas encore connecté.",
+    "notConnected": "Aucun serveur Matinee connecté.",
+    "saveFailed": "Impossible d'enregistrer l'adresse",
+    "codeFailed": "Impossible d'obtenir un code de connexion",
+    "player": "Lecteur Matinee ({{platform}})",
+    "playerClosed": "Lecteur Matinee ({{platform}}), fermé pour le moment",
+    "unknownPlatform": "inconnu"
   }
 }

@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: קבלת שמע מ-iPhone, iPad ו-Mac",
-    "airplayClient": "AirPlay: שליחת שמע לרמקולי AirPlay"
+    "airplayClient": "AirPlay: שליחת שמע לרמקולי AirPlay",
+    "matineeServer": "Matinee: מופיע ב-Matinee כנגן ומשמיע את מה שנשלח אליו",
+    "matineeClient": "Matinee: השמעה בנגן Matinee (כתובת: המזהה של הנגן)",
+    "streamClient": "זרם: זרם WAV חי ל-VLC או לדפדפן",
+    "localClient": "מקומי: כרטיס הקול של המחשב הזה"
   },
   "servers": {
     "title": "שרתי קלט",
@@ -144,5 +148,26 @@
     "done": "הצימוד הושלם",
     "doneMessage": "המכשיר צומד ומוכן לשימוש.",
     "failed": "הצימוד נכשל"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "רמקולים ונגנים של Matinee",
+    "what": "חברו את Air-Mixer לשרת ה-Matinee שלכם והנגנים שלו יהפכו כאן לרמקולים (הוסיפו לקוח פלט; חיפוש המכשירים מציג אותם), וכניסות Matinee יופיעו ב-Matinee וב-Home Assistant כנגנים שמשמיעים לתוך הנתיבים שלכם. התחברו פעם אחת, כמו בטלוויזיה: אשרו את הקוד בדף ‎/link של Matinee כמנהלים.",
+    "server": "שרת Matinee",
+    "save": "שמירה",
+    "signIn": "התחברות",
+    "signInAgain": "התחברות מחדש",
+    "signOut": "התנתקות",
+    "approve": "פתחו את {{url}} כמנהלי Matinee והזינו {{code}}. ממתין לאישור…",
+    "signedInTitle": "מחובר ל-Matinee",
+    "signedInMessage": "נגני Matinee נמצאים עכשיו בחיפוש המכשירים",
+    "signedInAs": "מחובר ל-{{url}} בתור {{user}}.",
+    "notSignedIn": "עדיין לא מחובר.",
+    "notConnected": "אין חיבור לשרת Matinee.",
+    "saveFailed": "לא ניתן היה לשמור את הכתובת",
+    "codeFailed": "לא ניתן היה לקבל קוד התחברות",
+    "player": "נגן Matinee ({{platform}})",
+    "playerClosed": "נגן Matinee ({{platform}}), סגור כרגע",
+    "unknownPlatform": "לא ידועה"
   }
 }

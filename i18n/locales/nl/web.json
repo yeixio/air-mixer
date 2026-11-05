@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: ontvang audio van iPhone, iPad en Mac",
-    "airplayClient": "AirPlay: stuur audio naar AirPlay-speakers"
+    "airplayClient": "AirPlay: stuur audio naar AirPlay-speakers",
+    "matineeServer": "Matinee: verschijnt in Matinee als speler en speelt af wat hij krijgt",
+    "matineeClient": "Matinee: afspelen op een Matinee-speler (adres: de ID van de speler)",
+    "streamClient": "Stream: een live WAV-stream voor VLC of een browser",
+    "localClient": "Lokaal: de geluidskaart van deze computer"
   },
   "servers": {
     "title": "Invoerservers",
@@ -143,5 +147,26 @@
     "done": "Gekoppeld",
     "doneMessage": "Het apparaat is gekoppeld en klaar voor gebruik.",
     "failed": "Koppelen mislukt"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Matinee-speakers en -spelers",
+    "what": "Koppel Air-Mixer aan je Matinee-server, dan worden de spelers daarvan hier speakers (voeg een uitvoerclient toe; Apparaten zoeken toont ze), en Matinee-ingangen verschijnen in Matinee en Home Assistant als spelers die in je routes spelen. Meld je één keer aan, zoals bij een tv: keur de code als beheerder goed op de /link-pagina van Matinee.",
+    "server": "Matinee-server",
+    "save": "Opslaan",
+    "signIn": "Aanmelden",
+    "signInAgain": "Opnieuw aanmelden",
+    "signOut": "Afmelden",
+    "approve": "Open {{url}} als Matinee-beheerder en voer {{code}} in. Wachten op goedkeuring…",
+    "signedInTitle": "Aangemeld bij Matinee",
+    "signedInMessage": "Matinee-spelers staan nu bij Apparaten zoeken",
+    "signedInAs": "Aangemeld bij {{url}} als {{user}}.",
+    "notSignedIn": "Nog niet aangemeld.",
+    "notConnected": "Niet verbonden met een Matinee-server.",
+    "saveFailed": "Het adres kon niet worden opgeslagen",
+    "codeFailed": "Er kon geen aanmeldcode worden opgehaald",
+    "player": "Matinee-speler ({{platform}})",
+    "playerClosed": "Matinee-speler ({{platform}}), nu gesloten",
+    "unknownPlatform": "onbekend"
   }
 }

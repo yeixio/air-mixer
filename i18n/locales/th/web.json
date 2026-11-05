@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: รับเสียงจาก iPhone, iPad และ Mac",
-    "airplayClient": "AirPlay: ส่งเสียงไปยังลำโพง AirPlay"
+    "airplayClient": "AirPlay: ส่งเสียงไปยังลำโพง AirPlay",
+    "matineeServer": "Matinee: ปรากฏใน Matinee เป็นเครื่องเล่นและเล่นสิ่งที่ส่งมา",
+    "matineeClient": "Matinee: เล่นบนเครื่องเล่น Matinee (ที่อยู่: ID ของเครื่องเล่น)",
+    "streamClient": "สตรีม: สตรีม WAV สดสำหรับ VLC หรือเบราว์เซอร์",
+    "localClient": "ในเครื่อง: การ์ดเสียงของเครื่องนี้"
   },
   "servers": {
     "title": "เซิร์ฟเวอร์ขาเข้า",
@@ -142,5 +146,26 @@
     "done": "จับคู่แล้ว",
     "doneMessage": "อุปกรณ์จับคู่แล้วและพร้อมใช้งาน",
     "failed": "จับคู่ไม่สำเร็จ"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "ลำโพงและเครื่องเล่น Matinee",
+    "what": "เชื่อมต่อ Air-Mixer กับเซิร์ฟเวอร์ Matinee แล้วเครื่องเล่นของมันจะกลายเป็นลำโพงที่นี่ (เพิ่มไคลเอนต์เอาต์พุต การค้นหาอุปกรณ์จะแสดงรายการ) และอินพุตของ Matinee จะปรากฏใน Matinee และ Home Assistant เป็นเครื่องเล่นที่เล่นเข้าสู่เส้นทางของคุณ ลงชื่อเข้าใช้ครั้งเดียวเหมือนบนทีวี: อนุมัติรหัสในหน้า /link ของ Matinee ในฐานะผู้ดูแล",
+    "server": "เซิร์ฟเวอร์ Matinee",
+    "save": "บันทึก",
+    "signIn": "ลงชื่อเข้าใช้",
+    "signInAgain": "ลงชื่อเข้าใช้อีกครั้ง",
+    "signOut": "ออกจากระบบ",
+    "approve": "เปิด {{url}} ในฐานะผู้ดูแล Matinee แล้วป้อน {{code}} กำลังรอการอนุมัติ…",
+    "signedInTitle": "ลงชื่อเข้าใช้ Matinee แล้ว",
+    "signedInMessage": "เครื่องเล่น Matinee อยู่ในการค้นหาอุปกรณ์แล้ว",
+    "signedInAs": "ลงชื่อเข้าใช้ {{url}} ในชื่อ {{user}} แล้ว",
+    "notSignedIn": "ยังไม่ได้ลงชื่อเข้าใช้",
+    "notConnected": "ไม่ได้เชื่อมต่อกับเซิร์ฟเวอร์ Matinee",
+    "saveFailed": "บันทึกที่อยู่ไม่ได้",
+    "codeFailed": "ขอรหัสลงชื่อเข้าใช้ไม่ได้",
+    "player": "เครื่องเล่น Matinee ({{platform}})",
+    "playerClosed": "เครื่องเล่น Matinee ({{platform}}) ปิดอยู่ตอนนี้",
+    "unknownPlatform": "ไม่ทราบ"
   }
 }

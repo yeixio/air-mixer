@@ -24,5 +24,11 @@
   "route_mix_mode": "Nieznany mix_mode „{{mode}}”",
   "route_dest_empty": "Nazwy celów nie mogą być puste",
   "route_duck_range": "duck {{duck}} jest poza zakresem 0..1",
-  "route_playback_owned": "Ta trasa należy do odtwarzania; zatrzymaj je przez DELETE /api/playback/{id}"
+  "route_playback_owned": "Ta trasa należy do odtwarzania; zatrzymaj je przez DELETE /api/playback/{id}",
+  "stream_not_found": "Nie ma takiego strumienia: to wyjście nie jest połączonym wyjściem strumienia ani Matinee",
+  "matinee_unavailable": "Matinee nie jest dostępne w tej wersji",
+  "matinee_needs_player": "Klient Matinee potrzebuje ID odtwarzacza jako adresu (zobacz /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer nie jest jeszcze zalogowany do Matinee",
+  "matinee_link_failed": "Nie udało się uzyskać kodu z Matinee: {{detail}}",
+  "matinee_players_failed": "Nie udało się pobrać odtwarzaczy z Matinee: {{detail}}"
 }

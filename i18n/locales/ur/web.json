@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone، iPad اور Mac سے آڈیو وصول کریں",
-    "airplayClient": "AirPlay: AirPlay اسپیکرز کو آڈیو بھیجیں"
+    "airplayClient": "AirPlay: AirPlay اسپیکرز کو آڈیو بھیجیں",
+    "matineeServer": "Matinee: Matinee میں پلیئر کے طور پر نظر آتا ہے اور جو بھیجا جائے وہ چلاتا ہے",
+    "matineeClient": "Matinee: Matinee پلیئر پر چلائیں (پتا: پلیئر کی ID)",
+    "streamClient": "اسٹریم: VLC یا براؤزر کے لیے لائیو WAV اسٹریم",
+    "localClient": "مقامی: اس مشین کا ساؤنڈ کارڈ"
   },
   "servers": {
     "title": "ان پٹ سرور",
@@ -143,5 +147,26 @@
     "done": "پیئر ہو گیا",
     "doneMessage": "آلہ پیئر ہو گیا ہے اور استعمال کے لیے تیار ہے۔",
     "failed": "پیئرنگ ناکام رہی"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Matinee اسپیکر اور پلیئر",
+    "what": "Air-Mixer کو اپنے Matinee سرور سے جوڑیں تو اس کے پلیئر یہاں اسپیکر بن جاتے ہیں (آؤٹ پٹ کلائنٹ شامل کریں؛ آلات کی تلاش انہیں دکھاتی ہے)، اور Matinee ان پٹ Matinee اور Home Assistant میں ایسے پلیئرز کے طور پر نظر آتے ہیں جو آپ کے روٹس میں چلتے ہیں۔ ایک بار سائن اِن کریں، جیسے ٹی وی پر کرتے ہیں: Matinee کے ‎/link صفحے پر ایڈمن کے طور پر کوڈ منظور کریں۔",
+    "server": "Matinee سرور",
+    "save": "محفوظ کریں",
+    "signIn": "سائن اِن",
+    "signInAgain": "دوبارہ سائن اِن",
+    "signOut": "سائن آؤٹ",
+    "approve": "{{url}} کو Matinee ایڈمن کے طور پر کھولیں اور {{code}} درج کریں۔ منظوری کا انتظار ہے…",
+    "signedInTitle": "Matinee میں سائن اِن ہو گیا",
+    "signedInMessage": "Matinee پلیئر اب آلات کی تلاش میں ہیں",
+    "signedInAs": "{{url}} میں {{user}} کے طور پر سائن اِن ہے۔",
+    "notSignedIn": "ابھی سائن اِن نہیں ہوا۔",
+    "notConnected": "کسی Matinee سرور سے منسلک نہیں۔",
+    "saveFailed": "پتا محفوظ نہیں ہو سکا",
+    "codeFailed": "سائن اِن کوڈ نہیں مل سکا",
+    "player": "Matinee پلیئر ({{platform}})",
+    "playerClosed": "Matinee پلیئر ({{platform}})، ابھی بند ہے",
+    "unknownPlatform": "نامعلوم"
   }
 }

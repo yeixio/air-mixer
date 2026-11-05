@@ -24,5 +24,11 @@
   "route_mix_mode": "mix_mode \"{{mode}}\" tidak dikenal",
   "route_dest_empty": "Nama tujuan tidak boleh kosong",
   "route_duck_range": "duck {{duck}} di luar 0..1",
-  "route_playback_owned": "Rute ini milik sebuah pemutaran; hentikan dengan DELETE /api/playback/{id}"
+  "route_playback_owned": "Rute ini milik sebuah pemutaran; hentikan dengan DELETE /api/playback/{id}",
+  "stream_not_found": "Stream tidak ada: output ini bukan output stream atau Matinee yang terhubung",
+  "matinee_unavailable": "Matinee tidak tersedia di build ini",
+  "matinee_needs_player": "Klien Matinee memerlukan ID pemutar sebagai alamat (lihat /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer belum masuk ke Matinee",
+  "matinee_link_failed": "Tidak dapat memperoleh kode dari Matinee: {{detail}}",
+  "matinee_players_failed": "Tidak dapat memperoleh pemutar dari Matinee: {{detail}}"
 }

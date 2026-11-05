@@ -24,5 +24,11 @@
   "route_mix_mode": "Onbekende mix_mode \"{{mode}}\"",
   "route_dest_empty": "Namen van bestemmingen mogen niet leeg zijn",
   "route_duck_range": "duck {{duck}} ligt buiten 0..1",
-  "route_playback_owned": "Deze route hoort bij een afspeelsessie; stop die met DELETE /api/playback/{id}"
+  "route_playback_owned": "Deze route hoort bij een afspeelsessie; stop die met DELETE /api/playback/{id}",
+  "stream_not_found": "Zo'n stream bestaat niet: de uitvoer is geen verbonden stream- of Matinee-uitvoer",
+  "matinee_unavailable": "Matinee is niet beschikbaar in deze build",
+  "matinee_needs_player": "Een Matinee-client heeft de ID van de speler als adres nodig (zie /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer is nog niet aangemeld bij Matinee",
+  "matinee_link_failed": "Kon geen code van Matinee krijgen: {{detail}}",
+  "matinee_players_failed": "Kon de spelers niet van Matinee ophalen: {{detail}}"
 }

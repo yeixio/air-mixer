@@ -54,7 +54,8 @@ On create, `id` is generated when omitted and `enabled` defaults to
 example the port is taken) nothing is saved and the error is returned.
 
 `config` may be sent as a JSON string, as stored, or as an object.
-AirPlay servers accept:
+A `matinee` server takes no config: it shows up in Matinee as a player
+named after the server (see [Matinee](#matinee)). AirPlay servers accept:
 
 | Key | Default | |
 |-----|---------|-|
@@ -85,6 +86,8 @@ reported by `/api/status`.
 | `airplay` | `host` or `host:port` (default port 5000) | `latency_ms` (default 2000), `disable_encryption` |
 | `local` | ignored | `delay_ms` |
 | `pulse` | ignored | `sink` (name, description or Bluetooth address; default sink if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`), `delay_ms` |
+| `stream` | ignored | none; see [Streams](#streams) |
+| `matinee` | the Matinee player's id, from `/api/matinee/players` | `library_id`: the music library its station goes in (default: the first) |
 
 `delay_ms` (0 to 5000) holds audio back on that output, to line up
 speakers with different latencies, such as several Bluetooth speakers in
@@ -271,3 +274,69 @@ most 30s.
   "count": 1
 }
 ```
+
+## Streams
+
+`GET /api/clients/{id}/stream` plays a `stream` or `matinee` output live,
+as a WAV of 16-bit stereo PCM at 44.1 kHz whose sizes are `0xFFFFFFFF`.
+It plays silence while nothing is routed to the output. Each listener gets
+its own copy; one that falls a second behind loses the oldest audio. 404
+means the output isn't connected or isn't a stream. Open it in VLC or a
+browser, or let a Matinee output hand it to a Matinee player.
+
+## Matinee
+
+Air-Mixer works with [Matinee](https://github.com/yeixio/matinee), the
+self-hosted media server, both ways:
+
+- A **`matinee` server** (input) shows up in Matinee, and in Matinee's Home
+  Assistant integration, as a player. Whatever is played on it comes into
+  Air-Mixer and goes wherever its routes send it. It takes play, pause,
+  seek, stop, previous, next, volume and mute; a song goes on to the next
+  song of its album, and the place is saved in Matinee.
+- A **`matinee` client** (output) plays on a Matinee player: a TV, a phone
+  or a browser with Matinee open. Air-Mixer adds the output's
+  [stream](#streams) to the first music library as a radio station named
+  "Air-Mixer · <output name>" and asks the player to play it. Matinee
+  converts it to AAC for the player. When the player is closed the client
+  stays `connecting` and starts again once the player is back. Matinee
+  players buffer a few seconds, so they lag behind AirPlay speakers.
+
+Both need Matinee 0.2.3 or later (`GET /items/{id}/audio` and stations
+on the home network) and one sign-in, approved by a Matinee admin.
+
+| Method | Path | |
+|--------|------|-|
+| GET | `/api/matinee` | The server, whether Air-Mixer is signed in, and the code while it signs in |
+| PUT | `/api/matinee` | Set the server: `{"url": "http://192.168.1.20:7171"}`. A different server signs out. |
+| POST | `/api/matinee/link` | Ask for a sign-in code; returns the state with `link` |
+| DELETE | `/api/matinee/link` | Sign out; returns 204 |
+| GET | `/api/matinee/players` | Matinee players to play on; 409 until signed in |
+
+```json
+{
+  "url": "http://192.168.1.20:7171",
+  "signed_in": false,
+  "link": {
+    "user_code": "WXYZ-2345",
+    "verification_url": "http://192.168.1.20:7171/link",
+    "verification_url_complete": "http://192.168.1.20:7171/link?code=WXYZ2345",
+    "expires_at": "2026-11-05T18:00:00Z"
+  }
+}
+```
+
+Open `verification_url` as a Matinee admin and enter the code; Air-Mixer
+notices within a few seconds and `signed_in` turns true. `link.error`
+says why a code stopped working (it expired or was turned down).
+
+Players:
+
+```json
+[{"id": "3f0c…", "name": "Living room TV", "platform": "tvos", "online": true, "user": "mike"}]
+```
+
+Matinee fetches an output's stream from Air-Mixer, so it has to reach
+Air-Mixer's web port. Air-Mixer uses its own address on the way to the
+Matinee server; set `server.public_url` (`AIRMIXER_SERVER_PUBLIC_URL`)
+when that isn't reachable, such as behind NAT or in Kubernetes.

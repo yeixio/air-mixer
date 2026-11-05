@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: vastaanota ääntä iPhonesta, iPadista ja Macista",
-    "airplayClient": "AirPlay: lähetä ääntä AirPlay-kaiuttimiin"
+    "airplayClient": "AirPlay: lähetä ääntä AirPlay-kaiuttimiin",
+    "matineeServer": "Matinee: näkyy Matineessa soittimena ja toistaa sille lähetetyn äänen",
+    "matineeClient": "Matinee: toista Matinee-soittimella (osoite: soittimen tunnus)",
+    "streamClient": "Stream: suora WAV-virta VLC:lle tai selaimelle",
+    "localClient": "Paikallinen: tämän koneen äänikortti"
   },
   "servers": {
     "title": "Tulopalvelimet",
@@ -143,5 +147,26 @@
     "done": "Yhdistetty pariksi",
     "doneMessage": "Laite on yhdistetty pariksi ja valmis käyttöön.",
     "failed": "Pariliitos epäonnistui"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Matinee-kaiuttimet ja -soittimet",
+    "what": "Yhdistä Air-Mixer Matinee-palvelimeesi, niin sen soittimista tulee täällä kaiuttimia (lisää lähtöasiakas; Etsi laitteita listaa ne), ja Matineen tulot näkyvät Matineessa ja Home Assistantissa soittimina, jotka soittavat reitteihisi. Kirjaudu kerran, kuten televisiossa: hyväksy koodi ylläpitäjänä Matineen /link-sivulla.",
+    "server": "Matinee-palvelin",
+    "save": "Tallenna",
+    "signIn": "Kirjaudu",
+    "signInAgain": "Kirjaudu uudelleen",
+    "signOut": "Kirjaudu ulos",
+    "approve": "Avaa {{url}} Matineen ylläpitäjänä ja syötä {{code}}. Odotetaan hyväksyntää…",
+    "signedInTitle": "Kirjauduttu Matineeseen",
+    "signedInMessage": "Matinee-soittimet löytyvät nyt laitehausta",
+    "signedInAs": "Kirjauduttu palveluun {{url}} käyttäjänä {{user}}.",
+    "notSignedIn": "Ei vielä kirjauduttu.",
+    "notConnected": "Ei yhteyttä Matinee-palvelimeen.",
+    "saveFailed": "Osoitetta ei voitu tallentaa",
+    "codeFailed": "Kirjautumiskoodia ei saatu",
+    "player": "Matinee-soitin ({{platform}})",
+    "playerClosed": "Matinee-soitin ({{platform}}), suljettu juuri nyt",
+    "unknownPlatform": "tuntematon"
   }
 }

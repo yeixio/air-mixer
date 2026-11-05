@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: receba áudio do iPhone, iPad e Mac",
-    "airplayClient": "AirPlay: envie áudio para caixas de som AirPlay"
+    "airplayClient": "AirPlay: envie áudio para caixas de som AirPlay",
+    "matineeServer": "Matinee: aparece no Matinee como player e toca o que recebe",
+    "matineeClient": "Matinee: tocar em um player do Matinee (endereço: o ID do player)",
+    "streamClient": "Stream: um stream WAV ao vivo para VLC ou um navegador",
+    "localClient": "Local: a placa de som desta máquina"
   },
   "servers": {
     "title": "Servidores de entrada",
@@ -144,5 +148,26 @@
     "done": "Pareado",
     "doneMessage": "O dispositivo está pareado e pronto para usar.",
     "failed": "O pareamento falhou"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Alto-falantes e players do Matinee",
+    "what": "Conecte o Air-Mixer ao seu servidor Matinee e os players dele viram alto-falantes aqui (adicione um cliente de saída; a busca os lista), e as entradas do Matinee aparecem no Matinee e no Home Assistant como players que tocam nas suas rotas. Entre uma vez, como em uma TV: aprove o código na página /link do Matinee como administrador.",
+    "server": "Servidor Matinee",
+    "save": "Salvar",
+    "signIn": "Entrar",
+    "signInAgain": "Entrar de novo",
+    "signOut": "Sair",
+    "approve": "Abra {{url}} como administrador do Matinee e digite {{code}}. Aguardando aprovação…",
+    "signedInTitle": "Conectado ao Matinee",
+    "signedInMessage": "Os players do Matinee agora estão na busca de dispositivos",
+    "signedInAs": "Conectado a {{url}} como {{user}}.",
+    "notSignedIn": "Ainda não conectado.",
+    "notConnected": "Sem conexão com um servidor Matinee.",
+    "saveFailed": "Não foi possível salvar o endereço",
+    "codeFailed": "Não foi possível obter um código de acesso",
+    "player": "Player do Matinee ({{platform}})",
+    "playerClosed": "Player do Matinee ({{platform}}), fechado agora",
+    "unknownPlatform": "desconhecida"
   }
 }

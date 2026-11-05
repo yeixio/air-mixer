@@ -24,5 +24,11 @@
   "route_mix_mode": "Neznámý mix_mode „{{mode}}“",
   "route_dest_empty": "Názvy cílů nesmí být prázdné",
   "route_duck_range": "duck {{duck}} je mimo rozsah 0..1",
-  "route_playback_owned": "Tato trasa patří k přehrávání; zastavte ho pomocí DELETE /api/playback/{id}"
+  "route_playback_owned": "Tato trasa patří k přehrávání; zastavte ho pomocí DELETE /api/playback/{id}",
+  "stream_not_found": "Takový stream neexistuje: výstup není připojený výstup streamu ani Matinee",
+  "matinee_unavailable": "Matinee není v tomto sestavení k dispozici",
+  "matinee_needs_player": "Klient Matinee potřebuje jako adresu ID přehrávače (viz /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer ještě není přihlášený do Matinee",
+  "matinee_link_failed": "Od Matinee se nepodařilo získat kód: {{detail}}",
+  "matinee_players_failed": "Od Matinee se nepodařilo získat přehrávače: {{detail}}"
 }

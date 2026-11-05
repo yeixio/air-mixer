@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: ricevi audio da iPhone, iPad e Mac",
-    "airplayClient": "AirPlay: invia audio agli altoparlanti AirPlay"
+    "airplayClient": "AirPlay: invia audio agli altoparlanti AirPlay",
+    "matineeServer": "Matinee: appare in Matinee come lettore e riproduce ciò che riceve",
+    "matineeClient": "Matinee: riproduci su un lettore Matinee (indirizzo: l'ID del lettore)",
+    "streamClient": "Stream: uno stream WAV dal vivo per VLC o un browser",
+    "localClient": "Locale: la scheda audio di questo computer"
   },
   "servers": {
     "title": "Server di ingresso",
@@ -144,5 +148,26 @@
     "done": "Abbinato",
     "doneMessage": "Il dispositivo è abbinato e pronto all’uso.",
     "failed": "Abbinamento non riuscito"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Altoparlanti e lettori Matinee",
+    "what": "Collega Air-Mixer al tuo server Matinee: i suoi lettori diventano altoparlanti qui (aggiungi un client di uscita; la ricerca li elenca) e gli ingressi Matinee compaiono in Matinee e Home Assistant come lettori che suonano nelle tue rotte. Accedi una sola volta, come su una TV: approva il codice nella pagina /link di Matinee come amministratore.",
+    "server": "Server Matinee",
+    "save": "Salva",
+    "signIn": "Accedi",
+    "signInAgain": "Accedi di nuovo",
+    "signOut": "Esci",
+    "approve": "Apri {{url}} come amministratore di Matinee e inserisci {{code}}. In attesa di approvazione…",
+    "signedInTitle": "Accesso a Matinee eseguito",
+    "signedInMessage": "I lettori Matinee sono ora nella ricerca dei dispositivi",
+    "signedInAs": "Accesso a {{url}} come {{user}}.",
+    "notSignedIn": "Accesso non ancora eseguito.",
+    "notConnected": "Nessun server Matinee collegato.",
+    "saveFailed": "Impossibile salvare l'indirizzo",
+    "codeFailed": "Impossibile ottenere un codice di accesso",
+    "player": "Lettore Matinee ({{platform}})",
+    "playerClosed": "Lettore Matinee ({{platform}}), chiuso al momento",
+    "unknownPlatform": "sconosciuta"
   }
 }

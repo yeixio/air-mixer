@@ -24,5 +24,11 @@
   "route_mix_mode": "Ukendt mix_mode \"{{mode}}\"",
   "route_dest_empty": "Målnavne må ikke være tomme",
   "route_duck_range": "duck {{duck}} er uden for 0..1",
-  "route_playback_owned": "Denne rute hører til en afspilning; stop den med DELETE /api/playback/{id}"
+  "route_playback_owned": "Denne rute hører til en afspilning; stop den med DELETE /api/playback/{id}",
+  "stream_not_found": "Ingen sådan stream: outputtet er ikke et forbundet stream- eller Matinee-output",
+  "matinee_unavailable": "Matinee er ikke tilgængelig i denne version",
+  "matinee_needs_player": "En Matinee-klient skal have afspillerens ID som adresse (se /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer er ikke logget ind på Matinee endnu",
+  "matinee_link_failed": "Kunne ikke få en kode fra Matinee: {{detail}}",
+  "matinee_players_failed": "Kunne ikke hente afspillerne fra Matinee: {{detail}}"
 }

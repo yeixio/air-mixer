@@ -24,5 +24,11 @@
   "route_mix_mode": "Bilinmeyen mix_mode \"{{mode}}\"",
   "route_dest_empty": "Hedef adları boş olamaz",
   "route_duck_range": "{{duck}} duck değeri 0..1 aralığının dışında",
-  "route_playback_owned": "Bu rota bir oynatmaya ait; DELETE /api/playback/{id} ile durdurun"
+  "route_playback_owned": "Bu rota bir oynatmaya ait; DELETE /api/playback/{id} ile durdurun",
+  "stream_not_found": "Böyle bir akış yok: çıkış bağlı bir akış veya Matinee çıkışı değil",
+  "matinee_unavailable": "Matinee bu sürümde yok",
+  "matinee_needs_player": "Bir Matinee istemcisi adres olarak oynatıcının kimliğine ihtiyaç duyar (bkz. /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer henüz Matinee'de oturum açmadı",
+  "matinee_link_failed": "Matinee'den kod alınamadı: {{detail}}",
+  "matinee_players_failed": "Oynatıcılar Matinee'den alınamadı: {{detail}}"
 }

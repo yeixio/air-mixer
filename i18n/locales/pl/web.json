@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: odbieraj dźwięk z iPhone’a, iPada i Maca",
-    "airplayClient": "AirPlay: wysyłaj dźwięk do głośników AirPlay"
+    "airplayClient": "AirPlay: wysyłaj dźwięk do głośników AirPlay",
+    "matineeServer": "Matinee: pojawia się w Matinee jako odtwarzacz i odtwarza to, co dostaje",
+    "matineeClient": "Matinee: odtwarzaj na odtwarzaczu Matinee (adres: ID odtwarzacza)",
+    "streamClient": "Strumień: strumień WAV na żywo dla VLC lub przeglądarki",
+    "localClient": "Lokalne: karta dźwiękowa tego komputera"
   },
   "servers": {
     "title": "Serwery wejściowe",
@@ -145,5 +149,26 @@
     "done": "Sparowano",
     "doneMessage": "Urządzenie jest sparowane i gotowe do użycia.",
     "failed": "Parowanie nie powiodło się"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Głośniki i odtwarzacze Matinee",
+    "what": "Połącz Air-Mixer z serwerem Matinee, a jego odtwarzacze staną się tu głośnikami (dodaj klienta wyjścia; wyszukiwanie urządzeń je pokaże), a wejścia Matinee pojawią się w Matinee i Home Assistant jako odtwarzacze grające do Twoich tras. Zaloguj się raz, tak jak na telewizorze: zatwierdź kod na stronie /link w Matinee jako administrator.",
+    "server": "Serwer Matinee",
+    "save": "Zapisz",
+    "signIn": "Zaloguj się",
+    "signInAgain": "Zaloguj się ponownie",
+    "signOut": "Wyloguj się",
+    "approve": "Otwórz {{url}} jako administrator Matinee i wpisz {{code}}. Czekam na zatwierdzenie…",
+    "signedInTitle": "Zalogowano do Matinee",
+    "signedInMessage": "Odtwarzacze Matinee są teraz w wyszukiwaniu urządzeń",
+    "signedInAs": "Zalogowano do {{url}} jako {{user}}.",
+    "notSignedIn": "Jeszcze nie zalogowano.",
+    "notConnected": "Brak połączenia z serwerem Matinee.",
+    "saveFailed": "Nie udało się zapisać adresu",
+    "codeFailed": "Nie udało się uzyskać kodu logowania",
+    "player": "Odtwarzacz Matinee ({{platform}})",
+    "playerClosed": "Odtwarzacz Matinee ({{platform}}), teraz zamknięty",
+    "unknownPlatform": "nieznana"
   }
 }

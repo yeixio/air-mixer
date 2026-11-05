@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: принимать звук с iPhone, iPad и Mac",
-    "airplayClient": "AirPlay: отправлять звук на колонки AirPlay"
+    "airplayClient": "AirPlay: отправлять звук на колонки AirPlay",
+    "matineeServer": "Matinee: появляется в Matinee как плеер и воспроизводит то, что ему отправляют",
+    "matineeClient": "Matinee: воспроизводить на плеере Matinee (адрес: ID плеера)",
+    "streamClient": "Поток: живой поток WAV для VLC или браузера",
+    "localClient": "Локально: звуковая карта этого компьютера"
   },
   "servers": {
     "title": "Входные серверы",
@@ -145,5 +149,26 @@
     "done": "Пара создана",
     "doneMessage": "Устройство объединено в пару и готово к работе.",
     "failed": "Не удалось создать пару"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Колонки и плееры Matinee",
+    "what": "Подключите Air-Mixer к серверу Matinee, и его плееры станут здесь колонками (добавьте клиент вывода; поиск устройств покажет их), а входы Matinee появятся в Matinee и Home Assistant как плееры, которые играют в ваши маршруты. Войдите один раз, как на телевизоре: подтвердите код на странице /link в Matinee как администратор.",
+    "server": "Сервер Matinee",
+    "save": "Сохранить",
+    "signIn": "Войти",
+    "signInAgain": "Войти снова",
+    "signOut": "Выйти",
+    "approve": "Откройте {{url}} как администратор Matinee и введите {{code}}. Ожидание подтверждения…",
+    "signedInTitle": "Вход в Matinee выполнен",
+    "signedInMessage": "Плееры Matinee теперь есть в поиске устройств",
+    "signedInAs": "Вход в {{url}} выполнен как {{user}}.",
+    "notSignedIn": "Вход ещё не выполнен.",
+    "notConnected": "Нет подключения к серверу Matinee.",
+    "saveFailed": "Не удалось сохранить адрес",
+    "codeFailed": "Не удалось получить код для входа",
+    "player": "Плеер Matinee ({{platform}})",
+    "playerClosed": "Плеер Matinee ({{platform}}), сейчас закрыт",
+    "unknownPlatform": "неизвестно"
   }
 }

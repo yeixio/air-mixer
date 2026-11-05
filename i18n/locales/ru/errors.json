@@ -24,5 +24,11 @@
   "route_mix_mode": "Неизвестный mix_mode «{{mode}}»",
   "route_dest_empty": "Названия назначений не могут быть пустыми",
   "route_duck_range": "duck {{duck}} вне диапазона 0..1",
-  "route_playback_owned": "Этот маршрут принадлежит воспроизведению; остановите его через DELETE /api/playback/{id}"
+  "route_playback_owned": "Этот маршрут принадлежит воспроизведению; остановите его через DELETE /api/playback/{id}",
+  "stream_not_found": "Такого потока нет: этот вывод не является подключённым потоком или выводом Matinee",
+  "matinee_unavailable": "Matinee недоступен в этой сборке",
+  "matinee_needs_player": "Клиенту Matinee нужен ID плеера в качестве адреса (см. /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer ещё не вошёл в Matinee",
+  "matinee_link_failed": "Не удалось получить код от Matinee: {{detail}}",
+  "matinee_players_failed": "Не удалось получить плееры от Matinee: {{detail}}"
 }

@@ -24,5 +24,11 @@
   "route_mix_mode": "अज्ञात mix_mode \"{{mode}}\"",
   "route_dest_empty": "गंतव्य के नाम खाली नहीं हो सकते",
   "route_duck_range": "duck {{duck}} 0..1 से बाहर है",
-  "route_playback_owned": "यह रूट एक प्लेबैक का है; इसे DELETE /api/playback/{id} से रोकें"
+  "route_playback_owned": "यह रूट एक प्लेबैक का है; इसे DELETE /api/playback/{id} से रोकें",
+  "stream_not_found": "ऐसी कोई स्ट्रीम नहीं: यह आउटपुट कनेक्ट की गई स्ट्रीम या Matinee आउटपुट नहीं है",
+  "matinee_unavailable": "इस बिल्ड में Matinee उपलब्ध नहीं है",
+  "matinee_needs_player": "Matinee क्लाइंट को पते के रूप में प्लेयर की ID चाहिए (/api/matinee/players देखें)",
+  "matinee_not_signed_in": "Air-Mixer अभी Matinee में साइन इन नहीं है",
+  "matinee_link_failed": "Matinee से कोड नहीं मिल सका: {{detail}}",
+  "matinee_players_failed": "Matinee से प्लेयर नहीं मिल सके: {{detail}}"
 }

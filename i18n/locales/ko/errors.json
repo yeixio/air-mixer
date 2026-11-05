@@ -24,5 +24,11 @@
   "route_mix_mode": "알 수 없는 mix_mode \"{{mode}}\"",
   "route_dest_empty": "대상 이름은 비워 둘 수 없습니다",
   "route_duck_range": "duck {{duck}}이(가) 0..1 범위를 벗어났습니다",
-  "route_playback_owned": "이 경로는 재생에 속해 있습니다. DELETE /api/playback/{id}로 중지하세요"
+  "route_playback_owned": "이 경로는 재생에 속해 있습니다. DELETE /api/playback/{id}로 중지하세요",
+  "stream_not_found": "그런 스트림이 없습니다: 이 출력은 연결된 스트림 또는 Matinee 출력이 아닙니다",
+  "matinee_unavailable": "이 빌드에서는 Matinee를 사용할 수 없습니다",
+  "matinee_needs_player": "Matinee 클라이언트의 주소에는 플레이어 ID가 필요합니다(/api/matinee/players 참고)",
+  "matinee_not_signed_in": "Air-Mixer가 아직 Matinee에 로그인하지 않았습니다",
+  "matinee_link_failed": "Matinee에서 코드를 받을 수 없습니다: {{detail}}",
+  "matinee_players_failed": "Matinee에서 플레이어 목록을 받을 수 없습니다: {{detail}}"
 }

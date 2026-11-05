@@ -24,5 +24,11 @@
   "route_mix_mode": "mix_mode ناشناخته \"{{mode}}\"",
   "route_dest_empty": "نام مقصدها نمی‌تواند خالی باشد",
   "route_duck_range": "duck {{duck}} خارج از بازه 0..1 است",
-  "route_playback_owned": "این مسیر متعلق به یک پخش است؛ آن را با DELETE /api/playback/{id} متوقف کنید"
+  "route_playback_owned": "این مسیر متعلق به یک پخش است؛ آن را با DELETE /api/playback/{id} متوقف کنید",
+  "stream_not_found": "چنین جریانی وجود ندارد: این خروجی، خروجی جریان یا Matinee متصل نیست",
+  "matinee_unavailable": "Matinee در این نسخه در دسترس نیست",
+  "matinee_needs_player": "کلاینت Matinee به شناسه پخش‌کننده به‌عنوان نشانی نیاز دارد (‎/api/matinee/players را ببینید)",
+  "matinee_not_signed_in": "Air-Mixer هنوز وارد Matinee نشده است",
+  "matinee_link_failed": "دریافت کد از Matinee ممکن نشد: {{detail}}",
+  "matinee_players_failed": "دریافت پخش‌کننده‌ها از Matinee ممکن نشد: {{detail}}"
 }

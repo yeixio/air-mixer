@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: hang fogadása iPhone-ról, iPadről és Macről",
-    "airplayClient": "AirPlay: hang küldése AirPlay-hangszórókra"
+    "airplayClient": "AirPlay: hang küldése AirPlay-hangszórókra",
+    "matineeServer": "Matinee: lejátszóként jelenik meg a Matinee-ben, és lejátssza, amit kap",
+    "matineeClient": "Matinee: lejátszás Matinee-lejátszón (cím: a lejátszó azonosítója)",
+    "streamClient": "Stream: élő WAV-stream VLC-hez vagy böngészőhöz",
+    "localClient": "Helyi: a gép hangkártyája"
   },
   "servers": {
     "title": "Bemeneti szerverek",
@@ -143,5 +147,26 @@
     "done": "Párosítva",
     "doneMessage": "Az eszköz párosítva van, és használatra kész.",
     "failed": "A párosítás nem sikerült"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Matinee-hangszórók és -lejátszók",
+    "what": "Csatlakoztasd az Air-Mixert a Matinee-szerveredhez, és a lejátszói itt hangszórók lesznek (adj hozzá kimeneti klienst; az eszközkeresés listázza őket), a Matinee-bemenetek pedig lejátszóként jelennek meg a Matinee-ben és a Home Assistantban, és az útvonalaidba játszanak. Jelentkezz be egyszer, mint egy tévén: hagyd jóvá a kódot adminként a Matinee /link oldalán.",
+    "server": "Matinee-szerver",
+    "save": "Mentés",
+    "signIn": "Bejelentkezés",
+    "signInAgain": "Újra bejelentkezés",
+    "signOut": "Kijelentkezés",
+    "approve": "Nyisd meg a(z) {{url}} oldalt Matinee-adminként, és írd be: {{code}}. Jóváhagyásra vár…",
+    "signedInTitle": "Bejelentkezve a Matinee-be",
+    "signedInMessage": "A Matinee-lejátszók most már az eszközkeresésben vannak",
+    "signedInAs": "Bejelentkezve ide: {{url}}, felhasználó: {{user}}.",
+    "notSignedIn": "Még nincs bejelentkezve.",
+    "notConnected": "Nincs kapcsolat Matinee-szerverrel.",
+    "saveFailed": "Nem sikerült menteni a címet",
+    "codeFailed": "Nem sikerült bejelentkezési kódot kérni",
+    "player": "Matinee-lejátszó ({{platform}})",
+    "playerClosed": "Matinee-lejátszó ({{platform}}), most bezárva",
+    "unknownPlatform": "ismeretlen"
   }
 }

@@ -18,6 +18,8 @@ import (
 	"github.com/yeixio/air-mixer/internal/discovery"
 	"github.com/yeixio/air-mixer/internal/playback"
 	"github.com/yeixio/air-mixer/internal/protocols"
+	"github.com/yeixio/air-mixer/internal/protocols/httpstream"
+	"github.com/yeixio/air-mixer/internal/protocols/matinee"
 	"github.com/yeixio/air-mixer/internal/router"
 	"github.com/yeixio/air-mixer/internal/service"
 )
@@ -63,9 +65,17 @@ func Run(ctx context.Context, opts Options) error {
 	manager := protocols.NewManager(r, log)
 	defer manager.Close()
 
+	streams := httpstream.NewRegistry()
+	account := matinee.NewAccount(ctx, store, cfg.Matinee.URL, log)
+	defer account.Close()
+
 	factory := opts.Factory
 	if factory == nil {
-		factory = service.NewFactory(service.Defaults{AirPlayPort: cfg.Server.AirPlayPort, Interface: cfg.Server.Interface}, log)
+		factory = service.NewFactory(service.Defaults{
+			AirPlayPort: cfg.Server.AirPlayPort, Interface: cfg.Server.Interface,
+			Version: opts.Version, WebPort: cfg.Server.WebPort, PublicURL: cfg.Server.PublicURL,
+			Streams: streams, Matinee: account, Settings: store,
+		}, log)
 	}
 	svc := service.New(store, r, manager, factory, log)
 	if err := svc.Load(ctx); err != nil {
@@ -91,7 +101,10 @@ func Run(ctx context.Context, opts Options) error {
 		disc = discovery.NewService()
 	}
 	srv := &http.Server{
-		Handler:           api.New(api.Options{Service: svc, Discovery: disc, Player: player, Logger: log, Version: opts.Version}),
+		Handler: api.New(api.Options{
+			Service: svc, Discovery: disc, Player: player, Logger: log, Version: opts.Version,
+			Streams: streams, Matinee: account,
+		}),
 		ReadHeaderTimeout: 10 * time.Second,
 		IdleTimeout:       2 * time.Minute,
 	}

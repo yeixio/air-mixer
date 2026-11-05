@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: Audio von iPhone, iPad und Mac empfangen",
-    "airplayClient": "AirPlay: Audio an AirPlay-Lautsprecher senden"
+    "airplayClient": "AirPlay: Audio an AirPlay-Lautsprecher senden",
+    "matineeServer": "Matinee: erscheint in Matinee als Player und spielt ab, was er bekommt",
+    "matineeClient": "Matinee: auf einem Matinee-Player abspielen (Adresse: die ID des Players)",
+    "streamClient": "Stream: ein Live-WAV-Stream für VLC oder einen Browser",
+    "localClient": "Lokal: die Soundkarte dieses Rechners"
   },
   "servers": {
     "title": "Eingangsserver",
@@ -143,5 +147,26 @@
     "done": "Gekoppelt",
     "doneMessage": "Das Gerät ist gekoppelt und bereit.",
     "failed": "Kopplung fehlgeschlagen"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Matinee-Lautsprecher und -Player",
+    "what": "Verbinde Air-Mixer mit deinem Matinee-Server, dann werden seine Player hier zu Lautsprechern (füge einen Ausgabe-Client hinzu; „Geräte suchen“ listet sie auf), und Matinee-Eingänge erscheinen in Matinee und Home Assistant als Player, die in deine Routen spielen. Melde dich einmal an, so wie bei einem Fernseher: Bestätige den Code als Admin auf der /link-Seite von Matinee.",
+    "server": "Matinee-Server",
+    "save": "Speichern",
+    "signIn": "Anmelden",
+    "signInAgain": "Erneut anmelden",
+    "signOut": "Abmelden",
+    "approve": "Öffne {{url}} als Matinee-Admin und gib {{code}} ein. Warte auf Bestätigung…",
+    "signedInTitle": "Bei Matinee angemeldet",
+    "signedInMessage": "Matinee-Player findest du jetzt unter „Geräte suchen“",
+    "signedInAs": "Bei {{url}} angemeldet als {{user}}.",
+    "notSignedIn": "Noch nicht angemeldet.",
+    "notConnected": "Mit keinem Matinee-Server verbunden.",
+    "saveFailed": "Die Adresse konnte nicht gespeichert werden",
+    "codeFailed": "Es konnte kein Anmeldecode abgerufen werden",
+    "player": "Matinee-Player ({{platform}})",
+    "playerClosed": "Matinee-Player ({{platform}}), gerade geschlossen",
+    "unknownPlatform": "unbekannt"
   }
 }

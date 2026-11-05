@@ -24,5 +24,11 @@
   "route_mix_mode": "mix_mode desconhecido: \"{{mode}}\"",
   "route_dest_empty": "Os nomes de destino não podem ficar vazios",
   "route_duck_range": "duck {{duck}} está fora de 0..1",
-  "route_playback_owned": "Esta rota pertence a uma reprodução; pare-a com DELETE /api/playback/{id}"
+  "route_playback_owned": "Esta rota pertence a uma reprodução; pare-a com DELETE /api/playback/{id}",
+  "stream_not_found": "Stream inexistente: a saída não é uma saída de stream ou Matinee conectada",
+  "matinee_unavailable": "O Matinee não está disponível nesta versão",
+  "matinee_needs_player": "Um cliente Matinee precisa do ID do player como endereço (veja /api/matinee/players)",
+  "matinee_not_signed_in": "O Air-Mixer ainda não está conectado ao Matinee",
+  "matinee_link_failed": "Não foi possível obter um código do Matinee: {{detail}}",
+  "matinee_players_failed": "Não foi possível obter os players do Matinee: {{detail}}"
 }

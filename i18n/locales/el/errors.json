@@ -24,5 +24,11 @@
   "route_mix_mode": "Άγνωστο mix_mode «{{mode}}»",
   "route_dest_empty": "Τα ονόματα προορισμών δεν μπορούν να είναι κενά",
   "route_duck_range": "Το duck {{duck}} είναι εκτός 0..1",
-  "route_playback_owned": "Αυτή η διαδρομή ανήκει σε αναπαραγωγή· σταματήστε την με DELETE /api/playback/{id}"
+  "route_playback_owned": "Αυτή η διαδρομή ανήκει σε αναπαραγωγή· σταματήστε την με DELETE /api/playback/{id}",
+  "stream_not_found": "Δεν υπάρχει τέτοια ροή: η έξοδος δεν είναι συνδεδεμένη έξοδος ροής ή Matinee",
+  "matinee_unavailable": "Το Matinee δεν είναι διαθέσιμο σε αυτή την έκδοση",
+  "matinee_needs_player": "Ένας πελάτης Matinee χρειάζεται ως διεύθυνση το ID του αναπαραγωγέα (δείτε /api/matinee/players)",
+  "matinee_not_signed_in": "Το Air-Mixer δεν έχει συνδεθεί ακόμη στο Matinee",
+  "matinee_link_failed": "Δεν ήταν δυνατή η λήψη κωδικού από το Matinee: {{detail}}",
+  "matinee_players_failed": "Δεν ήταν δυνατή η λήψη των αναπαραγωγέων από το Matinee: {{detail}}"
 }

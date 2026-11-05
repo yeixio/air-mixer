@@ -24,5 +24,11 @@
   "route_mix_mode": "不明な mix_mode「{{mode}}」",
   "route_dest_empty": "出力先の名前は空にできません",
   "route_duck_range": "duck {{duck}} が 0..1 の範囲外です",
-  "route_playback_owned": "このルートは再生に属しています。DELETE /api/playback/{id} で停止してください"
+  "route_playback_owned": "このルートは再生に属しています。DELETE /api/playback/{id} で停止してください",
+  "stream_not_found": "そのストリームはありません：この出力は接続済みのストリーム出力または Matinee 出力ではありません",
+  "matinee_unavailable": "このビルドでは Matinee を使えません",
+  "matinee_needs_player": "Matinee クライアントにはアドレスとしてプレーヤーの ID が必要です（/api/matinee/players を参照）",
+  "matinee_not_signed_in": "Air-Mixer はまだ Matinee にサインインしていません",
+  "matinee_link_failed": "Matinee からコードを取得できませんでした：{{detail}}",
+  "matinee_players_failed": "Matinee からプレーヤーを取得できませんでした：{{detail}}"
 }

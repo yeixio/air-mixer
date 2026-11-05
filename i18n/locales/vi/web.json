@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: nhận âm thanh từ iPhone, iPad và Mac",
-    "airplayClient": "AirPlay: gửi âm thanh tới loa AirPlay"
+    "airplayClient": "AirPlay: gửi âm thanh tới loa AirPlay",
+    "matineeServer": "Matinee: hiện trong Matinee như một trình phát và phát những gì được gửi tới",
+    "matineeClient": "Matinee: phát trên một trình phát Matinee (địa chỉ: ID của trình phát)",
+    "streamClient": "Luồng: luồng WAV trực tiếp cho VLC hoặc trình duyệt",
+    "localClient": "Cục bộ: card âm thanh của máy này"
   },
   "servers": {
     "title": "Máy chủ đầu vào",
@@ -142,5 +146,26 @@
     "done": "Đã ghép đôi",
     "doneMessage": "Thiết bị đã được ghép đôi và sẵn sàng sử dụng.",
     "failed": "Ghép đôi thất bại"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Loa và trình phát Matinee",
+    "what": "Kết nối Air-Mixer với máy chủ Matinee của bạn để các trình phát của nó trở thành loa ở đây (thêm một máy khách đầu ra; Tìm thiết bị sẽ liệt kê chúng), và các đầu vào Matinee hiện trong Matinee và Home Assistant như các trình phát phát vào tuyến của bạn. Đăng nhập một lần, như trên TV: phê duyệt mã trên trang /link của Matinee với tư cách quản trị viên.",
+    "server": "Máy chủ Matinee",
+    "save": "Lưu",
+    "signIn": "Đăng nhập",
+    "signInAgain": "Đăng nhập lại",
+    "signOut": "Đăng xuất",
+    "approve": "Mở {{url}} với tư cách quản trị viên Matinee và nhập {{code}}. Đang chờ phê duyệt…",
+    "signedInTitle": "Đã đăng nhập Matinee",
+    "signedInMessage": "Trình phát Matinee giờ có trong Tìm thiết bị",
+    "signedInAs": "Đã đăng nhập {{url}} với tên {{user}}.",
+    "notSignedIn": "Chưa đăng nhập.",
+    "notConnected": "Chưa kết nối với máy chủ Matinee nào.",
+    "saveFailed": "Không lưu được địa chỉ",
+    "codeFailed": "Không lấy được mã đăng nhập",
+    "player": "Trình phát Matinee ({{platform}})",
+    "playerClosed": "Trình phát Matinee ({{platform}}), hiện đang đóng",
+    "unknownPlatform": "không rõ"
   }
 }

@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: دریافت صدا از iPhone، iPad و Mac",
-    "airplayClient": "AirPlay: فرستادن صدا به بلندگوهای AirPlay"
+    "airplayClient": "AirPlay: فرستادن صدا به بلندگوهای AirPlay",
+    "matineeServer": "Matinee: در Matinee به‌عنوان پخش‌کننده نمایش داده می‌شود و هرچه برایش بفرستند پخش می‌کند",
+    "matineeClient": "Matinee: پخش روی یک پخش‌کننده Matinee (نشانی: شناسه پخش‌کننده)",
+    "streamClient": "جریان: جریان زنده WAV برای VLC یا مرورگر",
+    "localClient": "محلی: کارت صدای این دستگاه"
   },
   "servers": {
     "title": "سرورهای ورودی",
@@ -143,5 +147,26 @@
     "done": "جفت شد",
     "doneMessage": "دستگاه جفت شد و آماده استفاده است.",
     "failed": "جفت‌سازی ناموفق بود"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "بلندگوها و پخش‌کننده‌های Matinee",
+    "what": "Air-Mixer را به سرور Matinee خود وصل کنید تا پخش‌کننده‌هایش اینجا بلندگو شوند (یک کلاینت خروجی اضافه کنید؛ جست‌وجوی دستگاه‌ها آن‌ها را نشان می‌دهد) و ورودی‌های Matinee در Matinee و Home Assistant به‌شکل پخش‌کننده‌هایی ظاهر شوند که در مسیرهای شما پخش می‌کنند. یک بار وارد شوید، مثل یک تلویزیون: کد را در صفحه ‎/link در Matinee به‌عنوان مدیر تأیید کنید.",
+    "server": "سرور Matinee",
+    "save": "ذخیره",
+    "signIn": "ورود",
+    "signInAgain": "ورود دوباره",
+    "signOut": "خروج",
+    "approve": "{{url}} را به‌عنوان مدیر Matinee باز کنید و {{code}} را وارد کنید. در انتظار تأیید…",
+    "signedInTitle": "وارد Matinee شدید",
+    "signedInMessage": "پخش‌کننده‌های Matinee اکنون در جست‌وجوی دستگاه‌ها هستند",
+    "signedInAs": "به‌عنوان {{user}} وارد {{url}} شدید.",
+    "notSignedIn": "هنوز وارد نشده‌اید.",
+    "notConnected": "به هیچ سرور Matinee وصل نیست.",
+    "saveFailed": "ذخیره نشانی ممکن نشد",
+    "codeFailed": "دریافت کد ورود ممکن نشد",
+    "player": "پخش‌کننده Matinee ({{platform}})",
+    "playerClosed": "پخش‌کننده Matinee ({{platform}})، اکنون بسته است",
+    "unknownPlatform": "ناشناخته"
   }
 }

@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: استقبال الصوت من iPhone وiPad وMac",
-    "airplayClient": "AirPlay: إرسال الصوت إلى مكبرات صوت AirPlay"
+    "airplayClient": "AirPlay: إرسال الصوت إلى مكبرات صوت AirPlay",
+    "matineeServer": "Matinee: يظهر في Matinee كمشغّل ويشغّل ما يُرسل إليه",
+    "matineeClient": "Matinee: التشغيل على مشغّل Matinee (العنوان: معرّف المشغّل)",
+    "streamClient": "بث: بث WAV مباشر لـ VLC أو لمتصفح",
+    "localClient": "محلي: بطاقة الصوت في هذا الجهاز"
   },
   "servers": {
     "title": "خوادم الإدخال",
@@ -147,5 +151,26 @@
     "done": "اكتمل الإقران",
     "doneMessage": "أُقرن الجهاز وأصبح جاهزًا للاستخدام.",
     "failed": "فشل الإقران"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "سماعات ومشغّلات Matinee",
+    "what": "اربط Air-Mixer بخادم Matinee لتصبح مشغّلاته سماعات هنا (أضف عميل إخراج؛ يعرضها البحث عن الأجهزة)، وتظهر مدخلات Matinee في Matinee وHome Assistant كمشغّلات تعزف في مساراتك. سجّل الدخول مرة واحدة كما تفعل على التلفاز: وافق على الرمز في صفحة ‎/link في Matinee بصفتك مسؤولًا.",
+    "server": "خادم Matinee",
+    "save": "حفظ",
+    "signIn": "تسجيل الدخول",
+    "signInAgain": "تسجيل الدخول مجددًا",
+    "signOut": "تسجيل الخروج",
+    "approve": "افتح {{url}} بصفتك مسؤولًا في Matinee وأدخل {{code}}. في انتظار الموافقة…",
+    "signedInTitle": "تم تسجيل الدخول إلى Matinee",
+    "signedInMessage": "أصبحت مشغّلات Matinee الآن في البحث عن الأجهزة",
+    "signedInAs": "تم تسجيل الدخول إلى {{url}} باسم {{user}}.",
+    "notSignedIn": "لم يتم تسجيل الدخول بعد.",
+    "notConnected": "غير متصل بخادم Matinee.",
+    "saveFailed": "تعذّر حفظ العنوان",
+    "codeFailed": "تعذّر الحصول على رمز تسجيل الدخول",
+    "player": "مشغّل Matinee ({{platform}})",
+    "playerClosed": "مشغّل Matinee ({{platform}})، مغلق الآن",
+    "unknownPlatform": "غير معروفة"
   }
 }

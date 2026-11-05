@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone、iPad、Mac からオーディオを受信",
-    "airplayClient": "AirPlay: AirPlay スピーカーにオーディオを送信"
+    "airplayClient": "AirPlay: AirPlay スピーカーにオーディオを送信",
+    "matineeServer": "Matinee: Matinee にプレーヤーとして表示され、送られた音声を再生します",
+    "matineeClient": "Matinee: Matinee のプレーヤーで再生（アドレス：プレーヤーの ID）",
+    "streamClient": "ストリーム: VLC やブラウザ向けのライブ WAV ストリーム",
+    "localClient": "ローカル: このマシンのサウンドカード"
   },
   "servers": {
     "title": "入力サーバー",
@@ -142,5 +146,26 @@
     "done": "ペアリング完了",
     "doneMessage": "デバイスがペアリングされ、使えるようになりました。",
     "failed": "ペアリングに失敗しました"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Matinee のスピーカーとプレーヤー",
+    "what": "Air-Mixer を Matinee サーバーに接続すると、そのプレーヤーがここでスピーカーになり（出力クライアントを追加。デバイス検索に表示されます）、Matinee の入力は Matinee と Home Assistant にルートへ再生するプレーヤーとして表示されます。テレビと同じように一度だけサインインします。管理者として Matinee の /link ページでコードを承認してください。",
+    "server": "Matinee サーバー",
+    "save": "保存",
+    "signIn": "サインイン",
+    "signInAgain": "もう一度サインイン",
+    "signOut": "サインアウト",
+    "approve": "Matinee の管理者として {{url}} を開き、{{code}} を入力してください。承認を待っています…",
+    "signedInTitle": "Matinee にサインインしました",
+    "signedInMessage": "Matinee のプレーヤーがデバイス検索に表示されるようになりました",
+    "signedInAs": "{{user}} として {{url}} にサインインしています。",
+    "notSignedIn": "まだサインインしていません。",
+    "notConnected": "Matinee サーバーに接続していません。",
+    "saveFailed": "アドレスを保存できませんでした",
+    "codeFailed": "サインインコードを取得できませんでした",
+    "player": "Matinee プレーヤー（{{platform}}）",
+    "playerClosed": "Matinee プレーヤー（{{platform}}）、現在閉じています",
+    "unknownPlatform": "不明"
   }
 }

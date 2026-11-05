@@ -24,5 +24,11 @@
   "route_mix_mode": "mix_mode không rõ: \"{{mode}}\"",
   "route_dest_empty": "Tên đích không được để trống",
   "route_duck_range": "duck {{duck}} nằm ngoài 0..1",
-  "route_playback_owned": "Tuyến này thuộc về một lượt phát; hãy dừng nó bằng DELETE /api/playback/{id}"
+  "route_playback_owned": "Tuyến này thuộc về một lượt phát; hãy dừng nó bằng DELETE /api/playback/{id}",
+  "stream_not_found": "Không có luồng này: đầu ra không phải là đầu ra luồng hoặc Matinee đã kết nối",
+  "matinee_unavailable": "Bản dựng này không có Matinee",
+  "matinee_needs_player": "Máy khách Matinee cần ID của trình phát làm địa chỉ (xem /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer chưa đăng nhập Matinee",
+  "matinee_link_failed": "Không lấy được mã từ Matinee: {{detail}}",
+  "matinee_players_failed": "Không lấy được danh sách trình phát từ Matinee: {{detail}}"
 }

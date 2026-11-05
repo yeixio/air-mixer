@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: terima audio daripada iPhone, iPad dan Mac",
-    "airplayClient": "AirPlay: hantar audio ke pembesar suara AirPlay"
+    "airplayClient": "AirPlay: hantar audio ke pembesar suara AirPlay",
+    "matineeServer": "Matinee: muncul dalam Matinee sebagai pemain dan memainkan apa yang dihantar",
+    "matineeClient": "Matinee: main pada pemain Matinee (alamat: ID pemain)",
+    "streamClient": "Strim: strim WAV langsung untuk VLC atau pelayar",
+    "localClient": "Setempat: kad bunyi mesin ini"
   },
   "servers": {
     "title": "Pelayan input",
@@ -142,5 +146,26 @@
     "done": "Digandingkan",
     "doneMessage": "Peranti telah digandingkan dan sedia digunakan.",
     "failed": "Gandingan gagal"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Pembesar suara dan pemain Matinee",
+    "what": "Sambungkan Air-Mixer ke pelayan Matinee anda dan pemainnya menjadi pembesar suara di sini (tambah klien output; Cari peranti menyenaraikannya), dan input Matinee muncul dalam Matinee dan Home Assistant sebagai pemain yang bermain ke laluan anda. Log masuk sekali, seperti pada TV: luluskan kod di halaman /link Matinee sebagai pentadbir.",
+    "server": "Pelayan Matinee",
+    "save": "Simpan",
+    "signIn": "Log masuk",
+    "signInAgain": "Log masuk semula",
+    "signOut": "Log keluar",
+    "approve": "Buka {{url}} sebagai pentadbir Matinee dan masukkan {{code}}. Menunggu kelulusan…",
+    "signedInTitle": "Telah log masuk ke Matinee",
+    "signedInMessage": "Pemain Matinee kini ada dalam Cari peranti",
+    "signedInAs": "Telah log masuk ke {{url}} sebagai {{user}}.",
+    "notSignedIn": "Belum log masuk.",
+    "notConnected": "Tidak bersambung ke pelayan Matinee.",
+    "saveFailed": "Tidak dapat menyimpan alamat",
+    "codeFailed": "Tidak dapat mendapatkan kod log masuk",
+    "player": "Pemain Matinee ({{platform}})",
+    "playerClosed": "Pemain Matinee ({{platform}}), ditutup sekarang",
+    "unknownPlatform": "tidak diketahui"
   }
 }

@@ -11,7 +11,9 @@ import (
 	"github.com/yeixio/air-mixer/internal/db"
 	"github.com/yeixio/air-mixer/internal/protocols"
 	"github.com/yeixio/air-mixer/internal/protocols/airplay"
+	"github.com/yeixio/air-mixer/internal/protocols/httpstream"
 	"github.com/yeixio/air-mixer/internal/protocols/local"
+	"github.com/yeixio/air-mixer/internal/protocols/matinee"
 	"github.com/yeixio/air-mixer/internal/protocols/pulse"
 )
 
@@ -25,6 +27,14 @@ type Factory interface {
 type Defaults struct {
 	AirPlayPort int    // RTSP port for AirPlay receivers
 	Interface   string // network interface to advertise on
+
+	// For stream and Matinee adapters.
+	Version   string
+	WebPort   int                  // where the API (and so streams) is served
+	PublicURL string               // how other machines reach the API; empty to work it out
+	Streams   *httpstream.Registry // where stream outputs are served from
+	Matinee   *matinee.Account     // Air-Mixer's sign-in to Matinee
+	Settings  matinee.Settings     // remembers each Matinee output's station
 }
 
 // ServerConfig is the JSON stored in db.Server.Config.
@@ -55,6 +65,9 @@ type ClientConfig struct {
 	// Server is the PulseAudio server for a pulse output, such as
 	// "unix:/run/pulse/native". Empty means $PULSE_SERVER or the default.
 	Server string `json:"server,omitempty"`
+	// LibraryID is the Matinee music library a Matinee output's station
+	// goes in; 0 for the first one.
+	LibraryID int64 `json:"library_id,omitempty"`
 }
 
 // maxDelayMS bounds delay_ms; more than this is a typo, not a calibration.
@@ -89,6 +102,14 @@ func (f *factory) Server(s *db.Server) (protocols.Server, error) {
 	var cfg ServerConfig
 	if err := parseConfig(s.Config, &cfg); err != nil {
 		return nil, err
+	}
+	if s.Protocol == "matinee" {
+		if f.defaults.Matinee == nil {
+			return nil, invalidCode("matinee_unavailable", nil)
+		}
+		return matinee.NewSource(matinee.SourceOptions{
+			ID: s.ID, Name: s.Name, Account: f.defaults.Matinee, Version: f.defaults.Version, Logger: f.log,
+		}), nil
 	}
 	if s.Protocol != "airplay" {
 		return nil, invalidCode("unsupported_server_protocol", map[string]any{"protocol": s.Protocol})
@@ -137,6 +158,24 @@ func (f *factory) Client(c *db.Client) (protocols.Client, error) {
 		}
 		return pulse.NewClient(pulse.Options{
 			ID: c.ID, Name: c.Name, Server: cfg.Server, Sink: cfg.Sink, Delay: delay, Logger: f.log,
+		}), nil
+	case "stream":
+		return httpstream.New(c.ID, c.Name, f.defaults.Streams, f.log), nil
+	case "matinee":
+		addr := c.Address
+		if addr == "" {
+			addr = cfg.Address
+		}
+		if addr == "" {
+			return nil, invalidCode("matinee_needs_player", nil)
+		}
+		if f.defaults.Matinee == nil {
+			return nil, invalidCode("matinee_unavailable", nil)
+		}
+		return matinee.NewSpeaker(matinee.SpeakerOptions{
+			ID: c.ID, Name: c.Name, Player: addr, LibraryID: cfg.LibraryID,
+			Account: f.defaults.Matinee, Streams: f.defaults.Streams, Settings: f.defaults.Settings,
+			PublicURL: f.defaults.PublicURL, WebPort: f.defaults.WebPort, Logger: f.log,
 		}), nil
 	}
 	return nil, invalidCode("unsupported_client_protocol", map[string]any{"protocol": c.Protocol})

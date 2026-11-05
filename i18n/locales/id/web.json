@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: terima audio dari iPhone, iPad, dan Mac",
-    "airplayClient": "AirPlay: kirim audio ke speaker AirPlay"
+    "airplayClient": "AirPlay: kirim audio ke speaker AirPlay",
+    "matineeServer": "Matinee: muncul di Matinee sebagai pemutar dan memutar apa yang dikirim",
+    "matineeClient": "Matinee: putar di pemutar Matinee (alamat: ID pemutar)",
+    "streamClient": "Stream: stream WAV langsung untuk VLC atau browser",
+    "localClient": "Lokal: kartu suara mesin ini"
   },
   "servers": {
     "title": "Server input",
@@ -142,5 +146,26 @@
     "done": "Terpasang",
     "doneMessage": "Perangkat sudah terpasang dan siap digunakan.",
     "failed": "Pemasangan gagal"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Speaker dan pemutar Matinee",
+    "what": "Hubungkan Air-Mixer ke server Matinee Anda dan pemutarnya menjadi speaker di sini (tambahkan klien output; Cari perangkat menampilkannya), dan input Matinee muncul di Matinee dan Home Assistant sebagai pemutar yang memutar ke rute Anda. Masuk sekali, seperti di TV: setujui kode di halaman /link Matinee sebagai admin.",
+    "server": "Server Matinee",
+    "save": "Simpan",
+    "signIn": "Masuk",
+    "signInAgain": "Masuk lagi",
+    "signOut": "Keluar",
+    "approve": "Buka {{url}} sebagai admin Matinee dan masukkan {{code}}. Menunggu persetujuan…",
+    "signedInTitle": "Masuk ke Matinee",
+    "signedInMessage": "Pemutar Matinee sekarang ada di Cari perangkat",
+    "signedInAs": "Masuk ke {{url}} sebagai {{user}}.",
+    "notSignedIn": "Belum masuk.",
+    "notConnected": "Tidak terhubung ke server Matinee.",
+    "saveFailed": "Tidak dapat menyimpan alamat",
+    "codeFailed": "Tidak dapat memperoleh kode masuk",
+    "player": "Pemutar Matinee ({{platform}})",
+    "playerClosed": "Pemutar Matinee ({{platform}}), sedang tertutup",
+    "unknownPlatform": "tidak diketahui"
   }
 }

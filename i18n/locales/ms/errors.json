@@ -24,5 +24,11 @@
   "route_mix_mode": "mix_mode \"{{mode}}\" tidak dikenali",
   "route_dest_empty": "Nama destinasi tidak boleh kosong",
   "route_duck_range": "duck {{duck}} di luar 0..1",
-  "route_playback_owned": "Laluan ini milik satu main balik; hentikannya dengan DELETE /api/playback/{id}"
+  "route_playback_owned": "Laluan ini milik satu main balik; hentikannya dengan DELETE /api/playback/{id}",
+  "stream_not_found": "Tiada strim sebegitu: output ini bukan output strim atau Matinee yang bersambung",
+  "matinee_unavailable": "Matinee tidak tersedia dalam binaan ini",
+  "matinee_needs_player": "Klien Matinee memerlukan ID pemain sebagai alamat (lihat /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer belum log masuk ke Matinee",
+  "matinee_link_failed": "Tidak dapat mendapatkan kod daripada Matinee: {{detail}}",
+  "matinee_players_failed": "Tidak dapat mendapatkan pemain daripada Matinee: {{detail}}"
 }

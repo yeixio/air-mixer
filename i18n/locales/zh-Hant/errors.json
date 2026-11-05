@@ -24,5 +24,11 @@
   "route_mix_mode": "未知的 mix_mode「{{mode}}」",
   "route_dest_empty": "目標名稱不能為空",
   "route_duck_range": "duck {{duck}} 超出 0..1 範圍",
-  "route_playback_owned": "此路由屬於一次播放；請用 DELETE /api/playback/{id} 停止它"
+  "route_playback_owned": "此路由屬於一次播放；請用 DELETE /api/playback/{id} 停止它",
+  "stream_not_found": "沒有這個串流：此輸出不是已連接的串流輸出或 Matinee 輸出",
+  "matinee_unavailable": "此版本沒有 Matinee",
+  "matinee_needs_player": "Matinee 用戶端需要以播放器 ID 作為位址（請參閱 /api/matinee/players）",
+  "matinee_not_signed_in": "Air-Mixer 尚未登入 Matinee",
+  "matinee_link_failed": "無法從 Matinee 取得代碼：{{detail}}",
+  "matinee_players_failed": "無法從 Matinee 取得播放器：{{detail}}"
 }

@@ -28,6 +28,16 @@ server:
   # pick the first physical interface with an IPv4 address.
   interface: "auto"
 
+  # How other machines reach the web port, such as http://192.168.1.10:9001.
+  # Matinee outputs give this address to Matinee to fetch their stream from.
+  # Empty means this machine's address on the way to the Matinee server.
+  public_url: ""
+
+matinee:
+  # Matinee server to use until one is set in the web UI, such as
+  # http://192.168.1.20:7171. Signing in happens in the web UI.
+  url: ""
+
 database:
   # SQLite database file. Empty means airmixer.db inside data_dir.
   path: ""

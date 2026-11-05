@@ -24,5 +24,11 @@
   "route_mix_mode": "Tuntematon mix_mode \"{{mode}}\"",
   "route_dest_empty": "Kohteiden nimet eivät voi olla tyhjiä",
   "route_duck_range": "duck {{duck}} on välin 0..1 ulkopuolella",
-  "route_playback_owned": "Tämä reitti kuuluu toistoon; pysäytä se komennolla DELETE /api/playback/{id}"
+  "route_playback_owned": "Tämä reitti kuuluu toistoon; pysäytä se komennolla DELETE /api/playback/{id}",
+  "stream_not_found": "Virtaa ei ole: lähtö ei ole yhdistetty stream- tai Matinee-lähtö",
+  "matinee_unavailable": "Matinee ei ole käytettävissä tässä versiossa",
+  "matinee_needs_player": "Matinee-asiakas tarvitsee osoitteeksi soittimen tunnuksen (katso /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer ei ole vielä kirjautunut Matineeseen",
+  "matinee_link_failed": "Matineelta ei saatu koodia: {{detail}}",
+  "matinee_players_failed": "Soittimia ei saatu Matineelta: {{detail}}"
 }

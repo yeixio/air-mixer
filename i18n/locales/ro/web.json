@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: primește sunet de pe iPhone, iPad și Mac",
-    "airplayClient": "AirPlay: trimite sunet la difuzoare AirPlay"
+    "airplayClient": "AirPlay: trimite sunet la difuzoare AirPlay",
+    "matineeServer": "Matinee: apare în Matinee ca player și redă ce primește",
+    "matineeClient": "Matinee: redă pe un player Matinee (adresa: ID-ul playerului)",
+    "streamClient": "Stream: un stream WAV live pentru VLC sau un browser",
+    "localClient": "Local: placa de sunet a acestui calculator"
   },
   "servers": {
     "title": "Servere de intrare",
@@ -144,5 +148,26 @@
     "done": "Asociat",
     "doneMessage": "Dispozitivul este asociat și gata de folosit.",
     "failed": "Asocierea a eșuat"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Difuzoare și playere Matinee",
+    "what": "Conectează Air-Mixer la serverul Matinee, iar playerele lui devin aici difuzoare (adaugă un client de ieșire; căutarea le afișează), iar intrările Matinee apar în Matinee și Home Assistant ca playere care cântă în rutele tale. Conectează-te o singură dată, ca la un televizor: aprobă codul pe pagina /link din Matinee ca administrator.",
+    "server": "Server Matinee",
+    "save": "Salvează",
+    "signIn": "Conectează-te",
+    "signInAgain": "Conectează-te din nou",
+    "signOut": "Deconectează-te",
+    "approve": "Deschide {{url}} ca administrator Matinee și introdu {{code}}. Se așteaptă aprobarea…",
+    "signedInTitle": "Conectat la Matinee",
+    "signedInMessage": "Playerele Matinee sunt acum în căutarea de dispozitive",
+    "signedInAs": "Conectat la {{url}} ca {{user}}.",
+    "notSignedIn": "Încă neconectat.",
+    "notConnected": "Nu există conexiune cu un server Matinee.",
+    "saveFailed": "Adresa nu a putut fi salvată",
+    "codeFailed": "Nu s-a putut obține un cod de conectare",
+    "player": "Player Matinee ({{platform}})",
+    "playerClosed": "Player Matinee ({{platform}}), închis acum",
+    "unknownPlatform": "necunoscută"
   }
 }

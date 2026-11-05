@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: přijímat zvuk z iPhonu, iPadu a Macu",
-    "airplayClient": "AirPlay: posílat zvuk do reproduktorů AirPlay"
+    "airplayClient": "AirPlay: posílat zvuk do reproduktorů AirPlay",
+    "matineeServer": "Matinee: zobrazí se v Matinee jako přehrávač a přehrává, co dostane",
+    "matineeClient": "Matinee: přehrávat na přehrávači Matinee (adresa: ID přehrávače)",
+    "streamClient": "Stream: živý WAV stream pro VLC nebo prohlížeč",
+    "localClient": "Místní: zvuková karta tohoto počítače"
   },
   "servers": {
     "title": "Vstupní servery",
@@ -145,5 +149,26 @@
     "done": "Spárováno",
     "doneMessage": "Zařízení je spárované a připravené k použití.",
     "failed": "Párování selhalo"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Reproduktory a přehrávače Matinee",
+    "what": "Připojte Air-Mixer k serveru Matinee a jeho přehrávače se tu stanou reproduktory (přidejte výstupního klienta; hledání zařízení je vypíše), a vstupy Matinee se objeví v Matinee a Home Assistant jako přehrávače, které hrají do vašich tras. Přihlaste se jednou, jako na televizi: schvalte kód na stránce /link v Matinee jako správce.",
+    "server": "Server Matinee",
+    "save": "Uložit",
+    "signIn": "Přihlásit se",
+    "signInAgain": "Přihlásit se znovu",
+    "signOut": "Odhlásit se",
+    "approve": "Otevřete {{url}} jako správce Matinee a zadejte {{code}}. Čeká se na schválení…",
+    "signedInTitle": "Přihlášeno do Matinee",
+    "signedInMessage": "Přehrávače Matinee jsou teď v hledání zařízení",
+    "signedInAs": "Přihlášeno k {{url}} jako {{user}}.",
+    "notSignedIn": "Zatím nepřihlášeno.",
+    "notConnected": "Není připojeno k žádnému serveru Matinee.",
+    "saveFailed": "Adresu se nepodařilo uložit",
+    "codeFailed": "Nepodařilo se získat přihlašovací kód",
+    "player": "Přehrávač Matinee ({{platform}})",
+    "playerClosed": "Přehrávač Matinee ({{platform}}), právě zavřený",
+    "unknownPlatform": "neznámá"
   }
 }

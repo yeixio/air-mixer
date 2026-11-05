@@ -24,5 +24,11 @@
   "route_mix_mode": "نامعلوم mix_mode \"{{mode}}\"",
   "route_dest_empty": "منزلوں کے نام خالی نہیں ہو سکتے",
   "route_duck_range": "duck {{duck}} حد 0..1 سے باہر ہے",
-  "route_playback_owned": "یہ روٹ ایک پلے بیک کا ہے؛ اسے DELETE /api/playback/{id} سے روکیں"
+  "route_playback_owned": "یہ روٹ ایک پلے بیک کا ہے؛ اسے DELETE /api/playback/{id} سے روکیں",
+  "stream_not_found": "ایسا کوئی اسٹریم نہیں: یہ آؤٹ پٹ منسلک اسٹریم یا Matinee آؤٹ پٹ نہیں ہے",
+  "matinee_unavailable": "اس بلڈ میں Matinee دستیاب نہیں",
+  "matinee_needs_player": "Matinee کلائنٹ کو پتے کے طور پر پلیئر کی ID چاہیے (‎/api/matinee/players دیکھیں)",
+  "matinee_not_signed_in": "Air-Mixer ابھی Matinee میں سائن اِن نہیں ہوا",
+  "matinee_link_failed": "Matinee سے کوڈ نہیں مل سکا: {{detail}}",
+  "matinee_players_failed": "Matinee سے پلیئر نہیں مل سکے: {{detail}}"
 }

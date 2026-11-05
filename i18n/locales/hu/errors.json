@@ -24,5 +24,11 @@
   "route_mix_mode": "Ismeretlen mix_mode: „{{mode}}”",
   "route_dest_empty": "A célnevek nem lehetnek üresek",
   "route_duck_range": "A(z) {{duck}} duck érték kívül esik a 0..1 tartományon",
-  "route_playback_owned": "Ez az útvonal egy lejátszáshoz tartozik; állítsd le ezzel: DELETE /api/playback/{id}"
+  "route_playback_owned": "Ez az útvonal egy lejátszáshoz tartozik; állítsd le ezzel: DELETE /api/playback/{id}",
+  "stream_not_found": "Nincs ilyen stream: a kimenet nem csatlakoztatott stream- vagy Matinee-kimenet",
+  "matinee_unavailable": "A Matinee ebben a buildben nem érhető el",
+  "matinee_needs_player": "A Matinee-kliensnek a lejátszó azonosítója kell címként (lásd /api/matinee/players)",
+  "matinee_not_signed_in": "Az Air-Mixer még nincs bejelentkezve a Matinee-be",
+  "matinee_link_failed": "Nem sikerült kódot kérni a Matinee-től: {{detail}}",
+  "matinee_players_failed": "Nem sikerült lekérni a lejátszókat a Matinee-től: {{detail}}"
 }

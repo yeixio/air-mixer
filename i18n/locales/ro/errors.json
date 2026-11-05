@@ -24,5 +24,11 @@
   "route_mix_mode": "mix_mode necunoscut: „{{mode}}”",
   "route_dest_empty": "Numele destinațiilor nu pot fi goale",
   "route_duck_range": "duck {{duck}} este în afara intervalului 0..1",
-  "route_playback_owned": "Această rută aparține unei redări; oprește-o cu DELETE /api/playback/{id}"
+  "route_playback_owned": "Această rută aparține unei redări; oprește-o cu DELETE /api/playback/{id}",
+  "stream_not_found": "Nu există acest stream: ieșirea nu este o ieșire stream sau Matinee conectată",
+  "matinee_unavailable": "Matinee nu este disponibil în această versiune",
+  "matinee_needs_player": "Un client Matinee are nevoie de ID-ul playerului ca adresă (vezi /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer nu este încă conectat la Matinee",
+  "matinee_link_failed": "Nu s-a putut obține un cod de la Matinee: {{detail}}",
+  "matinee_players_failed": "Nu s-au putut obține playerele de la Matinee: {{detail}}"
 }

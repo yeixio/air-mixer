@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: ta imot lyd fra iPhone, iPad og Mac",
-    "airplayClient": "AirPlay: send lyd til AirPlay-høyttalere"
+    "airplayClient": "AirPlay: send lyd til AirPlay-høyttalere",
+    "matineeServer": "Matinee: vises i Matinee som en spiller og spiller det den får",
+    "matineeClient": "Matinee: spill på en Matinee-spiller (adresse: spillerens ID)",
+    "streamClient": "Strøm: en direkte WAV-strøm for VLC eller en nettleser",
+    "localClient": "Lokal: lydkortet på denne maskinen"
   },
   "servers": {
     "title": "Inngangsservere",
@@ -143,5 +147,26 @@
     "done": "Koblet sammen",
     "doneMessage": "Enheten er koblet sammen og klar til bruk.",
     "failed": "Sammenkoblingen mislyktes"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Matinee-høyttalere og -spillere",
+    "what": "Koble Air-Mixer til Matinee-serveren din, så blir spillerne der høyttalere her (legg til en utgangsklient; Finn enheter viser dem), og Matinee-innganger vises i Matinee og Home Assistant som spillere som spiller inn i rutene dine. Logg inn én gang, som på en TV: godkjenn koden på Matinees /link-side som administrator.",
+    "server": "Matinee-server",
+    "save": "Lagre",
+    "signIn": "Logg inn",
+    "signInAgain": "Logg inn igjen",
+    "signOut": "Logg ut",
+    "approve": "Åpne {{url}} som Matinee-administrator og skriv inn {{code}}. Venter på godkjenning…",
+    "signedInTitle": "Logget inn på Matinee",
+    "signedInMessage": "Matinee-spillere er nå under Finn enheter",
+    "signedInAs": "Logget inn på {{url}} som {{user}}.",
+    "notSignedIn": "Ikke logget inn ennå.",
+    "notConnected": "Ikke koblet til en Matinee-server.",
+    "saveFailed": "Kunne ikke lagre adressen",
+    "codeFailed": "Kunne ikke hente en innloggingskode",
+    "player": "Matinee-spiller ({{platform}})",
+    "playerClosed": "Matinee-spiller ({{platform}}), lukket akkurat nå",
+    "unknownPlatform": "ukjent"
   }
 }

@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone, iPad ve Mac'ten ses alın",
-    "airplayClient": "AirPlay: AirPlay hoparlörlerine ses gönderin"
+    "airplayClient": "AirPlay: AirPlay hoparlörlerine ses gönderin",
+    "matineeServer": "Matinee: Matinee'de oynatıcı olarak görünür ve gönderileni çalar",
+    "matineeClient": "Matinee: bir Matinee oynatıcısında çal (adres: oynatıcının kimliği)",
+    "streamClient": "Akış: VLC veya bir tarayıcı için canlı WAV akışı",
+    "localClient": "Yerel: bu makinenin ses kartı"
   },
   "servers": {
     "title": "Giriş sunucuları",
@@ -143,5 +147,26 @@
     "done": "Eşleştirildi",
     "doneMessage": "Cihaz eşleştirildi ve kullanıma hazır.",
     "failed": "Eşleştirme başarısız oldu"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Matinee hoparlörleri ve oynatıcıları",
+    "what": "Air-Mixer'ı Matinee sunucunuza bağlayın; oynatıcıları burada hoparlör olur (bir çıkış istemcisi ekleyin; cihaz arama onları listeler) ve Matinee girişleri Matinee ile Home Assistant'ta rotalarınıza çalan oynatıcılar olarak görünür. Bir televizyondaki gibi bir kez oturum açın: kodu yönetici olarak Matinee'nin /link sayfasında onaylayın.",
+    "server": "Matinee sunucusu",
+    "save": "Kaydet",
+    "signIn": "Oturum aç",
+    "signInAgain": "Yeniden oturum aç",
+    "signOut": "Oturumu kapat",
+    "approve": "{{url}} adresini Matinee yöneticisi olarak açın ve {{code}} kodunu girin. Onay bekleniyor…",
+    "signedInTitle": "Matinee'de oturum açıldı",
+    "signedInMessage": "Matinee oynatıcıları artık cihaz aramada",
+    "signedInAs": "{{url}} adresinde {{user}} olarak oturum açıldı.",
+    "notSignedIn": "Henüz oturum açılmadı.",
+    "notConnected": "Bir Matinee sunucusuna bağlı değil.",
+    "saveFailed": "Adres kaydedilemedi",
+    "codeFailed": "Oturum açma kodu alınamadı",
+    "player": "Matinee oynatıcısı ({{platform}})",
+    "playerClosed": "Matinee oynatıcısı ({{platform}}), şu anda kapalı",
+    "unknownPlatform": "bilinmiyor"
   }
 }

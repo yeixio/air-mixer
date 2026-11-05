@@ -24,5 +24,11 @@
   "route_mix_mode": "ไม่รู้จัก mix_mode \"{{mode}}\"",
   "route_dest_empty": "ชื่อปลายทางต้องไม่ว่าง",
   "route_duck_range": "duck {{duck}} อยู่นอกช่วง 0..1",
-  "route_playback_owned": "เส้นทางนี้เป็นของการเล่นรายการหนึ่ง หยุดได้ด้วย DELETE /api/playback/{id}"
+  "route_playback_owned": "เส้นทางนี้เป็นของการเล่นรายการหนึ่ง หยุดได้ด้วย DELETE /api/playback/{id}",
+  "stream_not_found": "ไม่มีสตรีมนี้: เอาต์พุตนี้ไม่ใช่เอาต์พุตสตรีมหรือ Matinee ที่เชื่อมต่ออยู่",
+  "matinee_unavailable": "Matinee ไม่มีในบิลด์นี้",
+  "matinee_needs_player": "ไคลเอนต์ Matinee ต้องใช้ ID ของเครื่องเล่นเป็นที่อยู่ (ดู /api/matinee/players)",
+  "matinee_not_signed_in": "Air-Mixer ยังไม่ได้ลงชื่อเข้าใช้ Matinee",
+  "matinee_link_failed": "ขอรหัสจาก Matinee ไม่ได้: {{detail}}",
+  "matinee_players_failed": "ขอรายการเครื่องเล่นจาก Matinee ไม่ได้: {{detail}}"
 }

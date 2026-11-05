@@ -33,7 +33,11 @@
   },
   "protocols": {
     "airplayServer": "AirPlay：接收来自 iPhone、iPad 和 Mac 的音频",
-    "airplayClient": "AirPlay：将音频发送到 AirPlay 扬声器"
+    "airplayClient": "AirPlay：将音频发送到 AirPlay 扬声器",
+    "matineeServer": "Matinee：在 Matinee 中显示为播放器，播放发送给它的内容",
+    "matineeClient": "Matinee：在 Matinee 播放器上播放（地址：播放器 ID）",
+    "streamClient": "流：供 VLC 或浏览器使用的实时 WAV 流",
+    "localClient": "本地：这台机器的声卡"
   },
   "servers": {
     "title": "输入服务器",
@@ -142,5 +146,26 @@
     "done": "已配对",
     "doneMessage": "设备已配对，可以使用了。",
     "failed": "配对失败"
+  },
+  "matinee": {
+    "title": "Matinee",
+    "whatTitle": "Matinee 音箱和播放器",
+    "what": "将 Air-Mixer 连接到你的 Matinee 服务器后，它的播放器会在这里成为音箱（添加输出客户端；查找设备会列出它们），Matinee 输入会作为播放到你的路由中的播放器出现在 Matinee 和 Home Assistant 中。像在电视上一样只需登录一次：以管理员身份在 Matinee 的 /link 页面批准代码。",
+    "server": "Matinee 服务器",
+    "save": "保存",
+    "signIn": "登录",
+    "signInAgain": "重新登录",
+    "signOut": "退出登录",
+    "approve": "以 Matinee 管理员身份打开 {{url}} 并输入 {{code}}。正在等待批准…",
+    "signedInTitle": "已登录 Matinee",
+    "signedInMessage": "Matinee 播放器现在出现在查找设备中",
+    "signedInAs": "已以 {{user}} 身份登录 {{url}}。",
+    "notSignedIn": "尚未登录。",
+    "notConnected": "未连接到 Matinee 服务器。",
+    "saveFailed": "无法保存地址",
+    "codeFailed": "无法获取登录代码",
+    "player": "Matinee 播放器（{{platform}}）",
+    "playerClosed": "Matinee 播放器（{{platform}}），目前已关闭",
+    "unknownPlatform": "未知"
   }
 }

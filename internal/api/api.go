@@ -16,6 +16,8 @@ import (
 
 	"github.com/yeixio/air-mixer/i18n"
 	"github.com/yeixio/air-mixer/internal/discovery"
+	"github.com/yeixio/air-mixer/internal/protocols/httpstream"
+	"github.com/yeixio/air-mixer/internal/protocols/matinee"
 	"github.com/yeixio/air-mixer/internal/service"
 	"github.com/yeixio/air-mixer/webui"
 )
@@ -36,6 +38,8 @@ type API struct {
 	player    Player
 	log       *slog.Logger
 	version   string
+	streams   *httpstream.Registry
+	matinee   *matinee.Account
 }
 
 // Options configures the API.
@@ -46,6 +50,10 @@ type Options struct {
 	Player  Player
 	Logger  *slog.Logger
 	Version string
+	// Streams serves stream and Matinee outputs' audio. Nil for none.
+	Streams *httpstream.Registry
+	// Matinee is the sign-in to Matinee. Nil turns /api/matinee off.
+	Matinee *matinee.Account
 }
 
 // New returns the HTTP handler for the API and web UI.
@@ -53,7 +61,10 @@ func New(opts Options) http.Handler {
 	if opts.Logger == nil {
 		opts.Logger = slog.Default()
 	}
-	a := &API{svc: opts.Service, discovery: opts.Discovery, player: opts.Player, log: opts.Logger.With("component", "api"), version: opts.Version}
+	a := &API{
+		svc: opts.Service, discovery: opts.Discovery, player: opts.Player, log: opts.Logger.With("component", "api"), version: opts.Version,
+		streams: opts.Streams, matinee: opts.Matinee,
+	}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /api/servers", a.listServers)
@@ -76,6 +87,14 @@ func New(opts Options) http.Handler {
 	mux.HandleFunc("DELETE /api/routes/{id}", a.deleteRoute)
 
 	a.registerPlayback(mux)
+	// Matinee (matinee.go) and live streams of outputs.
+	mux.HandleFunc("GET /api/clients/{id}/stream", a.clientStream)
+	mux.HandleFunc("HEAD /api/clients/{id}/stream", a.clientStream)
+	mux.HandleFunc("GET /api/matinee", a.matineeState)
+	mux.HandleFunc("PUT /api/matinee", a.setMatinee)
+	mux.HandleFunc("POST /api/matinee/link", a.linkMatinee)
+	mux.HandleFunc("DELETE /api/matinee/link", a.unlinkMatinee)
+	mux.HandleFunc("GET /api/matinee/players", a.matineePlayers)
 
 	mux.HandleFunc("GET /api/status", a.status)
 	mux.HandleFunc("GET /api/discovery", a.discoverAll)
@@ -117,6 +136,16 @@ func (r *statusRecorder) WriteHeader(code int) {
 	r.status = code
 	r.ResponseWriter.WriteHeader(code)
 }
+
+// Flush lets streams send audio as it comes.
+func (r *statusRecorder) Flush() {
+	if f, ok := r.ResponseWriter.(http.Flusher); ok {
+		f.Flush()
+	}
+}
+
+// Unwrap gives http.ResponseController the real writer.
+func (r *statusRecorder) Unwrap() http.ResponseWriter { return r.ResponseWriter }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {
 	w.Header().Set("Content-Type", "application/json")

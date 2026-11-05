@@ -793,6 +793,32 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="section" id="matineeSection">
+            <div class="section-header">
+                <div class="section-title">
+                    <h2><span class="icon icon-output"></span> <span data-i18n="matinee.title">Matinee</span></h2>
+                    <div class="section-doc">
+                        <strong data-i18n="matinee.whatTitle">Matinee speakers and players</strong><br>
+                        <span data-i18n="matinee.what">
+                        Connect Air-Mixer to your Matinee server and its players become speakers here (add an output
+                        client; Discover lists them), and Matinee inputs show up in Matinee and Home Assistant as players
+                        that play into your routes. Sign in once, the way you sign in a TV: approve the code on Matinee's
+                        /link page as an admin.</span>
+                    </div>
+                </div>
+            </div>
+            <form id="matineeForm" onsubmit="saveMatinee(event)" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                <div class="form-group" style="flex: 1; min-width: 240px; margin-bottom: 0;">
+                    <label data-i18n="matinee.server">Matinee server</label>
+                    <input type="text" name="url" id="matineeURL" placeholder="http://192.168.1.20:7171" dir="ltr">
+                </div>
+                <button type="submit" class="btn" data-i18n="matinee.save">Save</button>
+                <button type="button" class="btn" id="matineeSignIn" onclick="signInMatinee()" data-i18n="matinee.signIn">Sign in</button>
+                <button type="button" class="btn btn-danger" id="matineeSignOut" onclick="signOutMatinee()" style="display: none;" data-i18n="matinee.signOut">Sign out</button>
+            </form>
+            <div id="matineeStatus" style="margin-top: 12px; font-size: 13px; color: #aaa;"></div>
+        </div>
     </div>
 
     <!-- Add Server Modal -->
@@ -812,6 +838,7 @@
                     <label data-i18n="common.protocol">Protocol</label>
                     <select name="protocol" required>
                         <option value="airplay" data-i18n="protocols.airplayServer">AirPlay: receive audio from iPhone, iPad and Mac</option>
+                        <option value="matinee" data-i18n="protocols.matineeServer">Matinee: shows up in Matinee as a player and plays what it's sent</option>
                         <option value="bluetooth" disabled data-i18n="common.comingSoon" data-i18n-protocol="Bluetooth">Bluetooth (coming soon)</option>
                         <option value="chromecast" disabled data-i18n="common.comingSoon" data-i18n-protocol="Google Cast">Google Cast (coming soon)</option>
                         <option value="upnp" disabled data-i18n="common.comingSoon" data-i18n-protocol="UPnP/DLNA">UPnP/DLNA (coming soon)</option>
@@ -869,6 +896,9 @@
                             <label data-i18n="common.protocol">Protocol</label>
                             <select name="protocol" required>
                                 <option value="airplay" data-i18n="protocols.airplayClient">AirPlay: send audio to AirPlay speakers</option>
+                                <option value="matinee" data-i18n="protocols.matineeClient">Matinee: play on a Matinee player (address: the player's id)</option>
+                                <option value="stream" data-i18n="protocols.streamClient">Stream: a live WAV stream for VLC or a browser</option>
+                                <option value="local" data-i18n="protocols.localClient">Local: this machine's sound card</option>
                                 <option value="bluetooth" disabled data-i18n="common.comingSoon" data-i18n-protocol="Bluetooth">Bluetooth (coming soon)</option>
                                 <option value="chromecast" disabled data-i18n="common.comingSoon" data-i18n-protocol="Google Cast">Google Cast (coming soon)</option>
                                 <option value="upnp" disabled data-i18n="common.comingSoon" data-i18n-protocol="UPnP/DLNA">UPnP/DLNA (coming soon)</option>
@@ -876,7 +906,7 @@
                         </div>
                         <div class="form-group">
                             <label><span data-i18n="common.address">Address</span> <span style="color: #888; font-size: 12px;" data-i18n="clients.addressHint">(IP:port or device identifier)</span></label>
-                            <input type="text" name="address" required placeholder="192.168.1.100:49152" dir="ltr">
+                            <input type="text" name="address" placeholder="192.168.1.100:49152" dir="ltr">
                         </div>
                         <div class="form-group">
                             <label><span data-i18n="common.id">ID</span> <span style="color: #888; font-size: 12px;" data-i18n="common.idHint">(optional, made up if empty)</span></label>
@@ -1116,6 +1146,7 @@
             loadServers();
             loadClients();
             loadRoutes();
+            loadMatinee();
             renderDiscovery();
         }
 
@@ -1252,6 +1283,7 @@
         // Load data on page load
         window.onload = async function() {
             await initLanguage();
+            loadMatinee();
             // Load status first to check if server is ready
             loadStatus().then(() => {
                 // If status loads successfully, load other data
@@ -2104,6 +2136,105 @@
         }
 
         // Helper function to safely escape HTML (prevents XSS and double-escaping)
+        // ---- Matinee ----
+
+        let matineePoll = null;
+
+        async function loadMatinee() {
+            let st;
+            try {
+                const res = await fetch(`${API_BASE}/matinee`);
+                if (!res.ok) {
+                    document.getElementById('matineeSection').style.display = 'none';
+                    return;
+                }
+                st = await res.json();
+            } catch (err) {
+                return;
+            }
+            const urlInput = document.getElementById('matineeURL');
+            if (document.activeElement !== urlInput) urlInput.value = st.url || '';
+            const status = document.getElementById('matineeStatus');
+            document.getElementById('matineeSignOut').style.display = st.signed_in ? '' : 'none';
+            document.getElementById('matineeSignIn').textContent = st.signed_in ? t('matinee.signInAgain') : t('matinee.signIn');
+            if (st.link && !st.link.error) {
+                const link = escapeHtml(st.link.verification_url_complete || st.link.verification_url);
+                // The sentence is translated whole; the link and code go in after.
+                status.innerHTML = escapeHtml(t('matinee.approve', { url: '[[url]]', code: '[[code]]' }))
+                    .replace('[[url]]', `<a href="${link}" target="_blank" rel="noopener" style="color: #4a9eff;" dir="ltr">${escapeHtml(st.link.verification_url)}</a>`)
+                    .replace('[[code]]', `<strong style="color: #fff; font-size: 16px; letter-spacing: 2px;" dir="ltr">${escapeHtml(st.link.user_code)}</strong>`);
+                if (!matineePoll) matineePoll = setInterval(loadMatinee, 2000);
+                return;
+            }
+            if (matineePoll) {
+                clearInterval(matineePoll);
+                matineePoll = null;
+                if (st.signed_in) showNotification('success', t('matinee.signedInTitle'), t('matinee.signedInMessage'));
+            }
+            if (st.link && st.link.error) {
+                status.innerHTML = `<span class="icon icon-warning"></span> ${escapeHtml(st.link.error)}`;
+            } else if (st.signed_in) {
+                status.innerHTML = `<span class="icon icon-success"></span> ${escapeHtml(t('matinee.signedInAs', { url: st.url, user: st.user || 'Matinee' }))}`;
+            } else if (st.url) {
+                status.textContent = t('matinee.notSignedIn');
+            } else {
+                status.textContent = t('matinee.notConnected');
+            }
+        }
+
+        async function saveMatinee(e) {
+            e.preventDefault();
+            const url = document.getElementById('matineeURL').value;
+            const res = await fetch(`${API_BASE}/matinee`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+            if (!res.ok) {
+                showNotification('error', t('matinee.title'), apiError(await readError(res), 'matinee.saveFailed'));
+            }
+            loadMatinee();
+        }
+
+        async function signInMatinee() {
+            const url = document.getElementById('matineeURL').value;
+            if (url) {
+                await fetch(`${API_BASE}/matinee`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+            }
+            const res = await fetch(`${API_BASE}/matinee/link`, { method: 'POST' });
+            if (!res.ok) {
+                showNotification('error', t('matinee.title'), apiError(await readError(res), 'matinee.codeFailed'));
+            }
+            loadMatinee();
+        }
+
+        async function signOutMatinee() {
+            await fetch(`${API_BASE}/matinee/link`, { method: 'DELETE' });
+            loadMatinee();
+        }
+
+        // Matinee players, shaped like discovered devices, for Discover.
+        async function matineePlayerDevices() {
+            try {
+                const res = await fetch(`${API_BASE}/matinee/players`);
+                if (!res.ok) return [];
+                const players = await res.json();
+                return players.map(p => ({
+                    name: p.name,
+                    protocol: 'matinee',
+                    address: p.id,
+                    description: t(p.online ? 'matinee.player' : 'matinee.playerClosed', { platform: p.platform || t('matinee.unknownPlatform') })
+                }));
+            } catch (err) {
+                return [];
+            }
+        }
+
+
         function escapeHtml(text) {
             if (!text) return '';
             const div = document.createElement('div');
@@ -2132,7 +2263,7 @@
                 const res = await fetch(`${API_BASE}/discovery?timeout=5s`);
                 if (!res.ok) throw new Error(apiError(await readError(res)));
                 const data = await res.json();
-                discoveredDevicesList = data.devices || [];
+                discoveredDevicesList = (data.devices || []).concat(await matineePlayerDevices());
                 discoveryState = discoveredDevicesList.length > 0 ? 'found' : 'none';
             } catch (err) {
                 console.error('[Discovery] Error:', err);
