@@ -80,3 +80,39 @@ func TestValidateRequiresDataDir(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestSetup(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "airmixer.yaml")
+	os.WriteFile(file, []byte(`
+setup:
+  servers:
+    - name: Living Room
+      protocol: airplay
+  clients:
+    - name: Left
+      protocol: pulse
+      enabled: false
+      config:
+        sink: "AA:BB:CC:DD:EE:FF"
+        delay_ms: 40
+  routes:
+    - name: Living Room
+      source: Living Room
+      destinations: [Left]
+      volume: 0.8
+`), 0o600)
+	cfg, err := Load(file)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s := cfg.Setup
+	if len(s.Servers) != 1 || s.Servers[0].Name != "Living Room" || s.Servers[0].Enabled != nil {
+		t.Errorf("servers = %+v", s.Servers)
+	}
+	if len(s.Clients) != 1 || s.Clients[0].Config["sink"] != "AA:BB:CC:DD:EE:FF" || *s.Clients[0].Enabled {
+		t.Errorf("clients = %+v", s.Clients)
+	}
+	if len(s.Routes) != 1 || *s.Routes[0].Volume != 0.8 || s.Routes[0].Destinations[0] != "Left" {
+		t.Errorf("routes = %+v", s.Routes)
+	}
+}

@@ -27,8 +27,9 @@ devices, mixes it, and plays it on any combination of speakers, whatever
 protocol they speak.
 
 Today it speaks classic AirPlay in both directions and plays on the
-machine's own sound card. Google Cast, UPnP/DLNA, Bluetooth and AirPlay 2
-are on the [roadmap](ROADMAP.md).
+machine's own sound card or any PulseAudio or PipeWire sink, including
+paired Bluetooth speakers. Google Cast, UPnP/DLNA and AirPlay 2 are on the
+[roadmap](ROADMAP.md).
 
 <p align="center">
   <img src="docs/assets/web-ui.png" alt="The Air-Mixer web UI with AirPlay inputs, speakers and two routes" width="85%">
@@ -41,6 +42,13 @@ are on the [roadmap](ROADMAP.md).
 - **AirPlay sender.** Plays to AirPort Express, shairport-sync, most
   AV receivers and other classic AirPlay (RAOP) speakers.
 - **Local output.** Plays on the server's own default audio device.
+- **PulseAudio and Bluetooth output.** Plays to any PulseAudio or PipeWire
+  sink, picked by name or by a Bluetooth speaker's address, so one
+  Air-Mixer can drive every Bluetooth speaker paired with its host. Each
+  output can be delayed to line up speakers with different latencies.
+- **Kubernetes native.** A [Helm chart](deploy/helm/airmixer) runs the main
+  Air-Mixer plus a speaker agent on each node that has speakers paired,
+  such as a Raspberry Pi in a room. See [Kubernetes](docs/KUBERNETES.md).
 - **Routing and mixing.** A route sends one input to any number of
   outputs. Several routes into one output are mixed, each with its own
   volume. Routes refer to devices by name, so they survive a device being
@@ -64,11 +72,13 @@ flowchart LR
     in1 --> router{{"Router and mixer"}}
     router --> out1["AirPlay output"]
     router --> out2["Local output"]
+    router --> out3["PulseAudio output"]
     api["Web UI and REST API"] -. routes .-> router
     api --- db[("SQLite")]
   end
   out1 -- AirPlay --> spk1["AirPort Express,<br/>receivers, shairport-sync"]
   out2 --> spk2["Sound card"]
+  out3 --> spk3["Bluetooth speakers,<br/>PipeWire sinks"]
 ```
 
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) follows the audio through
@@ -86,6 +96,18 @@ docker compose up -d
 
 Open <http://localhost:9001>. The container uses host networking because
 AirPlay discovery relies on multicast DNS.
+
+### Kubernetes
+
+```bash
+helm install airmixer deploy/helm/airmixer -f my-values.yaml
+```
+
+The chart runs the main Air-Mixer and a speaker agent for each room, on
+the node its Bluetooth speakers are paired with. Multi-arch images
+(amd64, arm64, armv7) are published to `ghcr.io/yeixio/air-mixer`. See
+[docs/KUBERNETES.md](docs/KUBERNETES.md) for setting up a Raspberry Pi
+room.
 
 ### Release binaries
 
@@ -121,7 +143,8 @@ service. Headless servers that only bridge AirPlay devices do not need one.
 2. Add an **input server** (protocol `airplay`). It shows up as a speaker
    on your Apple devices.
 3. Add one or more **output clients**: AirPlay speakers (use Discover to
-   find them) or `local` for the server's sound card.
+   find them), `local` for the server's sound card, or `pulse` for a
+   Bluetooth speaker or other PulseAudio sink.
 4. Create a **route** from the input to the outputs, then play something.
 
 ## Configuration
@@ -133,7 +156,9 @@ See [config.yaml.example](config.yaml.example) for all settings and their
 defaults.
 
 Servers, clients and routes are stored in SQLite under `data_dir` and are
-managed through the UI or the API, not the config file.
+managed through the UI or the API. They can also be declared in the
+config file's `setup` section, which is applied on every start; that is
+how the Helm chart configures each room.
 
 ## Command line
 
@@ -169,6 +194,7 @@ useful on its own:
 
 - [Architecture](docs/ARCHITECTURE.md): how audio flows through the system
 - [REST API](docs/API.md)
+- [Kubernetes](docs/KUBERNETES.md): Helm chart and Raspberry Pi speaker rooms
 - [Testing](docs/TESTING.md)
 - [Roadmap](ROADMAP.md)
 - [Changelog](CHANGELOG.md)

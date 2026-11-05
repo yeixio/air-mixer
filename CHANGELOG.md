@@ -10,6 +10,10 @@ generated from its pull requests.
 
 ### Added
 
+- A PulseAudio/PipeWire output that can drive paired Bluetooth speakers,
+  with a per-output delay, and declarative setup from the config file.
+- A Helm chart with a per-room speaker agent, and multi-arch images on
+  `ghcr.io/yeixio/air-mixer`.
 - Release automation: every `v*` tag publishes binaries for Linux (amd64,
   arm64, armv7), macOS (amd64, arm64) and Windows (amd64) with checksums.
 - A logo, a web UI screenshot and a social preview image.

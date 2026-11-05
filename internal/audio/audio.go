@@ -7,7 +7,10 @@
 // protocol adapters convert at the edges.
 package audio
 
-import "math"
+import (
+	"math"
+	"time"
+)
 
 const (
 	// SampleRate is the router's internal sample rate in Hz. It matches
@@ -52,4 +55,10 @@ func Gain(samples []float32, g float32) []float32 {
 		out[i] = s * g
 	}
 	return out
+}
+
+// Samples returns the number of interleaved samples in d of audio in the
+// internal format.
+func Samples(d time.Duration) int {
+	return int(d.Seconds()*SampleRate) * Channels
 }

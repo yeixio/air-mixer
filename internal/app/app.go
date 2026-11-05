@@ -70,6 +70,15 @@ func Run(ctx context.Context, opts Options) error {
 	if err := svc.Load(ctx); err != nil {
 		return fmt.Errorf("load configuration: %w", err)
 	}
+	setup, err := setupFromConfig(cfg.Setup)
+	if err != nil {
+		return err
+	}
+	if !setup.Empty() {
+		if err := svc.Apply(ctx, setup); err != nil {
+			return err
+		}
+	}
 
 	disc := opts.Discovery
 	if disc == nil {

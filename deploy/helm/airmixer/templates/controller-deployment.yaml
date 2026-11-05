@@ -1,0 +1,112 @@
+{{- if .Values.controller.enabled }}
+{{- $c := .Values.controller }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "airmixer.fullname" . }}-controller
+  labels:
+    {{- include "airmixer.labels" . | nindent 4 }}
+    app.kubernetes.io/component: controller
+spec:
+  replicas: 1
+  # One at a time: the database is a single SQLite file, and with host
+  # networking two pods would want the same ports.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "airmixer.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: controller
+  template:
+    metadata:
+      labels:
+        {{- include "airmixer.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: controller
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/controller-configmap.yaml") . | sha256sum }}
+        {{- with $c.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      hostNetwork: {{ $c.hostNetwork }}
+      {{- if $c.hostNetwork }}
+      # Keep cluster DNS, so room addresses resolve.
+      dnsPolicy: ClusterFirstWithHostNet
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: airmixer
+          image: {{ include "airmixer.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: ["server", "--config", "/etc/airmixer/config.yaml"]
+          {{- with $c.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ $c.webPort }}
+              protocol: TCP
+            - name: airplay
+              containerPort: {{ $c.airplayPort }}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          {{- with $c.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/airmixer
+              readOnly: true
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "airmixer.fullname" . }}-controller
+        - name: data
+          {{- if $c.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ default (printf "%s-controller" (include "airmixer.fullname" .)) $c.persistence.existingClaim }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+      {{- with $c.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $c.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $c.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

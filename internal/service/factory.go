@@ -11,6 +11,7 @@ import (
 	"github.com/yeixio/air-mixer/internal/protocols"
 	"github.com/yeixio/air-mixer/internal/protocols/airplay"
 	"github.com/yeixio/air-mixer/internal/protocols/local"
+	"github.com/yeixio/air-mixer/internal/protocols/pulse"
 )
 
 // Factory builds protocol adapters from stored configuration.
@@ -42,7 +43,21 @@ type ClientConfig struct {
 	LatencyMS int `json:"latency_ms,omitempty"`
 	// DisableEncryption sends AirPlay audio unencrypted.
 	DisableEncryption bool `json:"disable_encryption,omitempty"`
+	// DelayMS holds audio back on local and pulse outputs, to line up
+	// speakers with different latencies, such as Bluetooth speakers in
+	// one room.
+	DelayMS int `json:"delay_ms,omitempty"`
+	// Sink is the PulseAudio sink a pulse output plays to: its name, its
+	// description, or a Bluetooth address such as "AA:BB:CC:DD:EE:FF".
+	// Empty means the default sink.
+	Sink string `json:"sink,omitempty"`
+	// Server is the PulseAudio server for a pulse output, such as
+	// "unix:/run/pulse/native". Empty means $PULSE_SERVER or the default.
+	Server string `json:"server,omitempty"`
 }
+
+// maxDelayMS bounds delay_ms; more than this is a typo, not a calibration.
+const maxDelayMS = 5000
 
 // parseConfig decodes an adapter's JSON config. Unknown fields are kept
 // by the database and ignored here.
@@ -111,8 +126,17 @@ func (f *factory) Client(c *db.Client) (protocols.Client, error) {
 			DisableEncryption: cfg.DisableEncryption,
 			Logger:            f.log,
 		}), nil
-	case "local":
-		return local.NewClient(c.ID, c.Name, f.log), nil
+	case "local", "pulse":
+		if cfg.DelayMS < 0 || cfg.DelayMS > maxDelayMS {
+			return nil, invalid("delay_ms must be between 0 and %d", maxDelayMS)
+		}
+		delay := time.Duration(cfg.DelayMS) * time.Millisecond
+		if c.Protocol == "local" {
+			return local.NewClient(local.Options{ID: c.ID, Name: c.Name, Delay: delay, Logger: f.log}), nil
+		}
+		return pulse.NewClient(pulse.Options{
+			ID: c.ID, Name: c.Name, Server: cfg.Server, Sink: cfg.Sink, Delay: delay, Logger: f.log,
+		}), nil
 	}
 	return nil, invalid("unsupported client protocol %q", c.Protocol)
 }

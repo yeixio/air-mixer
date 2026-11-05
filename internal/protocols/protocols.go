@@ -53,6 +53,10 @@ var (
 	ErrBufferFull = errors.New("output buffer full")
 	// ErrNotConnected is returned by Client.Send before Connect.
 	ErrNotConnected = errors.New("not connected")
+	// ErrConnectionLost is wrapped by Client.Send errors after the device
+	// went away. The Manager then disconnects the client and connects it
+	// again, so a speaker that drops off comes back by itself.
+	ErrConnectionLost = errors.New("connection lost")
 	// ErrUnsupportedDevice is wrapped by Connect errors that retrying will
 	// not fix, such as a device that needs a protocol version Air-Mixer
 	// does not speak.
