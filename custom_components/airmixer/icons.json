@@ -1,0 +1,10 @@
+{
+  "services": {
+    "announce": {
+      "service": "mdi:bullhorn"
+    },
+    "stop": {
+      "service": "mdi:stop"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+name: Home Assistant
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "custom_components/**"
+      - "tests/hass/**"
+      - "hacs.json"
+      - ".github/workflows/home-assistant.yml"
+  pull_request:
+    paths:
+      - "custom_components/**"
+      - "tests/hass/**"
+      - "hacs.json"
+      - ".github/workflows/home-assistant.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  hassfest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: home-assistant/actions/hassfest@master
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: tests/hass/requirements.txt
+      - name: Install
+        run: pip install -r tests/hass/requirements.txt ruff
+      - name: Lint
+        run: |
+          ruff check --select E,F,W,I,B,UP,SIM,RUF --ignore E501 custom_components tests/hass
+          ruff format --check custom_components tests/hass
+      - name: Test
+        run: pytest tests/hass

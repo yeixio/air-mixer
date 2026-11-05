@@ -1,0 +1,13 @@
+{
+  "domain": "airmixer",
+  "name": "Air-Mixer",
+  "codeowners": ["@gopherstein"],
+  "config_flow": true,
+  "dependencies": ["media_source"],
+  "documentation": "https://github.com/yeixio/air-mixer/blob/master/docs/HOME_ASSISTANT.md",
+  "integration_type": "hub",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/yeixio/air-mixer/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
