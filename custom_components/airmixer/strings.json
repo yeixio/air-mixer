@@ -1,0 +1,100 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Air-Mixer",
+        "description": "Enter the address of the Air-Mixer server. Home Assistant and Air-Mixer must be able to reach each other: Air-Mixer downloads the audio Home Assistant sends it.",
+        "data": {
+          "host": "[%key:common::config_flow::data::host%]",
+          "port": "[%key:common::config_flow::data::port%]"
+        },
+        "data_description": {
+          "host": "Hostname or IP address of the Air-Mixer server.",
+          "port": "The web UI and API port, 9001 by default."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+      "unhealthy": "Air-Mixer answered but reports a problem. Check its logs.",
+      "unknown": "[%key:common::config_flow::error::unknown%]"
+    },
+    "abort": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+    }
+  },
+  "entity": {
+    "media_player": {
+      "all_outputs": {
+        "name": "All outputs"
+      }
+    }
+  },
+  "selector": {
+    "mode": {
+      "options": {
+        "duck": "Duck: lower other audio",
+        "interrupt": "Interrupt: silence other audio",
+        "mix": "Mix: play alongside other audio"
+      }
+    }
+  },
+  "services": {
+    "announce": {
+      "name": "Announce",
+      "description": "Plays a clip, speech or an alarm on Air-Mixer outputs, lowering or silencing other audio while it plays and restoring it afterwards.",
+      "fields": {
+        "entity_id": {
+          "name": "Outputs",
+          "description": "Air-Mixer outputs to play on. Leave empty for every output."
+        },
+        "media_content_id": {
+          "name": "Media",
+          "description": "A URL of an MP3 or WAV file, or a media source item such as a local file or text-to-speech."
+        },
+        "mode": {
+          "name": "Mode",
+          "description": "What happens to other audio while this plays."
+        },
+        "volume": {
+          "name": "Volume",
+          "description": "Volume of the announcement, from 0 to 1."
+        },
+        "duck_level": {
+          "name": "Duck level",
+          "description": "Volume of other audio while ducked, from 0 to 1. The default is 0.2."
+        },
+        "repeat": {
+          "name": "Repeat",
+          "description": "How many times to play it."
+        },
+        "loop": {
+          "name": "Loop",
+          "description": "Repeat until stopped, for alarms. Stop it with the Air-Mixer stop action or by stopping the media player."
+        },
+        "max_duration": {
+          "name": "Maximum duration",
+          "description": "Stop after this many seconds."
+        },
+        "title": {
+          "name": "Title",
+          "description": "Shown as the media title while it plays."
+        },
+        "wait": {
+          "name": "Wait",
+          "description": "Wait until playback ends before the action completes, so a script can run steps in order."
+        }
+      }
+    },
+    "stop": {
+      "name": "Stop",
+      "description": "Stops what Home Assistant sent to Air-Mixer outputs. Other audio is not affected.",
+      "fields": {
+        "entity_id": {
+          "name": "Outputs",
+          "description": "Air-Mixer outputs to stop. Leave empty for every output."
+        }
+      }
+    }
+  }
+}

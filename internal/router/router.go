@@ -14,6 +14,10 @@ import (
 // ahead of another before the late one is treated as silent: 250 ms.
 const defaultMaxLag = audio.SampleRate * audio.Channels / 4
 
+// volumeRamp is how long, in samples, a full-scale volume change takes, so
+// that ducking fades rather than clicks: 250 ms.
+const volumeRamp = audio.SampleRate * audio.Channels / 4
+
 // Router routes audio from registered sources to registered sinks. All
 // audio is in the internal format (see package audio). Methods are safe for
 // concurrent use.
@@ -26,6 +30,7 @@ type Router struct {
 	sources  map[string]*source
 	sinks    map[string]*sink
 	maxLag   int
+	ramp     int
 	sequence int64 // registration order, to resolve duplicate names
 }
 
@@ -67,6 +72,7 @@ func New(logger *slog.Logger) *Router {
 		sources: make(map[string]*source),
 		sinks:   make(map[string]*sink),
 		maxLag:  defaultMaxLag,
+		ramp:    volumeRamp,
 	}
 }
 
@@ -283,8 +289,10 @@ func (r *Router) sinkByName(name string) *sink {
 // caller holds r.mu.
 func (r *Router) reconcile() {
 	type want struct {
-		src    *source
-		volume float32
+		src      *source
+		volume   float32
+		priority int
+		duck     *float32
 	}
 	desired := make(map[string]map[string]want) // sink ID -> route ID -> link
 	if r.running {
@@ -305,7 +313,26 @@ func (r *Router) reconcile() {
 				if desired[sk.id] == nil {
 					desired[sk.id] = make(map[string]want)
 				}
-				desired[sk.id][rt.ID] = want{src, rt.Volume}
+				desired[sk.id][rt.ID] = want{src, rt.Volume, rt.Priority, rt.Duck}
+			}
+		}
+	}
+	// Apply ducking: a route that ducks lowers every other route on the
+	// same sink that does not itself duck, or ducks at a lower priority.
+	for sinkID, links := range desired {
+		for id, w := range links {
+			factor := float32(1)
+			for otherID, d := range links {
+				if otherID == id || d.duck == nil {
+					continue
+				}
+				if w.duck == nil || w.priority < d.priority {
+					factor = min(factor, *d.duck)
+				}
+			}
+			if factor != 1 {
+				w.volume *= factor
+				desired[sinkID][id] = w
 			}
 		}
 	}
@@ -334,6 +361,7 @@ func (r *Router) reconcile() {
 func (r *Router) link(sk *sink, routeID string, src *source, volume float32) {
 	if sk.mixer == nil {
 		sk.mixer = audio.NewMixer(r.maxLag)
+		sk.mixer.SetRamp(r.ramp)
 		sk.fwdDone = make(chan struct{})
 		go forward(sk.mixer.Output(), sk.ch, sk.fwdDone)
 	}

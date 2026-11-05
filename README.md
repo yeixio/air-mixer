@@ -53,6 +53,12 @@ paired Bluetooth speakers. Google Cast, UPnP/DLNA and AirPlay 2 are on the
   outputs. Several routes into one output are mixed, each with its own
   volume. Routes refer to devices by name, so they survive a device being
   removed and added again.
+- **Announcements and alarms.** Play a clip, text-to-speech or a stream
+  from a URL on any set of outputs, ducking or silencing the music and
+  bringing it back afterwards.
+- **Home Assistant.** A [custom integration](docs/HOME_ASSISTANT.md)
+  makes every output a media player, so Home Assistant can send speech,
+  doorbells and house-wide alarms.
 - **Discovery.** Finds AirPlay speakers on your network.
 - **Web UI and REST API.** Everything the UI does is available over a
   [documented JSON API](docs/API.md).
@@ -177,7 +183,8 @@ airmixer version    Print version information
 - **Synchronisation.** Each output plays with its own buffering, so
   speakers in different rooms are not sample-aligned yet.
 - **Mix modes.** All routes into an output are mixed. The `mix_mode` field
-  is stored but exclusive and ducking modes are not implemented yet.
+  is stored but an exclusive mode is not implemented yet; ducking is
+  available for playback (announcements) only.
 
 ## The Yeix ecosystem
 
@@ -194,6 +201,7 @@ useful on its own:
 
 - [Architecture](docs/ARCHITECTURE.md): how audio flows through the system
 - [REST API](docs/API.md)
+- [Home Assistant](docs/HOME_ASSISTANT.md)
 - [Kubernetes](docs/KUBERNETES.md): Helm chart and Raspberry Pi speaker rooms
 - [Testing](docs/TESTING.md)
 - [Roadmap](ROADMAP.md)

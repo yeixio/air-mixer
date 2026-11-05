@@ -16,6 +16,7 @@ import (
 
 	"github.com/yeixio/air-mixer/internal/db"
 	"github.com/yeixio/air-mixer/internal/discovery"
+	"github.com/yeixio/air-mixer/internal/playback"
 	"github.com/yeixio/air-mixer/internal/protocols"
 	"github.com/yeixio/air-mixer/internal/router"
 	"github.com/yeixio/air-mixer/internal/service"
@@ -93,7 +94,9 @@ func newTestAPI(t *testing.T, disc Discoverer) *testAPI {
 	if disc == nil {
 		disc = stubDiscovery{}
 	}
-	h := New(Options{Service: service.New(store, r, m, factory{}, quiet), Discovery: disc, Logger: quiet, Version: "test"})
+	p := playback.New(r, playback.Options{Logger: quiet})
+	t.Cleanup(p.Close)
+	h := New(Options{Service: service.New(store, r, m, factory{}, quiet), Discovery: disc, Player: p, Logger: quiet, Version: "test"})
 	return &testAPI{t: t, handler: h, store: store}
 }
 

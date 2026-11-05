@@ -18,6 +18,11 @@ generated from its pull requests.
   arm64, armv7), macOS (amd64, arm64) and Windows (amd64) with checksums.
 - A logo, a web UI screenshot and a social preview image.
 - A device compatibility issue form, `SUPPORT.md` and `CODEOWNERS`.
+- Playback of MP3 and WAV URLs on chosen outputs (`/api/play`), ducking or
+  silencing other audio and restoring it afterwards, for announcements,
+  text-to-speech and alarms.
+- A Home Assistant integration: a media player per output plus "All
+  outputs", with `airmixer.announce` and `airmixer.stop` actions.
 
 ### Changed
 

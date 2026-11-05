@@ -19,8 +19,8 @@ import (
 
 // MixMode is stored with each route for compatibility with existing
 // configurations. All routes that share a destination are currently mixed
-// together regardless of mode; exclusive and ducking modes are on the
-// roadmap.
+// together regardless of mode; an exclusive mode is on the roadmap. Ducking
+// is set per route with Route.Duck.
 type MixMode string
 
 const (
@@ -40,6 +40,15 @@ type Route struct {
 	Volume     float32  `json:"volume"` // 0 to 1
 	Enabled    bool     `json:"enabled"`
 	Priority   int      `json:"priority"` // routes are listed highest first
+
+	// Duck, when set, makes this route an announcement: while it is
+	// active, every other route on the same destinations plays at Duck
+	// times its volume (0 silences them). Routes that duck do not duck
+	// each other unless they have a lower priority.
+	Duck *float32 `json:"duck,omitempty"`
+	// Transient marks a route created at runtime, for example by
+	// playback, that is not part of the stored configuration.
+	Transient bool `json:"transient,omitempty"`
 }
 
 // RouteStatus is a route plus its live state.
@@ -79,6 +88,8 @@ func (r Route) Validate() error {
 		return &ValidationError{"at least one destination is required"}
 	case r.Volume < 0 || r.Volume > 1:
 		return &ValidationError{fmt.Sprintf("volume %v is outside 0..1", r.Volume)}
+	case r.Duck != nil && (*r.Duck < 0 || *r.Duck > 1):
+		return &ValidationError{fmt.Sprintf("duck %v is outside 0..1", *r.Duck)}
 	}
 	switch r.MixMode {
 	case "", MixModeReplace, MixModeMix, MixModeAdd:
@@ -95,5 +106,9 @@ func (r Route) Validate() error {
 
 func (r Route) clone() Route {
 	r.DestNames = append([]string(nil), r.DestNames...)
+	if r.Duck != nil {
+		d := *r.Duck
+		r.Duck = &d
+	}
 	return r
 }

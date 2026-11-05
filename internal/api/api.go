@@ -31,6 +31,7 @@ type Discoverer interface {
 type API struct {
 	svc       *service.Service
 	discovery Discoverer
+	player    Player
 	log       *slog.Logger
 	version   string
 }
@@ -39,8 +40,10 @@ type API struct {
 type Options struct {
 	Service   *service.Service
 	Discovery Discoverer
-	Logger    *slog.Logger
-	Version   string
+	// Player plays audio from URLs. Nil disables the playback endpoints.
+	Player  Player
+	Logger  *slog.Logger
+	Version string
 }
 
 // New returns the HTTP handler for the API and web UI.
@@ -48,7 +51,7 @@ func New(opts Options) http.Handler {
 	if opts.Logger == nil {
 		opts.Logger = slog.Default()
 	}
-	a := &API{svc: opts.Service, discovery: opts.Discovery, log: opts.Logger.With("component", "api"), version: opts.Version}
+	a := &API{svc: opts.Service, discovery: opts.Discovery, player: opts.Player, log: opts.Logger.With("component", "api"), version: opts.Version}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /api/servers", a.listServers)
@@ -69,6 +72,8 @@ func New(opts Options) http.Handler {
 	mux.HandleFunc("GET /api/routes/{id}", a.getRoute)
 	mux.HandleFunc("PUT /api/routes/{id}", a.updateRoute)
 	mux.HandleFunc("DELETE /api/routes/{id}", a.deleteRoute)
+
+	a.registerPlayback(mux)
 
 	mux.HandleFunc("GET /api/status", a.status)
 	mux.HandleFunc("GET /api/discovery", a.discoverAll)

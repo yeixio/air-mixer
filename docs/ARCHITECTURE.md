@@ -101,6 +101,19 @@ removes the difference, so registration order never matters.
   [-1, 1].
 - A forwarder moves mixed audio to the sink's channel without blocking.
 
+### `internal/playback`
+
+Plays a URL on chosen outputs for announcements and alarms. Each playback
+fetches an MP3 or WAV, decodes it in pure Go, converts it to the internal
+format, and feeds it to the router in real time (never more than 100 ms
+ahead) as a temporary source with a **transient** route to its outputs.
+Announcement routes carry a `duck` level: the router multiplies every
+other route on the same destinations by it, and the mixer fades volume
+changes over 250 ms. Other audio therefore keeps flowing underneath and
+returns when the route is removed. When an input's channel closes the
+mixer still plays what it already holds, so the end of a clip is not cut
+off.
+
 ### `internal/service`
 
 Every change goes through the service, which saves it to SQLite and

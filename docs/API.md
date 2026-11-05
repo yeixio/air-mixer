@@ -14,8 +14,9 @@ the form:
 | 404 | No such item or endpoint |
 | 409 | An item with that ID already exists |
 | 413 | Request body over 1 MB |
+| 429 | Too many playbacks at once |
 | 501 | Not implemented (AirPlay 2 pairing) |
-| 502 | Discovery failed |
+| 502 | Discovery failed, or a playback URL could not be fetched or decoded |
 
 There is no authentication yet, so keep the port on a trusted network.
 
@@ -127,6 +128,94 @@ Listing and getting add live fields:
   "source_available": true,
   "samples_routed": 1764000
 }
+```
+
+Playback (below) adds **transient** routes while it plays. They carry
+`"transient": true` and a `duck` level, are not saved, disappear when the
+playback ends, and cannot be updated through `/api/routes`.
+
+## Playback
+
+Plays audio from a URL on any set of outputs: announcements,
+text-to-speech, doorbells, alarms or a stream. This is what the
+[Home Assistant integration](HOME_ASSISTANT.md) uses.
+
+`POST /api/play`
+
+```json
+{
+  "url": "http://homeassistant.local:8123/api/tts_proxy/abc123.mp3",
+  "outputs": ["Kitchen", "client-2"],
+  "mode": "duck",
+  "volume": 0.9,
+  "duck_level": 0.2,
+  "repeat": 1,
+  "loop": false,
+  "max_duration": 60,
+  "title": "Dinner is ready",
+  "wait": false
+}
+```
+
+| Field | | Default |
+|-------|-|---------|
+| `url` | An `http` or `https` URL of an MP3 or WAV file or stream. Required. | |
+| `outputs` | Client IDs or names (names match ignoring case). Empty or omitted means every enabled client. | all |
+| `mode` | `duck` lowers other audio on those outputs to `duck_level`; `interrupt` silences it; `mix` plays alongside it. | `duck` |
+| `volume` | Playback volume, 0 to 1. | 1 |
+| `duck_level` | Volume of other audio under `duck`, 0 to 1. | 0.2 |
+| `repeat` | Number of times to play, up to 100. | 1 |
+| `loop` | Repeat until stopped or `max_duration` passes. | `false` |
+| `max_duration` | Stop after this many seconds. Every playback stops after an hour. | |
+| `title` | Shown in status. | |
+| `wait` | Respond when playback ends (200) instead of when it starts (202). | `false` |
+
+Air-Mixer downloads the URL itself, so it must be reachable from the
+Air-Mixer server. It is fetched once per repeat. MP3 (any bitrate and
+sample rate) and WAV (8, 16, 24 or 32-bit integer PCM, or 32-bit float)
+are supported; other formats return 502.
+
+Other audio is never paused: it keeps playing underneath at the ducked
+volume, fading down over a quarter of a second and back up when the
+playback ends. Announcements (`duck` and `interrupt`) also duck `mix`
+playbacks; several announcements on one output play together.
+
+The response is the playback:
+
+```json
+{
+  "id": "play-3",
+  "url": "http://homeassistant.local:8123/api/tts_proxy/abc123.mp3",
+  "title": "Dinner is ready",
+  "outputs": ["Kitchen", "Den"],
+  "mode": "duck",
+  "volume": 0.9,
+  "duck_level": 0.2,
+  "repeat": 1,
+  "state": "playing",
+  "started_at": "2026-11-05T18:00:00Z",
+  "position": 0
+}
+```
+
+`state` is `playing`, then `finished`, `stopped` or `failed` (with
+`error`). `position` is seconds played, across repeats. The query
+string of `url` is left out of logs, since it often carries a token.
+
+| Method | Path | |
+|--------|------|-|
+| POST | `/api/play` | Start a playback; 202, or 200 with `wait` |
+| GET | `/api/playback` | `{"playback": [...]}`: playbacks in progress, oldest first |
+| GET | `/api/playback/{id}` | One playback in progress |
+| DELETE | `/api/playback/{id}` | Stop it; 204 |
+| DELETE | `/api/playback?output=Kitchen` | Stop playback on one output (ID or name); a playback on other outputs too keeps playing there. Returns `{"stopped": 1}` |
+| DELETE | `/api/playback` | Stop every playback; returns `{"stopped": n}` |
+
+For example, a doorbell from a shell:
+
+```sh
+curl -X POST http://airmixer.local:9001/api/play \
+  -d '{"url": "http://nas.local/sounds/doorbell.wav", "outputs": ["Kitchen", "Den"]}'
 ```
 
 ## Status and health
