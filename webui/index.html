@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" class="i18n-loading">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
             border-radius: 12px;
             font-size: 12px;
             font-weight: bold;
-            margin-left: 10px;
+            margin-inline-start: 10px;
         }
 
         .status.running {
@@ -87,7 +87,7 @@
             content: "";
             height: 18px;
             width: 18px;
-            left: 3px;
+            inset-inline-start: 3px;
             bottom: 3px;
             background-color: white;
             transition: .3s;
@@ -100,6 +100,10 @@
 
         .toggle-switch input:checked + .toggle-slider:before {
             transform: translateX(26px);
+        }
+
+        [dir="rtl"] .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(-26px);
         }
 
         .toggle-switch input:disabled + .toggle-slider {
@@ -139,7 +143,7 @@
 
         .section-doc {
             background: #1e1e1e;
-            border-left: 3px solid #4a9eff;
+            border-inline-start: 3px solid #4a9eff;
             padding: 12px 15px;
             margin-bottom: 15px;
             border-radius: 4px;
@@ -189,7 +193,7 @@
 
         th, td {
             padding: 12px;
-            text-align: left;
+            text-align: start;
             border-bottom: 1px solid #3a3a3a;
         }
 
@@ -255,7 +259,7 @@
         }
 
         .close {
-            float: right;
+            float: inline-end;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
@@ -313,14 +317,14 @@
         .notification-container {
             position: fixed;
             top: 20px;
-            right: 20px;
+            inset-inline-end: 20px;
             z-index: 10000;
             max-width: 400px;
         }
 
         .notification {
             background: #2a2a2a;
-            border-left: 4px solid #4a9eff;
+            border-inline-start: 4px solid #4a9eff;
             padding: 15px 20px;
             margin-bottom: 10px;
             border-radius: 4px;
@@ -332,23 +336,23 @@
         }
 
         .notification.error {
-            border-left-color: #f44336;
+            border-inline-start-color: #f44336;
         }
 
         .notification.success {
-            border-left-color: #4caf50;
+            border-inline-start-color: #4caf50;
         }
 
         .notification.warning {
-            border-left-color: #ff9800;
+            border-inline-start-color: #ff9800;
         }
 
         .notification.info {
-            border-left-color: #4a9eff;
+            border-inline-start-color: #4a9eff;
         }
 
         .notification.confirm {
-            border-left-color: #ff9800;
+            border-inline-start-color: #ff9800;
         }
 
         .notification-icon {
@@ -442,13 +446,80 @@
             animation: slideOut 0.3s ease-out forwards;
         }
 
+        [dir="rtl"] .notification {
+            animation-name: slideInRtl;
+        }
+
+        [dir="rtl"] .notification.hiding {
+            animation-name: slideOutRtl;
+        }
+
+        @keyframes slideInRtl {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRtl {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(-100%); opacity: 0; }
+        }
+
+        /* Language picker */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .language-picker {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        .language-picker label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .language-picker select {
+            padding: 6px 8px;
+            background: #1e1e1e;
+            color: #e0e0e0;
+            border: 1px solid #3a3a3a;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .language-note {
+            max-width: 320px;
+            font-size: 12px;
+            color: #888;
+            text-align: end;
+        }
+
+        .language-note a {
+            color: #4a9eff;
+        }
+
+        /* Until the page's language has loaded, so English doesn't flash first. */
+        html.i18n-loading body {
+            visibility: hidden;
+        }
+
         /* Icon System - Clean CSS-based icons */
         .icon {
             display: inline-block;
             width: 1em;
             height: 1em;
             vertical-align: middle;
-            margin-right: 0.3em;
+            margin-inline-end: 0.3em;
         }
 
         .icon-input::before {
@@ -591,6 +662,10 @@
             transform: rotate(90deg);
         }
 
+        [dir="rtl"] .collapsible-icon {
+            transform: scaleX(-1);
+        }
+
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
@@ -609,42 +684,54 @@
 
     <div class="container">
         <header>
-            <h1>Air-Mixer <span id="status" class="status stopped">Stopped</span></h1>
-            <p>Universal Audio Protocol Translator & Mixer</p>
+            <div class="header-top">
+                <div>
+                    <h1>Air-Mixer <span id="status" class="status stopped" data-i18n="app.stopped">Stopped</span></h1>
+                    <p data-i18n="app.tagline">Universal Audio Protocol Translator & Mixer</p>
+                </div>
+                <div class="language-picker">
+                    <label>
+                        <span data-i18n="language.label">Language</span>
+                        <select id="languageSelect" onchange="pickLanguage(this.value)">
+                            <option value="">Automatic</option>
+                        </select>
+                    </label>
+                    <div class="language-note" id="languageNote" hidden>
+                        <span data-i18n="language.machine">This language was translated by machine, so some words may read oddly.</span>
+                        <a href="https://github.com/yeixio/air-mixer/blob/master/i18n/README.md" target="_blank" rel="noopener" data-i18n="language.help">Help improve it</a>
+                    </div>
+                </div>
+            </div>
             <div style="margin-top: 15px; padding: 12px; background: #1e1e1e; border-radius: 4px; font-size: 13px; color: #aaa;">
-                <strong style="color: #4a9eff;">How it works:</strong> 
-                Add Input Servers to receive audio → Create Routes to connect sources to destinations → 
-                Add Output Clients to send audio to your speakers. Audio flows from inputs through routes to outputs.
+                <strong style="color: #4a9eff;" data-i18n="app.howTitle">How it works:</strong>
+                <span data-i18n="app.how">Add input servers to receive audio, create routes to connect sources to destinations, and add output clients to send audio to your speakers. Audio flows from inputs through routes to outputs.</span>
             </div>
         </header>
 
         <div class="section">
             <div class="section-header">
                 <div class="section-title">
-                    <h2><span class="icon icon-input"></span> Input Servers</h2>
+                    <h2><span class="icon icon-input"></span> <span data-i18n="servers.title">Input Servers</span></h2>
                     <div class="section-doc">
-                        <strong>What are Input Servers?</strong><br>
-                        Input Servers receive audio from external sources on your network. When you add an AirPlay server, 
-                        it appears as an AirPlay speaker that other devices can connect to. Audio sent to these servers 
-                        becomes available for routing to your output devices. For example, create an AirPlay server to receive 
-                        audio from your iPhone, iPad, or Mac.
+                        <strong data-i18n="servers.whatTitle">What are input servers?</strong><br>
+                        <span data-i18n="servers.what">Input servers receive audio from sources on your network. An AirPlay server shows up as an AirPlay speaker that your iPhone, iPad or Mac can play to. What it receives can be routed to your output clients.</span>
                     </div>
                 </div>
                 <div class="section-actions">
-                    <button class="btn" onclick="showAddServerModal()">Add Server</button>
+                    <button class="btn" onclick="showAddServerModal()" data-i18n="servers.add">Add Server</button>
                 </div>
             </div>
             <table id="serversTable">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Protocol</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th data-i18n="common.name">Name</th>
+                        <th data-i18n="common.protocol">Protocol</th>
+                        <th data-i18n="common.status">Status</th>
+                        <th data-i18n="common.actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="serversBody">
-                    <tr><td colspan="4" class="empty">No servers configured</td></tr>
+                    <tr><td colspan="4" class="empty" data-i18n="servers.empty">No servers yet</td></tr>
                 </tbody>
             </table>
         </div>
@@ -652,31 +739,28 @@
         <div class="section">
             <div class="section-header">
                 <div class="section-title">
-                    <h2><span class="icon icon-output"></span> Output Clients</h2>
+                    <h2><span class="icon icon-output"></span> <span data-i18n="clients.title">Output Clients</span></h2>
                     <div class="section-doc">
-                        <strong>What are Output Clients?</strong><br>
-                        Output Clients are destinations where audio is sent. These represent physical or network speakers 
-                        that you want to play audio on. Add an output client for each speaker or audio device you want to 
-                        control. When you create a route, you'll connect input servers to these output clients to define 
-                        where audio should play.
+                        <strong data-i18n="clients.whatTitle">What are output clients?</strong><br>
+                        <span data-i18n="clients.what">Output clients are where audio plays: the speakers and audio devices on your network. Add one for each speaker you want to control, then connect input servers to them with a route.</span>
                     </div>
                 </div>
                 <div class="section-actions">
-                    <button class="btn" onclick="showAddClientModal()">Add Client</button>
+                    <button class="btn" onclick="showAddClientModal()" data-i18n="clients.add">Add Client</button>
                 </div>
             </div>
             <table id="clientsTable">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Protocol</th>
-                        <th>Address</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th data-i18n="common.name">Name</th>
+                        <th data-i18n="common.protocol">Protocol</th>
+                        <th data-i18n="common.address">Address</th>
+                        <th data-i18n="common.status">Status</th>
+                        <th data-i18n="common.actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="clientsBody">
-                    <tr><td colspan="5" class="empty">No clients configured</td></tr>
+                    <tr><td colspan="5" class="empty" data-i18n="clients.empty">No clients yet</td></tr>
                 </tbody>
             </table>
         </div>
@@ -684,31 +768,28 @@
         <div class="section">
             <div class="section-header">
                 <div class="section-title">
-                    <h2><span class="icon icon-route"></span> Audio Routes</h2>
+                    <h2><span class="icon icon-route"></span> <span data-i18n="routes.title">Audio Routes</span></h2>
                     <div class="section-doc">
-                        <strong>What are Routes?</strong><br>
-                        Routes connect your Input Servers to Output Clients, defining how audio flows through the system. 
-                        A route specifies which input source (like an AirPlay connection) should send audio to which output 
-                        destinations (like speakers). You can route one source to multiple outputs, or mix multiple sources 
-                        together. Routes must be enabled to be active.
+                        <strong data-i18n="routes.whatTitle">What are routes?</strong><br>
+                        <span data-i18n="routes.what">Routes connect input servers to output clients. A route sends what one source receives, such as an AirPlay stream, to one or more speakers. Several routes can play into the same speaker. A route plays only while it's on.</span>
                     </div>
                 </div>
                 <div class="section-actions">
-                    <button class="btn" onclick="showAddRouteModal()">Add Route</button>
+                    <button class="btn" onclick="showAddRouteModal()" data-i18n="routes.add">Add Route</button>
                 </div>
             </div>
             <table id="routesTable">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Source</th>
-                        <th>Destinations</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th data-i18n="common.name">Name</th>
+                        <th data-i18n="routes.source">Source</th>
+                        <th data-i18n="routes.destinations">Destinations</th>
+                        <th data-i18n="common.status">Status</th>
+                        <th data-i18n="common.actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="routesBody">
-                    <tr><td colspan="5" class="empty">No routes configured</td></tr>
+                    <tr><td colspan="5" class="empty" data-i18n="routes.empty">No routes yet</td></tr>
                 </tbody>
             </table>
         </div>
@@ -717,38 +798,37 @@
     <!-- Add Server Modal -->
     <div id="serverModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('serverModal')">&times;</span>
-            <h2>Add Input Server</h2>
-            <div class="section-doc" style="margin-bottom: 20px;">
-                Create an input server to receive audio from external devices. For example, an AirPlay server will appear 
-                as an AirPlay speaker that your iPhone, iPad, or Mac can connect to.
+            <span class="close" onclick="closeModal('serverModal')" role="button" data-i18n-aria-label="common.close" aria-label="Close">&times;</span>
+            <h2 data-i18n="servers.addTitle">Add Input Server</h2>
+            <div class="section-doc" style="margin-bottom: 20px;" data-i18n="servers.addHint">
+                An input server receives audio from other devices. An AirPlay server shows up as an AirPlay speaker on your iPhone, iPad or Mac.
             </div>
             <form id="serverForm" onsubmit="addServer(event)">
                 <div class="form-group">
-                    <label>Name</label>
+                    <label data-i18n="common.name">Name</label>
                     <input type="text" name="name" required>
                 </div>
                 <div class="form-group">
-                    <label>Protocol</label>
+                    <label data-i18n="common.protocol">Protocol</label>
                     <select name="protocol" required>
-                        <option value="airplay">AirPlay - Receive audio from iOS/macOS devices</option>
-                        <option value="bluetooth" disabled>Bluetooth - Receive audio via Bluetooth (Coming Soon)</option>
-                        <option value="chromecast" disabled>Google Cast - Receive audio from Cast devices (Coming Soon)</option>
-                        <option value="upnp" disabled>UPnP/DLNA - Receive audio via UPnP (Coming Soon)</option>
+                        <option value="airplay" data-i18n="protocols.airplayServer">AirPlay: receive audio from iPhone, iPad and Mac</option>
+                        <option value="bluetooth" disabled data-i18n="common.comingSoon" data-i18n-protocol="Bluetooth">Bluetooth (coming soon)</option>
+                        <option value="chromecast" disabled data-i18n="common.comingSoon" data-i18n-protocol="Google Cast">Google Cast (coming soon)</option>
+                        <option value="upnp" disabled data-i18n="common.comingSoon" data-i18n-protocol="UPnP/DLNA">UPnP/DLNA (coming soon)</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Network Interface (optional)</label>
-                    <input type="text" name="interface" placeholder="auto (auto-detect)" id="serverInterface">
-                    <small style="color: #888; font-size: 12px; display: block; margin-top: 5px;">
-                        Leave empty or use "auto" to auto-detect. Specify interface name (e.g., "en0", "eth0") if auto-detection fails.
+                    <label data-i18n="servers.interface">Network interface (optional)</label>
+                    <input type="text" name="interface" placeholder="auto (detect it)" data-i18n-placeholder="servers.interfacePlaceholder" id="serverInterface">
+                    <small style="color: #888; font-size: 12px; display: block; margin-top: 5px;" data-i18n="servers.interfaceHint">
+                        Leave empty or write "auto" to detect it. Name an interface, such as en0 or eth0, if detection picks the wrong one.
                     </small>
                 </div>
                 <div class="form-group">
-                    <label>ID <span style="color: #888; font-size: 12px;">(optional, auto-generated if empty)</span></label>
-                    <input type="text" name="id" placeholder="Leave empty for auto-generation">
+                    <label><span data-i18n="common.id">ID</span> <span style="color: #888; font-size: 12px;" data-i18n="common.idHint">(optional, made up if empty)</span></label>
+                    <input type="text" name="id" placeholder="Leave empty to make one up" data-i18n-placeholder="common.idPlaceholder">
                 </div>
-                <button type="submit" class="btn">Add Server</button>
+                <button type="submit" class="btn" data-i18n="servers.add">Add Server</button>
             </form>
         </div>
     </div>
@@ -756,60 +836,59 @@
     <!-- Add Client Modal -->
     <div id="clientModal" class="modal">
         <div class="modal-content" style="max-width: 700px;">
-            <span class="close" onclick="closeModal('clientModal')">&times;</span>
-            <h2>Add Output Client</h2>
-            <div class="section-doc" style="margin-bottom: 20px;">
-                Create an output client to send audio to a speaker or audio device. Use auto-discovery to find devices 
-                on your network, or manually configure if the device isn't found.
+            <span class="close" onclick="closeModal('clientModal')" role="button" data-i18n-aria-label="common.close" aria-label="Close">&times;</span>
+            <h2 data-i18n="clients.addTitle">Add Output Client</h2>
+            <div class="section-doc" style="margin-bottom: 20px;" data-i18n="clients.addHint">
+                An output client sends audio to a speaker or audio device. Find devices on your network, or set one up by hand if it isn't found.
             </div>
-            
+
             <!-- Discovery Section -->
             <div style="margin-bottom: 20px; padding: 15px; background: #1e1e1e; border-radius: 4px;">
-                <h3 style="color: #4a9eff; margin-bottom: 10px; font-size: 16px;"><span class="icon icon-search"></span> Auto-Discovery</h3>
-                <button type="button" class="btn" id="discoverBtn" onclick="startDiscovery()" style="margin-bottom: 10px;">
-                    Discover Devices
+                <h3 style="color: #4a9eff; margin-bottom: 10px; font-size: 16px;"><span class="icon icon-search"></span> <span data-i18n="discovery.title">Find devices</span></h3>
+                <button type="button" class="btn" id="discoverBtn" onclick="startDiscovery()" style="margin-bottom: 10px;" data-i18n="discovery.start">
+                    Find Devices
                 </button>
                 <div id="discoveryStatus" style="font-size: 13px; color: #888; margin-bottom: 10px;"></div>
                 <div id="discoveredDevices" style="max-height: 200px; overflow-y: auto;"></div>
             </div>
-            
+
             <!-- Manual Configuration (Collapsible) -->
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #3a3a3a;">
                 <div class="collapsible-header" id="manualConfigHeader" onclick="toggleManualConfig()">
-                    <h3 style="color: #4a9eff; margin: 0; font-size: 16px;"><span class="icon icon-edit"></span> Manual Configuration</h3>
+                    <h3 style="color: #4a9eff; margin: 0; font-size: 16px;"><span class="icon icon-edit"></span> <span data-i18n="discovery.manual">Set Up by Hand</span></h3>
                     <span class="collapsible-icon">▶</span>
                 </div>
                 <div class="collapsible-content" id="manualConfigContent">
-                    <p style="font-size: 13px; color: #888; margin-bottom: 15px;">Use this if auto-discovery didn't find your device</p>
+                    <p style="font-size: 13px; color: #888; margin-bottom: 15px;" data-i18n="discovery.manualHint">Use this if your device wasn't found.</p>
                     <form id="clientForm" onsubmit="addClient(event)">
                         <div class="form-group">
-                            <label>Name</label>
+                            <label data-i18n="common.name">Name</label>
                             <input type="text" name="name" required>
                         </div>
                         <div class="form-group">
-                            <label>Protocol</label>
+                            <label data-i18n="common.protocol">Protocol</label>
                             <select name="protocol" required>
-                                <option value="airplay">AirPlay - Send audio to AirPlay speakers</option>
-                                <option value="bluetooth" disabled>Bluetooth - Send audio via Bluetooth (Coming Soon)</option>
-                                <option value="chromecast" disabled>Google Cast - Send audio to Cast devices (Coming Soon)</option>
-                                <option value="upnp" disabled>UPnP/DLNA - Send audio via UPnP (Coming Soon)</option>
+                                <option value="airplay" data-i18n="protocols.airplayClient">AirPlay: send audio to AirPlay speakers</option>
+                                <option value="bluetooth" disabled data-i18n="common.comingSoon" data-i18n-protocol="Bluetooth">Bluetooth (coming soon)</option>
+                                <option value="chromecast" disabled data-i18n="common.comingSoon" data-i18n-protocol="Google Cast">Google Cast (coming soon)</option>
+                                <option value="upnp" disabled data-i18n="common.comingSoon" data-i18n-protocol="UPnP/DLNA">UPnP/DLNA (coming soon)</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Address <span style="color: #888; font-size: 12px;">(IP:port or device identifier)</span></label>
-                            <input type="text" name="address" required placeholder="192.168.1.100:49152">
+                            <label><span data-i18n="common.address">Address</span> <span style="color: #888; font-size: 12px;" data-i18n="clients.addressHint">(IP:port or device identifier)</span></label>
+                            <input type="text" name="address" required placeholder="192.168.1.100:49152" dir="ltr">
                         </div>
                         <div class="form-group">
-                            <label>ID <span style="color: #888; font-size: 12px;">(optional, auto-generated if empty)</span></label>
-                            <input type="text" name="id" placeholder="Leave empty for auto-generation">
+                            <label><span data-i18n="common.id">ID</span> <span style="color: #888; font-size: 12px;" data-i18n="common.idHint">(optional, made up if empty)</span></label>
+                            <input type="text" name="id" placeholder="Leave empty to make one up" data-i18n-placeholder="common.idPlaceholder">
                         </div>
                     </form>
                 </div>
             </div>
-            
+
             <!-- Add Client Button - Always visible outside collapsible section -->
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #3a3a3a; text-align: right;">
-                <button type="button" class="btn" onclick="submitClientForm()" style="min-width: 120px;">
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #3a3a3a; text-align: end;">
+                <button type="button" class="btn" onclick="submitClientForm()" style="min-width: 120px;" data-i18n="clients.add">
                     Add Client
                 </button>
             </div>
@@ -819,32 +898,32 @@
     <!-- Pairing PIN Modal -->
     <div id="pairingModal" class="modal">
         <div class="modal-content" style="max-width: 500px;">
-            <span class="close" onclick="closeModal('pairingModal')">&times;</span>
-            <h2>AirPlay Pairing Required</h2>
+            <span class="close" onclick="closeModal('pairingModal')" role="button" data-i18n-aria-label="common.close" aria-label="Close">&times;</span>
+            <h2 data-i18n="pairing.title">AirPlay Pairing</h2>
             <div class="section-doc" style="margin-bottom: 20px;">
-                <strong>Pairing Required</strong><br>
-                This Apple TV requires pairing before it can be used. Please enter the 4-digit PIN code displayed on your TV screen.
+                <strong data-i18n="pairing.requiredTitle">Pairing needed</strong><br>
+                <span data-i18n="pairing.required">This Apple TV needs to be paired before it can be used. Enter the 4-digit PIN it shows on screen.</span>
             </div>
-            <div id="pairingMessage" style="margin-bottom: 20px; padding: 15px; background: #1e1e1e; border-radius: 4px; color: #4a9eff; font-weight: bold;">
-                Enter the PIN code displayed on your Apple TV
+            <div id="pairingMessage" style="margin-bottom: 20px; padding: 15px; background: #1e1e1e; border-radius: 4px; color: #4a9eff; font-weight: bold;" data-i18n="pairing.prompt">
+                Enter the PIN your Apple TV shows
             </div>
             <form id="pairingForm" onsubmit="completePairing(event)">
                 <div class="form-group">
-                    <label>PIN Code <span style="color: #888; font-size: 12px;">(4 digits)</span></label>
-                    <input type="text" name="pin" id="pairingPinInput" required 
-                           maxlength="4" pattern="[0-9]{4}" 
-                           placeholder="0000" 
+                    <label><span data-i18n="pairing.pin">PIN</span> <span style="color: #888; font-size: 12px;" data-i18n="pairing.pinHint">(4 digits)</span></label>
+                    <input type="text" name="pin" id="pairingPinInput" required
+                           maxlength="4" pattern="[0-9]{4}" inputmode="numeric" dir="ltr"
+                           placeholder="0000"
                            style="font-size: 24px; text-align: center; letter-spacing: 8px; font-weight: bold;">
-                    <small style="color: #888; font-size: 12px; display: block; margin-top: 5px;">
-                        Enter the 4-digit code shown on your Apple TV screen
+                    <small style="color: #888; font-size: 12px; display: block; margin-top: 5px;" data-i18n="pairing.pinHelp">
+                        The 4-digit code on your Apple TV's screen
                     </small>
                 </div>
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="button" class="btn btn-danger" onclick="closeModal('pairingModal')" style="flex: 1;">
+                    <button type="button" class="btn btn-danger" onclick="closeModal('pairingModal')" style="flex: 1;" data-i18n="common.cancel">
                         Cancel
                     </button>
-                    <button type="submit" class="btn" style="flex: 1;">
-                        Complete Pairing
+                    <button type="submit" class="btn" style="flex: 1;" data-i18n="pairing.submit">
+                        Pair
                     </button>
                 </div>
             </form>
@@ -855,42 +934,206 @@
     <!-- Add Route Modal -->
     <div id="routeModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('routeModal')">&times;</span>
-            <h2>Add Audio Route</h2>
-            <div class="section-doc" style="margin-bottom: 20px;">
-                Create a route to connect an input server (audio source) to one or more output clients (speakers). 
-                This defines how audio flows: from where it's received to where it should play. You can route one source 
-                to multiple outputs, or mix multiple sources together.
+            <span class="close" onclick="closeModal('routeModal')" role="button" data-i18n-aria-label="common.close" aria-label="Close">&times;</span>
+            <h2 data-i18n="routes.addTitle">Add Audio Route</h2>
+            <div class="section-doc" style="margin-bottom: 20px;" data-i18n="routes.addHint">
+                A route connects an input server, where audio comes from, to one or more output clients, where it plays.
             </div>
             <form id="routeForm" onsubmit="addRoute(event)">
                 <div class="form-group">
-                    <label>Name</label>
+                    <label data-i18n="common.name">Name</label>
                     <input type="text" name="name" required>
                 </div>
                 <div class="form-group">
-                    <label>Source Server <span style="color: #888; font-size: 12px;">(where audio comes from)</span></label>
+                    <label><span data-i18n="routes.sourceLabel">Source server</span> <span style="color: #888; font-size: 12px;" data-i18n="routes.sourceHint">(where audio comes from)</span></label>
                     <select name="source_name" id="routeSourceSelect" required>
-                        <option value="">-- Select an input server --</option>
+                        <option value="" data-i18n="routes.sourcePick">Pick an input server</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Destination Clients <span style="color: #888; font-size: 12px;">(where audio goes - hold Ctrl/Cmd to select multiple)</span></label>
+                    <label><span data-i18n="routes.destinationsLabel">Destination clients</span> <span style="color: #888; font-size: 12px;" data-i18n="routes.destinationsHint">(where audio goes; hold Ctrl or Cmd to pick several)</span></label>
                     <select name="dest_names" id="routeDestSelect" multiple required size="4" style="min-height: 80px;">
-                        <option value="">-- Select one or more output clients --</option>
+                        <option value="" data-i18n="routes.destinationsPick">Pick one or more output clients</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Volume</label>
+                    <label data-i18n="routes.volume">Volume</label>
                     <input type="range" name="volume" min="0" max="100" value="100">
                     <span id="volumeValue">100%</span>
                 </div>
-                <button type="submit" class="btn">Add Route</button>
+                <button type="submit" class="btn" data-i18n="routes.add">Add Route</button>
             </form>
         </div>
     </div>
 
     <script>
         const API_BASE = '/api';
+
+        // ---- Languages ----
+        //
+        // The text comes from the catalog in i18n/locales at the repository
+        // root, which the server serves at /i18n/: one folder per language,
+        // web.json for this page and errors.json for the API's error codes.
+        // English is the source and the fallback for any missing key. The
+        // server picks the browser's language from Accept-Language (the
+        // lang attribute on <html>); a language picked here wins and is kept
+        // in this browser. See i18n/README.md.
+
+        const SOURCE_LANGUAGE = 'en';
+        const LANGUAGE_KEY = 'airmixer.language';
+        const NAMESPACES = ['web', 'errors'];
+        const serverLanguage = document.documentElement.lang || SOURCE_LANGUAGE;
+        const catalogs = {};
+        let languages = [{ code: SOURCE_LANGUAGE, name: 'English', dir: 'ltr', status: 'source' }];
+        let language = SOURCE_LANGUAGE;
+
+        function storedLanguage() {
+            try {
+                return localStorage.getItem(LANGUAGE_KEY) || '';
+            } catch (err) {
+                return '';
+            }
+        }
+
+        async function loadCatalog(code) {
+            if (catalogs[code]) return;
+            const files = await Promise.all(NAMESPACES.map(ns =>
+                fetch(`/i18n/locales/${encodeURIComponent(code)}/${ns}.json`)
+                    .then(res => res.ok ? res.json() : {})
+                    .catch(() => ({}))
+            ));
+            catalogs[code] = Object.fromEntries(NAMESPACES.map((ns, i) => [ns, files[i]]));
+        }
+
+        function lookup(code, ns, key) {
+            let v = catalogs[code] && catalogs[code][ns];
+            for (const part of key.split('.')) {
+                if (v == null || typeof v !== 'object') return undefined;
+                v = v[part];
+            }
+            return typeof v === 'string' ? v : undefined;
+        }
+
+        function formatValue(v) {
+            return typeof v === 'number' ? new Intl.NumberFormat(language).format(v) : String(v);
+        }
+
+        // t('servers.added') or t('errors:not_found', params). Plurals use
+        // i18next's suffixes (key_one, key_other, ...), picked by count.
+        function t(fullKey, params = {}) {
+            const [ns, key] = fullKey.includes(':') ? fullKey.split(':', 2) : ['web', fullKey];
+            for (const code of [language, SOURCE_LANGUAGE]) {
+                let text;
+                if (typeof params.count === 'number') {
+                    const category = new Intl.PluralRules(code).select(params.count);
+                    text = lookup(code, ns, `${key}_${category}`) ?? lookup(code, ns, `${key}_other`);
+                }
+                text = text ?? lookup(code, ns, key);
+                if (text !== undefined) {
+                    return text.replace(/\{\{\s*(\w+)\s*\}\}/g, (m, name) => name in params ? formatValue(params[name]) : m);
+                }
+            }
+            return key.split('.').pop();
+        }
+
+        // The message for an API error: its code in the reader's language,
+        // else the server's English text, else the fallback key.
+        function apiError(data, fallbackKey = 'common.unexpected') {
+            if (data && data.code && lookup(SOURCE_LANGUAGE, 'errors', data.code) !== undefined) {
+                return t(`errors:${data.code}`, data.params || {});
+            }
+            return (data && data.error) || t(fallbackKey);
+        }
+
+        async function readError(res) {
+            const data = await res.json().catch(() => ({}));
+            if (!data.error && !data.code) data.error = t('common.httpStatus', { status: res.status });
+            return data;
+        }
+
+        // Fills every element marked with data-i18n (its text),
+        // data-i18n-placeholder, data-i18n-title or data-i18n-aria-label.
+        // data-i18n-<name> attributes fill {{name}}.
+        function translatePage(root = document) {
+            const paramsOf = el => {
+                const params = {};
+                for (const attr of el.attributes) {
+                    const m = /^data-i18n-(?!placeholder$|title$|aria-label$)(.+)$/.exec(attr.name);
+                    if (m) params[m[1]] = attr.value;
+                }
+                return params;
+            };
+            root.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n, paramsOf(el)); });
+            root.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+            root.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+            root.querySelectorAll('[data-i18n-aria-label]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAriaLabel)); });
+        }
+
+        function languageInfo(code) {
+            return languages.find(l => l.code === code) || { code, name: code, dir: 'ltr', status: 'machine' };
+        }
+
+        function renderLanguagePicker() {
+            const select = document.getElementById('languageSelect');
+            const picked = storedLanguage();
+            select.innerHTML = '';
+            const automatic = document.createElement('option');
+            automatic.value = '';
+            automatic.textContent = t('language.automatic', { language: languageInfo(serverLanguage).name });
+            select.appendChild(automatic);
+            for (const l of languages) {
+                const option = document.createElement('option');
+                option.value = l.code;
+                option.lang = l.code;
+                option.textContent = l.name;
+                select.appendChild(option);
+            }
+            select.value = languages.some(l => l.code === picked) ? picked : '';
+            document.getElementById('languageNote').hidden = languageInfo(language).status !== 'machine';
+        }
+
+        // Shows the page in a language: a listed code, or '' for the browser's.
+        async function setLanguage(picked) {
+            const code = languages.some(l => l.code === picked) ? picked : serverLanguage;
+            await Promise.all([loadCatalog(SOURCE_LANGUAGE), loadCatalog(code)]);
+            language = code;
+            document.documentElement.lang = code;
+            document.documentElement.dir = languageInfo(code).dir;
+            translatePage();
+            renderLanguagePicker();
+        }
+
+        async function pickLanguage(picked) {
+            try {
+                if (picked) localStorage.setItem(LANGUAGE_KEY, picked);
+                else localStorage.removeItem(LANGUAGE_KEY);
+            } catch (err) {
+                // Storage can be off; the pick then lasts until the page reloads.
+            }
+            await setLanguage(picked);
+            // Text the page wrote itself follows the new language too.
+            loadStatus();
+            loadServers();
+            loadClients();
+            loadRoutes();
+            renderDiscovery();
+        }
+
+        async function initLanguage() {
+            try {
+                const res = await fetch('/i18n/languages.json');
+                if (res.ok) languages = await res.json();
+            } catch (err) {
+                console.warn('[Language] Could not load the language list:', err);
+            }
+            try {
+                await setLanguage(storedLanguage());
+            } finally {
+                document.documentElement.classList.remove('i18n-loading');
+            }
+        }
+        // Never keep the page hidden for long, even if the catalog is slow.
+        setTimeout(() => document.documentElement.classList.remove('i18n-loading'), 1500);
 
         // Notification System
         function showNotification(type, title, message, duration = 5000) {
@@ -913,8 +1156,8 @@
             notification.innerHTML = `
                 <div class="notification-icon">${icons[type] || icons.info}</div>
                 <div class="notification-content">
-                    <div class="notification-title">${title}</div>
-                    <div class="notification-message">${message}</div>
+                    <div class="notification-title">${escapeHtml(title)}</div>
+                    ${message ? `<div class="notification-message">${escapeHtml(message)}</div>` : ''}
                 </div>
                 <div class="notification-close" onclick="this.parentElement.remove()">&times;</div>
             `;
@@ -949,7 +1192,7 @@
                 
                 const confirmBtn = document.createElement('button');
                 confirmBtn.className = 'notification-btn notification-btn-confirm';
-                confirmBtn.textContent = 'Confirm';
+                confirmBtn.textContent = t('common.confirm');
                 confirmBtn.onclick = () => {
                     notification.classList.add('hiding');
                     setTimeout(() => notification.remove(), 300);
@@ -958,7 +1201,7 @@
 
                 const cancelBtn = document.createElement('button');
                 cancelBtn.className = 'notification-btn notification-btn-cancel';
-                cancelBtn.textContent = 'Cancel';
+                cancelBtn.textContent = t('common.cancel');
                 cancelBtn.onclick = () => {
                     notification.classList.add('hiding');
                     setTimeout(() => notification.remove(), 300);
@@ -1007,7 +1250,8 @@
         }
 
         // Load data on page load
-        window.onload = function() {
+        window.onload = async function() {
+            await initLanguage();
             // Load status first to check if server is ready
             loadStatus().then(() => {
                 // If status loads successfully, load other data
@@ -1038,10 +1282,12 @@
                 const statusEl = document.getElementById('status');
                 if (statusEl) {
                     if (data.router_running) {
-                        statusEl.textContent = 'Running';
+                        statusEl.textContent = t('app.running');
+                        statusEl.dataset.i18n = 'app.running';
                         statusEl.className = 'status running';
                     } else {
-                        statusEl.textContent = 'Stopped';
+                        statusEl.textContent = t('app.stopped');
+                        statusEl.dataset.i18n = 'app.stopped';
                         statusEl.className = 'status stopped';
                     }
                 }
@@ -1056,9 +1302,9 @@
                 const res = await fetch(`${API_BASE}/servers`);
                 
                 if (!res.ok) {
-                    const errorData = await res.json().catch(() => ({ error: `HTTP ${res.status}: ${res.statusText}` }));
+                    const errorData = await readError(res);
                     console.error('[Load Servers] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Load Servers', errorData.error || `Server returned ${res.status}. Please refresh the page.`);
+                    showNotification('error', t('servers.loadFailed'), apiError(errorData));
                     return;
                 }
                 
@@ -1073,12 +1319,12 @@
                 // Handle null/undefined response
                 if (!servers || !Array.isArray(servers)) {
                     console.warn('[Load Servers] Invalid response format, expected array:', servers);
-                    tbody.innerHTML = '<tr><td colspan="4" class="empty">No servers configured</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="4" class="empty">${escapeHtml(t('servers.empty'))}</td></tr>`;
                     return;
                 }
                 
                 if (servers.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="empty">No servers configured</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="4" class="empty">${escapeHtml(t('servers.empty'))}</td></tr>`;
                     return;
                 }
 
@@ -1108,7 +1354,7 @@
                     const actionCell = document.createElement('td');
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'btn btn-danger';
-                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.textContent = t('common.delete');
                     deleteBtn.onclick = () => deleteServer(s.id);
                     actionCell.appendChild(deleteBtn);
                     row.appendChild(actionCell);
@@ -1118,7 +1364,7 @@
             } catch (err) {
                 console.error('[Load Servers] Exception:', err);
                 console.error('[Load Servers] Stack:', err.stack);
-                showNotification('error', 'Failed to Load Servers', err.message || 'Could not fetch server list. Please check if the server is running and refresh the page.');
+                showNotification('error', t('servers.loadFailed'), t('common.loadFailed'));
             }
         }
 
@@ -1127,9 +1373,9 @@
                 const res = await fetch(`${API_BASE}/clients`);
                 
                 if (!res.ok) {
-                    const errorData = await res.json().catch(() => ({ error: `HTTP ${res.status}: ${res.statusText}` }));
+                    const errorData = await readError(res);
                     console.error('[Load Clients] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Load Clients', errorData.error || `Server returned ${res.status}. Please refresh the page.`);
+                    showNotification('error', t('clients.loadFailed'), apiError(errorData));
                     return;
                 }
                 
@@ -1144,12 +1390,12 @@
                 // Handle null/undefined response
                 if (!clients || !Array.isArray(clients)) {
                     console.warn('[Load Clients] Invalid response format, expected array:', clients);
-                    tbody.innerHTML = '<tr><td colspan="5" class="empty">No clients configured</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="5" class="empty">${escapeHtml(t('clients.empty'))}</td></tr>`;
                     return;
                 }
                 
                 if (clients.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="empty">No clients configured</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="5" class="empty">${escapeHtml(t('clients.empty'))}</td></tr>`;
                     return;
                 }
 
@@ -1183,7 +1429,7 @@
                     const actionCell = document.createElement('td');
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'btn btn-danger';
-                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.textContent = t('common.delete');
                     deleteBtn.onclick = () => deleteClient(c.id);
                     actionCell.appendChild(deleteBtn);
                     row.appendChild(actionCell);
@@ -1193,7 +1439,7 @@
             } catch (err) {
                 console.error('[Load Clients] Exception:', err);
                 console.error('[Load Clients] Stack:', err.stack);
-                showNotification('error', 'Failed to Load Clients', err.message || 'Could not fetch client list. Please check if the server is running and refresh the page.');
+                showNotification('error', t('clients.loadFailed'), t('common.loadFailed'));
             }
         }
 
@@ -1202,9 +1448,9 @@
                 const res = await fetch(`${API_BASE}/routes`);
                 
                 if (!res.ok) {
-                    const errorData = await res.json().catch(() => ({ error: `HTTP ${res.status}: ${res.statusText}` }));
+                    const errorData = await readError(res);
                     console.error('[Load Routes] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Load Routes', errorData.error || `Server returned ${res.status}. Please refresh the page.`);
+                    showNotification('error', t('routes.loadFailed'), apiError(errorData));
                     return;
                 }
                 
@@ -1220,12 +1466,12 @@
                 // Handle null/undefined response
                 if (!routes || !Array.isArray(routes)) {
                     console.warn('[Load Routes] Invalid response format, expected array:', routes);
-                    tbody.innerHTML = '<tr><td colspan="5" class="empty">No routes configured</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="5" class="empty">${escapeHtml(t('routes.empty'))}</td></tr>`;
                     return;
                 }
                 
                 if (routes.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="empty">No routes configured</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="5" class="empty">${escapeHtml(t('routes.empty'))}</td></tr>`;
                     return;
                 }
 
@@ -1261,7 +1507,7 @@
                     const actionCell = document.createElement('td');
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'btn btn-danger';
-                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.textContent = t('common.delete');
                     deleteBtn.onclick = () => deleteRoute(r.id);
                     actionCell.appendChild(deleteBtn);
                     row.appendChild(actionCell);
@@ -1271,7 +1517,7 @@
             } catch (err) {
                 console.error('[Load Routes] Exception:', err);
                 console.error('[Load Routes] Stack:', err.stack);
-                showNotification('error', 'Failed to Load Routes', err.message || 'Could not fetch route list. Please check if the server is running and refresh the page.');
+                showNotification('error', t('routes.loadFailed'), t('common.loadFailed'));
             }
         }
 
@@ -1292,8 +1538,8 @@
             // Reset discovery state
             selectedDiscoveredDevice = null;
             discoveredDevicesList = [];
-            document.getElementById('discoveryStatus').innerHTML = '';
-            document.getElementById('discoveredDevices').innerHTML = '';
+            discoveryState = 'idle';
+            renderDiscovery();
             
             // Collapse manual configuration by default
             const header = document.getElementById('manualConfigHeader');
@@ -1349,7 +1595,7 @@
             // Reset volume slider display
             const volumeValue = document.getElementById('volumeValue');
             if (volumeValue) {
-                volumeValue.textContent = '100%';
+                volumeValue.textContent = formatPercent(100);
             }
             
             // Load servers and clients first
@@ -1358,7 +1604,7 @@
             // Populate source select
             const sourceSelect = document.getElementById('routeSourceSelect');
             if (sourceSelect) {
-                sourceSelect.innerHTML = '<option value="">-- Select an input server --</option>';
+                sourceSelect.innerHTML = `<option value="">${escapeHtml(t('routes.sourcePick'))}</option>`;
                 const serversRes = await fetch(`${API_BASE}/servers`);
                 if (serversRes.ok) {
                     const servers = await serversRes.json();
@@ -1376,7 +1622,7 @@
             // Populate destination select
             const destSelect = document.getElementById('routeDestSelect');
             if (destSelect) {
-                destSelect.innerHTML = '<option value="">-- Select one or more output clients --</option>';
+                destSelect.innerHTML = `<option value="">${escapeHtml(t('routes.destinationsPick'))}</option>`;
                 const clientsRes = await fetch(`${API_BASE}/clients`);
                 if (clientsRes.ok) {
                     const clients = await clientsRes.json();
@@ -1408,7 +1654,7 @@
                     // Reset volume slider display
                     const volumeValue = document.getElementById('volumeValue');
                     if (volumeValue) {
-                        volumeValue.textContent = '100%';
+                        volumeValue.textContent = formatPercent(100);
                     }
                 }
                 
@@ -1460,16 +1706,16 @@
                 if (res.ok) {
                     closeModal('serverModal');
                     loadServers();
-                    showNotification('success', 'Server Added', 'Input server created successfully');
+                    showNotification('success', t('servers.added'), '');
                 } else {
-                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(res);
                     console.error('[Add Server] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Add Server', errorData.error || 'Server creation failed');
+                    showNotification('error', t('servers.addFailed'), apiError(errorData));
                 }
             } catch (err) {
                 console.error('[Add Server] Exception:', err);
                 console.error('[Add Server] Stack:', err.stack);
-                showNotification('error', 'Error Adding Server', err.message || 'An unexpected error occurred');
+                showNotification('error', t('servers.addFailed'), err.message || t('common.unexpected'));
             }
         }
 
@@ -1517,28 +1763,28 @@
                             address: responseData.address || data.address
                         };
                         // Show PIN input dialog with client data
-                        showPairingDialog(responseData.id || data.id, responseData.message || 'Enter the PIN code displayed on your Apple TV', clientData);
+                        showPairingDialog(responseData.id || data.id, t('pairing.prompt'), clientData);
                         selectedDiscoveredDevice = null; // Reset selection
                     } else {
                         // Unexpected 202 response
-                        const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
-                        showNotification('error', 'Failed to Add Client', errorData.error || 'Client creation failed');
+                        const errorData = await readError(res);
+                        showNotification('error', t('clients.addFailed'), apiError(errorData));
                     }
                 } else if (res.ok) {
                     closeModal('clientModal');
                     loadClients();
-                    showNotification('success', 'Client Added', 'Output client created successfully');
+                    showNotification('success', t('clients.added'), '');
                     selectedDiscoveredDevice = null; // Reset selection
                 } else {
-                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(res);
                     console.error('[Add Client] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Add Client', errorData.error || 'Client creation failed');
+                    showNotification('error', t('clients.addFailed'), apiError(errorData));
                 }
             } catch (err) {
                 console.error('[Add Client] Exception:', err);
                 console.error('[Add Client] Stack:', err.stack);
                 console.error('[Add Client] Data being sent:', data);
-                showNotification('error', 'Error Adding Client', err.message || 'An unexpected error occurred');
+                showNotification('error', t('clients.addFailed'), err.message || t('common.unexpected'));
             }
         }
 
@@ -1560,17 +1806,17 @@
             });
             
             if (!name || !name.trim()) {
-                showNotification('warning', 'Validation Error', 'Please enter a route name');
+                showNotification('warning', t('common.validation'), t('routes.needName'));
                 return;
             }
             
             if (!sourceName || sourceName.trim() === '') {
-                showNotification('warning', 'Validation Error', 'Please select a source server');
+                showNotification('warning', t('common.validation'), t('routes.needSource'));
                 return;
             }
             
             if (destNames.length === 0) {
-                showNotification('warning', 'Validation Error', 'Please select at least one destination client');
+                showNotification('warning', t('common.validation'), t('routes.needDestination'));
                 return;
             }
             
@@ -1596,25 +1842,22 @@
                 if (res.ok) {
                     closeModal('routeModal');
                     loadRoutes();
-                    showNotification('success', 'Route Added', 'Audio route created successfully');
+                    showNotification('success', t('routes.added'), '');
                 } else {
-                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(res);
                     console.error('[Add Route] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Add Route', errorData.error || 'Route creation failed');
+                    showNotification('error', t('routes.addFailed'), apiError(errorData));
                 }
             } catch (err) {
                 console.error('[Add Route] Exception:', err);
                 console.error('[Add Route] Stack:', err.stack);
                 console.error('[Add Route] Data being sent:', data);
-                showNotification('error', 'Error Adding Route', err.message || 'An unexpected error occurred');
+                showNotification('error', t('routes.addFailed'), err.message || t('common.unexpected'));
             }
         }
 
         async function deleteServer(id) {
-            const confirmed = await showConfirmNotification(
-                'Delete Server',
-                'Are you sure you want to delete this input server? This action cannot be undone.'
-            );
+            const confirmed = await showConfirmNotification(t('servers.deleteTitle'), t('servers.deleteMessage'));
             
             if (!confirmed) {
                 console.log('[Delete Server] Deletion cancelled by user');
@@ -1626,24 +1869,21 @@
                 const res = await fetch(`${API_BASE}/servers/${id}`, { method: 'DELETE' });
                 if (res.ok) {
                     loadServers();
-                    showNotification('success', 'Server Deleted', 'Input server removed successfully');
+                    showNotification('success', t('servers.deleted'), '');
                 } else {
-                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(res);
                     console.error('[Delete Server] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Delete Server', errorData.error || 'Server deletion failed');
+                    showNotification('error', t('servers.deleteFailed'), apiError(errorData));
                 }
             } catch (err) {
                 console.error('[Delete Server] Exception:', err);
                 console.error('[Delete Server] Stack:', err.stack);
-                showNotification('error', 'Error Deleting Server', err.message || 'An unexpected error occurred');
+                showNotification('error', t('servers.deleteFailed'), err.message || t('common.unexpected'));
             }
         }
 
         async function deleteClient(id) {
-            const confirmed = await showConfirmNotification(
-                'Delete Client',
-                'Are you sure you want to delete this output client? This action cannot be undone.'
-            );
+            const confirmed = await showConfirmNotification(t('clients.deleteTitle'), t('clients.deleteMessage'));
             
             if (!confirmed) {
                 console.log('[Delete Client] Deletion cancelled by user');
@@ -1655,16 +1895,16 @@
                 const res = await fetch(`${API_BASE}/clients/${id}`, { method: 'DELETE' });
                 if (res.ok) {
                     loadClients();
-                    showNotification('success', 'Client Deleted', 'Output client removed successfully');
+                    showNotification('success', t('clients.deleted'), '');
                 } else {
-                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(res);
                     console.error('[Delete Client] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Delete Client', errorData.error || 'Client deletion failed');
+                    showNotification('error', t('clients.deleteFailed'), apiError(errorData));
                 }
             } catch (err) {
                 console.error('[Delete Client] Exception:', err);
                 console.error('[Delete Client] Stack:', err.stack);
-                showNotification('error', 'Error Deleting Client', err.message || 'An unexpected error occurred');
+                showNotification('error', t('clients.deleteFailed'), err.message || t('common.unexpected'));
             }
         }
 
@@ -1675,9 +1915,9 @@
                 // First get the current server data
                 const getRes = await fetch(`${API_BASE}/servers/${id}`);
                 if (!getRes.ok) {
-                    const errorData = await getRes.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(getRes);
                     console.error('[Toggle Server] Failed to get server:', errorData);
-                    showNotification('error', 'Failed to Toggle Server', errorData.error || 'Could not fetch server data');
+                    showNotification('error', t('servers.updateFailed'), apiError(errorData));
                     loadServers(); // Reload to reset toggle
                     return;
                 }
@@ -1693,16 +1933,16 @@
                 
                 if (res.ok) {
                     loadServers();
-                    showNotification('success', 'Server Updated', `Server ${enabled ? 'enabled' : 'disabled'} successfully`);
+                    showNotification('success', enabled ? t('servers.enabled') : t('servers.disabled'), '');
                 } else {
-                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(res);
                     console.error('[Toggle Server] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Toggle Server', errorData.error || 'Server update failed');
+                    showNotification('error', t('servers.updateFailed'), apiError(errorData));
                     loadServers(); // Reload to reset toggle
                 }
             } catch (err) {
                 console.error('[Toggle Server] Exception:', err);
-                showNotification('error', 'Error Toggling Server', err.message || 'An unexpected error occurred');
+                showNotification('error', t('servers.updateFailed'), err.message || t('common.unexpected'));
                 loadServers(); // Reload to reset toggle
             }
         }
@@ -1714,9 +1954,9 @@
                 // First get the current client data
                 const getRes = await fetch(`${API_BASE}/clients/${id}`);
                 if (!getRes.ok) {
-                    const errorData = await getRes.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(getRes);
                     console.error('[Toggle Client] Failed to get client:', errorData);
-                    showNotification('error', 'Failed to Toggle Client', errorData.error || 'Could not fetch client data');
+                    showNotification('error', t('clients.updateFailed'), apiError(errorData));
                     loadClients(); // Reload to reset toggle
                     return;
                 }
@@ -1732,16 +1972,16 @@
                 
                 if (res.ok) {
                     loadClients();
-                    showNotification('success', 'Client Updated', `Client ${enabled ? 'enabled' : 'disabled'} successfully`);
+                    showNotification('success', enabled ? t('clients.enabled') : t('clients.disabled'), '');
                 } else {
-                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(res);
                     console.error('[Toggle Client] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Toggle Client', errorData.error || 'Client update failed');
+                    showNotification('error', t('clients.updateFailed'), apiError(errorData));
                     loadClients(); // Reload to reset toggle
                 }
             } catch (err) {
                 console.error('[Toggle Client] Exception:', err);
-                showNotification('error', 'Error Toggling Client', err.message || 'An unexpected error occurred');
+                showNotification('error', t('clients.updateFailed'), err.message || t('common.unexpected'));
                 loadClients(); // Reload to reset toggle
             }
         }
@@ -1753,9 +1993,9 @@
                 // First get the current route data
                 const getRes = await fetch(`${API_BASE}/routes/${id}`);
                 if (!getRes.ok) {
-                    const errorData = await getRes.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(getRes);
                     console.error('[Toggle Route] Failed to get route:', errorData);
-                    showNotification('error', 'Failed to Toggle Route', errorData.error || 'Could not fetch route data');
+                    showNotification('error', t('routes.updateFailed'), apiError(errorData));
                     loadRoutes(); // Reload to reset toggle
                     return;
                 }
@@ -1781,25 +2021,22 @@
                 
                 if (res.ok) {
                     loadRoutes();
-                    showNotification('success', 'Route Updated', `Route ${enabled ? 'enabled' : 'disabled'} successfully`);
+                    showNotification('success', enabled ? t('routes.enabled') : t('routes.disabled'), '');
                 } else {
-                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(res);
                     console.error('[Toggle Route] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Toggle Route', errorData.error || 'Route update failed');
+                    showNotification('error', t('routes.updateFailed'), apiError(errorData));
                     loadRoutes(); // Reload to reset toggle
                 }
             } catch (err) {
                 console.error('[Toggle Route] Exception:', err);
-                showNotification('error', 'Error Toggling Route', err.message || 'An unexpected error occurred');
+                showNotification('error', t('routes.updateFailed'), err.message || t('common.unexpected'));
                 loadRoutes(); // Reload to reset toggle
             }
         }
 
         async function deleteRoute(id) {
-            const confirmed = await showConfirmNotification(
-                'Delete Route',
-                'Are you sure you want to delete this audio route? This action cannot be undone.'
-            );
+            const confirmed = await showConfirmNotification(t('routes.deleteTitle'), t('routes.deleteMessage'));
             
             if (!confirmed) {
                 console.log('[Delete Route] Deletion cancelled by user');
@@ -1811,16 +2048,16 @@
                 const res = await fetch(`${API_BASE}/routes/${id}`, { method: 'DELETE' });
                 if (res.ok) {
                     loadRoutes();
-                    showNotification('success', 'Route Deleted', 'Audio route removed successfully');
+                    showNotification('success', t('routes.deleted'), '');
                 } else {
-                    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                    const errorData = await readError(res);
                     console.error('[Delete Route] API error:', res.status, errorData);
-                    showNotification('error', 'Failed to Delete Route', errorData.error || 'Route deletion failed');
+                    showNotification('error', t('routes.deleteFailed'), apiError(errorData));
                 }
             } catch (err) {
                 console.error('[Delete Route] Exception:', err);
                 console.error('[Delete Route] Stack:', err.stack);
-                showNotification('error', 'Error Deleting Route', err.message || 'An unexpected error occurred');
+                showNotification('error', t('routes.deleteFailed'), err.message || t('common.unexpected'));
             }
         }
 
@@ -1829,7 +2066,7 @@
             const volumeSlider = document.querySelector('input[name="volume"]');
             if (volumeSlider) {
                 volumeSlider.addEventListener('input', function(e) {
-                    document.getElementById('volumeValue').textContent = e.target.value + '%';
+                    document.getElementById('volumeValue').textContent = formatPercent(Number(e.target.value));
                 });
             }
             
@@ -1861,6 +2098,11 @@
         let selectedDiscoveredDevice = null;
         let discoveredDevicesList = []; // Store discovered devices in memory
 
+        // 100 → "100%" in the page's language: "100 %" in German, "٪100" in Arabic.
+        function formatPercent(value) {
+            return new Intl.NumberFormat(language, { style: 'percent' }).format(value / 100);
+        }
+
         // Helper function to safely escape HTML (prevents XSS and double-escaping)
         function escapeHtml(text) {
             if (!text) return '';
@@ -1877,72 +2119,89 @@
             return name.replace(/\\ /g, ' ').replace(/\\/g, '');
         }
 
+        // What the discovery box shows: idle, searching, found, none or failed.
+        let discoveryState = 'idle';
+
         async function startDiscovery() {
-            const btn = document.getElementById('discoverBtn');
-            const status = document.getElementById('discoveryStatus');
-            const devicesDiv = document.getElementById('discoveredDevices');
-            
-            btn.disabled = true;
-            btn.textContent = 'Discovering...';
-            status.innerHTML = `
-                <div class="discovery-loader">
-                    <div class="spinner"></div>
-                    <span class="discovery-loading">Searching for devices on your network</span>
-                    <div class="pulse-dots">
-                        <div class="pulse-dot"></div>
-                        <div class="pulse-dot"></div>
-                        <div class="pulse-dot"></div>
-                    </div>
-                </div>
-            `;
-            devicesDiv.innerHTML = '';
             selectedDiscoveredDevice = null;
-            discoveredDevicesList = []; // Reset the list
+            discoveredDevicesList = [];
+            discoveryState = 'searching';
+            renderDiscovery();
 
             try {
                 const res = await fetch(`${API_BASE}/discovery?timeout=5s`);
+                if (!res.ok) throw new Error(apiError(await readError(res)));
                 const data = await res.json();
-                
-                if (data.devices && data.devices.length > 0) {
-                    status.innerHTML = `<span class="discovery-success"><span class="icon icon-success"></span> Found ${data.devices.length} device(s)</span>`;
-                    
-                    // Store devices in memory array
-                    discoveredDevicesList = data.devices;
-                    
-                    // Render devices using index instead of JSON in onclick
-                    devicesDiv.innerHTML = data.devices.map((device, index) => {
-                        // Clean device name first, then escape HTML
-                        const cleanedName = cleanDeviceName(device.name || 'Unknown Device');
-                        const cleanedDescription = device.description ? cleanDeviceName(device.description) : '';
-                        const safeName = escapeHtml(cleanedName);
-                        const safeDescription = cleanedDescription ? escapeHtml(cleanedDescription) : '';
-                        const safeAddress = escapeHtml(device.address || '');
-                        const safeProtocol = escapeHtml(device.protocol || '');
-                        
-                        return `
-                        <div class="discovered-device" data-device-index="${index}" onclick="selectDiscoveredDeviceByIndex(event, ${index})">
-                            <div class="device-name">${safeName}</div>
-                            <div class="device-details">
-                                Protocol: ${safeProtocol} | Address: ${safeAddress}
-                                ${safeDescription ? '<br>' + safeDescription : ''}
-                            </div>
-                        </div>
-                    `;
-                    }).join('');
-                } else {
-                    status.innerHTML = '<span class="discovery-error"><span class="icon icon-warning"></span> No devices found. Try manual configuration.</span>';
-                    devicesDiv.innerHTML = '<p style="color: #888; font-size: 13px; padding: 10px;">No devices discovered. Make sure your devices are on the same network and try again, or use manual configuration below.</p>';
-                }
+                discoveredDevicesList = data.devices || [];
+                discoveryState = discoveredDevicesList.length > 0 ? 'found' : 'none';
             } catch (err) {
                 console.error('[Discovery] Error:', err);
-                console.error('[Discovery] Error stack:', err.stack);
-                const errorMsg = err.message || 'Discovery failed';
-                status.innerHTML = '<span class="discovery-error"><span class="icon icon-error"></span> Discovery failed. Use manual configuration.</span>';
-                devicesDiv.innerHTML = '<p style="color: #888; font-size: 13px; padding: 10px;">Discovery encountered an error. Please use manual configuration below.</p>';
-                showNotification('error', 'Discovery Failed', errorMsg);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Discover Devices';
+                discoveryState = 'failed';
+                showNotification('error', t('discovery.failedTitle'), err.message || t('common.unexpected'));
+            }
+            renderDiscovery();
+        }
+
+        function renderDiscovery() {
+            const btn = document.getElementById('discoverBtn');
+            const status = document.getElementById('discoveryStatus');
+            const devicesDiv = document.getElementById('discoveredDevices');
+            if (!btn || !status || !devicesDiv) return;
+
+            const searching = discoveryState === 'searching';
+            btn.disabled = searching;
+            btn.textContent = searching ? t('discovery.searching') : t('discovery.start');
+            const hint = key => `<p style="color: #888; font-size: 13px; padding: 10px;">${escapeHtml(t(key))}</p>`;
+
+            switch (discoveryState) {
+            case 'searching':
+                status.innerHTML = `
+                    <div class="discovery-loader">
+                        <div class="spinner"></div>
+                        <span class="discovery-loading">${escapeHtml(t('discovery.searchingLong'))}</span>
+                        <div class="pulse-dots">
+                            <div class="pulse-dot"></div>
+                            <div class="pulse-dot"></div>
+                            <div class="pulse-dot"></div>
+                        </div>
+                    </div>
+                `;
+                devicesDiv.innerHTML = '';
+                break;
+            case 'found': {
+                const selected = selectedDiscoveredDevice;
+                status.innerHTML = selected
+                    ? `<span class="discovery-success"><span class="icon icon-success"></span> ${escapeHtml(t('discovery.selected', { name: cleanDeviceName(selected.name || t('discovery.unknownDevice')) }))}</span>`
+                    : `<span class="discovery-success"><span class="icon icon-success"></span> ${escapeHtml(t('discovery.found', { count: discoveredDevicesList.length }))}</span>`;
+                // Render devices using index instead of JSON in onclick
+                devicesDiv.innerHTML = discoveredDevicesList.map((device, index) => {
+                    // Clean device name first, then escape HTML
+                    const safeName = escapeHtml(cleanDeviceName(device.name || t('discovery.unknownDevice')));
+                    const cleanedDescription = device.description ? cleanDeviceName(device.description) : '';
+                    const details = escapeHtml(t('discovery.details', { protocol: device.protocol || '', address: device.address || '' }));
+                    return `
+                    <div class="discovered-device${device === selected ? ' selected' : ''}" data-device-index="${index}" onclick="selectDiscoveredDeviceByIndex(event, ${index})">
+                        <div class="device-name">${safeName}</div>
+                        <div class="device-details">
+                            ${details}
+                            ${cleanedDescription ? '<br>' + escapeHtml(cleanedDescription) : ''}
+                        </div>
+                    </div>
+                `;
+                }).join('');
+                break;
+            }
+            case 'none':
+                status.innerHTML = `<span class="discovery-error"><span class="icon icon-warning"></span> ${escapeHtml(t('discovery.none'))}</span>`;
+                devicesDiv.innerHTML = hint('discovery.noneHint');
+                break;
+            case 'failed':
+                status.innerHTML = `<span class="discovery-error"><span class="icon icon-error"></span> ${escapeHtml(t('discovery.failed'))}</span>`;
+                devicesDiv.innerHTML = '';
+                break;
+            default:
+                status.innerHTML = '';
+                devicesDiv.innerHTML = '';
             }
         }
 
@@ -1959,7 +2218,7 @@
             const form = document.getElementById('pairingForm');
             
             if (messageDiv) {
-                messageDiv.textContent = message || 'Enter the PIN code displayed on your Apple TV';
+                messageDiv.textContent = message || t('pairing.prompt');
             }
             if (statusDiv) {
                 statusDiv.innerHTML = '';
@@ -1984,24 +2243,24 @@
             
             if (!pin || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
                 if (statusDiv) {
-                    statusDiv.innerHTML = '<span style="color: #f44336;">Please enter a valid 4-digit PIN code</span>';
+                    statusDiv.innerHTML = `<span style="color: #f44336;">${escapeHtml(t('pairing.badPin'))}</span>`;
                 }
                 return;
             }
             
             if (!currentPairingClientId) {
-                showNotification('error', 'Pairing Error', 'No client ID available for pairing');
+                showNotification('error', t('pairing.failed'), t('pairing.noClient'));
                 return;
             }
             
             // Disable submit button
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.textContent = 'Pairing...';
+                submitBtn.textContent = t('pairing.pairing');
             }
             
             if (statusDiv) {
-                statusDiv.innerHTML = '<span style="color: #4a9eff;">Pairing in progress...</span>';
+                statusDiv.innerHTML = `<span style="color: #4a9eff;">${escapeHtml(t('pairing.pairing'))}</span>`;
             }
             
             try {
@@ -2023,35 +2282,35 @@
                     // Pairing successful
                     closeModal('pairingModal');
                     loadClients();
-                    showNotification('success', 'Pairing Complete', 'Device paired successfully. Client is now ready to use.');
+                    showNotification('success', t('pairing.done'), t('pairing.doneMessage'));
                     currentPairingClientId = null;
                     currentPairingClientData = null; // Clear client data
                 } else {
                     // Pairing failed
-                    const errorMsg = responseData.message || responseData.error || 'Pairing failed';
+                    const errorMsg = responseData.code ? apiError(responseData) : (responseData.message || responseData.error || t('pairing.failed'));
                     if (statusDiv) {
                         statusDiv.innerHTML = `<span style="color: #f44336;">${escapeHtml(errorMsg)}</span>`;
                     }
-                    showNotification('error', 'Pairing Failed', errorMsg);
+                    showNotification('error', t('pairing.failed'), errorMsg);
                     
                     // Re-enable submit button
                     if (submitBtn) {
                         submitBtn.disabled = false;
-                        submitBtn.textContent = 'Complete Pairing';
+                        submitBtn.textContent = t('pairing.submit');
                     }
                 }
             } catch (err) {
                 console.error('[Complete Pairing] Exception:', err);
-                const errorMsg = err.message || 'An unexpected error occurred';
+                const errorMsg = err.message || t('common.unexpected');
                 if (statusDiv) {
                     statusDiv.innerHTML = `<span style="color: #f44336;">${escapeHtml(errorMsg)}</span>`;
                 }
-                showNotification('error', 'Pairing Error', errorMsg);
+                showNotification('error', t('pairing.failed'), errorMsg);
                 
                 // Re-enable submit button
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Complete Pairing';
+                    submitBtn.textContent = t('pairing.submit');
                 }
             }
         }
@@ -2146,13 +2405,12 @@
                 // Show success message
                 const status = document.getElementById('discoveryStatus');
                 if (status) {
-                    const cleanedName = cleanDeviceName(device.name || 'Device');
-                    const deviceName = escapeHtml(cleanedName);
-                    status.innerHTML = `<span class="discovery-success"><span class="icon icon-success"></span> Selected: ${deviceName}</span>`;
+                    const cleanedName = cleanDeviceName(device.name || t('discovery.unknownDevice'));
+                    status.innerHTML = `<span class="discovery-success"><span class="icon icon-success"></span> ${escapeHtml(t('discovery.selected', { name: cleanedName }))}</span>`;
                 }
                 
                 console.log('[Device Selection] Step 6: Selection complete successfully');
-                showNotification('success', 'Device Selected', `Selected ${device.name || 'device'} - form fields populated`);
+                showNotification('success', t('discovery.selectedTitle'), t('discovery.selectedMessage', { name: cleanDeviceName(device.name || t('discovery.unknownDevice')) }));
             } catch (err) {
                 console.error('[Device Selection] Error occurred:', err);
                 console.error('[Device Selection] Error stack:', err.stack);
@@ -2160,9 +2418,7 @@
                 console.error('[Device Selection] Available devices count:', discoveredDevicesList ? discoveredDevicesList.length : 0);
                 console.error('[Device Selection] Event object:', event);
                 
-                const errorMessage = err.message || 'Unknown error occurred';
-                showNotification('error', 'Device Selection Failed', 
-                    `Failed to select device: ${errorMessage}. Please try manual configuration.`);
+                showNotification('error', t('discovery.failedTitle'), t('discovery.selectFailed'));
             }
         }
     </script>

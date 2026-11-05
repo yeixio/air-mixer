@@ -120,11 +120,11 @@ func NewID(prefix string) string {
 func validateCommon(id, name, protocol string) error {
 	switch {
 	case strings.TrimSpace(name) == "":
-		return invalid("name is required")
+		return invalidCode("name_required", nil)
 	case strings.TrimSpace(protocol) == "":
-		return invalid("protocol is required")
+		return invalidCode("protocol_required", nil)
 	case len(id) > 128 || strings.ContainsAny(id, "/?#"):
-		return invalid("id must be at most 128 characters without '/', '?' or '#'")
+		return invalidCode("bad_id", nil)
 	}
 	return nil
 }
@@ -287,7 +287,7 @@ func checkRoute(r router.Route) error {
 	if err := r.Validate(); err != nil {
 		var ve *router.ValidationError
 		if errors.As(err, &ve) {
-			return invalid("%s", ve.Reason)
+			return &InvalidError{Reason: ve.Reason, Code: ve.Code, Params: ve.Params}
 		}
 		return err
 	}

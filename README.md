@@ -36,6 +36,10 @@ are on the [roadmap](ROADMAP.md).
 - **Discovery.** Finds AirPlay speakers on your network.
 - **Web UI and REST API.** Everything the UI does is available over a
   [documented JSON API](docs/API.md).
+- **32 languages.** The web UI and API errors come in the same languages as
+  [Matinee](https://github.com/yeixio/matinee), right to left for Arabic,
+  Hebrew, Persian and Urdu. It starts in the browser's language and has a
+  picker in the header. See [Translations](i18n/README.md).
 - **Single static binary.** Pure Go, no cgo: the web UI, SQLite and the
   ALAC codec are all built in. Cross-compiles to Linux, macOS and Windows.
 
@@ -132,6 +136,7 @@ airmixer version    Print version information
 - [Architecture](docs/ARCHITECTURE.md): how audio flows through the system
 - [REST API](docs/API.md)
 - [Kubernetes](docs/KUBERNETES.md): Helm chart and Raspberry Pi speaker rooms
+- [Translations](i18n/README.md): languages, and how to review or add text
 - [Testing](docs/TESTING.md)
 - [Roadmap](ROADMAP.md)
 - [Contributing](CONTRIBUTING.md)

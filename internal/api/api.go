@@ -1,7 +1,8 @@
 // Package api serves the REST API and the web UI.
 //
 // The API is documented in docs/API.md. Responses are JSON; errors have the
-// form {"error": "message"} with a matching status code.
+// form {"error": "message"} with a matching status code, plus a stable
+// "code" and its "params" for errors in the i18n catalog.
 package api
 
 import (
@@ -13,6 +14,7 @@ import (
 	"runtime/debug"
 	"time"
 
+	"github.com/yeixio/air-mixer/i18n"
 	"github.com/yeixio/air-mixer/internal/discovery"
 	"github.com/yeixio/air-mixer/internal/service"
 	"github.com/yeixio/air-mixer/webui"
@@ -74,7 +76,7 @@ func New(opts Options) http.Handler {
 	mux.HandleFunc("GET /api/discovery", a.discoverAll)
 	mux.HandleFunc("GET /api/discovery/{protocol}", a.discoverProtocol)
 	mux.HandleFunc("/api/", func(w http.ResponseWriter, r *http.Request) {
-		writeError(w, http.StatusNotFound, "no such endpoint")
+		writeCode(w, http.StatusNotFound, "no_such_endpoint", nil)
 	})
 
 	mux.HandleFunc("GET /health", a.health)
@@ -91,7 +93,7 @@ func (a *API) middleware(next http.Handler) http.Handler {
 		defer func() {
 			if v := recover(); v != nil {
 				a.log.Error("panic in handler", "path", r.URL.Path, "panic", v, "stack", string(debug.Stack()))
-				writeError(rec, http.StatusInternalServerError, "internal error")
+				writeCode(rec, http.StatusInternalServerError, "internal", nil)
 			}
 			a.log.Debug("request", "method", r.Method, "path", r.URL.Path, "status", rec.status, "duration", time.Since(start))
 		}()
@@ -118,11 +120,20 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 }
 
 type errorResponse struct {
-	Error string `json:"error"`
+	Error  string         `json:"error"`
+	Code   string         `json:"code,omitempty"`
+	Params map[string]any `json:"params,omitempty"`
 }
 
+// writeError sends an English message that has no code in the catalog.
 func writeError(w http.ResponseWriter, status int, msg string) {
 	writeJSON(w, status, errorResponse{Error: msg})
+}
+
+// writeCode sends an error from the i18n catalog: its code and params, so
+// the web UI can show it in the reader's language, and its English text.
+func writeCode(w http.ResponseWriter, status int, code string, params map[string]any) {
+	writeJSON(w, status, errorResponse{Error: i18n.Message(code, params), Code: code, Params: params})
 }
 
 // fail maps a service error to a status code.
@@ -130,11 +141,11 @@ func (a *API) fail(w http.ResponseWriter, r *http.Request, err error) {
 	var invalid *service.InvalidError
 	switch {
 	case errors.As(err, &invalid):
-		writeError(w, http.StatusBadRequest, invalid.Reason)
+		writeJSON(w, http.StatusBadRequest, errorResponse{Error: invalid.Reason, Code: invalid.Code, Params: invalid.Params})
 	case errors.Is(err, service.ErrNotFound):
-		writeError(w, http.StatusNotFound, "not found")
+		writeCode(w, http.StatusNotFound, "not_found", nil)
 	case errors.Is(err, service.ErrConflict):
-		writeError(w, http.StatusConflict, "an item with this id already exists")
+		writeCode(w, http.StatusConflict, "conflict", nil)
 	default:
 		a.log.Error("request failed", "method", r.Method, "path", r.URL.Path, "err", err)
 		writeError(w, http.StatusInternalServerError, err.Error())
@@ -146,9 +157,9 @@ func decode(w http.ResponseWriter, r *http.Request, v any) bool {
 	if err := json.NewDecoder(r.Body).Decode(v); err != nil {
 		var tooBig *http.MaxBytesError
 		if errors.As(err, &tooBig) {
-			writeError(w, http.StatusRequestEntityTooLarge, "request body too large")
+			writeCode(w, http.StatusRequestEntityTooLarge, "body_too_large", nil)
 		} else {
-			writeError(w, http.StatusBadRequest, "invalid JSON body: "+err.Error())
+			writeCode(w, http.StatusBadRequest, "invalid_json", map[string]any{"detail": err.Error()})
 		}
 		return false
 	}
@@ -176,7 +187,7 @@ func (a *API) status(w http.ResponseWriter, r *http.Request) {
 // pairClient answers the pairing endpoint the web UI calls for devices that
 // need AirPlay 2 pairing, which is not implemented yet.
 func (a *API) pairClient(w http.ResponseWriter, r *http.Request) {
-	writeError(w, http.StatusNotImplemented, "AirPlay 2 pairing is not supported yet; see ROADMAP.md")
+	writeCode(w, http.StatusNotImplemented, "pairing_unsupported", nil)
 }
 
 const (
@@ -199,7 +210,7 @@ func discoveryTimeout(r *http.Request) (time.Duration, bool) {
 func (a *API) discoverAll(w http.ResponseWriter, r *http.Request) {
 	timeout, ok := discoveryTimeout(r)
 	if !ok {
-		writeError(w, http.StatusBadRequest, "timeout must be a duration between 0 and 30s, such as 5s")
+		writeCode(w, http.StatusBadRequest, "bad_timeout", nil)
 		return
 	}
 	devices, err := a.discovery.DiscoverAll(r.Context(), timeout)
@@ -213,7 +224,7 @@ func (a *API) discoverAll(w http.ResponseWriter, r *http.Request) {
 func (a *API) discoverProtocol(w http.ResponseWriter, r *http.Request) {
 	timeout, ok := discoveryTimeout(r)
 	if !ok {
-		writeError(w, http.StatusBadRequest, "timeout must be a duration between 0 and 30s, such as 5s")
+		writeCode(w, http.StatusBadRequest, "bad_timeout", nil)
 		return
 	}
 	protocol := r.PathValue("protocol")
@@ -221,7 +232,7 @@ func (a *API) discoverProtocol(w http.ResponseWriter, r *http.Request) {
 	var unknown discovery.ErrUnknownProtocol
 	switch {
 	case errors.As(err, &unknown):
-		writeError(w, http.StatusNotFound, err.Error())
+		writeCode(w, http.StatusNotFound, "discovery_unsupported", map[string]any{"protocol": string(unknown)})
 		return
 	case err != nil:
 		writeError(w, http.StatusBadGateway, err.Error())

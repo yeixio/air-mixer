@@ -5,8 +5,15 @@ and responses are JSON. Errors use the matching HTTP status and a body of
 the form:
 
 ```json
-{"error": "name is required"}
+{"error": "name is required", "code": "name_required"}
 ```
+
+`code` is a stable name for the error and `params` fills in the names in
+its message, such as `{"protocol": "dlna"}` for
+`unsupported_client_protocol`. Clients can show the code in their reader's
+language from [i18n/locales](../i18n/README.md#errors); `error` is always
+the English text. Errors without a code, such as a failed discovery, carry
+only `error`.
 
 | Status | Meaning |
 |--------|---------|

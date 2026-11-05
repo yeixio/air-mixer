@@ -12,6 +12,8 @@ documentation and code are all welcome.
   item from the [roadmap](ROADMAP.md). For anything large, such as a new
   protocol, open an issue first so we can agree on the approach.
 - **Improve the docs** when something confused you.
+- **Review a translation.** Every language but English was machine
+  translated; [i18n/README.md](i18n/README.md) explains how to fix one.
 
 ## Development setup
 
@@ -48,7 +50,11 @@ internal/db/           SQLite storage and migrations
 internal/config/       configuration loading
 internal/logging/      slog setup
 webui/                 the embedded single-page UI
+i18n/                  languages and the text of the UI and API errors in each
 ```
+
+Text the web UI shows goes in `i18n/locales/en/web.json` with a key, not in
+`webui/index.html`; see [i18n/README.md](i18n/README.md).
 
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) explains how audio flows
 between these.
