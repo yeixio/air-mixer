@@ -76,7 +76,14 @@ reported by `/api/status`.
 | Protocol | `address` | `config` keys |
 |----------|-----------|---------------|
 | `airplay` | `host` or `host:port` (default port 5000) | `latency_ms` (default 2000), `disable_encryption` |
-| `local` | ignored | none |
+| `local` | ignored | `delay_ms` |
+| `pulse` | ignored | `sink` (name, description or Bluetooth address; default sink if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`), `delay_ms` |
+
+`delay_ms` (0 to 5000) holds audio back on that output, to line up
+speakers with different latencies, such as several Bluetooth speakers in
+one room. A `pulse` client keeps retrying while its sink is missing, for
+example while a Bluetooth speaker is off, and reconnects by itself when
+the speaker drops off and comes back.
 
 `POST /api/clients/{id}/pair` returns 501: AirPlay 2 pairing is not
 implemented yet.

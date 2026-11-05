@@ -1,0 +1,68 @@
+# Release binaries for Air-Mixer. Run by .github/workflows/release.yml on
+# every v* tag; try it locally with `make release-snapshot`.
+#
+# Container images are built and pushed by .github/workflows/image.yml, so
+# this file deliberately builds no Docker images.
+version: 2
+
+project_name: airmixer
+
+before:
+  hooks:
+    - go mod tidy -diff
+
+builds:
+  - id: airmixer
+    main: ./cmd/airmixer
+    binary: airmixer
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.Version={{ .Version }} -X main.GitCommit={{ .ShortCommit }} -X main.BuildTime={{ .Date }}
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64, arm]
+    goarm: ["7"]
+    ignore:
+      - goos: darwin
+        goarch: arm
+      - goos: windows
+        goarch: arm
+      - goos: windows
+        goarch: arm64
+
+archives:
+  - id: default
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}
+    files:
+      - LICENSE
+      - NOTICE
+      - README.md
+      - config.yaml.example
+
+checksum:
+  name_template: checksums.txt
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  # Release notes come from GitHub, grouped by the labels in
+  # .github/release.yml.
+  use: github-native
+
+release:
+  github:
+    owner: yeixio
+    name: air-mixer
+  prerelease: auto
+  footer: |
+    **Container image:** `docker pull ghcr.io/yeixio/air-mixer:{{ .Version }}`
+
+    Full changelog: https://github.com/yeixio/air-mixer/compare/{{ .PreviousTag }}...{{ .Tag }}

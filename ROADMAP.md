@@ -13,12 +13,12 @@ longer.
 | Feature | Size | Notes |
 |---------|------|-------|
 | Receiver jitter buffer | M | Reorder late packets and request retransmission (the sender side already answers requests), instead of dropping anything out of order. Fixes clicks on busy Wi-Fi. |
-| Connection health for AirPlay outputs | S | Detect a receiver that went away (RTSP keepalive, socket errors) and hand it back to the Manager to reconnect. Today only the first connection is retried. |
+| Connection health for AirPlay outputs | S | Detect a receiver that went away (RTSP keepalive, socket errors) and report `ErrConnectionLost` from `Send`, so the Manager reconnects it. The Manager side and the pulse output already do this. |
 | Adapter status in the web UI | S | Show `connecting`, `connected` and `failed` with the error from `/api/status`, and remove the leftover pairing dialog. |
 | Idle handling | S | Stop streaming to outputs after a period of silence (RTSP `FLUSH`), and resume on audio, so AirPlay speakers can sleep and other senders can use them. |
 | Device volume | S | Send `SET_PARAMETER volume` to AirPlay outputs and expose per-output volume in the API, separate from route volume. |
 | API authentication | M | Optional token or password, and a setting to require it. Needed before anyone exposes the UI beyond a trusted LAN. |
-| Release pipeline | S | Tagged releases with GoReleaser: binaries, checksums, multi-arch Docker images on GHCR, and a Homebrew tap. |
+| Release pipeline | S | Tagged releases with GoReleaser: binaries, checksums and a Homebrew tap. Multi-arch images are already published to GHCR. |
 
 ## Next: synchronised multi-room audio
 
@@ -26,7 +26,7 @@ longer.
 |---------|------|-------|
 | Shared clock and synchronised start | L | Schedule every output against one timeline, using AirPlay sync packets and per-device latency, so rooms play in step. |
 | Clock-drift compensation | M | Resample very slightly to follow each output's real clock rate, so long sessions do not drift apart. |
-| Per-output latency calibration | M | A test tone and a slider, then automatic measurement where devices report latency. |
+| Per-output latency calibration | M | A test tone and a slider for `delay_ms` (which local and pulse outputs already take), then automatic measurement where devices report latency. |
 | Mix modes | M | Implement `exclusive` (highest-priority active route wins) for stored routes, and let stored routes duck others. The router already ducks for playback (announcements). |
 | Better resampling | S | Replace linear interpolation with a windowed-sinc or polyphase resampler for sources not at 44.1 kHz. |
 
@@ -39,7 +39,7 @@ longer.
 | Google Cast output | L | Cast to Chromecast Audio, Nest speakers and Cast-enabled TVs by serving a live stream to the default media receiver. |
 | UPnP/DLNA renderer output | M | Push a stream to Sonos (via UPnP) and other DLNA renderers. Includes SSDP discovery. |
 | UPnP/DLNA renderer input | M | Appear as a renderer so DLNA apps can play to Air-Mixer. |
-| Bluetooth output and input | L | A2DP through BlueZ on Linux. Platform-specific, so it would be an optional build. |
+| Bluetooth input | M | Appear as an A2DP speaker so phones can play to Air-Mixer over Bluetooth. Output to Bluetooth speakers already works through the `pulse` output. |
 | Snapcast and Spotify Connect | M | Snapcast as an output for open-source multi-room setups; Spotify Connect input through librespot. |
 | Internet radio and file sources | S | Play a stream URL or a local file as a persistent input. One-off playback of MP3 and WAV URLs is done (`/api/play`); more formats (FLAC, Ogg, AAC) would help both. |
 

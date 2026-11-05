@@ -15,6 +15,7 @@ import (
 	"github.com/yeixio/air-mixer/internal/protocols"
 	"github.com/yeixio/air-mixer/internal/protocols/airplay"
 	"github.com/yeixio/air-mixer/internal/protocols/local"
+	"github.com/yeixio/air-mixer/internal/protocols/pulse"
 	"github.com/yeixio/air-mixer/internal/router"
 )
 
@@ -385,6 +386,16 @@ func TestFactory(t *testing.T) {
 		t.Error(err)
 	} else if _, ok := c.(*local.Client); !ok {
 		t.Errorf("client is %T", c)
+	}
+	if c, err := f.Client(&db.Client{Protocol: "pulse", Config: `{"sink":"AA:BB:CC:DD:EE:FF","delay_ms":120}`}); err != nil {
+		t.Error(err)
+	} else if _, ok := c.(*pulse.Client); !ok {
+		t.Errorf("client is %T", c)
+	}
+	for _, bad := range []string{`{"delay_ms":-1}`, `{"delay_ms":60000}`} {
+		if _, err := f.Client(&db.Client{Protocol: "pulse", Config: bad}); !isInvalid(err) {
+			t.Errorf("pulse %s = %v", bad, err)
+		}
 	}
 	if _, err := f.Client(&db.Client{Protocol: "cast"}); !isInvalid(err) {
 		t.Errorf("unknown protocol = %v", err)

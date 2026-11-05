@@ -1,0 +1,26 @@
+{{- range .Values.rooms }}
+{{- $room := include "airmixer.room" (dict "root" $ "room" .) | fromJson }}
+---
+# Headless, so the name resolves to the agent's pod IP, which with host
+# networking is its node's address. The controller plays to the room
+# through this name.
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "airmixer.roomName" (dict "root" $ "room" $room) }}
+  labels:
+    {{- include "airmixer.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: room
+    airmixer.yeix.io/room: {{ $room.name }}
+spec:
+  clusterIP: None
+  selector:
+    {{- include "airmixer.selectorLabels" $ | nindent 4 }}
+    app.kubernetes.io/component: room
+    airmixer.yeix.io/room: {{ $room.name }}
+  ports:
+    - name: airplay
+      port: {{ $room.airplayPort }}
+      targetPort: airplay
+      protocol: TCP
+{{- end }}

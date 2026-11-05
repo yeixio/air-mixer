@@ -55,4 +55,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - run: docker build -t airmixer:ci .
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - name: Build for every platform
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: false
+
+  helm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: azure/setup-helm@v4
+      - name: Lint
+        run: helm lint --strict deploy/helm/airmixer
+      - name: Render
+        run: |
+          helm template airmixer deploy/helm/airmixer > /dev/null
+          helm template airmixer deploy/helm/airmixer -f deploy/helm/airmixer/examples/raspberry-pi-room.yaml > /dev/null

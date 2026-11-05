@@ -3,3 +3,6 @@ contact_links:
   - name: Security vulnerability
     url: https://github.com/yeixio/air-mixer/security/advisories/new
     about: Please report security problems privately.
+  - name: Help and questions
+    url: https://github.com/yeixio/air-mixer/blob/master/SUPPORT.md
+    about: Setting it up, or not sure whether it's a bug? Start here.

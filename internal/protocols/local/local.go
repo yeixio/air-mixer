@@ -10,6 +10,7 @@ import (
 	"log/slog"
 	"math"
 	"sync"
+	"time"
 
 	"github.com/ebitengine/oto/v3"
 
@@ -57,23 +58,36 @@ func otoPlayer(r io.Reader) (player, error) {
 	return otoCtx.NewPlayer(r), nil
 }
 
+// Options configures a local output.
+type Options struct {
+	ID, Name string
+	// Delay holds audio back before playing it, to line this output up
+	// with slower ones.
+	Delay  time.Duration
+	Logger *slog.Logger
+}
+
 // Client plays audio on the local default output device.
 type Client struct {
 	id, name string
 	log      *slog.Logger
+	buf      *audio.Playout
 
 	mu        sync.Mutex
 	player    player
 	connected bool
-	queue     []float32
 }
 
 // NewClient returns a local output. Call Connect to open the device.
-func NewClient(id, name string, logger *slog.Logger) *Client {
-	if logger == nil {
-		logger = slog.Default()
+func NewClient(o Options) *Client {
+	if o.Logger == nil {
+		o.Logger = slog.Default()
 	}
-	return &Client{id: id, name: name, log: logger.With("component", "local-client", "client", id)}
+	return &Client{
+		id: o.ID, name: o.Name,
+		log: o.Logger.With("component", "local-client", "client", o.ID),
+		buf: audio.NewPlayout(maxBuffered, audio.Samples(o.Delay)),
+	}
 }
 
 func (c *Client) ID() string       { return c.id }
@@ -95,12 +109,13 @@ func (c *Client) Connect(context.Context) error {
 	if c.connected {
 		return nil
 	}
-	p, err := newPlayer(reader{c})
+	p, err := newPlayer(&reader{c: c})
 	if err != nil {
 		return err
 	}
+	c.buf.Reset()
 	p.Play()
-	c.player, c.connected, c.queue = p, true, nil
+	c.player, c.connected = p, true
 	c.log.Info("local output opened")
 	return nil
 }
@@ -109,8 +124,9 @@ func (c *Client) Connect(context.Context) error {
 func (c *Client) Disconnect() error {
 	c.mu.Lock()
 	p := c.player
-	c.player, c.connected, c.queue = nil, false, nil
+	c.player, c.connected = nil, false
 	c.mu.Unlock()
+	c.buf.Reset()
 	if p == nil {
 		return nil
 	}
@@ -124,32 +140,35 @@ func (c *Client) Send(p protocols.Packet) error {
 		return fmt.Errorf("local: expected %+v audio, got %+v", audio.Internal, p.Format)
 	}
 	c.mu.Lock()
-	defer c.mu.Unlock()
-	if !c.connected {
+	connected := c.connected
+	c.mu.Unlock()
+	if !connected {
 		return protocols.ErrNotConnected
 	}
-	if len(c.queue)+len(p.Samples) > maxBuffered {
+	if !c.buf.Push(p.Samples) {
 		return protocols.ErrBufferFull
 	}
-	c.queue = append(c.queue, p.Samples...)
 	return nil
 }
 
 // reader feeds queued audio to the device, padding with silence.
-type reader struct{ c *Client }
+type reader struct {
+	c       *Client
+	scratch []float32
+}
 
-func (r reader) Read(b []byte) (int, error) {
+func (r *reader) Read(b []byte) (int, error) {
 	n := len(b) / 4
 	if n == 0 {
 		return 0, nil
 	}
-	r.c.mu.Lock()
-	k := min(n, len(r.c.queue))
-	for i, s := range r.c.queue[:k] {
+	if cap(r.scratch) < n {
+		r.scratch = make([]float32, n)
+	}
+	samples := r.scratch[:n]
+	r.c.buf.Fill(samples)
+	for i, s := range samples {
 		binary.LittleEndian.PutUint32(b[4*i:], math.Float32bits(s))
 	}
-	r.c.queue = r.c.queue[k:]
-	r.c.mu.Unlock()
-	clear(b[4*k : 4*n])
 	return 4 * n, nil
 }
