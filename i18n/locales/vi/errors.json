@@ -22,5 +22,7 @@
   "route_dest_required": "Cần ít nhất một đích",
   "route_volume_range": "Âm lượng {{volume}} nằm ngoài 0..1",
   "route_mix_mode": "mix_mode không rõ: \"{{mode}}\"",
-  "route_dest_empty": "Tên đích không được để trống"
+  "route_dest_empty": "Tên đích không được để trống",
+  "route_duck_range": "duck {{duck}} nằm ngoài 0..1",
+  "route_playback_owned": "Tuyến này thuộc về một lượt phát; hãy dừng nó bằng DELETE /api/playback/{id}"
 }

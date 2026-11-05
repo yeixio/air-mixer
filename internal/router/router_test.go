@@ -12,6 +12,7 @@ import (
 func newTestRouter(t *testing.T) *Router {
 	t.Helper()
 	r := New(slog.New(slog.NewTextHandler(io.Discard, nil)))
+	r.ramp = 0 // volume changes apply at once, so tests can compare samples
 	r.Start()
 	t.Cleanup(r.Stop)
 	return r
@@ -310,4 +311,101 @@ func TestConcurrentChurn(t *testing.T) {
 		})
 	}
 	wg.Wait()
+}
+
+func duck(level float32) *float32 { return &level }
+
+func TestDuckingLowersOtherRoutesAndRestores(t *testing.T) {
+	r := newTestRouter(t)
+	music := sourceFor(r, "s1", "music")
+	ann := sourceFor(r, "s2", "announce")
+	out := sinkFor(r, "c1", "kitchen")
+	other := sinkFor(r, "c2", "patio")
+	if err := r.AddRoute(route("music", "music", "kitchen", "patio")); err != nil {
+		t.Fatal(err)
+	}
+	music <- []float32{0.5, 0.5}
+	recv(t, out)
+	recv(t, other)
+
+	a := route("ann", "announce", "kitchen")
+	a.Duck, a.Transient = duck(0.2), true
+	if err := r.AddRoute(a); err != nil {
+		t.Fatal(err)
+	}
+	if st, _ := r.Route("ann"); st.Duck == nil || *st.Duck != 0.2 || !st.Transient {
+		t.Fatalf("route status lost duck or transient: %+v", st)
+	}
+	music <- []float32{0.5, 0.5}
+	ann <- []float32{0.3, 0.3}
+	if got := recv(t, out); !approx(got, []float32{0.5*0.2 + 0.3, 0.5*0.2 + 0.3}) {
+		t.Errorf("ducked mix = %v", got)
+	}
+	// Patio has no announcement, so it is not ducked.
+	if got := recv(t, other); !approx(got, []float32{0.5, 0.5}) {
+		t.Errorf("patio = %v, want undiminished", got)
+	}
+
+	if err := r.RemoveRoute("ann"); err != nil {
+		t.Fatal(err)
+	}
+	music <- []float32{0.5, 0.5}
+	if got := recv(t, out); !approx(got, []float32{0.5, 0.5}) {
+		t.Errorf("after the announcement got %v, want full volume", got)
+	}
+}
+
+func TestDuckingRoutesDoNotDuckEachOther(t *testing.T) {
+	r := newTestRouter(t)
+	a1 := sourceFor(r, "s1", "a1")
+	a2 := sourceFor(r, "s2", "a2")
+	out := sinkFor(r, "c1", "kitchen")
+	for _, id := range []string{"a1", "a2"} {
+		rt := route(id, id, "kitchen")
+		rt.Duck = duck(0)
+		r.AddRoute(rt)
+	}
+	a1 <- []float32{0.25, 0.25}
+	a2 <- []float32{0.25, 0.25}
+	if got := recv(t, out); !approx(got, []float32{0.5, 0.5}) {
+		t.Errorf("got %v, want both announcements at full volume", got)
+	}
+
+	// A higher-priority announcement ducks a lower one.
+	rt := route("a2", "a2", "kitchen")
+	rt.Duck, rt.Priority = duck(0), 10
+	r.UpdateRoute(rt)
+	a1 <- []float32{0.25, 0.25}
+	a2 <- []float32{0.25, 0.25}
+	if got := recv(t, out); !approx(got, []float32{0.25, 0.25}) {
+		t.Errorf("got %v, want only the higher priority announcement", got)
+	}
+}
+
+func TestDuckValidation(t *testing.T) {
+	rt := route("r", "s", "d")
+	rt.Duck = duck(1.5)
+	if err := rt.Validate(); err == nil {
+		t.Error("duck 1.5 accepted")
+	}
+}
+
+func TestDuckingFades(t *testing.T) {
+	r := newTestRouter(t)
+	r.ramp = 4 // a full-scale change takes four samples
+	music := sourceFor(r, "s1", "music")
+	ann := sourceFor(r, "s2", "announce")
+	out := sinkFor(r, "c1", "kitchen")
+	r.AddRoute(route("music", "music", "kitchen"))
+	music <- []float32{1, 1}
+	recv(t, out)
+
+	a := route("ann", "announce", "kitchen")
+	a.Duck = duck(0)
+	r.AddRoute(a)
+	music <- []float32{1, 1, 1, 1, 1, 1}
+	ann <- []float32{0, 0, 0, 0, 0, 0}
+	if got := recv(t, out); !approx(got, []float32{0.75, 0.5, 0.25, 0, 0, 0}) {
+		t.Errorf("fade = %v", got)
+	}
 }

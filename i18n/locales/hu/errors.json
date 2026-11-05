@@ -22,5 +22,7 @@
   "route_dest_required": "Legalább egy cél szükséges",
   "route_volume_range": "A(z) {{volume}} hangerő kívül esik a 0..1 tartományon",
   "route_mix_mode": "Ismeretlen mix_mode: „{{mode}}”",
-  "route_dest_empty": "A célnevek nem lehetnek üresek"
+  "route_dest_empty": "A célnevek nem lehetnek üresek",
+  "route_duck_range": "A(z) {{duck}} duck érték kívül esik a 0..1 tartományon",
+  "route_playback_owned": "Ez az útvonal egy lejátszáshoz tartozik; állítsd le ezzel: DELETE /api/playback/{id}"
 }

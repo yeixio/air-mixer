@@ -22,5 +22,7 @@
   "route_dest_required": "Minst ett mål er påkrevd",
   "route_volume_range": "Volumet {{volume}} er utenfor 0..1",
   "route_mix_mode": "Ukjent mix_mode \"{{mode}}\"",
-  "route_dest_empty": "Målnavn kan ikke være tomme"
+  "route_dest_empty": "Målnavn kan ikke være tomme",
+  "route_duck_range": "duck {{duck}} er utenfor 0..1",
+  "route_playback_owned": "Denne ruten hører til en avspilling; stopp den med DELETE /api/playback/{id}"
 }

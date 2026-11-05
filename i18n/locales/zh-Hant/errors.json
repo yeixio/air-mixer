@@ -22,5 +22,7 @@
   "route_dest_required": "至少需要一個目標",
   "route_volume_range": "音量 {{volume}} 超出 0..1 範圍",
   "route_mix_mode": "未知的 mix_mode「{{mode}}」",
-  "route_dest_empty": "目標名稱不能為空"
+  "route_dest_empty": "目標名稱不能為空",
+  "route_duck_range": "duck {{duck}} 超出 0..1 範圍",
+  "route_playback_owned": "此路由屬於一次播放；請用 DELETE /api/playback/{id} 停止它"
 }

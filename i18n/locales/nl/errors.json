@@ -22,5 +22,7 @@
   "route_dest_required": "Minstens één bestemming is verplicht",
   "route_volume_range": "Volume {{volume}} ligt buiten 0..1",
   "route_mix_mode": "Onbekende mix_mode \"{{mode}}\"",
-  "route_dest_empty": "Namen van bestemmingen mogen niet leeg zijn"
+  "route_dest_empty": "Namen van bestemmingen mogen niet leeg zijn",
+  "route_duck_range": "duck {{duck}} ligt buiten 0..1",
+  "route_playback_owned": "Deze route hoort bij een afspeelsessie; stop die met DELETE /api/playback/{id}"
 }

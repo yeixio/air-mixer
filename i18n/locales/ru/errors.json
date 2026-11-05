@@ -22,5 +22,7 @@
   "route_dest_required": "Нужно хотя бы одно назначение",
   "route_volume_range": "Громкость {{volume}} вне диапазона 0..1",
   "route_mix_mode": "Неизвестный mix_mode «{{mode}}»",
-  "route_dest_empty": "Названия назначений не могут быть пустыми"
+  "route_dest_empty": "Названия назначений не могут быть пустыми",
+  "route_duck_range": "duck {{duck}} вне диапазона 0..1",
+  "route_playback_owned": "Этот маршрут принадлежит воспроизведению; остановите его через DELETE /api/playback/{id}"
 }

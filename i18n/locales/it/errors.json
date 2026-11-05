@@ -22,5 +22,7 @@
   "route_dest_required": "Serve almeno una destinazione",
   "route_volume_range": "Il volume {{volume}} è fuori da 0..1",
   "route_mix_mode": "mix_mode sconosciuto: \"{{mode}}\"",
-  "route_dest_empty": "I nomi delle destinazioni non possono essere vuoti"
+  "route_dest_empty": "I nomi delle destinazioni non possono essere vuoti",
+  "route_duck_range": "duck {{duck}} è fuori da 0..1",
+  "route_playback_owned": "Questo percorso appartiene a una riproduzione; fermala con DELETE /api/playback/{id}"
 }

@@ -22,5 +22,7 @@
   "route_dest_required": "Χρειάζεται τουλάχιστον ένας προορισμός",
   "route_volume_range": "Η ένταση {{volume}} είναι εκτός 0..1",
   "route_mix_mode": "Άγνωστο mix_mode «{{mode}}»",
-  "route_dest_empty": "Τα ονόματα προορισμών δεν μπορούν να είναι κενά"
+  "route_dest_empty": "Τα ονόματα προορισμών δεν μπορούν να είναι κενά",
+  "route_duck_range": "Το duck {{duck}} είναι εκτός 0..1",
+  "route_playback_owned": "Αυτή η διαδρομή ανήκει σε αναπαραγωγή· σταματήστε την με DELETE /api/playback/{id}"
 }

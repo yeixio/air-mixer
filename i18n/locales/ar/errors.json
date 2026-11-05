@@ -22,5 +22,7 @@
   "route_dest_required": "يلزم وجود وجهة واحدة على الأقل",
   "route_volume_range": "مستوى الصوت {{volume}} خارج النطاق 0..1",
   "route_mix_mode": "قيمة mix_mode غير معروفة \"{{mode}}\"",
-  "route_dest_empty": "لا يمكن أن تكون أسماء الوجهات فارغة"
+  "route_dest_empty": "لا يمكن أن تكون أسماء الوجهات فارغة",
+  "route_duck_range": "قيمة duck {{duck}} خارج النطاق 0..1",
+  "route_playback_owned": "ينتمي هذا المسار إلى تشغيل؛ أوقفه عبر DELETE /api/playback/{id}"
 }

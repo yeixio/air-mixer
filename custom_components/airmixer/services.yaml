@@ -1,0 +1,65 @@
+announce:
+  fields:
+    entity_id:
+      selector:
+        entity:
+          integration: airmixer
+          domain: media_player
+          multiple: true
+    media_content_id:
+      required: true
+      example: "media-source://media_source/local/doorbell.mp3"
+      selector:
+        media:
+          accept:
+            - audio/*
+    mode:
+      default: duck
+      selector:
+        select:
+          translation_key: mode
+          options:
+            - duck
+            - interrupt
+            - mix
+    volume:
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 0.05
+    duck_level:
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 0.05
+    repeat:
+      selector:
+        number:
+          min: 1
+          max: 100
+    loop:
+      selector:
+        boolean:
+    max_duration:
+      selector:
+        number:
+          min: 1
+          max: 3600
+          unit_of_measurement: s
+    title:
+      selector:
+        text:
+    wait:
+      default: false
+      selector:
+        boolean:
+stop:
+  fields:
+    entity_id:
+      selector:
+        entity:
+          integration: airmixer
+          domain: media_player
+          multiple: true

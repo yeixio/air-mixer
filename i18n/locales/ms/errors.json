@@ -22,5 +22,7 @@
   "route_dest_required": "Sekurang-kurangnya satu destinasi diperlukan",
   "route_volume_range": "Kelantangan {{volume}} di luar 0..1",
   "route_mix_mode": "mix_mode \"{{mode}}\" tidak dikenali",
-  "route_dest_empty": "Nama destinasi tidak boleh kosong"
+  "route_dest_empty": "Nama destinasi tidak boleh kosong",
+  "route_duck_range": "duck {{duck}} di luar 0..1",
+  "route_playback_owned": "Laluan ini milik satu main balik; hentikannya dengan DELETE /api/playback/{id}"
 }

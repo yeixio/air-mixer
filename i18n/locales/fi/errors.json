@@ -22,5 +22,7 @@
   "route_dest_required": "Vähintään yksi kohde vaaditaan",
   "route_volume_range": "Äänenvoimakkuus {{volume}} on välin 0..1 ulkopuolella",
   "route_mix_mode": "Tuntematon mix_mode \"{{mode}}\"",
-  "route_dest_empty": "Kohteiden nimet eivät voi olla tyhjiä"
+  "route_dest_empty": "Kohteiden nimet eivät voi olla tyhjiä",
+  "route_duck_range": "duck {{duck}} on välin 0..1 ulkopuolella",
+  "route_playback_owned": "Tämä reitti kuuluu toistoon; pysäytä se komennolla DELETE /api/playback/{id}"
 }

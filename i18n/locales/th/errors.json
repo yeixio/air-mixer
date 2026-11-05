@@ -22,5 +22,7 @@
   "route_dest_required": "ต้องมีปลายทางอย่างน้อยหนึ่งรายการ",
   "route_volume_range": "ระดับเสียง {{volume}} อยู่นอกช่วง 0..1",
   "route_mix_mode": "ไม่รู้จัก mix_mode \"{{mode}}\"",
-  "route_dest_empty": "ชื่อปลายทางต้องไม่ว่าง"
+  "route_dest_empty": "ชื่อปลายทางต้องไม่ว่าง",
+  "route_duck_range": "duck {{duck}} อยู่นอกช่วง 0..1",
+  "route_playback_owned": "เส้นทางนี้เป็นของการเล่นรายการหนึ่ง หยุดได้ด้วย DELETE /api/playback/{id}"
 }

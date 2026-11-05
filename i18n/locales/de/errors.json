@@ -22,5 +22,7 @@
   "route_dest_required": "Mindestens ein Ziel ist erforderlich",
   "route_volume_range": "Die Lautstärke {{volume}} liegt nicht zwischen 0 und 1",
   "route_mix_mode": "Unbekannter mix_mode „{{mode}}“",
-  "route_dest_empty": "Zielnamen dürfen nicht leer sein"
+  "route_dest_empty": "Zielnamen dürfen nicht leer sein",
+  "route_duck_range": "duck {{duck}} liegt nicht zwischen 0 und 1",
+  "route_playback_owned": "Diese Route gehört zu einer Wiedergabe; beende sie mit DELETE /api/playback/{id}"
 }

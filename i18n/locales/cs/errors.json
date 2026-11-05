@@ -22,5 +22,7 @@
   "route_dest_required": "Je potřeba alespoň jeden cíl",
   "route_volume_range": "Hlasitost {{volume}} je mimo rozsah 0..1",
   "route_mix_mode": "Neznámý mix_mode „{{mode}}“",
-  "route_dest_empty": "Názvy cílů nesmí být prázdné"
+  "route_dest_empty": "Názvy cílů nesmí být prázdné",
+  "route_duck_range": "duck {{duck}} je mimo rozsah 0..1",
+  "route_playback_owned": "Tato trasa patří k přehrávání; zastavte ho pomocí DELETE /api/playback/{id}"
 }

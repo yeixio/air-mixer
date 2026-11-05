@@ -22,5 +22,7 @@
   "route_dest_required": "کم از کم ایک منزل ضروری ہے",
   "route_volume_range": "آواز {{volume}} حد 0..1 سے باہر ہے",
   "route_mix_mode": "نامعلوم mix_mode \"{{mode}}\"",
-  "route_dest_empty": "منزلوں کے نام خالی نہیں ہو سکتے"
+  "route_dest_empty": "منزلوں کے نام خالی نہیں ہو سکتے",
+  "route_duck_range": "duck {{duck}} حد 0..1 سے باہر ہے",
+  "route_playback_owned": "یہ روٹ ایک پلے بیک کا ہے؛ اسے DELETE /api/playback/{id} سے روکیں"
 }

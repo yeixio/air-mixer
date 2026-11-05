@@ -22,5 +22,7 @@
   "route_dest_required": "נדרש לפחות יעד אחד",
   "route_volume_range": "העוצמה {{volume}} מחוץ לטווח 0..1",
   "route_mix_mode": "mix_mode לא ידוע \"{{mode}}\"",
-  "route_dest_empty": "שמות היעדים לא יכולים להיות ריקים"
+  "route_dest_empty": "שמות היעדים לא יכולים להיות ריקים",
+  "route_duck_range": "duck {{duck}} מחוץ לטווח 0..1",
+  "route_playback_owned": "הנתיב הזה שייך להשמעה; עצרו אותה עם DELETE /api/playback/{id}"
 }

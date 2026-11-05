@@ -22,5 +22,7 @@
   "route_dest_required": "at least one destination is required",
   "route_volume_range": "volume {{volume}} is outside 0..1",
   "route_mix_mode": "unknown mix_mode \"{{mode}}\"",
-  "route_dest_empty": "destination names cannot be empty"
+  "route_dest_empty": "destination names cannot be empty",
+  "route_duck_range": "duck {{duck}} is outside 0..1",
+  "route_playback_owned": "this route belongs to a playback; stop it with DELETE /api/playback/{id}"
 }

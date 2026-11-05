@@ -22,5 +22,7 @@
   "route_dest_required": "En az bir hedef gerekli",
   "route_volume_range": "{{volume}} ses düzeyi 0..1 aralığının dışında",
   "route_mix_mode": "Bilinmeyen mix_mode \"{{mode}}\"",
-  "route_dest_empty": "Hedef adları boş olamaz"
+  "route_dest_empty": "Hedef adları boş olamaz",
+  "route_duck_range": "{{duck}} duck değeri 0..1 aralığının dışında",
+  "route_playback_owned": "Bu rota bir oynatmaya ait; DELETE /api/playback/{id} ile durdurun"
 }

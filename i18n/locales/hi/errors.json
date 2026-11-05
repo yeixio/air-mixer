@@ -22,5 +22,7 @@
   "route_dest_required": "कम से कम एक गंतव्य ज़रूरी है",
   "route_volume_range": "वॉल्यूम {{volume}} 0..1 से बाहर है",
   "route_mix_mode": "अज्ञात mix_mode \"{{mode}}\"",
-  "route_dest_empty": "गंतव्य के नाम खाली नहीं हो सकते"
+  "route_dest_empty": "गंतव्य के नाम खाली नहीं हो सकते",
+  "route_duck_range": "duck {{duck}} 0..1 से बाहर है",
+  "route_playback_owned": "यह रूट एक प्लेबैक का है; इसे DELETE /api/playback/{id} से रोकें"
 }

@@ -27,7 +27,7 @@ longer.
 | Shared clock and synchronised start | L | Schedule every output against one timeline, using AirPlay sync packets and per-device latency, so rooms play in step. |
 | Clock-drift compensation | M | Resample very slightly to follow each output's real clock rate, so long sessions do not drift apart. |
 | Per-output latency calibration | M | A test tone and a slider for `delay_ms` (which local and pulse outputs already take), then automatic measurement where devices report latency. |
-| Mix modes | M | Implement `exclusive` (highest-priority active route wins) and `duck` (lower others while a priority source plays, for announcements and doorbells), which are already stored on routes. |
+| Mix modes | M | Implement `exclusive` (highest-priority active route wins) for stored routes, and let stored routes duck others. The router already ducks for playback (announcements). |
 | Better resampling | S | Replace linear interpolation with a windowed-sinc or polyphase resampler for sources not at 44.1 kHz. |
 
 ## Later: more ecosystems
@@ -41,14 +41,14 @@ longer.
 | UPnP/DLNA renderer input | M | Appear as a renderer so DLNA apps can play to Air-Mixer. |
 | Bluetooth input | M | Appear as an A2DP speaker so phones can play to Air-Mixer over Bluetooth. Output to Bluetooth speakers already works through the `pulse` output. |
 | Snapcast and Spotify Connect | M | Snapcast as an output for open-source multi-room setups; Spotify Connect input through librespot. |
-| Internet radio and file sources | S | Play a stream URL or a local file as an input, useful for alarms and testing. |
+| Internet radio and file sources | S | Play a stream URL or a local file as a persistent input. One-off playback of MP3 and WAV URLs is done (`/api/play`); more formats (FLAC, Ogg, AAC) would help both. |
 
 ## Platform
 
 | Feature | Size | Notes |
 |---------|------|-------|
 | Plugin interface for adapters | M | Load third-party protocol adapters without forking, for example over gRPC. |
-| Home Assistant integration | M | A media-player entity per route and output. |
+| Home Assistant integration | M | Done for outputs: a media player per output plus "all outputs", announcements, alarms and TTS ([docs](docs/HOME_ASSISTANT.md)). Next: per-route entities, device volume, and push updates once the event stream exists. |
 | Metrics | S | Prometheus metrics: packets, drops, underruns and latency per adapter. |
 | Event stream | S | Server-sent events for status changes, so the UI updates without polling. |
 | Config import and export | S | Back up and restore servers, clients and routes as one file. |

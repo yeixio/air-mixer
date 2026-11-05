@@ -284,6 +284,9 @@ func fromRouter(r router.Route) *db.Route {
 }
 
 func checkRoute(r router.Route) error {
+	if r.Transient || r.Duck != nil {
+		return invalidCode("route_playback_owned", nil)
+	}
 	if err := r.Validate(); err != nil {
 		var ve *router.ValidationError
 		if errors.As(err, &ve) {

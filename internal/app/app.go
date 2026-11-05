@@ -16,6 +16,7 @@ import (
 	"github.com/yeixio/air-mixer/internal/config"
 	"github.com/yeixio/air-mixer/internal/db"
 	"github.com/yeixio/air-mixer/internal/discovery"
+	"github.com/yeixio/air-mixer/internal/playback"
 	"github.com/yeixio/air-mixer/internal/protocols"
 	"github.com/yeixio/air-mixer/internal/router"
 	"github.com/yeixio/air-mixer/internal/service"
@@ -80,12 +81,17 @@ func Run(ctx context.Context, opts Options) error {
 		}
 	}
 
+	// Declared after the manager so it stops first, while outputs are
+	// still connected.
+	player := playback.New(r, playback.Options{Logger: log})
+	defer player.Close()
+
 	disc := opts.Discovery
 	if disc == nil {
 		disc = discovery.NewService()
 	}
 	srv := &http.Server{
-		Handler:           api.New(api.Options{Service: svc, Discovery: disc, Logger: log, Version: opts.Version}),
+		Handler:           api.New(api.Options{Service: svc, Discovery: disc, Player: player, Logger: log, Version: opts.Version}),
 		ReadHeaderTimeout: 10 * time.Second,
 		IdleTimeout:       2 * time.Minute,
 	}

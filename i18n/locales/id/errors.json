@@ -22,5 +22,7 @@
   "route_dest_required": "Setidaknya satu tujuan diperlukan",
   "route_volume_range": "Volume {{volume}} di luar 0..1",
   "route_mix_mode": "mix_mode \"{{mode}}\" tidak dikenal",
-  "route_dest_empty": "Nama tujuan tidak boleh kosong"
+  "route_dest_empty": "Nama tujuan tidak boleh kosong",
+  "route_duck_range": "duck {{duck}} di luar 0..1",
+  "route_playback_owned": "Rute ini milik sebuah pemutaran; hentikan dengan DELETE /api/playback/{id}"
 }

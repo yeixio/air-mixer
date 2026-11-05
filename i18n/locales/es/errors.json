@@ -22,5 +22,7 @@
   "route_dest_required": "Se necesita al menos un destino",
   "route_volume_range": "El volumen {{volume}} está fuera de 0..1",
   "route_mix_mode": "mix_mode desconocido: \"{{mode}}\"",
-  "route_dest_empty": "Los nombres de destino no pueden estar vacíos"
+  "route_dest_empty": "Los nombres de destino no pueden estar vacíos",
+  "route_duck_range": "duck {{duck}} está fuera de 0..1",
+  "route_playback_owned": "Esta ruta pertenece a una reproducción; detenla con DELETE /api/playback/{id}"
 }

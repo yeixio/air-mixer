@@ -22,5 +22,7 @@
   "route_dest_required": "Este nevoie de cel puțin o destinație",
   "route_volume_range": "Volumul {{volume}} este în afara intervalului 0..1",
   "route_mix_mode": "mix_mode necunoscut: „{{mode}}”",
-  "route_dest_empty": "Numele destinațiilor nu pot fi goale"
+  "route_dest_empty": "Numele destinațiilor nu pot fi goale",
+  "route_duck_range": "duck {{duck}} este în afara intervalului 0..1",
+  "route_playback_owned": "Această rută aparține unei redări; oprește-o cu DELETE /api/playback/{id}"
 }

@@ -20,12 +20,14 @@ var ErrInvalidVolume = errors.New("audio: volume must be between 0 and 1")
 // input and emits as many samples as every input has ready. If an input falls
 // more than maxLag samples behind the others it is treated as silent for the
 // gap, so one stalled source never blocks the rest. With a single input the
-// mixer passes buffers through unchanged apart from volume.
+// mixer passes buffers through unchanged apart from volume. When an input's
+// channel closes, the samples it already delivered are still played.
 //
 // All inputs must share one sample format, and every buffer must hold whole
 // frames.
 type Mixer struct {
 	maxLag int
+	ramp   int // samples a full-scale volume change takes; 0 is immediate
 	out    chan []float32
 	events chan mixerEvent
 	done   chan struct{}
@@ -37,8 +39,10 @@ type Mixer struct {
 }
 
 type mixerInput struct {
-	volume  float32
+	volume  float32 // target volume
+	gain    float32 // current volume, moving towards volume
 	pending []float32
+	ended   bool // the input's channel closed; remove once drained
 	stop    chan struct{}
 }
 
@@ -81,7 +85,7 @@ func (m *Mixer) AddInput(id string, ch <-chan []float32, volume float32) error {
 	if _, ok := m.inputs[id]; ok {
 		return ErrInputExists
 	}
-	in := &mixerInput{volume: volume, stop: make(chan struct{})}
+	in := &mixerInput{volume: volume, gain: volume, stop: make(chan struct{})}
 	m.inputs[id] = in
 	go m.read(id, in, ch)
 	return nil
@@ -100,7 +104,16 @@ func (m *Mixer) RemoveInput(id string) error {
 	return nil
 }
 
-// SetVolume changes an input's volume.
+// SetRamp makes volume changes fade over the given number of samples per
+// full-scale change, instead of applying at once. Zero, the default, applies
+// them at once.
+func (m *Mixer) SetRamp(samples int) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.ramp = max(0, samples)
+}
+
+// SetVolume changes an input's volume, fading if a ramp is set.
 func (m *Mixer) SetVolume(id string, volume float32) error {
 	if volume < 0 || volume > 1 {
 		return ErrInvalidVolume
@@ -112,6 +125,9 @@ func (m *Mixer) SetVolume(id string, volume float32) error {
 		return ErrInputNotFound
 	}
 	in.volume = volume
+	if m.ramp == 0 {
+		in.gain = volume
+	}
 	return nil
 }
 
@@ -188,23 +204,32 @@ func (m *Mixer) handle(ev mixerEvent) []float32 {
 		return nil // removed or replaced since the event was read
 	}
 	if ev.eof {
-		delete(m.inputs, ev.id)
+		ev.in.ended = true
 	} else {
 		ev.in.pending = append(ev.in.pending, ev.samples...)
 	}
-	if len(m.inputs) == 0 {
-		return nil
-	}
 
+	// Inputs that ended do not hold the others back; they are only
+	// waited for when nothing else is playing.
 	ready, most := -1, 0
-	for _, in := range m.inputs {
-		if ready < 0 || len(in.pending) < ready {
+	for id, in := range m.inputs {
+		if in.ended && len(in.pending) == 0 {
+			delete(m.inputs, id)
+			continue
+		}
+		if !in.ended && (ready < 0 || len(in.pending) < ready) {
 			ready = len(in.pending)
 		}
 		most = max(most, len(in.pending))
 	}
+	if len(m.inputs) == 0 {
+		return nil
+	}
 	n := ready
-	if n == 0 {
+	switch {
+	case ready < 0:
+		n = most // only ended inputs are left: drain them
+	case n == 0:
 		if most < m.maxLag {
 			return nil
 		}
@@ -212,14 +237,37 @@ func (m *Mixer) handle(ev mixerEvent) []float32 {
 	}
 
 	out := make([]float32, n)
-	for _, in := range m.inputs {
+	step := float32(1)
+	if m.ramp > 0 {
+		step = 1 / float32(m.ramp)
+	}
+	mixed := 0
+	for id, in := range m.inputs {
 		k := min(n, len(in.pending))
-		for i, s := range in.pending[:k] {
-			out[i] += s * in.volume
+		if k > 0 {
+			mixed++
+		}
+		if in.gain == in.volume {
+			for i, s := range in.pending[:k] {
+				out[i] += s * in.gain
+			}
+		} else {
+			for i, s := range in.pending[:k] {
+				switch {
+				case in.gain < in.volume:
+					in.gain = min(in.volume, in.gain+step)
+				case in.gain > in.volume:
+					in.gain = max(in.volume, in.gain-step)
+				}
+				out[i] += s * in.gain
+			}
 		}
 		in.pending = append(in.pending[:0], in.pending[k:]...)
+		if in.ended && len(in.pending) == 0 {
+			delete(m.inputs, id)
+		}
 	}
-	if len(m.inputs) > 1 {
+	if mixed > 1 {
 		for i, s := range out {
 			out[i] = Clamp(s)
 		}

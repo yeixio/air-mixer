@@ -22,5 +22,7 @@
   "route_dest_required": "دست‌کم یک مقصد لازم است",
   "route_volume_range": "بلندی صدای {{volume}} خارج از بازه 0..1 است",
   "route_mix_mode": "mix_mode ناشناخته \"{{mode}}\"",
-  "route_dest_empty": "نام مقصدها نمی‌تواند خالی باشد"
+  "route_dest_empty": "نام مقصدها نمی‌تواند خالی باشد",
+  "route_duck_range": "duck {{duck}} خارج از بازه 0..1 است",
+  "route_playback_owned": "این مسیر متعلق به یک پخش است؛ آن را با DELETE /api/playback/{id} متوقف کنید"
 }

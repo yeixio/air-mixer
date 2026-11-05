@@ -22,5 +22,7 @@
   "route_dest_required": "Потрібне принаймні одне призначення",
   "route_volume_range": "Гучність {{volume}} поза межами 0..1",
   "route_mix_mode": "Невідомий mix_mode «{{mode}}»",
-  "route_dest_empty": "Назви призначень не можуть бути порожніми"
+  "route_dest_empty": "Назви призначень не можуть бути порожніми",
+  "route_duck_range": "duck {{duck}} поза межами 0..1",
+  "route_playback_owned": "Цей маршрут належить відтворенню; зупиніть його через DELETE /api/playback/{id}"
 }

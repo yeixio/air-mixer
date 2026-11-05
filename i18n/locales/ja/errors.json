@@ -22,5 +22,7 @@
   "route_dest_required": "出力先が 1 つ以上必要です",
   "route_volume_range": "音量 {{volume}} が 0..1 の範囲外です",
   "route_mix_mode": "不明な mix_mode「{{mode}}」",
-  "route_dest_empty": "出力先の名前は空にできません"
+  "route_dest_empty": "出力先の名前は空にできません",
+  "route_duck_range": "duck {{duck}} が 0..1 の範囲外です",
+  "route_playback_owned": "このルートは再生に属しています。DELETE /api/playback/{id} で停止してください"
 }

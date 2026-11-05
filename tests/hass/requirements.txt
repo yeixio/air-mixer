@@ -1,0 +1,2 @@
+# Test dependencies for the Home Assistant integration in custom_components/airmixer.
+pytest-homeassistant-custom-component==0.13.316
