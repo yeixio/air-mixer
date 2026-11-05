@@ -1,0 +1,41 @@
+{{- range .Values.rooms }}
+{{- $room := include "airmixer.room" (dict "root" $ "room" .) | fromJson }}
+{{- $clients := list }}
+{{- $names := list }}
+{{- range $room.speakers }}
+{{- if not .name }}{{ fail (printf "every speaker in room %q needs a name" $room.name) }}{{ end }}
+{{- if eq .name $room.displayName }}{{ fail (printf "speaker %q in room %q needs a name different from the room's" .name $room.name) }}{{ end }}
+{{- $config := dict }}
+{{- with .sink }}{{ $_ := set $config "sink" . }}{{ end }}
+{{- with .delayMs }}{{ $_ := set $config "delay_ms" . }}{{ end }}
+{{- $clients = append $clients (dict "name" .name "protocol" "pulse" "config" $config) }}
+{{- $names = append $names .name }}
+{{- end }}
+{{- $setup := dict
+      "servers" (list (dict "id" "room-receiver" "name" $room.displayName "protocol" "airplay"))
+      "clients" $clients
+      "routes" (list (dict "id" "room-speakers" "name" $room.displayName "source" $room.displayName "destinations" $names)) }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "airmixer.roomName" (dict "root" $ "room" $room) }}
+  labels:
+    {{- include "airmixer.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: room
+    airmixer.yeix.io/room: {{ $room.name }}
+data:
+  config.yaml: |
+    server:
+      # The status API has no authentication, so it stays on localhost.
+      host: "127.0.0.1"
+      web_port: {{ $room.webPort }}
+      airplay_port: {{ $room.airplayPort }}
+      interface: {{ $room.interface | quote }}
+      data_dir: /data
+    logging:
+      level: {{ $.Values.logging.level | quote }}
+      format: {{ $.Values.logging.format | quote }}
+    setup:
+      {{- toYaml $setup | nindent 6 }}
+{{- end }}

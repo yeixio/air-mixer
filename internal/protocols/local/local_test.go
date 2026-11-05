@@ -47,7 +47,7 @@ func read(t *testing.T, r io.Reader, n int) []float32 {
 
 func TestClient(t *testing.T) {
 	fp := withFakePlayer(t)
-	c := NewClient("l1", "Speakers", slog.New(slog.NewTextHandler(io.Discard, nil)))
+	c := NewClient(Options{ID: "l1", Name: "Speakers", Logger: slog.New(slog.NewTextHandler(io.Discard, nil))})
 	if c.ID() != "l1" || c.Name() != "Speakers" || c.Protocol() != "local" {
 		t.Error("identity")
 	}
@@ -109,7 +109,7 @@ func TestConnectError(t *testing.T) {
 	orig := newPlayer
 	newPlayer = func(io.Reader) (player, error) { return nil, errors.New("no device") }
 	defer func() { newPlayer = orig }()
-	c := NewClient("l1", "Speakers", nil)
+	c := NewClient(Options{ID: "l1", Name: "Speakers"})
 	if err := c.Connect(context.Background()); err == nil || c.Connected() {
 		t.Errorf("Connect = %v", err)
 	}

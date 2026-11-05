@@ -40,7 +40,9 @@ gets a goroutine that converts its audio and feeds a router source. Each
 client gets a router sink and a goroutine that connects it, retrying with
 exponential backoff (1 s up to 30 s) until it succeeds, is removed, or
 fails with `ErrUnsupportedDevice`. Speakers that are switched off
-therefore start playing when they come back.
+therefore start playing when they come back. When `Send` reports
+`ErrConnectionLost`, the Manager disconnects the client and starts
+connecting again.
 
 ### `internal/protocols/airplay`
 
@@ -61,6 +63,19 @@ Classic AirPlay (RAOP), both directions.
   every second, keeps the last 1024 packets to answer retransmit requests,
   and answers timing requests. Devices that demand AirPlay 2 pairing are
   reported with `ErrAirPlay2Required`.
+
+### `internal/protocols/local` and `internal/protocols/pulse`
+
+Outputs on the machine Air-Mixer runs on. `local` plays on the default
+device through oto, which allows one device per process. `pulse` speaks
+the PulseAudio native protocol in pure Go, so any number of outputs can
+each play to their own sink, including Bluetooth speakers and sinks
+reached through a socket mounted into a container. Both queue audio in an
+`audio.Playout`, which can hold it back by a fixed `delay_ms` to line up
+speakers. A pulse output checks every two seconds that its stream still
+plays on its sink; when PulseAudio moves it because the sink went away,
+it closes the stream and reports `ErrConnectionLost`, and the Manager
+reconnects it once the sink is back.
 
 ### `internal/audio/alac`
 
@@ -92,7 +107,8 @@ Every change goes through the service, which saves it to SQLite and
 applies it to the Manager and router in one place. For example, creating
 an enabled server builds its adapter through the `Factory`, starts it, and
 rolls the database insert back if it cannot start. `Load` restores the
-saved setup on startup.
+saved setup on startup, then `Apply` creates or updates whatever the
+config file's `setup` section declares.
 
 ### `internal/api` and `webui`
 

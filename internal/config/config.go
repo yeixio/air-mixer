@@ -16,6 +16,50 @@ type Config struct {
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Logging  LoggingConfig  `mapstructure:"logging"`
+	// Setup declares servers, clients and routes to create or update on
+	// startup, for deployments configured from a file, such as a
+	// Kubernetes ConfigMap.
+	Setup SetupConfig `mapstructure:"setup"`
+}
+
+// SetupConfig declares servers, clients and routes. Items are matched by
+// id, or by an id made from the name when id is left out.
+type SetupConfig struct {
+	Servers []SetupServer `mapstructure:"servers"`
+	Clients []SetupClient `mapstructure:"clients"`
+	Routes  []SetupRoute  `mapstructure:"routes"`
+}
+
+// SetupServer declares an input. Enabled defaults to true.
+type SetupServer struct {
+	ID       string         `mapstructure:"id"`
+	Name     string         `mapstructure:"name"`
+	Protocol string         `mapstructure:"protocol"`
+	Enabled  *bool          `mapstructure:"enabled"`
+	Config   map[string]any `mapstructure:"config"`
+}
+
+// SetupClient declares an output. Enabled defaults to true.
+type SetupClient struct {
+	ID       string         `mapstructure:"id"`
+	Name     string         `mapstructure:"name"`
+	Protocol string         `mapstructure:"protocol"`
+	Address  string         `mapstructure:"address"`
+	Enabled  *bool          `mapstructure:"enabled"`
+	Config   map[string]any `mapstructure:"config"`
+}
+
+// SetupRoute declares a route from a server to clients, by name. Enabled
+// defaults to true and Volume to 1.
+type SetupRoute struct {
+	ID           string   `mapstructure:"id"`
+	Name         string   `mapstructure:"name"`
+	Source       string   `mapstructure:"source"`
+	Destinations []string `mapstructure:"destinations"`
+	MixMode      string   `mapstructure:"mix_mode"`
+	Volume       *float64 `mapstructure:"volume"`
+	Enabled      *bool    `mapstructure:"enabled"`
+	Priority     int      `mapstructure:"priority"`
 }
 
 // ServerConfig holds network and storage settings.

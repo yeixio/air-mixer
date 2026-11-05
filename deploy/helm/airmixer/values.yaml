@@ -1,0 +1,145 @@
+# Default values for the Air-Mixer chart. See docs/KUBERNETES.md for a
+# walkthrough.
+
+image:
+  repository: ghcr.io/yeixio/air-mixer
+  # Defaults to the chart's appVersion.
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# Cluster DNS domain, used to give the controller each room's address.
+clusterDomain: cluster.local
+
+logging:
+  level: info
+  format: json
+
+# The controller is the main Air-Mixer: the web UI, the database, and the
+# AirPlay receivers your phones play to. It sends each room's audio to
+# that room's agent over the network.
+controller:
+  enabled: true
+
+  # Host networking lets the controller advertise AirPlay receivers and
+  # find AirPlay speakers over mDNS, and receive AirPlay audio on dynamic
+  # UDP ports. Without it, only rooms and speakers with known addresses
+  # can be used.
+  hostNetwork: true
+
+  webPort: 9001
+  airplayPort: 49152
+  # Network interface AirPlay receivers advertise on, or "auto".
+  interface: auto
+
+  # Servers, clients and routes to create on startup, in the format of
+  # the config file's setup section (see config.yaml.example). Each room
+  # below is added as an AirPlay client automatically.
+  setup: {}
+  # setup:
+  #   servers:
+  #     - name: Air-Mixer
+  #       protocol: airplay
+  #   routes:
+  #     - name: Everywhere
+  #       source: Air-Mixer
+  #       destinations: [Living Room]
+
+  persistence:
+    enabled: true
+    # Use an existing PersistentVolumeClaim instead of creating one.
+    existingClaim: ""
+    storageClass: ""
+    accessModes: [ReadWriteOnce]
+    size: 1Gi
+
+  service:
+    # Exposes the web UI and API inside the cluster.
+    enabled: true
+    type: ClusterIP
+    port: 9001
+
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts:
+      - host: airmixer.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+
+  # Extra environment variables, for example AIRMIXER_* settings.
+  env: []
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+
+# Each room runs a speaker agent on the node its Bluetooth speakers are
+# paired with, for example a Raspberry Pi in that room. The agent appears
+# as one AirPlay receiver and plays what it receives on every speaker in
+# the room, each through its own PulseAudio or PipeWire sink.
+#
+# The host does the Bluetooth part: pair and trust the speakers with
+# bluetoothctl, and run PipeWire (or PulseAudio) for the user given in
+# pulse.uid. The agent reaches it through the user's socket, so the pod
+# needs no Bluetooth or D-Bus access.
+rooms: []
+# rooms:
+#   - name: living-room             # Kubernetes name
+#     displayName: Living Room      # AirPlay receiver name, shown in the UI
+#     nodeSelector:
+#       kubernetes.io/hostname: pi-living-room
+#     speakers:
+#       - name: Living Room Left
+#         sink: "AA:BB:CC:DD:EE:01" # sink name, description or Bluetooth address
+#       - name: Living Room Right
+#         sink: "AA:BB:CC:DD:EE:02"
+#         delayMs: 40               # hold back to line up with the slower speaker
+
+# Defaults for every room; a room can override any of them.
+roomDefaults:
+  # Add each room to the controller as an AirPlay client.
+  registerWithController: true
+  # The agent's AirPlay receiver port. Rooms that share a node need
+  # different ports.
+  airplayPort: 49200
+  # The agent's status API. It listens on localhost only, since it has no
+  # authentication; the health checks run inside the pod.
+  webPort: 9101
+  interface: auto
+  # Playback delay the controller asks of the room, in milliseconds.
+  latencyMs: 2000
+  pulse:
+    # The host user running PipeWire or PulseAudio. The agent runs as this
+    # user so it can open the socket.
+    uid: 1000
+    gid: 1000
+    # Directory holding the "native" socket on the host. Defaults to
+    # /run/user/<uid>/pulse.
+    socketDir: ""
+    # PulseAudio's auth cookie on the host, if the server needs one
+    # (PipeWire does not), for example /home/pi/.config/pulse/cookie.
+    cookie: ""
+  resources:
+    requests:
+      cpu: 50m
+      memory: 32Mi
+    limits:
+      memory: 128Mi
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}

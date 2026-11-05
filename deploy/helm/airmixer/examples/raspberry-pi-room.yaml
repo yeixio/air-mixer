@@ -1,0 +1,36 @@
+# A Raspberry Pi in the living room with two Bluetooth speakers.
+#
+#   helm install airmixer deploy/helm/airmixer -f deploy/helm/airmixer/examples/raspberry-pi-room.yaml
+#
+# See docs/KUBERNETES.md for preparing the Pi.
+
+controller:
+  setup:
+    servers:
+      # Phones and Macs play to this AirPlay receiver.
+      - name: Air-Mixer
+        protocol: airplay
+    routes:
+      - name: Air-Mixer to Living Room
+        source: Air-Mixer
+        destinations: [Living Room]
+
+rooms:
+  - name: living-room
+    displayName: Living Room
+    nodeSelector:
+      kubernetes.io/hostname: pi-living-room
+    # Keep other workloads off the Pi with a taint, and tolerate it here:
+    #   kubectl taint nodes pi-living-room airmixer.yeix.io/room=living-room:NoSchedule
+    tolerations:
+      - key: airmixer.yeix.io/room
+        operator: Equal
+        value: living-room
+        effect: NoSchedule
+    speakers:
+      - name: Living Room Left
+        sink: "AA:BB:CC:DD:EE:01"
+      - name: Living Room Right
+        sink: "AA:BB:CC:DD:EE:02"
+        # This speaker plays 40 ms sooner than the other, so hold it back.
+        delayMs: 40

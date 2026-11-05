@@ -3,6 +3,7 @@ package protocols
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"log/slog"
 	"sync"
@@ -75,6 +76,7 @@ type fakeClient struct {
 	disconnected bool
 	sent         chan []float32
 	sendErr      error
+	lose         int // Send reports ErrConnectionLost this many times
 }
 
 func (c *fakeClient) ID() string       { return c.id }
@@ -102,6 +104,13 @@ func (c *fakeClient) Send(p Packet) error {
 		return errors.New("bad format")
 	}
 	c.sent <- p.Samples
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.lose > 0 {
+		c.lose--
+		c.connected = false
+		return fmt.Errorf("device gone: %w", ErrConnectionLost)
+	}
 	return c.sendErr
 }
 
@@ -270,5 +279,53 @@ func TestRemoveWhileConnecting(t *testing.T) {
 		}
 	case <-time.After(2 * time.Second):
 		t.Fatal("RemoveClient blocked on the retry loop")
+	}
+}
+
+func TestClientReconnectsAfterLoss(t *testing.T) {
+	r := newFakeRouter()
+	m := NewManager(r, quiet)
+	defer m.Close()
+	c := &fakeClient{id: "c1", lose: 1, sent: make(chan []float32, 4)}
+	if err := m.AddClient(c); err != nil {
+		t.Fatal(err)
+	}
+	waitState(t, m, "c1", StateConnected)
+	r.sink("c1") <- []float32{1, 1}
+	<-c.sent // reported lost
+
+	// The Manager disconnects and connects again, then resumes sending.
+	deadline := time.Now().Add(5 * time.Second)
+	for {
+		c.mu.Lock()
+		attempts, disconnected := c.attempts, c.disconnected
+		c.mu.Unlock()
+		if attempts >= 2 && disconnected {
+			break
+		}
+		if time.Now().After(deadline) {
+			t.Fatalf("not reconnected: attempts %d, disconnected %v", attempts, disconnected)
+		}
+		time.Sleep(5 * time.Millisecond)
+	}
+	waitState(t, m, "c1", StateConnected)
+	// Audio queued while reconnecting is discarded, so keep offering it.
+	deadline = time.Now().Add(5 * time.Second)
+	for {
+		select {
+		case r.sink("c1") <- []float32{0.5, 0.5}:
+		default:
+		}
+		select {
+		case got := <-c.sent:
+			if got[0] != 0.5 {
+				t.Errorf("sent %v", got)
+			}
+			return
+		case <-time.After(10 * time.Millisecond):
+		}
+		if time.Now().After(deadline) {
+			t.Fatal("no audio after reconnecting")
+		}
 	}
 }

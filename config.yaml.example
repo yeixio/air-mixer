@@ -3,8 +3,9 @@
 # in upper case with dots replaced by underscores and an AIRMIXER_ prefix,
 # for example AIRMIXER_SERVER_WEB_PORT=8080.
 #
-# Servers, clients and routes are not configured here: they are stored in
-# the database and managed through the web UI or the REST API.
+# Servers, clients and routes are stored in the database and managed
+# through the web UI or the REST API. They can also be declared in the
+# setup section at the end of this file.
 
 server:
   # Address the web UI and API listen on. Use 127.0.0.1 to allow local
@@ -36,3 +37,29 @@ logging:
   level: "info"
   # text or json.
   format: "text"
+
+# Servers, clients and routes to create or update on every start, for
+# deployments configured from a file such as a Kubernetes ConfigMap. Items
+# are matched by id, or by an id made from the name ("Living Room" becomes
+# server-living-room). Declared settings replace changes made in the web
+# UI; items that are not declared are left alone. "enabled" defaults to
+# true and a route's "volume" to 1. Config keys are those in docs/API.md.
+#
+# setup:
+#   servers:
+#     - name: Living Room
+#       protocol: airplay
+#   clients:
+#     - name: Left Speaker
+#       protocol: pulse
+#       config:
+#         sink: "AA:BB:CC:DD:EE:01"
+#     - name: Right Speaker
+#       protocol: pulse
+#       config:
+#         sink: "AA:BB:CC:DD:EE:02"
+#         delay_ms: 40
+#   routes:
+#     - name: Living Room
+#       source: Living Room
+#       destinations: [Left Speaker, Right Speaker]
