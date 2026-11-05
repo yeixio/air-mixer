@@ -1,0 +1,40 @@
+{{- if .Values.controller.enabled }}
+{{- $c := .Values.controller }}
+{{- $setup := deepCopy (default dict $c.setup) }}
+{{- $clients := default list $setup.clients }}
+{{- range .Values.rooms }}
+{{- $room := include "airmixer.room" (dict "root" $ "room" .) | fromJson }}
+{{- if $room.registerWithController }}
+{{- $host := printf "%s.%s.svc.%s" (include "airmixer.roomName" (dict "root" $ "room" $room)) $.Release.Namespace $.Values.clusterDomain }}
+{{- $clients = append $clients (dict
+      "id" (printf "room-%s" $room.name)
+      "name" $room.displayName
+      "protocol" "airplay"
+      "address" (printf "%s:%v" $host $room.airplayPort)
+      "config" (dict "latency_ms" $room.latencyMs)) }}
+{{- end }}
+{{- end }}
+{{- if $clients }}{{ $_ := set $setup "clients" $clients }}{{ end }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "airmixer.fullname" . }}-controller
+  labels:
+    {{- include "airmixer.labels" . | nindent 4 }}
+    app.kubernetes.io/component: controller
+data:
+  config.yaml: |
+    server:
+      host: "0.0.0.0"
+      web_port: {{ $c.webPort }}
+      airplay_port: {{ $c.airplayPort }}
+      interface: {{ $c.interface | quote }}
+      data_dir: /data
+    logging:
+      level: {{ .Values.logging.level | quote }}
+      format: {{ .Values.logging.format | quote }}
+    {{- if $setup }}
+    setup:
+      {{- toYaml $setup | nindent 6 }}
+    {{- end }}
+{{- end }}

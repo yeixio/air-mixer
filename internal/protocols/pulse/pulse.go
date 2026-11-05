@@ -189,7 +189,7 @@ func (c *Client) Send(p protocols.Packet) error {
 	case st == nil:
 		return protocols.ErrNotConnected
 	case lost != nil:
-		return fmt.Errorf("pulse: %w: %v", protocols.ErrConnectionLost, lost)
+		return fmt.Errorf("pulse: %w: %w", protocols.ErrConnectionLost, lost)
 	}
 	if !c.buf.Push(p.Samples) {
 		return protocols.ErrBufferFull

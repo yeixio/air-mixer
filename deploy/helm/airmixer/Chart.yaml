@@ -1,0 +1,14 @@
+apiVersion: v2
+name: airmixer
+description: Air-Mixer on Kubernetes, with speaker agents that play to Bluetooth speakers on other nodes
+type: application
+version: 0.1.0
+appVersion: "edge"
+home: https://github.com/yeixio/air-mixer
+sources:
+  - https://github.com/yeixio/air-mixer
+keywords:
+  - airplay
+  - audio
+  - bluetooth
+  - multi-room

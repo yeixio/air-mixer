@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.27-alpine AS build
+# The build stage runs on the build machine and cross-compiles, so
+# multi-arch images (linux/amd64, linux/arm64, linux/arm/v7 for a
+# Raspberry Pi) build quickly without emulation.
+FROM --platform=$BUILDPLATFORM golang:1.27-alpine AS build
 WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
@@ -8,7 +11,11 @@ COPY . .
 ARG VERSION=dev
 ARG GIT_COMMIT=unknown
 ARG BUILD_TIME=unknown
-RUN CGO_ENABLED=0 go build -trimpath \
+ARG TARGETOS
+ARG TARGETARCH
+ARG TARGETVARIANT
+RUN GOOS=${TARGETOS:-$(go env GOOS)} GOARCH=${TARGETARCH:-$(go env GOARCH)} GOARM=${TARGETVARIANT#v} \
+    CGO_ENABLED=0 go build -trimpath \
     -ldflags="-s -w -X main.Version=${VERSION} -X main.GitCommit=${GIT_COMMIT} -X main.BuildTime=${BUILD_TIME}" \
     -o /out/airmixer ./cmd/airmixer
 
@@ -22,6 +29,8 @@ ENV AIRMIXER_SERVER_DATA_DIR=/data
 VOLUME /data
 # 9001: web UI and API. 49152: default AirPlay receiver (RTSP); audio uses
 # dynamic UDP ports, so run with host networking.
+# pulse outputs need no extra packages: mount the host's PulseAudio or
+# PipeWire socket and set PULSE_SERVER, as docs/KUBERNETES.md shows.
 EXPOSE 9001 49152
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD wget -q --spider http://127.0.0.1:9001/health || exit 1

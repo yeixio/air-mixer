@@ -70,9 +70,11 @@ func Run(ctx context.Context, opts Options) error {
 	if err := svc.Load(ctx); err != nil {
 		return fmt.Errorf("load configuration: %w", err)
 	}
-	if setup, err := setupFromConfig(cfg.Setup); err != nil {
+	setup, err := setupFromConfig(cfg.Setup)
+	if err != nil {
 		return err
-	} else if !setup.Empty() {
+	}
+	if !setup.Empty() {
 		if err := svc.Apply(ctx, setup); err != nil {
 			return err
 		}

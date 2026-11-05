@@ -1,0 +1,131 @@
+{{- range .Values.rooms }}
+{{- $room := include "airmixer.room" (dict "root" $ "room" .) | fromJson }}
+{{- $name := include "airmixer.roomName" (dict "root" $ "room" $room) }}
+{{- if not $room.nodeSelector }}{{ fail (printf "room %q needs a nodeSelector that picks the node its speakers are paired with" $room.name) }}{{ end }}
+---
+# A DaemonSet rather than a Deployment: the agent belongs to the node its
+# speakers are paired with, and an update stops the old pod before
+# starting the new one, which host networking needs.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "airmixer.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: room
+    airmixer.yeix.io/room: {{ $room.name }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "airmixer.selectorLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: room
+      airmixer.yeix.io/room: {{ $room.name }}
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        {{- include "airmixer.selectorLabels" $ | nindent 8 }}
+        app.kubernetes.io/component: room
+        airmixer.yeix.io/room: {{ $room.name }}
+      annotations:
+        checksum/config: {{ toJson $room | sha256sum }}
+        {{- with $room.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with $.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      # The AirPlay receiver uses dynamic UDP ports and advertises itself
+      # over mDNS.
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      securityContext:
+        runAsNonRoot: true
+        # The same user as the host's PipeWire or PulseAudio, so the
+        # socket opens.
+        runAsUser: {{ $room.pulse.uid }}
+        runAsGroup: {{ $room.pulse.gid }}
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: airmixer
+          image: {{ include "airmixer.image" $ }}
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          args: ["server", "--config", "/etc/airmixer/config.yaml"]
+          env:
+            - name: PULSE_SERVER
+              value: unix:/run/pulse/native
+            {{- if $room.pulse.cookie }}
+            - name: PULSE_COOKIE
+              value: /run/pulse-cookie/cookie
+            {{- end }}
+          ports:
+            - name: airplay
+              containerPort: {{ $room.airplayPort }}
+              protocol: TCP
+          # The status API listens on localhost only, so probe from inside.
+          readinessProbe:
+            exec:
+              command: ["wget", "-q", "--spider", "http://127.0.0.1:{{ $room.webPort }}/health"]
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["wget", "-q", "--spider", "http://127.0.0.1:{{ $room.webPort }}/health"]
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          {{- with $room.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/airmixer
+              readOnly: true
+            - name: data
+              mountPath: /data
+            - name: pulse
+              mountPath: /run/pulse
+            {{- if $room.pulse.cookie }}
+            - name: pulse-cookie
+              mountPath: /run/pulse-cookie/cookie
+              readOnly: true
+            {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ $name }}
+        # The setup is applied again on every start, so the agent needs no
+        # persistent state.
+        - name: data
+          emptyDir: {}
+        - name: pulse
+          hostPath:
+            path: {{ $room.pulse.socketDir }}
+            type: Directory
+        {{- if $room.pulse.cookie }}
+        - name: pulse-cookie
+          hostPath:
+            path: {{ $room.pulse.cookie }}
+            type: File
+        {{- end }}
+      nodeSelector:
+        {{- toYaml $room.nodeSelector | nindent 8 }}
+      {{- with $room.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $room.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
