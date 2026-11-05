@@ -292,3 +292,50 @@ func TestConverter(t *testing.T) {
 		t.Error("expected invalid format to fail")
 	}
 }
+
+func TestMixerPlaysTheTailOfAnEndedInput(t *testing.T) {
+	m := NewMixer(1000)
+	defer m.Close()
+	music := make(chan []float32, 4)
+	clip := make(chan []float32, 4)
+	m.AddInput("music", music, 1)
+	m.AddInput("clip", clip, 1)
+
+	clip <- []float32{0.1, 0.1, 0.2, 0.2}
+	close(clip)
+	music <- []float32{0.5, 0.5}
+	if got := recv(t, m.Output()); !equal(got, []float32{0.6, 0.6}) {
+		t.Fatalf("got %v", got)
+	}
+	// The clip has ended but still holds samples; they are not dropped.
+	music <- []float32{0.5, 0.5}
+	if got := recv(t, m.Output()); !equal(got, []float32{0.7, 0.7}) {
+		t.Fatalf("got %v, want the rest of the clip", got)
+	}
+	music <- []float32{0.5, 0.5}
+	if got := recv(t, m.Output()); !equal(got, []float32{0.5, 0.5}) {
+		t.Fatalf("got %v after the clip drained", got)
+	}
+	if m.Len() != 1 {
+		t.Errorf("Len = %d after the clip drained, want 1", m.Len())
+	}
+}
+
+func TestMixerDrainsWhenOnlyEndedInputsRemain(t *testing.T) {
+	m := NewMixer(1000)
+	defer m.Close()
+	clip := make(chan []float32, 1)
+	m.AddInput("clip", clip, 0.5)
+	clip <- []float32{0.4, 0.4}
+	if got := recv(t, m.Output()); !equal(got, []float32{0.2, 0.2}) {
+		t.Fatalf("got %v", got)
+	}
+	close(clip)
+	deadline := time.Now().Add(2 * time.Second)
+	for m.Len() != 0 {
+		if time.Now().After(deadline) {
+			t.Fatal("ended input not removed")
+		}
+		time.Sleep(5 * time.Millisecond)
+	}
+}
