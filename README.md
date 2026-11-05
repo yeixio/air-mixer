@@ -200,7 +200,7 @@ useful on its own:
 | Project | What it does |
 |---------|--------------|
 | **Air-Mixer** | One home for every speaker you own: receives, routes and mixes audio across speakers from different ecosystems. |
-| [**Matinee**](https://github.com/yeixio/matinee) | A fast, open-source media server for your movies, TV, music, audiobooks and podcasts, with web, phone and TV apps. |
+| [**Matinee**](https://github.com/yeixio/matinee) | A fast, open-source media server for your movies, TV, music, audiobooks and podcasts, with web, phone and TV apps. Air-Mixer plays Matinee on your speakers and uses Matinee players as speakers ([how](docs/API.md#matinee)). |
 | [**Box Office**](https://github.com/yeixio/boxoffice) | Manages your movie and TV library in place of Radarr, Sonarr and NZBGet, and plugs straight into Matinee. |
 
 ## Documentation
