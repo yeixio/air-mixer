@@ -200,8 +200,16 @@ func (m *Manager) AddClient(c Client) error {
 	m.router.RegisterSink(c.ID(), c.Name(), sink)
 	go func() {
 		defer close(a.done)
-		if m.connect(ctx, a) {
-			m.pumpClient(ctx, c, sink)
+		for m.connect(ctx, a) {
+			err := m.pumpClient(ctx, c, sink)
+			if err == nil {
+				return
+			}
+			a.set(StateConnecting, err)
+			m.log.Warn("client connection lost, reconnecting", "id", c.ID(), "err", err)
+			if err := c.Disconnect(); err != nil {
+				m.log.Warn("disconnect lost client", "id", c.ID(), "err", err)
+			}
 		}
 	}()
 	m.log.Info("client added", "id", c.ID(), "name", c.Name(), "protocol", c.Protocol())
@@ -240,7 +248,10 @@ func (m *Manager) connect(ctx context.Context, a *adapter) bool {
 	}
 }
 
-func (m *Manager) pumpClient(ctx context.Context, c Client, in <-chan []float32) {
+// pumpClient sends the sink's audio to the client until ctx is done, when
+// it returns nil, or the client reports ErrConnectionLost, which it
+// returns.
+func (m *Manager) pumpClient(ctx context.Context, c Client, in <-chan []float32) error {
 	// Audio queued while connecting is stale; start from now.
 	for len(in) > 0 {
 		<-in
@@ -249,10 +260,12 @@ func (m *Manager) pumpClient(ctx context.Context, c Client, in <-chan []float32)
 	for {
 		select {
 		case <-ctx.Done():
-			return
+			return nil
 		case buf := <-in:
 			err := c.Send(Packet{Samples: buf, Format: audio.Internal})
 			switch {
+			case errors.Is(err, ErrConnectionLost):
+				return err
 			case errors.Is(err, ErrBufferFull):
 				if dropped++; dropped%100 == 1 {
 					m.log.Debug("client is behind, dropping audio", "id", c.ID(), "dropped_buffers", dropped)
