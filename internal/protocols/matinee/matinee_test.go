@@ -210,7 +210,7 @@ func newFakeMatinee(t *testing.T) *fakeMatinee {
 		for id, u := range f.stationURL {
 			if u == req.URL {
 				_ = id
-				http.Error(w, `{"error":"that station is already in the library"}`, 409)
+				http.Error(w, `{"error":"that station is already in the library"}`, http.StatusConflict)
 				return
 			}
 		}

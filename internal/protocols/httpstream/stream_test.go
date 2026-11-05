@@ -3,6 +3,7 @@ package httpstream
 import (
 	"context"
 	"encoding/binary"
+	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -18,7 +19,7 @@ import (
 func TestStream(t *testing.T) {
 	reg := NewRegistry()
 	s := New("tap", "Tap", reg, nil)
-	if err := s.Send(protocols.Packet{Samples: []float32{0, 0}, Format: audio.Internal}); err != protocols.ErrNotConnected {
+	if err := s.Send(protocols.Packet{Samples: []float32{0, 0}, Format: audio.Internal}); !errors.Is(err, protocols.ErrNotConnected) {
 		t.Fatalf("before connect: %v", err)
 	}
 	if _, ok := reg.Lookup("tap"); ok {
@@ -33,7 +34,7 @@ func TestStream(t *testing.T) {
 	}
 	srv := httptest.NewServer(s)
 	defer srv.Close()
-	res, err := http.Get(srv.URL)
+	res, err := http.Get(srv.URL) //nolint:bodyclose // closed below, and drained to check the stream ends
 	if err != nil {
 		t.Fatal(err)
 	}
