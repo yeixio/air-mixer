@@ -8,7 +8,7 @@ PLATFORMS  := linux/amd64 linux/arm64 linux/arm darwin/amd64 darwin/arm64 window
 export CGO_ENABLED := 0
 
 .DEFAULT_GOAL := help
-.PHONY: help build build-all run dev test test-coverage fuzz fmt vet lint check tidy clean docker-build docker-run
+.PHONY: help build build-all run dev test test-coverage fuzz fmt vet lint check tidy clean docker-build docker-run release-snapshot
 
 help: ## Show this help
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_-]+:.*## / {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -62,3 +62,6 @@ docker-build: ## Build the Docker image
 
 docker-run: docker-build ## Run the Docker image with host networking
 	docker run --rm -it --network host -v $(CURDIR)/data:/data $(APP):latest
+
+release-snapshot: ## Build release archives locally with GoReleaser (needs goreleaser)
+	goreleaser release --snapshot --clean
