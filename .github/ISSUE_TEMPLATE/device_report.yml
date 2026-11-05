@@ -1,0 +1,52 @@
+name: Device compatibility report
+description: Tell us how Air-Mixer works with your speaker, receiver or sender.
+labels: [compatibility]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Reports like this are real contributions. CI can't test with your speakers, so every report widens what we know works. "It works" reports are welcome too.
+  - type: dropdown
+    id: result
+    attributes:
+      label: Result
+      options:
+        - Works
+        - Works with problems
+        - Doesn't work
+    validations:
+      required: true
+  - type: dropdown
+    id: role
+    attributes:
+      label: How was the device used?
+      options:
+        - Output (Air-Mixer plays to it)
+        - Input (it plays to Air-Mixer)
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: Make, model and firmware or OS version, for example "AirPort Express 2nd gen, firmware 7.8.1" or "iPhone 15, iOS 26.1".
+    validations:
+      required: true
+  - type: input
+    id: protocol
+    attributes:
+      label: Protocol
+      description: For example airplay or local.
+  - type: input
+    id: version
+    attributes:
+      label: Air-Mixer version
+      description: Output of `airmixer version`.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything that didn't work, latency you noticed, and relevant log lines (run with `AIRMIXER_LOGGING_LEVEL=debug`).
+      render: text

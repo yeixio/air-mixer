@@ -77,8 +77,8 @@ A protocol is an adapter in `internal/protocols/<name>` that implements
   macOS.
 - Write commit messages in the imperative ("Add Cast discovery"), with a
   body explaining why when it is not obvious.
-- Update `docs/API.md` for API changes and `README.md` for user-facing
-  changes.
+- Update `docs/API.md` for API changes, `README.md` for user-facing
+  changes, and add a line to the `Unreleased` section of `CHANGELOG.md`.
 
 ## Style
 
@@ -89,6 +89,17 @@ A protocol is an adapter in `internal/protocols/<name>` that implements
 - Wrap errors with context (`fmt.Errorf("open UDP port: %w", err)`) and
   compare them with `errors.Is` and `errors.As`.
 - Comment why, not what. Exported identifiers get doc comments.
+
+## Releasing
+
+Maintainers release by pushing a tag: `git tag v0.2.0 && git push origin v0.2.0`.
+The release workflow runs [GoReleaser](https://goreleaser.com), which
+publishes binaries, checksums and release notes grouped by pull request
+label (see `.github/release.yml`), so label PRs `enhancement`, `bug`,
+`documentation` or `breaking`. Move the `Unreleased` entries in
+[CHANGELOG.md](CHANGELOG.md) under the new version in the same commit.
+`make release-snapshot` builds the same archives locally without
+publishing anything.
 
 ## Code of conduct
 
