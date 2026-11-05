@@ -49,6 +49,12 @@ paired Bluetooth speakers. Google Cast, UPnP/DLNA and AirPlay 2 are on the
 - **Kubernetes native.** A [Helm chart](deploy/helm/airmixer) runs the main
   Air-Mixer plus a speaker agent on each node that has speakers paired,
   such as a Raspberry Pi in a room. See [Kubernetes](docs/KUBERNETES.md).
+- **Matinee, both ways.** Play anything from a [Matinee](https://github.com/yeixio/matinee)
+  library on your speakers: a Matinee input shows up in Matinee and Home
+  Assistant as a player. And any Matinee player, such as a TV, becomes a
+  speaker you can route to. See [Matinee](docs/API.md#matinee).
+- **Stream output.** Any output can be a live WAV stream for VLC or a
+  browser.
 - **Routing and mixing.** A route sends one input to any number of
   outputs. Several routes into one output are mixed, each with its own
   volume. Routes refer to devices by name, so they survive a device being

@@ -16,6 +16,7 @@ type Config struct {
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Logging  LoggingConfig  `mapstructure:"logging"`
+	Matinee  MatineeConfig  `mapstructure:"matinee"`
 	// Setup declares servers, clients and routes to create or update on
 	// startup, for deployments configured from a file, such as a
 	// Kubernetes ConfigMap.
@@ -75,6 +76,18 @@ type ServerConfig struct {
 	// Interface is the network interface AirPlay receivers advertise on,
 	// or "auto".
 	Interface string `mapstructure:"interface"`
+	// PublicURL is how other machines reach the web port, such as
+	// http://192.168.1.10:9001, for players that pull a stream from
+	// Air-Mixer (Matinee outputs). Empty means this machine's address on
+	// the way to them.
+	PublicURL string `mapstructure:"public_url"`
+}
+
+// MatineeConfig holds the Matinee integration's settings.
+type MatineeConfig struct {
+	// URL is the Matinee server to use until one is set in the web UI,
+	// such as http://192.168.1.20:7171.
+	URL string `mapstructure:"url"`
 }
 
 // DatabaseConfig holds database settings.
@@ -140,6 +153,8 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("server.airplay_port", 49152)
 	v.SetDefault("server.data_dir", "./data")
 	v.SetDefault("server.interface", "auto")
+	v.SetDefault("server.public_url", "")
+	v.SetDefault("matinee.url", "")
 	v.SetDefault("database.path", "")
 	v.SetDefault("logging.level", "info")
 	v.SetDefault("logging.format", "text")
@@ -155,6 +170,9 @@ func (c *Config) Validate() error {
 		return fmt.Errorf("config: invalid server.airplay_port %d", c.Server.AirPlayPort)
 	case c.Server.DataDir == "":
 		return errors.New("config: server.data_dir is required")
+	}
+	if u := c.Server.PublicURL; u != "" && !strings.HasPrefix(u, "http://") && !strings.HasPrefix(u, "https://") {
+		return fmt.Errorf("config: server.public_url %q must start with http:// or https://", u)
 	}
 	switch strings.ToLower(c.Logging.Level) {
 	case "debug", "info", "warn", "warning", "error":
