@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/yeixio/air-mixer/i18n"
 	"github.com/yeixio/air-mixer/internal/db"
 	"github.com/yeixio/air-mixer/internal/protocols"
 	"github.com/yeixio/air-mixer/internal/protocols/airplay"
@@ -79,7 +80,7 @@ func parseConfig(s string, v any) error {
 		return nil
 	}
 	if err := json.Unmarshal([]byte(s), v); err != nil {
-		return invalid("config is not valid JSON: %v", err)
+		return invalidCode("invalid_config", map[string]any{"detail": err.Error()})
 	}
 	return nil
 }
@@ -104,14 +105,14 @@ func (f *factory) Server(s *db.Server) (protocols.Server, error) {
 	}
 	if s.Protocol == "matinee" {
 		if f.defaults.Matinee == nil {
-			return nil, invalid("Matinee isn't available in this build")
+			return nil, invalidCode("matinee_unavailable", nil)
 		}
 		return matinee.NewSource(matinee.SourceOptions{
 			ID: s.ID, Name: s.Name, Account: f.defaults.Matinee, Version: f.defaults.Version, Logger: f.log,
 		}), nil
 	}
 	if s.Protocol != "airplay" {
-		return nil, invalid("unsupported server protocol %q", s.Protocol)
+		return nil, invalidCode("unsupported_server_protocol", map[string]any{"protocol": s.Protocol})
 	}
 	if cfg.Address == "" {
 		cfg.Address = ":" + strconv.Itoa(f.defaults.AirPlayPort)
@@ -136,10 +137,10 @@ func (f *factory) Client(c *db.Client) (protocols.Client, error) {
 			addr = cfg.Address
 		}
 		if addr == "" {
-			return nil, invalid("an AirPlay client needs an address")
+			return nil, invalidCode("airplay_needs_address", nil)
 		}
 		if cfg.LatencyMS < 0 {
-			return nil, invalid("latency_ms must not be negative")
+			return nil, invalidCode("negative_latency", nil)
 		}
 		return airplay.NewClient(airplay.ClientOptions{
 			ID: c.ID, Name: c.Name, Address: addr,
@@ -149,7 +150,7 @@ func (f *factory) Client(c *db.Client) (protocols.Client, error) {
 		}), nil
 	case "local", "pulse":
 		if cfg.DelayMS < 0 || cfg.DelayMS > maxDelayMS {
-			return nil, invalid("delay_ms must be between 0 and %d", maxDelayMS)
+			return nil, invalidCode("delay_range", map[string]any{"max": maxDelayMS})
 		}
 		delay := time.Duration(cfg.DelayMS) * time.Millisecond
 		if c.Protocol == "local" {
@@ -166,10 +167,10 @@ func (f *factory) Client(c *db.Client) (protocols.Client, error) {
 			addr = cfg.Address
 		}
 		if addr == "" {
-			return nil, invalid("a Matinee client needs the player's id as its address (see /api/matinee/players)")
+			return nil, invalidCode("matinee_needs_player", nil)
 		}
 		if f.defaults.Matinee == nil {
-			return nil, invalid("Matinee isn't available in this build")
+			return nil, invalidCode("matinee_unavailable", nil)
 		}
 		return matinee.NewSpeaker(matinee.SpeakerOptions{
 			ID: c.ID, Name: c.Name, Player: addr, LibraryID: cfg.LibraryID,
@@ -177,14 +178,26 @@ func (f *factory) Client(c *db.Client) (protocols.Client, error) {
 			PublicURL: f.defaults.PublicURL, WebPort: f.defaults.WebPort, Logger: f.log,
 		}), nil
 	}
-	return nil, invalid("unsupported client protocol %q", c.Protocol)
+	return nil, invalidCode("unsupported_client_protocol", map[string]any{"protocol": c.Protocol})
 }
 
-// InvalidError reports a request that cannot be carried out as given.
-type InvalidError struct{ Reason string }
+// InvalidError reports a request that cannot be carried out as given. Code
+// and Params, when set, name the message in the i18n error catalog, so
+// clients can show it in their reader's language.
+type InvalidError struct {
+	Reason string
+	Code   string
+	Params map[string]any
+}
 
 func (e *InvalidError) Error() string { return e.Reason }
 
+// invalid is an InvalidError with an English reason only.
 func invalid(format string, args ...any) error {
 	return &InvalidError{Reason: fmt.Sprintf(format, args...)}
+}
+
+// invalidCode is an InvalidError from the i18n error catalog.
+func invalidCode(code string, params map[string]any) error {
+	return &InvalidError{Reason: i18n.Message(code, params), Code: code, Params: params}
 }

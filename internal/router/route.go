@@ -14,7 +14,8 @@ package router
 
 import (
 	"errors"
-	"fmt"
+
+	"github.com/yeixio/air-mixer/i18n"
 )
 
 // MixMode is stored with each route for compatibility with existing
@@ -72,8 +73,18 @@ var (
 	ErrExists = errors.New("route already exists")
 )
 
-// ValidationError describes a route that cannot be saved.
-type ValidationError struct{ Reason string }
+// ValidationError describes a route that cannot be saved. Code and Params
+// name the message in the i18n error catalog, so clients can show it in
+// their reader's language.
+type ValidationError struct {
+	Reason string
+	Code   string
+	Params map[string]any
+}
+
+func invalidRoute(code string, params map[string]any) *ValidationError {
+	return &ValidationError{Reason: i18n.Message(code, params), Code: code, Params: params}
+}
 
 func (e *ValidationError) Error() string { return "invalid route: " + e.Reason }
 
@@ -81,24 +92,24 @@ func (e *ValidationError) Error() string { return "invalid route: " + e.Reason }
 func (r Route) Validate() error {
 	switch {
 	case r.ID == "":
-		return &ValidationError{"id is required"}
+		return invalidRoute("route_id_required", nil)
 	case r.SourceName == "":
-		return &ValidationError{"source_name is required"}
+		return invalidRoute("route_source_required", nil)
 	case len(r.DestNames) == 0:
-		return &ValidationError{"at least one destination is required"}
+		return invalidRoute("route_dest_required", nil)
 	case r.Volume < 0 || r.Volume > 1:
-		return &ValidationError{fmt.Sprintf("volume %v is outside 0..1", r.Volume)}
+		return invalidRoute("route_volume_range", map[string]any{"volume": r.Volume})
 	case r.Duck != nil && (*r.Duck < 0 || *r.Duck > 1):
-		return &ValidationError{fmt.Sprintf("duck %v is outside 0..1", *r.Duck)}
+		return invalidRoute("route_duck_range", map[string]any{"duck": *r.Duck})
 	}
 	switch r.MixMode {
 	case "", MixModeReplace, MixModeMix, MixModeAdd:
 	default:
-		return &ValidationError{fmt.Sprintf("unknown mix_mode %q", r.MixMode)}
+		return invalidRoute("route_mix_mode", map[string]any{"mode": string(r.MixMode)})
 	}
 	for _, d := range r.DestNames {
 		if d == "" {
-			return &ValidationError{"destination names cannot be empty"}
+			return invalidRoute("route_dest_empty", nil)
 		}
 	}
 	return nil

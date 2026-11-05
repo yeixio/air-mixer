@@ -109,7 +109,7 @@ func (a *API) playbackFail(w http.ResponseWriter, r *http.Request, err error) {
 	case errors.As(err, &fetch):
 		writeError(w, http.StatusBadGateway, fetch.Error())
 	case errors.Is(err, playback.ErrNotFound):
-		writeError(w, http.StatusNotFound, "not found")
+		writeCode(w, http.StatusNotFound, "not_found", nil)
 	case errors.Is(err, playback.ErrBusy):
 		writeError(w, http.StatusTooManyRequests, err.Error())
 	case errors.Is(err, playback.ErrClosed):

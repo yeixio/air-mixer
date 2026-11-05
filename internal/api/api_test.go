@@ -10,10 +10,12 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/yeixio/air-mixer/i18n"
 	"github.com/yeixio/air-mixer/internal/db"
 	"github.com/yeixio/air-mixer/internal/discovery"
 	"github.com/yeixio/air-mixer/internal/playback"
@@ -289,5 +291,39 @@ func TestPanicRecovery(t *testing.T) {
 	h.ServeHTTP(rec, httptest.NewRequest("GET", "/", nil))
 	if rec.Code != 500 {
 		t.Errorf("panic gave %d", rec.Code)
+	}
+}
+
+// Errors carry a stable code from the i18n catalog and its params, so the
+// web UI can show them in the reader's language, beside the English text.
+func TestErrorCodes(t *testing.T) {
+	a := newTestAPI(t, nil)
+	type apiError struct {
+		Error  string         `json:"error"`
+		Code   string         `json:"code"`
+		Params map[string]any `json:"params"`
+	}
+	for _, c := range []struct {
+		method, path, body string
+		status             int
+		want               apiError
+	}{
+		{"POST", "/api/servers", `{"protocol":"airplay"}`, 400, apiError{Error: "name is required", Code: "name_required"}},
+		{"POST", "/api/servers", `{`, 400, apiError{Code: "invalid_json"}},
+		{"POST", "/api/routes", `{"name":"r","source_name":"s","dest_names":["d"],"volume":2}`, 400,
+			apiError{Error: "volume 2 is outside 0..1", Code: "route_volume_range", Params: map[string]any{"volume": 2.0}}},
+		{"GET", "/api/servers/nope", "", 404, apiError{Error: "not found", Code: "not_found"}},
+		{"GET", "/api/nope", "", 404, apiError{Error: "no such endpoint", Code: "no_such_endpoint"}},
+		{"GET", "/api/discovery/cast", "", 404,
+			apiError{Error: `discovery is not supported for protocol "cast"`, Code: "discovery_unsupported", Params: map[string]any{"protocol": "cast"}}},
+	} {
+		var got apiError
+		a.expect(c.method, c.path, c.body, c.status, &got)
+		if got.Code != c.want.Code || (c.want.Error != "" && got.Error != c.want.Error) || (c.want.Params != nil && !reflect.DeepEqual(got.Params, c.want.Params)) {
+			t.Errorf("%s %s = %+v, want %+v", c.method, c.path, got, c.want)
+		}
+		if !i18n.HasError(got.Code) {
+			t.Errorf("%s %s: code %q is not in i18n/locales/en/errors.json", c.method, c.path, got.Code)
+		}
 	}
 }

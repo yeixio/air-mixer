@@ -4,15 +4,13 @@ import (
 	"context"
 	"net/http"
 	"time"
-
-	"github.com/yeixio/air-mixer/internal/protocols/matinee"
 )
 
 // clientStream serves a stream or Matinee output's audio as a live WAV.
 func (a *API) clientStream(w http.ResponseWriter, r *http.Request) {
 	s, ok := a.streams.Lookup(r.PathValue("id"))
 	if !ok {
-		writeError(w, http.StatusNotFound, "no such stream: the output isn't a connected stream or Matinee output")
+		writeCode(w, http.StatusNotFound, "stream_not_found", nil)
 		return
 	}
 	s.ServeHTTP(w, r)
@@ -20,7 +18,7 @@ func (a *API) clientStream(w http.ResponseWriter, r *http.Request) {
 
 func (a *API) matineeOn(w http.ResponseWriter) bool {
 	if a.matinee == nil {
-		writeError(w, http.StatusNotFound, "Matinee isn't available")
+		writeCode(w, http.StatusNotFound, "matinee_unavailable", nil)
 		return false
 	}
 	return true
@@ -61,7 +59,7 @@ func (a *API) linkMatinee(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
 	defer cancel()
 	if _, err := a.matinee.StartLink(ctx); err != nil {
-		writeError(w, http.StatusBadGateway, "asking Matinee for a code: "+err.Error())
+		writeCode(w, http.StatusBadGateway, "matinee_link_failed", map[string]any{"detail": err.Error()})
 		return
 	}
 	writeJSON(w, http.StatusOK, a.matinee.State())
@@ -97,14 +95,14 @@ func (a *API) matineePlayers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !a.matinee.SignedIn() {
-		writeError(w, http.StatusConflict, matinee.ErrNotSignedIn.Error())
+		writeCode(w, http.StatusConflict, "matinee_not_signed_in", nil)
 		return
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
 	defer cancel()
 	players, err := a.matinee.API().Players(ctx)
 	if err != nil {
-		writeError(w, http.StatusBadGateway, "asking Matinee for its players: "+err.Error())
+		writeCode(w, http.StatusBadGateway, "matinee_players_failed", map[string]any{"detail": err.Error()})
 		return
 	}
 	out := []matineePlayer{}
