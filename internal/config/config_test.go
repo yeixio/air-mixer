@@ -116,3 +116,27 @@ setup:
 		t.Errorf("routes = %+v", s.Routes)
 	}
 }
+
+func TestAirPlayPorts(t *testing.T) {
+	for _, tc := range []struct {
+		port        int
+		rng         string
+		first, last int
+	}{
+		{49152, "", 49152, 49199},
+		{49200, "", 49200, 49247},
+		{49152, "50000-50009", 50000, 50009},
+		{65530, "", 65530, 65535},
+	} {
+		f, l := ServerConfig{AirPlayPort: tc.port, AirPlayPortRange: tc.rng}.AirPlayPorts()
+		if f != tc.first || l != tc.last {
+			t.Errorf("%d %q = %d-%d, want %d-%d", tc.port, tc.rng, f, l, tc.first, tc.last)
+		}
+	}
+	for _, bad := range []string{"50000", "50009-50000", "0-10", "a-b", "1-70000"} {
+		cfg := Config{Server: ServerConfig{WebPort: 1, AirPlayPort: 2, AirPlayPortRange: bad, DataDir: "x"}, Logging: LoggingConfig{Level: "info", Format: "text"}}
+		if err := cfg.Validate(); err == nil {
+			t.Errorf("range %q accepted", bad)
+		}
+	}
+}

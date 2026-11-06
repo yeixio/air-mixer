@@ -38,7 +38,10 @@ type Factory interface {
 
 // Defaults are the settings used when a stored adapter leaves them out.
 type Defaults struct {
-	AirPlayPort int    // RTSP port for AirPlay receivers
+	AirPlayPort int    // first RTSP port for AirPlay receivers
+	// AirPlayLastPort ends the range receivers without an address take
+	// ports from; 0 means AirPlayPort only.
+	AirPlayLastPort int
 	Interface   string // network interface to advertise on
 
 	// DataDir is where adapters keep state, such as Spotify credentials.
@@ -218,14 +221,18 @@ func (f *factory) Server(s *db.Server) (protocols.Server, error) {
 	default:
 		return nil, invalidCode("unsupported_server_protocol", map[string]any{"protocol": s.Protocol})
 	}
+	lastPort := 0
 	if cfg.Address == "" {
+		// Without a port of its own, each receiver takes the first free
+		// one in the AirPlay range; mDNS tells senders which.
 		cfg.Address = ":" + strconv.Itoa(f.defaults.AirPlayPort)
+		lastPort = f.defaults.AirPlayLastPort
 	}
 	if cfg.Interface == "" {
 		cfg.Interface = f.defaults.Interface
 	}
 	return airplay.NewServer(airplay.ServerOptions{
-		ID: s.ID, Name: s.Name, Address: cfg.Address, Interface: cfg.Interface, Logger: f.log,
+		ID: s.ID, Name: s.Name, Address: cfg.Address, LastPort: lastPort, Interface: cfg.Interface, Logger: f.log,
 	}), nil
 }
 

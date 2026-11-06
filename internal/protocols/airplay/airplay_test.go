@@ -557,3 +557,33 @@ func TestServerLifecycle(t *testing.T) {
 		t.Error("invalid address accepted")
 	}
 }
+
+func TestServerNextFreePort(t *testing.T) {
+	first := NewServer(ServerOptions{Address: "127.0.0.1:0", DisableAdvertising: true, Logger: quiet})
+	if err := first.Start(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	defer first.Stop()
+	taken := first.Addr().String()
+
+	port := first.Addr().(*net.TCPAddr).Port
+
+	strict := NewServer(ServerOptions{Address: taken, DisableAdvertising: true, Logger: quiet})
+	if err := strict.Start(context.Background()); err == nil {
+		strict.Stop()
+		t.Fatal("a taken port was accepted without a range")
+	}
+	second := NewServer(ServerOptions{Address: taken, LastPort: port + 20, DisableAdvertising: true, Logger: quiet})
+	if err := second.Start(context.Background()); err != nil {
+		t.Skipf("no free port above %d: %v", port, err)
+	}
+	defer second.Stop()
+	if got := second.Addr().(*net.TCPAddr).Port; got <= port || got > port+20 {
+		t.Errorf("second receiver on %d, want %d-%d", got, port+1, port+20)
+	}
+	full := NewServer(ServerOptions{Address: taken, LastPort: port, DisableAdvertising: true, Logger: quiet})
+	if err := full.Start(context.Background()); err == nil || !strings.Contains(err.Error(), "every port") {
+		full.Stop()
+		t.Errorf("exhausted range = %v", err)
+	}
+}

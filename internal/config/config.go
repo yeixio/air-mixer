@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -69,8 +70,12 @@ type ServerConfig struct {
 	Host string `mapstructure:"host"`
 	// WebPort is the web UI and API port.
 	WebPort int `mapstructure:"web_port"`
-	// AirPlayPort is the default RTSP port for AirPlay receivers.
+	// AirPlayPort is the first RTSP port for AirPlay receivers.
 	AirPlayPort int `mapstructure:"airplay_port"`
+	// AirPlayPortRange is the ports AirPlay receivers without an address
+	// of their own take, in order, as "first-last". Empty means
+	// airplay_port and the next DefaultAirPlayPorts-1 ports.
+	AirPlayPortRange string `mapstructure:"airplay_port_range"`
 	// DataDir holds the database and other state.
 	DataDir string `mapstructure:"data_dir"`
 	// Interface is the network interface AirPlay receivers advertise on,
@@ -151,6 +156,7 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("server.host", "0.0.0.0")
 	v.SetDefault("server.web_port", 9001)
 	v.SetDefault("server.airplay_port", 49152)
+	v.SetDefault("server.airplay_port_range", "")
 	v.SetDefault("server.data_dir", "./data")
 	v.SetDefault("server.interface", "auto")
 	v.SetDefault("server.public_url", "")
@@ -168,6 +174,8 @@ func (c *Config) Validate() error {
 		return fmt.Errorf("config: invalid server.web_port %d", c.Server.WebPort)
 	case !validPort(c.Server.AirPlayPort):
 		return fmt.Errorf("config: invalid server.airplay_port %d", c.Server.AirPlayPort)
+	case c.Server.AirPlayPortRange != "" && !validRange(c.Server.AirPlayPortRange):
+		return fmt.Errorf("config: invalid server.airplay_port_range %q, want first-last such as 49152-49199", c.Server.AirPlayPortRange)
 	case c.Server.DataDir == "":
 		return errors.New("config: server.data_dir is required")
 	}
@@ -185,4 +193,35 @@ func (c *Config) Validate() error {
 		return fmt.Errorf("config: invalid logging.format %q", c.Logging.Format)
 	}
 	return nil
+}
+
+// DefaultAirPlayPorts is how many ports AirPlay receivers get when
+// airplay_port_range is not set: 49152-49199 by default, which stops short
+// of the Helm chart's room agents at 49200.
+const DefaultAirPlayPorts = 48
+
+// AirPlayPorts returns the first and last port of the AirPlay range.
+func (s ServerConfig) AirPlayPorts() (first, last int) {
+	if f, l, ok := parseRange(s.AirPlayPortRange); ok {
+		return f, l
+	}
+	return s.AirPlayPort, min(s.AirPlayPort+DefaultAirPlayPorts-1, 65535)
+}
+
+func parseRange(r string) (first, last int, ok bool) {
+	a, b, found := strings.Cut(strings.TrimSpace(r), "-")
+	if !found {
+		return 0, 0, false
+	}
+	first, err1 := strconv.Atoi(strings.TrimSpace(a))
+	last, err2 := strconv.Atoi(strings.TrimSpace(b))
+	if err1 != nil || err2 != nil || first < 1 || last > 65535 || first > last {
+		return 0, 0, false
+	}
+	return first, last, true
+}
+
+func validRange(r string) bool {
+	_, _, ok := parseRange(r)
+	return ok
 }

@@ -46,7 +46,10 @@ var (
 // protocolCatalog lists every built-in protocol, inputs first, in the order
 // the web UI offers them. Factory builds each of them.
 var protocolCatalog = []Protocol{
-	{Name: "airplay", Kind: "server", Title: "AirPlay", Description: "protocols.airplayServer", Fields: []Field{fieldInterface}},
+	{Name: "airplay", Kind: "server", Title: "AirPlay", Description: "protocols.airplayServer", Fields: []Field{
+		{Key: "address", Type: "text", Label: "fields.listen", Hint: "fields.listenHint", Placeholder: ":49152"},
+		fieldInterface,
+	}},
 	{Name: "radio", Kind: "server", Title: "Internet radio", Description: "protocols.radioServer", Fields: []Field{
 		{Key: "url", Type: "url", Required: true, Label: "fields.url", Hint: "fields.urlHint", Placeholder: "https://stream.example.com/radio.mp3"},
 	}},

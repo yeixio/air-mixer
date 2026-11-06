@@ -32,6 +32,9 @@ controller:
 
   webPort: 9001
   airplayPort: 49152
+  # TCP ports AirPlay inputs without their own address take, in order, as
+  # "first-last". Empty means 48 ports from airplayPort (49152-49199).
+  airplayPortRange: ""
   # Network interface AirPlay receivers advertise on, or "auto".
   interface: auto
 
