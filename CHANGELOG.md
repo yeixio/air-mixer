@@ -19,6 +19,11 @@ generated from its pull requests.
   sink's monitor, or a phone playing to the host over Bluetooth.
 - A Google Cast output for Chromecast, Nest and Google Home speakers,
   speaker groups and Cast TVs, with discovery.
+- UPnP/DLNA in both directions: an output for Sonos (MP3 through its
+  radio scheme), AV receivers, smart TVs and other renderers, found with
+  SSDP; and an input that is a DLNA media renderer apps can play to.
+- Streams take `?raw=1` (close-delimited, DLNA headers) and
+  `?format=mp3` (through ffmpeg).
 - A Snapcast output that feeds a snapserver TCP source, and discovery of
   Snapcast servers.
 - AAC, Ogg, Opus and FLAC through ffmpeg for playback and radio, when

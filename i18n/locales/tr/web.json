@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire veya PulseAudio: hat girişini, USB ses arabirimini veya Bluetooth ile çalan bir telefonu kaydet",
     "castClient": "Google Cast: Chromecast'te, Nest ve Google Home hoparlörlerde, hoparlör gruplarında ve Cast destekli TV'lerde çal",
     "pulseClient": "PipeWire veya PulseAudio: bir ses kartında veya eşleştirilmiş bir Bluetooth hoparlörde çal",
-    "snapcastClient": "Snapcast: her Snapcast istemcisinde senkronize çal"
+    "snapcastClient": "Snapcast: her Snapcast istemcisinde senkronize çal",
+    "upnpServer": "UPnP/DLNA: BubbleUPnP gibi DLNA uygulamalarında hoparlör olarak görünür ve gönderdiklerini çalar",
+    "upnpClient": "UPnP/DLNA: Sonos, AV alıcılar, akıllı TV'ler ve diğer DLNA oynatıcılarda çal"
   },
   "servers": {
     "title": "Giriş sunucuları",
@@ -150,7 +152,12 @@
     "sampleRate": "Örnekleme hızı (isteğe bağlı)",
     "sampleRateHint": "snapserver kaynağının sampleformat değerindeki hız. snapserver'ın varsayılanı olan 48000 için boş bırak.",
     "snapcastAddressHint": "snapserver ana makinesi ve 4953 değilse TCP kaynağının bağlantı noktası.",
-    "castAddressHint": "Cihazın IP adresi ve 8009 değilse bağlantı noktası (hoparlör grupları başka bir bağlantı noktası kullanır). Cast cihazları birkaç saniye geç çalar; diğer hoparlörleri buna göre geciktir."
+    "castAddressHint": "Cihazın IP adresi ve 8009 değilse bağlantı noktası (hoparlör grupları başka bir bağlantı noktası kullanır). Cast cihazları birkaç saniye geç çalar; diğer hoparlörleri buna göre geciktir.",
+    "listen": "Dinleme adresi (isteğe bağlı)",
+    "listenHint": "Uygulamaların bu girişe ulaştığı bağlantı noktası, örneğin :49494. Boş bir bağlantı noktası için boş bırak.",
+    "upnpAddressHint": "Oynatıcının Cihazları bul ile gelen açıklama URL'si veya bir Sonos oynatıcının IP adresi.",
+    "format": "Yayın biçimi (isteğe bağlı)",
+    "formatHint": "wav veya mp3. Sonos'ta MP3, diğer her şeyde WAV için boş bırak. MP3 için ffmpeg gerekir."
   },
   "pairing": {
     "title": "AirPlay eşleştirme",

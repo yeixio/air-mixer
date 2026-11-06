@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire या PulseAudio: लाइन-इन, USB ऑडियो इंटरफ़ेस या Bluetooth पर चल रहे फ़ोन को रिकॉर्ड करें",
     "castClient": "Google Cast: Chromecast, Nest और Google Home स्पीकर, स्पीकर ग्रुप और Cast वाले टीवी पर चलाएँ",
     "pulseClient": "PipeWire या PulseAudio: साउंड कार्ड या पेयर किए गए Bluetooth स्पीकर पर चलाएँ",
-    "snapcastClient": "Snapcast: हर Snapcast क्लाइंट पर एक साथ चलाएँ"
+    "snapcastClient": "Snapcast: हर Snapcast क्लाइंट पर एक साथ चलाएँ",
+    "upnpServer": "UPnP/DLNA: BubbleUPnP जैसे DLNA ऐप में स्पीकर के रूप में दिखता है और वे जो भेजें उसे चलाता है",
+    "upnpClient": "UPnP/DLNA: Sonos, AV रिसीवर, स्मार्ट टीवी और दूसरे DLNA रेंडरर पर चलाएँ"
   },
   "servers": {
     "title": "इनपुट सर्वर",
@@ -150,7 +152,12 @@
     "sampleRate": "सैंपल रेट (वैकल्पिक)",
     "sampleRateHint": "snapserver स्रोत के sampleformat में दी गई रेट। snapserver की डिफ़ॉल्ट 48000 के लिए खाली छोड़ें।",
     "snapcastAddressHint": "snapserver होस्ट, और उसके TCP स्रोत का पोर्ट अगर वह 4953 नहीं है।",
-    "castAddressHint": "डिवाइस का IP पता, और उसका पोर्ट अगर वह 8009 नहीं है (स्पीकर ग्रुप दूसरा पोर्ट इस्तेमाल करते हैं)। Cast डिवाइस कुछ सेकंड देर से बजते हैं, इसलिए बाकी स्पीकरों में उतनी देरी जोड़ें।"
+    "castAddressHint": "डिवाइस का IP पता, और उसका पोर्ट अगर वह 8009 नहीं है (स्पीकर ग्रुप दूसरा पोर्ट इस्तेमाल करते हैं)। Cast डिवाइस कुछ सेकंड देर से बजते हैं, इसलिए बाकी स्पीकरों में उतनी देरी जोड़ें।",
+    "listen": "सुनने का पता (वैकल्पिक)",
+    "listenHint": "वह पोर्ट जिससे ऐप इस इनपुट तक पहुँचते हैं, जैसे :49494। खाली पोर्ट के लिए खाली छोड़ें।",
+    "upnpAddressHint": "रेंडरर का विवरण URL, जैसा डिवाइस खोजें देता है, या किसी Sonos प्लेयर का IP पता।",
+    "format": "स्ट्रीम फ़ॉर्मैट (वैकल्पिक)",
+    "formatHint": "wav या mp3। Sonos पर MP3 और बाकी सब पर WAV के लिए खाली छोड़ें। MP3 के लिए ffmpeg चाहिए।"
   },
   "pairing": {
     "title": "AirPlay पेयरिंग",

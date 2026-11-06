@@ -1,6 +1,7 @@
 package httpstream
 
 import (
+	"bytes"
 	"context"
 	"encoding/binary"
 	"errors"
@@ -11,6 +12,7 @@ import (
 	"time"
 
 	"github.com/yeixio/air-mixer/internal/audio"
+	"github.com/yeixio/air-mixer/internal/audio/decode"
 	"github.com/yeixio/air-mixer/internal/protocols"
 )
 
@@ -94,5 +96,48 @@ func TestStream(t *testing.T) {
 	case <-done:
 	case <-time.After(2 * time.Second):
 		t.Fatal("the stream didn't end")
+	}
+}
+
+// raw=1 sends a close-delimited HTTP/1.0 body with DLNA headers, and
+// format=mp3 encodes through ffmpeg.
+func TestRawAndMP3(t *testing.T) {
+	s := New("tap", "Tap", NewRegistry(), nil)
+	if err := s.Connect(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	srv := httptest.NewServer(s)
+	defer srv.Close()
+
+	res, err := http.Get(srv.URL + "?raw=1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.ProtoMajor != 1 || res.ProtoMinor != 0 || len(res.TransferEncoding) != 0 || res.Header.Get("transferMode.dlna.org") != "Streaming" {
+		t.Errorf("raw response %s %v %v", res.Proto, res.TransferEncoding, res.Header)
+	}
+	hdr := make([]byte, 4)
+	if _, err := io.ReadFull(res.Body, hdr); err != nil || string(hdr) != "RIFF" {
+		t.Errorf("raw body %q, %v", hdr, err)
+	}
+	res.Body.Close()
+
+	if decode.FFmpeg == "" {
+		t.Skip("ffmpeg is not installed")
+	}
+	res, err = http.Get(srv.URL + "?format=mp3&raw=1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer res.Body.Close()
+	if ct := res.Header.Get("Content-Type"); ct != "audio/mpeg" {
+		t.Errorf("Content-Type %q", ct)
+	}
+	b := make([]byte, 4096)
+	if _, err := io.ReadFull(res.Body, b); err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Contains(b, []byte{0xFF, 0xFB}) && !bytes.Contains(b, []byte("ID3")) {
+		t.Errorf("no MP3 frames in % x", b[:16])
 	}
 }

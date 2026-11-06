@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire vagy PulseAudio: vonalbemenet, USB-s hangkártya vagy Bluetooth-on lejátszó telefon felvétele",
     "castClient": "Google Cast: lejátszás Chromecaston, Nest és Google Home hangszórókon, hangszórócsoportokon és Cast-os tévéken",
     "pulseClient": "PipeWire vagy PulseAudio: lejátszás hangkártyán vagy párosított Bluetooth-hangszórón",
-    "snapcastClient": "Snapcast: szinkron lejátszás minden Snapcast-kliensen"
+    "snapcastClient": "Snapcast: szinkron lejátszás minden Snapcast-kliensen",
+    "upnpServer": "UPnP/DLNA: hangszóróként jelenik meg a DLNA-appokban, például a BubbleUPnP-ben, és lejátssza, amit küldenek",
+    "upnpClient": "UPnP/DLNA: lejátszás Sonoson, AV-erősítőkön, okostévéken és más DLNA-renderereken"
   },
   "servers": {
     "title": "Bemeneti szerverek",
@@ -150,7 +152,12 @@
     "sampleRate": "Mintavételezési frekvencia (nem kötelező)",
     "sampleRateHint": "A snapserver-forrás sampleformat beállításában szereplő frekvencia. Hagyd üresen a snapserver alapértelmezett 48000 értékéhez.",
     "snapcastAddressHint": "A snapserver gépe, és TCP-forrásának portja, ha az nem 4953.",
-    "castAddressHint": "Az eszköz IP-címe, és a portja, ha az nem 8009 (a hangszórócsoportok másikat használnak). A Cast-eszközök néhány másodperccel később szólnak, ezért késleltesd ennyivel a többi hangszórót."
+    "castAddressHint": "Az eszköz IP-címe, és a portja, ha az nem 8009 (a hangszórócsoportok másikat használnak). A Cast-eszközök néhány másodperccel később szólnak, ezért késleltesd ennyivel a többi hangszórót.",
+    "listen": "Figyelési cím (nem kötelező)",
+    "listenHint": "A port, amelyen az appok elérik ezt a bemenetet, például :49494. Hagyd üresen egy szabad porthoz.",
+    "upnpAddressHint": "A renderer leíró URL-je, ahogy az Eszközök keresése megadja, vagy egy Sonos-lejátszó IP-címe.",
+    "format": "Streamformátum (nem kötelező)",
+    "formatHint": "wav vagy mp3. Hagyd üresen, és a Sonos MP3-at, minden más WAV-ot kap. Az MP3-hoz ffmpeg kell."
   },
   "pairing": {
     "title": "AirPlay-párosítás",

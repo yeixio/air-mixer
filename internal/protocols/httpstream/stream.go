@@ -9,15 +9,21 @@
 package httpstream
 
 import (
+	"bufio"
 	"context"
 	"encoding/binary"
+	"errors"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
+	"os/exec"
+	"strconv"
 	"sync"
 	"time"
 
 	"github.com/yeixio/air-mixer/internal/audio"
+	"github.com/yeixio/air-mixer/internal/audio/decode"
 	"github.com/yeixio/air-mixer/internal/protocols"
 )
 
@@ -166,7 +172,20 @@ func (s *Stream) Send(p protocols.Packet) error {
 
 // ServeHTTP sends the live stream until the listener leaves or the output
 // is disconnected.
+//
+// Query parameters pick what renderers need: format=mp3 encodes the
+// stream as MP3 through ffmpeg (for Sonos and other players that won't
+// take an endless WAV), and raw=1 sends an HTTP/1.0-style body that ends
+// when the connection closes instead of a chunked one, with DLNA's
+// streaming headers, as internet radio servers do.
 func (s *Stream) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query()
+	mp3 := q.Get("format") == "mp3"
+	raw := q.Get("raw") == "1"
+	if mp3 && decode.FFmpeg == "" {
+		http.Error(w, "MP3 streams need ffmpeg on the server", http.StatusNotImplemented)
+		return
+	}
 	l := &listener{}
 	s.mu.Lock()
 	if !s.connected {
@@ -181,36 +200,73 @@ func (s *Stream) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		delete(s.listeners, l)
 		s.mu.Unlock()
 	}()
-	s.log.Info("listener joined", "remote", r.RemoteAddr)
+	s.log.Info("listener joined", "remote", r.RemoteAddr, "mp3", mp3)
 	defer s.log.Info("listener left", "remote", r.RemoteAddr)
 
-	h := w.Header()
-	h.Set("Content-Type", "audio/wav")
+	contentType := "audio/wav"
+	if mp3 {
+		contentType = "audio/mpeg"
+	}
+	h := http.Header{}
+	h.Set("Content-Type", contentType)
 	h.Set("Cache-Control", "no-store")
 	h.Set("Icy-Name", s.name)
-	w.WriteHeader(http.StatusOK)
-	if r.Method == http.MethodHead {
-		return
+	if raw {
+		h.Set("transferMode.dlna.org", "Streaming")
+		h.Set("contentFeatures.dlna.org", "DLNA.ORG_OP=00;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01700000000000000000000000000000")
 	}
-	flush := func() {
+
+	var out io.Writer = w
+	flush := func() error {
 		if f, ok := w.(http.Flusher); ok {
 			f.Flush()
 		}
+		return nil
 	}
-	if _, err := w.Write(WAVHeader(audio.SampleRate, audio.Channels)); err != nil {
+	if raw {
+		bw, closeConn, err := hijack(w, h)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer closeConn()
+		out, flush = bw, bw.Flush
+	} else {
+		for k, v := range h {
+			w.Header()[k] = v
+		}
+		w.WriteHeader(http.StatusOK)
+	}
+	if r.Method == http.MethodHead {
 		return
 	}
-	if _, err := w.Write(make([]byte, preroll*2)); err != nil {
+
+	ctx := r.Context()
+	if mp3 {
+		enc, err := newMP3Encoder(ctx, out, flush)
+		if err != nil {
+			s.log.Warn("start MP3 encoder", "err", err)
+			return
+		}
+		defer enc.Close()
+		out, flush = enc, func() error { return nil }
+		ctx = enc.ctx // ends when ffmpeg or the listener goes away
+	} else if _, err := out.Write(WAVHeader(audio.SampleRate, audio.Channels)); err != nil {
 		return
 	}
-	flush()
+	if _, err := out.Write(make([]byte, preroll*2)); err != nil {
+		return
+	}
+	if flush() != nil {
+		return
+	}
 
 	t := time.NewTicker(tick)
 	defer t.Stop()
 	start, sent := time.Now(), 0 // samples sent after the preroll
 	for {
 		select {
-		case <-r.Context().Done():
+		case <-ctx.Done():
 			return
 		case now := <-t.C:
 			if !s.member(l) {
@@ -226,12 +282,92 @@ func (s *Stream) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			l.queue = l.queue[k:]
 			l.mu.Unlock()
 			sent += due
-			if _, err := w.Write(buf); err != nil {
+			if _, err := out.Write(buf); err != nil {
 				return
 			}
-			flush()
+			if flush() != nil {
+				return
+			}
 		}
 	}
+}
+
+// hijack takes over the connection and writes the response head, so the
+// body can end with the connection rather than be chunked.
+func hijack(w http.ResponseWriter, h http.Header) (*bufio.Writer, func(), error) {
+	hj, ok := w.(http.Hijacker)
+	if !ok {
+		return nil, nil, errors.New("raw streams need HTTP/1")
+	}
+	conn, rw, err := hj.Hijack()
+	if err != nil {
+		return nil, nil, err
+	}
+	// A failed write shows up on the next flush.
+	_, _ = rw.WriteString("HTTP/1.0 200 OK\r\n")
+	h.Set("Connection", "close")
+	_ = h.Write(rw)
+	_, _ = rw.WriteString("\r\n")
+	return rw.Writer, func() { rw.Flush(); conn.Close() }, nil
+}
+
+// mp3Encoder pipes 16-bit PCM through ffmpeg and copies the MP3 out.
+type mp3Encoder struct {
+	cmd    *exec.Cmd
+	in     io.WriteCloser
+	ctx    context.Context
+	cancel context.CancelFunc
+	copied chan struct{}
+}
+
+func newMP3Encoder(parent context.Context, out io.Writer, flush func() error) (*mp3Encoder, error) {
+	ctx, cancel := context.WithCancel(parent)
+	cmd := exec.CommandContext(ctx, decode.FFmpeg, //nolint:gosec // ffmpeg from $PATH, fixed arguments
+		"-hide_banner", "-loglevel", "error", "-nostdin",
+		"-f", "s16le", "-ar", strconv.Itoa(audio.SampleRate), "-ac", strconv.Itoa(audio.Channels), "-i", "pipe:0",
+		"-f", "mp3", "-b:a", "320k", "-flush_packets", "1", "pipe:1")
+	in, err := cmd.StdinPipe()
+	if err != nil {
+		cancel()
+		return nil, err
+	}
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		cancel()
+		return nil, err
+	}
+	if err := cmd.Start(); err != nil {
+		cancel()
+		return nil, err
+	}
+	e := &mp3Encoder{cmd: cmd, in: in, ctx: ctx, cancel: cancel, copied: make(chan struct{})}
+	go func() {
+		defer close(e.copied)
+		defer cancel()
+		buf := make([]byte, 8<<10)
+		for {
+			n, err := stdout.Read(buf)
+			if n > 0 {
+				if _, werr := out.Write(buf[:n]); werr != nil || flush() != nil {
+					return
+				}
+			}
+			if err != nil {
+				return
+			}
+		}
+	}()
+	return e, nil
+}
+
+func (e *mp3Encoder) Write(b []byte) (int, error) { return e.in.Write(b) }
+
+// Close stops ffmpeg.
+func (e *mp3Encoder) Close() {
+	e.in.Close()
+	e.cancel()
+	<-e.copied
+	_ = e.cmd.Wait()
 }
 
 func (s *Stream) member(l *listener) bool {

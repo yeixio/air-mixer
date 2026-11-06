@@ -60,6 +60,7 @@ example the port is taken) nothing is saved and the error is returned.
 | `airplay` | `address` (RTSP listen address, default `:<airplay_port>`; each receiver needs its own port), `interface` (interface to advertise on, default `server.interface`) |
 | `radio` | `url` (required): an internet radio station, a PLS or M3U playlist, an HLS stream (`.m3u8`) or an audio file, over http, https, rtsp or rtmp |
 | `pulse` | `source` (name, description, a phone's Bluetooth address, or `<sink>.monitor`; default source if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`) |
+| `upnp` | `address`: the HTTP listen address for control points, such as `:49494` (default: a free port, which SSDP advertises) |
 | `matinee` | none: it shows up in Matinee as a player named after the server (see [Matinee](#matinee)) |
 
 A `radio` server plays its URL for as long as it is on. A station that
@@ -67,6 +68,13 @@ drops is reconnected with backoff (1 s, doubling up to a minute) and a
 file starts again when it ends. MP3 and WAV are decoded in Go; AAC, Ogg,
 Opus, FLAC, HLS, RTSP and RTMP need `ffmpeg` on the server's `$PATH`,
 which the Docker image includes.
+
+A `upnp` server is a UPnP/DLNA media renderer named after the server:
+apps such as BubbleUPnP, Hi-Fi Cast, foobar2000 or Windows' "Cast to
+Device" list it as a speaker and send it a URL, which it plays like a
+`radio` server, once per track (with `SetNextAVTransportURI` for gapless
+queues). It handles play, pause, stop, volume and mute, and sends GENA
+events so apps show its state.
 
 A `pulse` server records from a PulseAudio or PipeWire source: a line-in,
 a USB audio interface, the monitor of a sink, or a phone playing to the
@@ -99,6 +107,7 @@ reported by `/api/status`.
 | `local` | ignored | `delay_ms` |
 | `pulse` | ignored | `sink` (name, description or Bluetooth address; default sink if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`), `delay_ms` |
 | `cast` | the Cast device's `host` or `host:port` (default port 8009; speaker groups have their own port, which discovery gives) | none |
+| `upnp` | the renderer's device description URL, as discovery gives it; a bare host or `host:port` means a Sonos player | `format`: `wav`, `mp3` (needs ffmpeg), or empty for MP3 on Sonos with ffmpeg installed and WAV otherwise |
 | `snapcast` | snapserver's `host` or `host:port` of its TCP source (default port 4953) | `sample_rate` (default 48000, snapserver's default) |
 | `stream` | ignored | none; see [Streams](#streams) |
 | `matinee` | the Matinee player's id, from `/api/matinee/players` | `library_id`: the music library its station goes in (default: the first) |
@@ -119,6 +128,16 @@ stops and starts again. Cast devices buffer a live stream for a few
 seconds, so give the outputs that play alongside one a `delay_ms` to
 match. The device must be able to reach Air-Mixer's web port; set
 `server.public_url` if it can't be worked out.
+
+A `upnp` client plays on a UPnP/DLNA media renderer: Sonos, AV
+receivers, smart TVs, Kodi and the like. Like `cast`, it starts the
+renderer when audio starts (`SetAVTransportURI` and `Play`), stops it
+after a minute of silence, plays again if the renderer gives up on the
+stream, and steps aside when another app sets a different URI. Sonos gets
+MP3 through its `x-rincon-mp3radio` scheme, which it needs for endless
+streams; use a group's coordinator as the address. Renderers fetch the
+stream with `?raw=1`, a close-delimited body with DLNA's streaming
+headers, and `?format=mp3` when they get MP3.
 
 A `snapcast` client writes 16-bit stereo PCM into a TCP source on
 snapserver, which every Snapcast client then plays in sync. Add the source
@@ -327,7 +346,9 @@ the database is unavailable.
 most 30s. AirPlay speakers (`_raop._tcp`), Google Cast devices and groups
 (`_googlecast._tcp`, named as in the Google Home app) and Snapcast servers
 (`_snapcast._tcp`, given with the TCP source port 4953) are found over
-mDNS, over IPv4 alone on hosts without IPv6.
+mDNS, over IPv4 alone on hosts without IPv6. UPnP/DLNA renderers and Sonos
+players are found with an SSDP search for `MediaRenderer:1`; their
+address is their description URL.
 
 ```json
 {

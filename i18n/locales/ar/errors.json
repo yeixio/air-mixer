@@ -35,5 +35,7 @@
   "radio_bad_url": "يجب أن يكون url عنوان http أو https أو rtsp أو rtmp",
   "snapcast_needs_address": "يحتاج عميل Snapcast إلى عنوان snapserver",
   "sample_rate_range": "يجب أن تكون قيمة sample_rate بين 8000 و192000",
-  "cast_needs_address": "يحتاج عميل Google Cast إلى عنوان الجهاز"
+  "cast_needs_address": "يحتاج عميل Google Cast إلى عنوان الجهاز",
+  "upnp_needs_address": "يحتاج عميل UPnP/DLNA إلى عنوان URL لوصف العارض أو عنوان مشغّل Sonos",
+  "upnp_bad_format": "يجب أن تكون قيمة format هي wav أو mp3"
 }

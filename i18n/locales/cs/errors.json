@@ -35,5 +35,7 @@
   "radio_bad_url": "url musí být adresa http, https, rtsp nebo rtmp",
   "snapcast_needs_address": "Klient Snapcast potřebuje adresu snapserveru",
   "sample_rate_range": "sample_rate musí být mezi 8000 a 192000",
-  "cast_needs_address": "Klient Google Cast potřebuje adresu zařízení"
+  "cast_needs_address": "Klient Google Cast potřebuje adresu zařízení",
+  "upnp_needs_address": "Klient UPnP/DLNA potřebuje URL popisu rendereru nebo adresu přehrávače Sonos",
+  "upnp_bad_format": "format musí být wav nebo mp3"
 }

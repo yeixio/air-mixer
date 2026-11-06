@@ -8,9 +8,12 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/libp2p/zeroconf/v2"
+
+	"github.com/yeixio/air-mixer/internal/protocols/upnp"
 )
 
 // Device is a speaker found on the network.
@@ -39,7 +42,7 @@ type Service struct {
 // built-in one if none are given.
 func NewService(ds ...Discoverer) *Service {
 	if len(ds) == 0 {
-		ds = []Discoverer{NewAirPlay(), NewCast(), NewSnapcast()}
+		ds = []Discoverer{NewAirPlay(), NewCast(), NewSnapcast(), NewUPnP()}
 	}
 	return &Service{discoverers: ds}
 }
@@ -302,4 +305,58 @@ func (c *Cast) Discover(ctx context.Context, timeout time.Duration) ([]Device, e
 			Metadata:    meta,
 		}
 	})
+}
+
+// UPnP discovers UPnP/DLNA media renderers, Sonos players among them,
+// with an SSDP search, and reads each one's name from its description.
+type UPnP struct {
+	search func(ctx context.Context, target string, timeout time.Duration) ([]upnp.SearchResult, error)
+	name   func(ctx context.Context, location string) (name, model string, err error)
+}
+
+// NewUPnP returns a UPnP discoverer.
+func NewUPnP() *UPnP { return &UPnP{search: upnp.Search, name: upnp.Describe} }
+
+// Protocol returns "upnp".
+func (*UPnP) Protocol() string { return "upnp" }
+
+// Discover searches for media renderers for timeout.
+func (u *UPnP) Discover(ctx context.Context, timeout time.Duration) ([]Device, error) {
+	found, err := u.search(ctx, "urn:schemas-upnp-org:device:MediaRenderer:1", timeout)
+	if err != nil {
+		return nil, err
+	}
+	devices := make([]Device, len(found))
+	var wg sync.WaitGroup
+	for i, r := range found {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			d := Device{Protocol: "upnp", Address: r.Location, Metadata: map[string]string{"usn": r.USN, "server": r.Server}}
+			if host, port, err := net.SplitHostPort(hostOf(r.Location)); err == nil {
+				d.Port, _ = strconv.Atoi(port)
+				d.Metadata["host"] = host
+			}
+			ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+			name, model, err := u.name(ctx, r.Location)
+			cancel()
+			if err != nil || name == "" {
+				name = hostOf(r.Location)
+			}
+			d.Name = name
+			d.Description = "UPnP/DLNA renderer"
+			if model != "" {
+				d.Description += ": " + model
+			}
+			devices[i] = d
+		}()
+	}
+	wg.Wait()
+	return devices, nil
+}
+
+func hostOf(location string) string {
+	rest := strings.TrimPrefix(strings.TrimPrefix(location, "http://"), "https://")
+	host, _, _ := strings.Cut(rest, "/")
+	return host
 }

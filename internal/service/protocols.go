@@ -50,6 +50,9 @@ var protocolCatalog = []Protocol{
 		{Key: "source", Type: "text", Label: "fields.source", Hint: "fields.sourceHint", Placeholder: "alsa_input.usb-…"},
 		fieldPulseServer,
 	}},
+	{Name: "upnp", Kind: "server", Title: "UPnP/DLNA", Description: "protocols.upnpServer", Fields: []Field{
+		{Key: "address", Type: "text", Label: "fields.listen", Hint: "fields.listenHint", Placeholder: ":49494"},
+	}},
 	{Name: "matinee", Kind: "server", Title: "Matinee", Description: "protocols.matineeServer", Fields: []Field{}},
 
 	{Name: "airplay", Kind: "client", Title: "AirPlay", Description: "protocols.airplayClient", Discovery: true, Fields: []Field{
@@ -57,6 +60,10 @@ var protocolCatalog = []Protocol{
 	}},
 	{Name: "cast", Kind: "client", Title: "Google Cast", Description: "protocols.castClient", Discovery: true, Fields: []Field{
 		{Key: "address", Type: "text", Required: true, Label: "common.address", Hint: "fields.castAddressHint", Placeholder: "192.168.1.40:8009"},
+	}},
+	{Name: "upnp", Kind: "client", Title: "UPnP/DLNA", Description: "protocols.upnpClient", Discovery: true, Fields: []Field{
+		{Key: "address", Type: "text", Required: true, Label: "common.address", Hint: "fields.upnpAddressHint", Placeholder: "http://192.168.1.50:1400/xml/device_description.xml"},
+		{Key: "format", Type: "text", Label: "fields.format", Hint: "fields.formatHint", Placeholder: "wav"},
 	}},
 	{Name: "pulse", Kind: "client", Title: "PipeWire / PulseAudio", Description: "protocols.pulseClient", Fields: []Field{
 		{Key: "sink", Type: "text", Label: "fields.sink", Hint: "fields.sinkHint", Placeholder: "AA:BB:CC:DD:EE:FF"},

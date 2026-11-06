@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire 또는 PulseAudio: 라인 입력, USB 오디오 인터페이스 또는 Bluetooth로 재생 중인 휴대폰을 녹음",
     "castClient": "Google Cast: Chromecast, Nest 및 Google Home 스피커, 스피커 그룹, Cast 지원 TV에서 재생",
     "pulseClient": "PipeWire 또는 PulseAudio: 사운드 카드나 페어링된 Bluetooth 스피커에서 재생",
-    "snapcastClient": "Snapcast: 모든 Snapcast 클라이언트에서 동기화해 재생"
+    "snapcastClient": "Snapcast: 모든 Snapcast 클라이언트에서 동기화해 재생",
+    "upnpServer": "UPnP/DLNA: BubbleUPnP 같은 DLNA 앱에 스피커로 표시되고 앱이 보내는 것을 재생",
+    "upnpClient": "UPnP/DLNA: Sonos, AV 리시버, 스마트 TV 및 기타 DLNA 렌더러에서 재생"
   },
   "servers": {
     "title": "입력 서버",
@@ -149,7 +151,12 @@
     "sampleRate": "샘플 레이트(선택)",
     "sampleRateHint": "snapserver 소스의 sampleformat에 있는 레이트입니다. snapserver 기본값인 48000을 쓰려면 비워 두세요.",
     "snapcastAddressHint": "snapserver 호스트, 그리고 TCP 소스 포트가 4953이 아니면 그 포트입니다.",
-    "castAddressHint": "기기의 IP 주소, 그리고 포트가 8009가 아니면 그 포트입니다(스피커 그룹은 다른 포트를 씁니다). Cast 기기는 몇 초 늦게 재생되므로 다른 스피커에도 그만큼 지연을 주세요."
+    "castAddressHint": "기기의 IP 주소, 그리고 포트가 8009가 아니면 그 포트입니다(스피커 그룹은 다른 포트를 씁니다). Cast 기기는 몇 초 늦게 재생되므로 다른 스피커에도 그만큼 지연을 주세요.",
+    "listen": "수신 주소(선택)",
+    "listenHint": "앱이 이 입력에 접속하는 포트입니다(예: :49494). 빈 포트를 쓰려면 비워 두세요.",
+    "upnpAddressHint": "기기 찾기에서 얻은 렌더러의 설명 URL 또는 Sonos 플레이어의 IP 주소입니다.",
+    "format": "스트림 형식(선택)",
+    "formatHint": "wav 또는 mp3입니다. 비워 두면 Sonos에는 MP3, 그 외에는 WAV를 보냅니다. MP3에는 ffmpeg가 필요합니다."
   },
   "pairing": {
     "title": "AirPlay 페어링",

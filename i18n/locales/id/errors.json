@@ -35,5 +35,7 @@
   "radio_bad_url": "url harus berupa alamat http, https, rtsp, atau rtmp",
   "snapcast_needs_address": "Klien Snapcast memerlukan alamat snapserver",
   "sample_rate_range": "sample_rate harus antara 8000 dan 192000",
-  "cast_needs_address": "Klien Google Cast memerlukan alamat perangkat"
+  "cast_needs_address": "Klien Google Cast memerlukan alamat perangkat",
+  "upnp_needs_address": "Klien UPnP/DLNA memerlukan URL deskripsi renderer atau alamat pemutar Sonos",
+  "upnp_bad_format": "format harus wav atau mp3"
 }

@@ -35,5 +35,7 @@
   "radio_bad_url": "url bir http, https, rtsp veya rtmp adresi olmalı",
   "snapcast_needs_address": "Snapcast istemcisi için snapserver adresi gerekir",
   "sample_rate_range": "sample_rate 8000 ile 192000 arasında olmalı",
-  "cast_needs_address": "Google Cast istemcisi için cihazın adresi gerekir"
+  "cast_needs_address": "Google Cast istemcisi için cihazın adresi gerekir",
+  "upnp_needs_address": "UPnP/DLNA istemcisi için oynatıcının açıklama URL'si veya bir Sonos oynatıcının adresi gerekir",
+  "upnp_bad_format": "format wav veya mp3 olmalı"
 }

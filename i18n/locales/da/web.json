@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire eller PulseAudio: optag en linjeindgang, et USB-lydkort eller en telefon, der afspiller via Bluetooth",
     "castClient": "Google Cast: afspil på Chromecast, Nest- og Google Home-højttalere, højttalergrupper og tv'er med Cast",
     "pulseClient": "PipeWire eller PulseAudio: afspil på et lydkort eller en parret Bluetooth-højttaler",
-    "snapcastClient": "Snapcast: afspil synkront på alle Snapcast-klienter"
+    "snapcastClient": "Snapcast: afspil synkront på alle Snapcast-klienter",
+    "upnpServer": "UPnP/DLNA: vises som højttaler i DLNA-apps som BubbleUPnP og afspiller det, de sender",
+    "upnpClient": "UPnP/DLNA: afspil på Sonos, AV-receivere, smart-tv'er og andre DLNA-renderere"
   },
   "servers": {
     "title": "Indgangsservere",
@@ -150,7 +152,12 @@
     "sampleRate": "Samplingsfrekvens (valgfri)",
     "sampleRateHint": "Frekvensen i snapserver-kildens sampleformat. Lad feltet stå tomt for 48000, snapservers standard.",
     "snapcastAddressHint": "snapserver-værten og porten på dens TCP-kilde, hvis den ikke er 4953.",
-    "castAddressHint": "Enhedens IP-adresse og dens port, hvis den ikke er 8009 (højttalergrupper bruger en anden). Cast-enheder spiller et par sekunder senere, så forsink de andre højttalere tilsvarende."
+    "castAddressHint": "Enhedens IP-adresse og dens port, hvis den ikke er 8009 (højttalergrupper bruger en anden). Cast-enheder spiller et par sekunder senere, så forsink de andre højttalere tilsvarende.",
+    "listen": "Lytteadresse (valgfri)",
+    "listenHint": "Porten, apps når denne indgang på, f.eks. :49494. Lad feltet stå tomt for en ledig port.",
+    "upnpAddressHint": "Rendererens beskrivelses-URL, som Find enheder giver den, eller IP-adressen på en Sonos-afspiller.",
+    "format": "Streamformat (valgfri)",
+    "formatHint": "wav eller mp3. Lad feltet stå tomt for MP3 på Sonos og WAV på alt andet. MP3 kræver ffmpeg."
   },
   "pairing": {
     "title": "AirPlay-parring",

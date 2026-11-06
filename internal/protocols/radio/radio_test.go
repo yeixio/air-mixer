@@ -136,3 +136,32 @@ func TestRedact(t *testing.T) {
 		t.Errorf("redact = %q", got)
 	}
 }
+
+func TestOnce(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "audio/wav")
+		w.Write(wav())
+	}))
+	defer ts.Close()
+	ended := make(chan error, 1)
+	s := New(Options{URL: ts.URL + "/a.wav", Once: true, Ended: func(err error) { ended <- err }, Logger: quiet})
+	if err := s.Start(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	defer s.Stop()
+	go func() {
+		for range s.Audio() {
+		}
+	}()
+	select {
+	case err := <-ended:
+		if err != nil {
+			t.Fatal(err)
+		}
+	case <-time.After(3 * time.Second):
+		t.Fatal("never ended")
+	}
+	if p := s.Played(); p < 90*time.Millisecond || p > 110*time.Millisecond {
+		t.Errorf("Played = %v, want 100ms", p)
+	}
+}

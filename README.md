@@ -29,8 +29,9 @@ protocol they speak.
 Today it speaks classic AirPlay in both directions, plays internet radio,
 records any PulseAudio or PipeWire source (a line-in, or a phone playing
 over Bluetooth), and plays on the machine's own sound card, any PulseAudio
-or PipeWire sink including paired Bluetooth speakers, Google Cast devices
-and Snapcast. UPnP/DLNA and AirPlay 2 are on the [roadmap](ROADMAP.md).
+or PipeWire sink including paired Bluetooth speakers, Google Cast devices,
+Sonos and other UPnP/DLNA renderers, and Snapcast. It shows up as a speaker
+in DLNA apps too. AirPlay 2 is on the [roadmap](ROADMAP.md).
 
 <p align="center">
   <img src="docs/assets/web-ui.png" alt="The Air-Mixer web UI with AirPlay inputs, speakers and two routes" width="85%">
@@ -52,6 +53,9 @@ and Snapcast. UPnP/DLNA and AirPlay 2 are on the [roadmap](ROADMAP.md).
 - **Google Cast output.** Plays on Chromecast, Nest and Google Home
   speakers, speaker groups and Cast TVs, and lets go of them when it goes
   quiet or someone casts something else.
+- **UPnP/DLNA, both ways.** Plays on Sonos, AV receivers, smart TVs and
+  other DLNA renderers, and appears as a renderer that apps like
+  BubbleUPnP and Windows' "Cast to Device" can play to.
 - **Snapcast output.** Feeds a snapserver TCP source, so every Snapcast
   client in the house plays in sync.
 - **Local output.** Plays on the server's own default audio device.
@@ -78,8 +82,8 @@ and Snapcast. UPnP/DLNA and AirPlay 2 are on the [roadmap](ROADMAP.md).
 - **Home Assistant.** A [custom integration](docs/HOME_ASSISTANT.md)
   makes every output a media player, so Home Assistant can send speech,
   doorbells and house-wide alarms.
-- **Discovery.** Finds AirPlay speakers, Google Cast devices and Snapcast
-  servers on your network.
+- **Discovery.** Finds AirPlay speakers, Google Cast devices, Sonos and
+  other DLNA renderers, and Snapcast servers on your network.
 - **Web UI and REST API.** Everything the UI does is available over a
   [documented JSON API](docs/API.md).
 - **32 languages.** The web UI and API errors come in the same languages as

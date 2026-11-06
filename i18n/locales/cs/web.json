@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire nebo PulseAudio: nahrávej linkový vstup, USB zvukové rozhraní nebo telefon hrající přes Bluetooth",
     "castClient": "Google Cast: přehrávej na Chromecastu, reproduktorech Nest a Google Home, skupinách reproduktorů a televizích s Cast",
     "pulseClient": "PipeWire nebo PulseAudio: přehrávej na zvukové kartě nebo spárovaném Bluetooth reproduktoru",
-    "snapcastClient": "Snapcast: přehrávej synchronně na všech klientech Snapcast"
+    "snapcastClient": "Snapcast: přehrávej synchronně na všech klientech Snapcast",
+    "upnpServer": "UPnP/DLNA: zobrazí se jako reproduktor v DLNA aplikacích, jako je BubbleUPnP, a přehraje, co pošlou",
+    "upnpClient": "UPnP/DLNA: přehrávej na Sonos, AV receiverech, chytrých televizích a dalších DLNA rendererech"
   },
   "servers": {
     "title": "Vstupní servery",
@@ -152,7 +154,12 @@
     "sampleRate": "Vzorkovací frekvence (nepovinné)",
     "sampleRateHint": "Frekvence v sampleformat zdroje snapserveru. Nech prázdné pro 48000, výchozí hodnotu snapserveru.",
     "snapcastAddressHint": "Hostitel snapserveru a port jeho TCP zdroje, pokud to není 4953.",
-    "castAddressHint": "IP adresa zařízení a jeho port, pokud to není 8009 (skupiny reproduktorů používají jiný). Zařízení Cast hrají o pár sekund později, proto ostatní reproduktory odpovídajícím způsobem zpozdi."
+    "castAddressHint": "IP adresa zařízení a jeho port, pokud to není 8009 (skupiny reproduktorů používají jiný). Zařízení Cast hrají o pár sekund později, proto ostatní reproduktory odpovídajícím způsobem zpozdi.",
+    "listen": "Adresa pro naslouchání (nepovinné)",
+    "listenHint": "Port, na kterém aplikace tento vstup najdou, například :49494. Pro volný port nech prázdné.",
+    "upnpAddressHint": "URL popisu rendereru, jak ji vrátí Najít zařízení, nebo IP adresa přehrávače Sonos.",
+    "format": "Formát streamu (nepovinné)",
+    "formatHint": "wav nebo mp3. Nech prázdné pro MP3 na Sonos a WAV na všem ostatním. MP3 potřebuje ffmpeg."
   },
   "pairing": {
     "title": "Párování AirPlay",

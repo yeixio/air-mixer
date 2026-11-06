@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire atau PulseAudio: rekam line-in, antarmuka audio USB, atau ponsel yang memutar lewat Bluetooth",
     "castClient": "Google Cast: putar di Chromecast, speaker Nest dan Google Home, grup speaker, dan TV dengan Cast",
     "pulseClient": "PipeWire atau PulseAudio: putar di kartu suara atau speaker Bluetooth yang dipasangkan",
-    "snapcastClient": "Snapcast: putar serempak di setiap klien Snapcast"
+    "snapcastClient": "Snapcast: putar serempak di setiap klien Snapcast",
+    "upnpServer": "UPnP/DLNA: muncul sebagai speaker di aplikasi DLNA seperti BubbleUPnP dan memutar apa yang dikirim",
+    "upnpClient": "UPnP/DLNA: putar di Sonos, receiver AV, smart TV, dan renderer DLNA lainnya"
   },
   "servers": {
     "title": "Server input",
@@ -149,7 +151,12 @@
     "sampleRate": "Laju sampel (opsional)",
     "sampleRateHint": "Laju pada sampleformat sumber snapserver. Kosongkan untuk 48000, bawaan snapserver.",
     "snapcastAddressHint": "Host snapserver, dan port sumber TCP-nya jika bukan 4953.",
-    "castAddressHint": "Alamat IP perangkat, dan port-nya jika bukan 8009 (grup speaker memakai port lain). Perangkat Cast berbunyi beberapa detik lebih lambat, jadi tunda speaker lain agar selaras."
+    "castAddressHint": "Alamat IP perangkat, dan port-nya jika bukan 8009 (grup speaker memakai port lain). Perangkat Cast berbunyi beberapa detik lebih lambat, jadi tunda speaker lain agar selaras.",
+    "listen": "Alamat dengar (opsional)",
+    "listenHint": "Port yang dipakai aplikasi untuk menjangkau input ini, misalnya :49494. Kosongkan untuk port bebas.",
+    "upnpAddressHint": "URL deskripsi renderer, seperti yang diberikan Cari Perangkat, atau alamat IP pemutar Sonos.",
+    "format": "Format stream (opsional)",
+    "formatHint": "wav atau mp3. Kosongkan untuk MP3 di Sonos dan WAV di perangkat lain. MP3 memerlukan ffmpeg."
   },
   "pairing": {
     "title": "Pemasangan AirPlay",

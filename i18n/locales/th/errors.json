@@ -35,5 +35,7 @@
   "radio_bad_url": "url ต้องเป็นที่อยู่ http, https, rtsp หรือ rtmp",
   "snapcast_needs_address": "ไคลเอนต์ Snapcast ต้องมีที่อยู่ของ snapserver",
   "sample_rate_range": "sample_rate ต้องอยู่ระหว่าง 8000 ถึง 192000",
-  "cast_needs_address": "ไคลเอนต์ Google Cast ต้องมีที่อยู่ของอุปกรณ์"
+  "cast_needs_address": "ไคลเอนต์ Google Cast ต้องมีที่อยู่ของอุปกรณ์",
+  "upnp_needs_address": "ไคลเอนต์ UPnP/DLNA ต้องมี URL คำอธิบายของ renderer หรือที่อยู่ของเครื่องเล่น Sonos",
+  "upnp_bad_format": "format ต้องเป็น wav หรือ mp3"
 }

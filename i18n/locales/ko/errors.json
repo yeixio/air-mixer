@@ -35,5 +35,7 @@
   "radio_bad_url": "url은 http, https, rtsp 또는 rtmp 주소여야 합니다",
   "snapcast_needs_address": "Snapcast 클라이언트에는 snapserver 주소가 필요합니다",
   "sample_rate_range": "sample_rate는 8000에서 192000 사이여야 합니다",
-  "cast_needs_address": "Google Cast 클라이언트에는 기기 주소가 필요합니다"
+  "cast_needs_address": "Google Cast 클라이언트에는 기기 주소가 필요합니다",
+  "upnp_needs_address": "UPnP/DLNA 클라이언트에는 렌더러의 설명 URL 또는 Sonos 플레이어 주소가 필요합니다",
+  "upnp_bad_format": "format은 wav 또는 mp3여야 합니다"
 }

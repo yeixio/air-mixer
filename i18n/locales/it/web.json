@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire o PulseAudio: registra un ingresso di linea, un'interfaccia audio USB o un telefono che riproduce via Bluetooth",
     "castClient": "Google Cast: riproduci su Chromecast, altoparlanti Nest e Google Home, gruppi di altoparlanti e TV con Cast",
     "pulseClient": "PipeWire o PulseAudio: riproduci su una scheda audio o su un altoparlante Bluetooth associato",
-    "snapcastClient": "Snapcast: riproduci in sincrono su ogni client Snapcast"
+    "snapcastClient": "Snapcast: riproduci in sincrono su ogni client Snapcast",
+    "upnpServer": "UPnP/DLNA: appare come altoparlante nelle app DLNA come BubbleUPnP e riproduce ciò che inviano",
+    "upnpClient": "UPnP/DLNA: riproduci su Sonos, sintoamplificatori AV, smart TV e altri renderer DLNA"
   },
   "servers": {
     "title": "Server di ingresso",
@@ -151,7 +153,12 @@
     "sampleRate": "Frequenza di campionamento (facoltativa)",
     "sampleRateHint": "La frequenza nel sampleformat della sorgente di snapserver. Lascia vuoto per 48000, il valore predefinito di snapserver.",
     "snapcastAddressHint": "L'host di snapserver e la porta della sua sorgente TCP, se non è 4953.",
-    "castAddressHint": "L'indirizzo IP del dispositivo e la sua porta, se non è 8009 (i gruppi di altoparlanti ne usano un'altra). I dispositivi Cast suonano qualche secondo in ritardo, quindi ritarda gli altri altoparlanti di conseguenza."
+    "castAddressHint": "L'indirizzo IP del dispositivo e la sua porta, se non è 8009 (i gruppi di altoparlanti ne usano un'altra). I dispositivi Cast suonano qualche secondo in ritardo, quindi ritarda gli altri altoparlanti di conseguenza.",
+    "listen": "Indirizzo di ascolto (facoltativo)",
+    "listenHint": "La porta da cui le app raggiungono questo ingresso, come :49494. Lascia vuoto per una porta libera.",
+    "upnpAddressHint": "L'URL di descrizione del renderer, come lo fornisce Trova dispositivi, o l'indirizzo IP di un lettore Sonos.",
+    "format": "Formato dello stream (facoltativo)",
+    "formatHint": "wav o mp3. Lascia vuoto per MP3 su Sonos e WAV su tutto il resto. MP3 richiede ffmpeg."
   },
   "pairing": {
     "title": "Abbinamento AirPlay",

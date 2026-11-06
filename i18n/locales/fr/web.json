@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire ou PulseAudio : enregistrer une entrée ligne, une interface audio USB ou un téléphone qui joue en Bluetooth",
     "castClient": "Google Cast : jouer sur Chromecast, les enceintes Nest et Google Home, les groupes d'enceintes et les téléviseurs Cast",
     "pulseClient": "PipeWire ou PulseAudio : jouer sur une carte son ou une enceinte Bluetooth appairée",
-    "snapcastClient": "Snapcast : jouer en synchro sur tous les clients Snapcast"
+    "snapcastClient": "Snapcast : jouer en synchro sur tous les clients Snapcast",
+    "upnpServer": "UPnP/DLNA : apparaît comme enceinte dans les apps DLNA comme BubbleUPnP et joue ce qu'elles envoient",
+    "upnpClient": "UPnP/DLNA : jouer sur Sonos, les amplis AV, les téléviseurs connectés et autres renderers DLNA"
   },
   "servers": {
     "title": "Serveurs d’entrée",
@@ -151,7 +153,12 @@
     "sampleRate": "Fréquence d'échantillonnage (facultatif)",
     "sampleRateHint": "La fréquence du sampleformat de la source snapserver. Laissez vide pour 48000, la valeur par défaut de snapserver.",
     "snapcastAddressHint": "L'hôte snapserver, et le port de sa source TCP s'il n'est pas 4953.",
-    "castAddressHint": "L'adresse IP de l'appareil, et son port s'il n'est pas 8009 (les groupes d'enceintes en utilisent un autre). Les appareils Cast jouent quelques secondes en retard : retardez les autres enceintes d'autant."
+    "castAddressHint": "L'adresse IP de l'appareil, et son port s'il n'est pas 8009 (les groupes d'enceintes en utilisent un autre). Les appareils Cast jouent quelques secondes en retard : retardez les autres enceintes d'autant.",
+    "listen": "Adresse d'écoute (facultatif)",
+    "listenHint": "Le port par lequel les apps joignent cette entrée, comme :49494. Laissez vide pour un port libre.",
+    "upnpAddressHint": "L'URL de description du renderer, telle que Trouver des appareils la donne, ou l'adresse IP d'un lecteur Sonos.",
+    "format": "Format du flux (facultatif)",
+    "formatHint": "wav ou mp3. Laissez vide pour du MP3 sur Sonos et du WAV partout ailleurs. Le MP3 nécessite ffmpeg."
   },
   "pairing": {
     "title": "Jumelage AirPlay",

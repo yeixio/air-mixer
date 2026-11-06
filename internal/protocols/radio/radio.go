@@ -18,6 +18,7 @@ import (
 	"net/url"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/yeixio/air-mixer/internal/audio/decode"
@@ -46,6 +47,11 @@ var (
 type Options struct {
 	ID, Name string
 	URL      string
+	// Once plays the URL a single time instead of for as long as the
+	// input is on, then calls Ended with why it stopped (nil at the end
+	// of a file). The UPnP renderer input plays tracks this way.
+	Once  bool
+	Ended func(error)
 	// HTTP is the client for fetching; http.DefaultClient if nil.
 	HTTP   *http.Client
 	Logger *slog.Logger
@@ -61,6 +67,8 @@ type Server struct {
 	cancel context.CancelFunc
 	done   chan struct{}
 	err    error // why the last attempt failed
+	frames atomic.Int64
+	rate   atomic.Int64
 }
 
 // New returns a radio input. Call Start to begin playing.
@@ -115,8 +123,24 @@ func (s *Server) Stop() error {
 	return nil
 }
 
+// Played is how much of the current stream has been played.
+func (s *Server) Played() time.Duration {
+	r := s.rate.Load()
+	if r == 0 {
+		return 0
+	}
+	return time.Duration(s.frames.Load()) * time.Second / time.Duration(r)
+}
+
 func (s *Server) run(ctx context.Context) {
 	defer close(s.done)
+	if s.opts.Once {
+		err := s.play(ctx)
+		if ctx.Err() == nil && s.opts.Ended != nil {
+			s.opts.Ended(err)
+		}
+		return
+	}
 	backoff := minBackoff
 	for {
 		start := time.Now()
@@ -160,11 +184,14 @@ func (s *Server) play(ctx context.Context) error {
 	buf := make([]float32, max(1, f.SampleRate*int(chunk/time.Millisecond)/1000)*f.Channels)
 	start := time.Now()
 	var frames int64
+	s.frames.Store(0)
+	s.rate.Store(int64(f.SampleRate))
 	for {
 		n, rerr := dec.Read(buf)
 		if n > 0 {
 			p := protocols.Packet{Samples: append([]float32(nil), buf[:n]...), Format: f}
 			frames += int64(n / f.Channels)
+			s.frames.Store(frames)
 			// A live station arrives in real time; a file must not be
 			// played faster than that.
 			ahead := time.Duration(frames)*time.Second/time.Duration(f.SampleRate) - time.Since(start)

@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire یا PulseAudio: ضبط ورودی لاین، رابط صوتی USB یا گوشی‌ای که از طریق Bluetooth پخش می‌کند",
     "castClient": "Google Cast: پخش روی Chromecast، بلندگوهای Nest و Google Home، گروه‌های بلندگو و تلویزیون‌های دارای Cast",
     "pulseClient": "PipeWire یا PulseAudio: پخش روی کارت صدا یا بلندگوی Bluetooth جفت‌شده",
-    "snapcastClient": "Snapcast: پخش هم‌زمان روی همهٔ کلاینت‌های Snapcast"
+    "snapcastClient": "Snapcast: پخش هم‌زمان روی همهٔ کلاینت‌های Snapcast",
+    "upnpServer": "UPnP/DLNA: در برنامه‌های DLNA مانند BubbleUPnP به‌صورت بلندگو دیده می‌شود و آنچه می‌فرستند را پخش می‌کند",
+    "upnpClient": "UPnP/DLNA: پخش روی Sonos، گیرنده‌های AV، تلویزیون‌های هوشمند و دیگر رندررهای DLNA"
   },
   "servers": {
     "title": "سرورهای ورودی",
@@ -150,7 +152,12 @@
     "sampleRate": "نرخ نمونه‌برداری (اختیاری)",
     "sampleRateHint": "نرخِ sampleformat منبع snapserver. برای 48000، پیش‌فرض snapserver، خالی بگذارید.",
     "snapcastAddressHint": "میزبان snapserver، و درگاه منبع TCP آن اگر 4953 نیست.",
-    "castAddressHint": "نشانی IP دستگاه، و درگاه آن اگر 8009 نیست (گروه‌های بلندگو درگاه دیگری دارند). دستگاه‌های Cast چند ثانیه دیرتر پخش می‌کنند، پس بلندگوهای دیگر را به همان اندازه تأخیر دهید."
+    "castAddressHint": "نشانی IP دستگاه، و درگاه آن اگر 8009 نیست (گروه‌های بلندگو درگاه دیگری دارند). دستگاه‌های Cast چند ثانیه دیرتر پخش می‌کنند، پس بلندگوهای دیگر را به همان اندازه تأخیر دهید.",
+    "listen": "نشانی شنود (اختیاری)",
+    "listenHint": "درگاهی که برنامه‌ها از آن به این ورودی می‌رسند، مانند ‎:49494. برای یک درگاه آزاد خالی بگذارید.",
+    "upnpAddressHint": "URL توضیحات رندرر، همان‌طور که «یافتن دستگاه‌ها» می‌دهد، یا نشانی IP یک پخش‌کنندهٔ Sonos.",
+    "format": "قالب جریان (اختیاری)",
+    "formatHint": "wav یا mp3. برای MP3 روی Sonos و WAV روی بقیه خالی بگذارید. MP3 به ffmpeg نیاز دارد."
   },
   "pairing": {
     "title": "جفت‌سازی AirPlay",

@@ -365,7 +365,7 @@ func TestFactory(t *testing.T) {
 	if _, err := f.Server(&db.Server{Protocol: "airplay", Config: "{"}); !isInvalid(err) {
 		t.Errorf("bad JSON = %v", err)
 	}
-	if _, err := f.Server(&db.Server{Protocol: "upnp"}); !isInvalid(err) {
+	if _, err := f.Server(&db.Server{Protocol: "dlna"}); !isInvalid(err) {
 		t.Errorf("unknown protocol = %v", err)
 	}
 

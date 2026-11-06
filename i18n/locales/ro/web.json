@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire sau PulseAudio: înregistrează o intrare line-in, o interfață audio USB sau un telefon care redă prin Bluetooth",
     "castClient": "Google Cast: redă pe Chromecast, boxe Nest și Google Home, grupuri de boxe și televizoare cu Cast",
     "pulseClient": "PipeWire sau PulseAudio: redă pe o placă de sunet sau pe o boxă Bluetooth asociată",
-    "snapcastClient": "Snapcast: redă sincronizat pe fiecare client Snapcast"
+    "snapcastClient": "Snapcast: redă sincronizat pe fiecare client Snapcast",
+    "upnpServer": "UPnP/DLNA: apare ca boxă în aplicațiile DLNA, precum BubbleUPnP, și redă ce trimit",
+    "upnpClient": "UPnP/DLNA: redă pe Sonos, receivere AV, televizoare smart și alte renderere DLNA"
   },
   "servers": {
     "title": "Servere de intrare",
@@ -151,7 +153,12 @@
     "sampleRate": "Rată de eșantionare (opțional)",
     "sampleRateHint": "Rata din sampleformat a sursei snapserver. Lasă gol pentru 48000, valoarea implicită a snapserver.",
     "snapcastAddressHint": "Gazda snapserver și portul sursei sale TCP, dacă nu este 4953.",
-    "castAddressHint": "Adresa IP a dispozitivului și portul, dacă nu este 8009 (grupurile de boxe folosesc altul). Dispozitivele Cast redau cu câteva secunde mai târziu, așa că întârzie celelalte boxe la fel."
+    "castAddressHint": "Adresa IP a dispozitivului și portul, dacă nu este 8009 (grupurile de boxe folosesc altul). Dispozitivele Cast redau cu câteva secunde mai târziu, așa că întârzie celelalte boxe la fel.",
+    "listen": "Adresă de ascultare (opțional)",
+    "listenHint": "Portul prin care aplicațiile ajung la această intrare, de exemplu :49494. Lasă gol pentru un port liber.",
+    "upnpAddressHint": "URL-ul de descriere al rendererului, cum îl dă Găsește dispozitive, sau adresa IP a unui player Sonos.",
+    "format": "Formatul stream-ului (opțional)",
+    "formatHint": "wav sau mp3. Lasă gol pentru MP3 pe Sonos și WAV pe orice altceva. MP3 necesită ffmpeg."
   },
   "pairing": {
     "title": "Asociere AirPlay",

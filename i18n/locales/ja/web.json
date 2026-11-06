@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire または PulseAudio：ライン入力、USB オーディオインターフェイス、Bluetooth で再生中のスマートフォンを録音",
     "castClient": "Google Cast：Chromecast、Nest や Google Home のスピーカー、スピーカーグループ、Cast 対応テレビで再生",
     "pulseClient": "PipeWire または PulseAudio：サウンドカードやペアリング済みの Bluetooth スピーカーで再生",
-    "snapcastClient": "Snapcast：すべての Snapcast クライアントで同期して再生"
+    "snapcastClient": "Snapcast：すべての Snapcast クライアントで同期して再生",
+    "upnpServer": "UPnP/DLNA：BubbleUPnP などの DLNA アプリにスピーカーとして表示され、送られたものを再生",
+    "upnpClient": "UPnP/DLNA：Sonos、AV アンプ、スマートテレビなどの DLNA レンダラーで再生"
   },
   "servers": {
     "title": "入力サーバー",
@@ -149,7 +151,12 @@
     "sampleRate": "サンプルレート（任意）",
     "sampleRateHint": "snapserver ソースの sampleformat のレート。空欄なら snapserver のデフォルトの 48000 です。",
     "snapcastAddressHint": "snapserver のホスト。TCP ソースのポートが 4953 でなければそのポートも。",
-    "castAddressHint": "デバイスの IP アドレス。ポートが 8009 でなければそのポートも（スピーカーグループは別のポートを使います）。Cast デバイスは数秒遅れて鳴るので、ほかのスピーカーにも同じだけ遅延を設定してください。"
+    "castAddressHint": "デバイスの IP アドレス。ポートが 8009 でなければそのポートも（スピーカーグループは別のポートを使います）。Cast デバイスは数秒遅れて鳴るので、ほかのスピーカーにも同じだけ遅延を設定してください。",
+    "listen": "待ち受けアドレス（任意）",
+    "listenHint": "アプリがこの入力に接続するポート（例：:49494）。空欄なら空いているポートを使います。",
+    "upnpAddressHint": "「デバイスを探す」で得られるレンダラーの説明 URL、または Sonos プレーヤーの IP アドレス。",
+    "format": "ストリーム形式（任意）",
+    "formatHint": "wav または mp3。空欄なら Sonos には MP3、それ以外には WAV を送ります。MP3 には ffmpeg が必要です。"
   },
   "pairing": {
     "title": "AirPlay のペアリング",

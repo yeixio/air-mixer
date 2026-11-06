@@ -35,5 +35,7 @@
   "radio_bad_url": "url måste vara en http-, https-, rtsp- eller rtmp-adress",
   "snapcast_needs_address": "En Snapcast-klient behöver snapserverns adress",
   "sample_rate_range": "sample_rate måste vara mellan 8000 och 192000",
-  "cast_needs_address": "En Google Cast-klient behöver enhetens adress"
+  "cast_needs_address": "En Google Cast-klient behöver enhetens adress",
+  "upnp_needs_address": "En UPnP/DLNA-klient behöver rendererns beskrivnings-URL eller adressen till en Sonos-spelare",
+  "upnp_bad_format": "format måste vara wav eller mp3"
 }

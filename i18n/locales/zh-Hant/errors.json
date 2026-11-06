@@ -35,5 +35,7 @@
   "radio_bad_url": "url 必須是 http、https、rtsp 或 rtmp 位址",
   "snapcast_needs_address": "Snapcast 用戶端需要 snapserver 的位址",
   "sample_rate_range": "sample_rate 必須介於 8000 到 192000 之間",
-  "cast_needs_address": "Google Cast 用戶端需要裝置的位址"
+  "cast_needs_address": "Google Cast 用戶端需要裝置的位址",
+  "upnp_needs_address": "UPnP/DLNA 用戶端需要渲染器的描述 URL 或 Sonos 播放器的位址",
+  "upnp_bad_format": "format 必須是 wav 或 mp3"
 }

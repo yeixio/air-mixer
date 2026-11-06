@@ -35,5 +35,7 @@
   "radio_bad_url": "url trebuie să fie o adresă http, https, rtsp sau rtmp",
   "snapcast_needs_address": "Un client Snapcast are nevoie de adresa snapserver-ului",
   "sample_rate_range": "sample_rate trebuie să fie între 8000 și 192000",
-  "cast_needs_address": "Un client Google Cast are nevoie de adresa dispozitivului"
+  "cast_needs_address": "Un client Google Cast are nevoie de adresa dispozitivului",
+  "upnp_needs_address": "Un client UPnP/DLNA are nevoie de URL-ul de descriere al rendererului sau de adresa unui player Sonos",
+  "upnp_bad_format": "format trebuie să fie wav sau mp3"
 }

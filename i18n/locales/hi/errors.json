@@ -35,5 +35,7 @@
   "radio_bad_url": "url एक http, https, rtsp या rtmp पता होना चाहिए",
   "snapcast_needs_address": "Snapcast क्लाइंट को snapserver का पता चाहिए",
   "sample_rate_range": "sample_rate 8000 और 192000 के बीच होना चाहिए",
-  "cast_needs_address": "Google Cast क्लाइंट को डिवाइस का पता चाहिए"
+  "cast_needs_address": "Google Cast क्लाइंट को डिवाइस का पता चाहिए",
+  "upnp_needs_address": "UPnP/DLNA क्लाइंट को रेंडरर का विवरण URL या किसी Sonos प्लेयर का पता चाहिए",
+  "upnp_bad_format": "format wav या mp3 होना चाहिए"
 }

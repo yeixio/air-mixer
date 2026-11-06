@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire 或 PulseAudio：錄製線路輸入、USB 音訊介面或透過藍牙播放的手機",
     "castClient": "Google Cast：在 Chromecast、Nest 和 Google Home 喇叭、喇叭群組以及支援 Cast 的電視上播放",
     "pulseClient": "PipeWire 或 PulseAudio：在音效卡或已配對的藍牙喇叭上播放",
-    "snapcastClient": "Snapcast：在每個 Snapcast 用戶端上同步播放"
+    "snapcastClient": "Snapcast：在每個 Snapcast 用戶端上同步播放",
+    "upnpServer": "UPnP/DLNA：在 BubbleUPnP 等 DLNA App 中顯示為喇叭，並播放它們傳送的內容",
+    "upnpClient": "UPnP/DLNA：在 Sonos、AV 擴大機、智慧電視和其他 DLNA 渲染器上播放"
   },
   "servers": {
     "title": "輸入伺服器",
@@ -149,7 +151,12 @@
     "sampleRate": "取樣率（選填）",
     "sampleRateHint": "snapserver 音源 sampleformat 中的取樣率。留空則使用 snapserver 預設的 48000。",
     "snapcastAddressHint": "snapserver 主機；如果 TCP 音源連接埠不是 4953，再加上連接埠。",
-    "castAddressHint": "裝置的 IP 位址；如果連接埠不是 8009，再加上連接埠（喇叭群組使用其他連接埠）。Cast 裝置會晚幾秒發聲，請替其他喇叭設定相同的延遲。"
+    "castAddressHint": "裝置的 IP 位址；如果連接埠不是 8009，再加上連接埠（喇叭群組使用其他連接埠）。Cast 裝置會晚幾秒發聲，請替其他喇叭設定相同的延遲。",
+    "listen": "監聽位址（選填）",
+    "listenHint": "App 連到此輸入的連接埠，例如 :49494。留空則使用可用的連接埠。",
+    "upnpAddressHint": "渲染器的描述 URL（「尋找裝置」會提供），或 Sonos 播放器的 IP 位址。",
+    "format": "串流格式（選填）",
+    "formatHint": "wav 或 mp3。留空則 Sonos 用 MP3，其他裝置用 WAV。MP3 需要 ffmpeg。"
   },
   "pairing": {
     "title": "AirPlay 配對",

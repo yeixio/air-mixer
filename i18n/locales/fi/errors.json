@@ -35,5 +35,7 @@
   "radio_bad_url": "url-osoitteen on oltava http-, https-, rtsp- tai rtmp-osoite",
   "snapcast_needs_address": "Snapcast-asiakas tarvitsee snapserverin osoitteen",
   "sample_rate_range": "sample_rate-arvon on oltava välillä 8000–192000",
-  "cast_needs_address": "Google Cast -asiakas tarvitsee laitteen osoitteen"
+  "cast_needs_address": "Google Cast -asiakas tarvitsee laitteen osoitteen",
+  "upnp_needs_address": "UPnP/DLNA-asiakas tarvitsee toistimen kuvauksen URL-osoitteen tai Sonos-soittimen osoitteen",
+  "upnp_bad_format": "format-arvon on oltava wav tai mp3"
 }

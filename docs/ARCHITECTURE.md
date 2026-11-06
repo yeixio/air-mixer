@@ -105,6 +105,23 @@ stops it after a minute of silence, and steps aside when a
 or a device that stops answering for 20 seconds reports
 `ErrConnectionLost`.
 
+### `internal/protocols/upnp`
+
+UPnP AV both ways, with SSDP (`ssdp.go`: M-SEARCH for discovery, and an
+advertiser that answers searches and sends `NOTIFY`) and a small SOAP
+client and parser (`soap.go`).
+
+- **Client** reads the renderer's description (Sonos nests its
+  AVTransport in an embedded device), then drives it like the Cast output:
+  `SetAVTransportURI` and `Play` on sound, `GetTransportInfo` and
+  `GetMediaInfo` every five seconds to notice another app or a renderer
+  that stopped, `Stop` after a minute of silence. Three failed polls in a
+  row report `ErrConnectionLost`.
+- **Server** is a media renderer with AVTransport, RenderingControl and
+  ConnectionManager (`scpd.go` holds their descriptions) and GENA
+  eventing. Each track plays through a `radio.Server` with `Once` set, at
+  the renderer's volume.
+
 ### `internal/audio/decode`
 
 Turns encoded audio into samples for playback and radio inputs: MP3 and

@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire ou PulseAudio: grave uma entrada de linha, uma interface de áudio USB ou um celular tocando por Bluetooth",
     "castClient": "Google Cast: toque em Chromecast, alto-falantes Nest e Google Home, grupos de alto-falantes e TVs com Cast",
     "pulseClient": "PipeWire ou PulseAudio: toque em uma placa de som ou em um alto-falante Bluetooth pareado",
-    "snapcastClient": "Snapcast: toque em sincronia em todos os clientes Snapcast"
+    "snapcastClient": "Snapcast: toque em sincronia em todos os clientes Snapcast",
+    "upnpServer": "UPnP/DLNA: aparece como alto-falante em apps DLNA, como o BubbleUPnP, e toca o que eles enviam",
+    "upnpClient": "UPnP/DLNA: toque em Sonos, receivers AV, smart TVs e outros renderizadores DLNA"
   },
   "servers": {
     "title": "Servidores de entrada",
@@ -151,7 +153,12 @@
     "sampleRate": "Taxa de amostragem (opcional)",
     "sampleRateHint": "A taxa no sampleformat da fonte do snapserver. Deixe vazio para 48000, o padrão do snapserver.",
     "snapcastAddressHint": "O host do snapserver e a porta da fonte TCP dele, se não for 4953.",
-    "castAddressHint": "O endereço IP do dispositivo e a porta dele, se não for 8009 (grupos de alto-falantes usam outra). Dispositivos Cast tocam alguns segundos atrasados, então atrase os outros alto-falantes para acompanhar."
+    "castAddressHint": "O endereço IP do dispositivo e a porta dele, se não for 8009 (grupos de alto-falantes usam outra). Dispositivos Cast tocam alguns segundos atrasados, então atrase os outros alto-falantes para acompanhar.",
+    "listen": "Endereço de escuta (opcional)",
+    "listenHint": "A porta pela qual os apps chegam a esta entrada, como :49494. Deixe vazio para uma porta livre.",
+    "upnpAddressHint": "A URL de descrição do renderizador, como Encontrar dispositivos mostra, ou o endereço IP de um player Sonos.",
+    "format": "Formato do stream (opcional)",
+    "formatHint": "wav ou mp3. Deixe vazio para MP3 no Sonos e WAV em todo o resto. MP3 precisa de ffmpeg."
   },
   "pairing": {
     "title": "Pareamento AirPlay",

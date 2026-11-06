@@ -35,5 +35,7 @@
   "radio_bad_url": "url phải là địa chỉ http, https, rtsp hoặc rtmp",
   "snapcast_needs_address": "Máy khách Snapcast cần địa chỉ của snapserver",
   "sample_rate_range": "sample_rate phải nằm trong khoảng 8000 đến 192000",
-  "cast_needs_address": "Máy khách Google Cast cần địa chỉ của thiết bị"
+  "cast_needs_address": "Máy khách Google Cast cần địa chỉ của thiết bị",
+  "upnp_needs_address": "Máy khách UPnP/DLNA cần URL mô tả của renderer hoặc địa chỉ của một loa Sonos",
+  "upnp_bad_format": "format phải là wav hoặc mp3"
 }

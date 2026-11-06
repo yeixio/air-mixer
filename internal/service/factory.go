@@ -20,6 +20,7 @@ import (
 	"github.com/yeixio/air-mixer/internal/protocols/pulse"
 	"github.com/yeixio/air-mixer/internal/protocols/radio"
 	"github.com/yeixio/air-mixer/internal/protocols/snapcast"
+	"github.com/yeixio/air-mixer/internal/protocols/upnp"
 )
 
 // Factory builds protocol adapters from stored configuration.
@@ -44,8 +45,9 @@ type Defaults struct {
 
 // ServerConfig is the JSON stored in db.Server.Config.
 type ServerConfig struct {
-	// Address is the listen address, such as ":5000". Defaults to the
-	// configured AirPlay port on every interface.
+	// Address is the listen address, such as ":5000". For AirPlay it
+	// defaults to the configured AirPlay port on every interface; for a
+	// UPnP renderer, to a free port.
 	Address string `json:"address,omitempty"`
 	// Interface overrides the interface the receiver is advertised on.
 	Interface string `json:"interface,omitempty"`
@@ -79,6 +81,9 @@ type ClientConfig struct {
 	// Server is the PulseAudio server for a pulse output, such as
 	// "unix:/run/pulse/native". Empty means $PULSE_SERVER or the default.
 	Server string `json:"server,omitempty"`
+	// Format is what a UPnP output streams: "wav", "mp3" (needs ffmpeg),
+	// or empty for MP3 on Sonos when ffmpeg is installed and WAV otherwise.
+	Format string `json:"format,omitempty"`
 	// SampleRate is the rate a Snapcast output's source expects; 48000
 	// if 0, snapserver's default.
 	SampleRate int `json:"sample_rate,omitempty"`
@@ -138,6 +143,8 @@ func (f *factory) Server(s *db.Server) (protocols.Server, error) {
 		return pulse.NewSource(pulse.SourceOptions{
 			ID: s.ID, Name: s.Name, Server: cfg.Server, Source: cfg.Source, Logger: f.log,
 		}), nil
+	case "upnp":
+		return upnp.NewServer(upnp.ServerOptions{ID: s.ID, Name: s.Name, Address: cfg.Address, Logger: f.log}), nil
 	case "radio":
 		if cfg.URL == "" {
 			return nil, invalidCode("radio_needs_url", nil)
@@ -204,6 +211,21 @@ func (f *factory) Client(c *db.Client) (protocols.Client, error) {
 		}
 		return cast.New(cast.Options{
 			ID: c.ID, Name: c.Name, Address: addr, Streams: f.defaults.Streams,
+			PublicURL: f.defaults.PublicURL, WebPort: f.defaults.WebPort, Logger: f.log,
+		}), nil
+	case "upnp":
+		addr := c.Address
+		if addr == "" {
+			addr = cfg.Address
+		}
+		if addr == "" {
+			return nil, invalidCode("upnp_needs_address", nil)
+		}
+		if cfg.Format != "" && cfg.Format != "wav" && cfg.Format != "mp3" {
+			return nil, invalidCode("upnp_bad_format", nil)
+		}
+		return upnp.NewClient(upnp.ClientOptions{
+			ID: c.ID, Name: c.Name, Address: addr, Format: cfg.Format, Streams: f.defaults.Streams,
 			PublicURL: f.defaults.PublicURL, WebPort: f.defaults.WebPort, Logger: f.log,
 		}), nil
 	case "snapcast":

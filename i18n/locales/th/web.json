@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire หรือ PulseAudio: บันทึกจากช่อง line-in, อินเทอร์เฟซเสียง USB หรือโทรศัพท์ที่เล่นผ่าน Bluetooth",
     "castClient": "Google Cast: เล่นบน Chromecast, ลำโพง Nest และ Google Home, กลุ่มลำโพง และทีวีที่รองรับ Cast",
     "pulseClient": "PipeWire หรือ PulseAudio: เล่นบนการ์ดเสียงหรือลำโพง Bluetooth ที่จับคู่ไว้",
-    "snapcastClient": "Snapcast: เล่นพร้อมกันบนไคลเอนต์ Snapcast ทุกเครื่อง"
+    "snapcastClient": "Snapcast: เล่นพร้อมกันบนไคลเอนต์ Snapcast ทุกเครื่อง",
+    "upnpServer": "UPnP/DLNA: ปรากฏเป็นลำโพงในแอป DLNA เช่น BubbleUPnP และเล่นสิ่งที่แอปส่งมา",
+    "upnpClient": "UPnP/DLNA: เล่นบน Sonos, เครื่องรับ AV, สมาร์ททีวี และ DLNA renderer อื่นๆ"
   },
   "servers": {
     "title": "เซิร์ฟเวอร์ขาเข้า",
@@ -149,7 +151,12 @@
     "sampleRate": "อัตราสุ่มตัวอย่าง (ไม่บังคับ)",
     "sampleRateHint": "อัตราใน sampleformat ของแหล่งเสียง snapserver เว้นว่างไว้เพื่อใช้ 48000 ซึ่งเป็นค่าเริ่มต้นของ snapserver",
     "snapcastAddressHint": "โฮสต์ของ snapserver และพอร์ตของแหล่ง TCP หากไม่ใช่ 4953",
-    "castAddressHint": "ที่อยู่ IP ของอุปกรณ์ และพอร์ตหากไม่ใช่ 8009 (กลุ่มลำโพงใช้พอร์ตอื่น) อุปกรณ์ Cast จะเล่นช้ากว่าไม่กี่วินาที จึงควรหน่วงลำโพงอื่นให้ตรงกัน"
+    "castAddressHint": "ที่อยู่ IP ของอุปกรณ์ และพอร์ตหากไม่ใช่ 8009 (กลุ่มลำโพงใช้พอร์ตอื่น) อุปกรณ์ Cast จะเล่นช้ากว่าไม่กี่วินาที จึงควรหน่วงลำโพงอื่นให้ตรงกัน",
+    "listen": "ที่อยู่สำหรับรอรับ (ไม่บังคับ)",
+    "listenHint": "พอร์ตที่แอปใช้เข้าถึงอินพุตนี้ เช่น :49494 เว้นว่างไว้เพื่อใช้พอร์ตที่ว่าง",
+    "upnpAddressHint": "URL คำอธิบายของ renderer ตามที่ค้นหาอุปกรณ์ให้มา หรือที่อยู่ IP ของเครื่องเล่น Sonos",
+    "format": "รูปแบบสตรีม (ไม่บังคับ)",
+    "formatHint": "wav หรือ mp3 เว้นว่างไว้เพื่อใช้ MP3 กับ Sonos และ WAV กับอุปกรณ์อื่นทั้งหมด MP3 ต้องใช้ ffmpeg"
   },
   "pairing": {
     "title": "การจับคู่ AirPlay",

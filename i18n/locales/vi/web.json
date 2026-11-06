@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire hoặc PulseAudio: thu âm line-in, giao diện âm thanh USB hoặc điện thoại đang phát qua Bluetooth",
     "castClient": "Google Cast: phát trên Chromecast, loa Nest và Google Home, nhóm loa và TV có Cast",
     "pulseClient": "PipeWire hoặc PulseAudio: phát trên card âm thanh hoặc loa Bluetooth đã ghép đôi",
-    "snapcastClient": "Snapcast: phát đồng bộ trên mọi máy khách Snapcast"
+    "snapcastClient": "Snapcast: phát đồng bộ trên mọi máy khách Snapcast",
+    "upnpServer": "UPnP/DLNA: hiện như một loa trong các ứng dụng DLNA như BubbleUPnP và phát những gì chúng gửi",
+    "upnpClient": "UPnP/DLNA: phát trên Sonos, ampli AV, TV thông minh và các renderer DLNA khác"
   },
   "servers": {
     "title": "Máy chủ đầu vào",
@@ -149,7 +151,12 @@
     "sampleRate": "Tần số lấy mẫu (không bắt buộc)",
     "sampleRateHint": "Tần số trong sampleformat của nguồn snapserver. Để trống để dùng 48000, mặc định của snapserver.",
     "snapcastAddressHint": "Máy chủ snapserver, và cổng của nguồn TCP nếu không phải 4953.",
-    "castAddressHint": "Địa chỉ IP của thiết bị, và cổng nếu không phải 8009 (nhóm loa dùng cổng khác). Thiết bị Cast phát trễ vài giây, nên hãy đặt độ trễ cho các loa khác cho khớp."
+    "castAddressHint": "Địa chỉ IP của thiết bị, và cổng nếu không phải 8009 (nhóm loa dùng cổng khác). Thiết bị Cast phát trễ vài giây, nên hãy đặt độ trễ cho các loa khác cho khớp.",
+    "listen": "Địa chỉ lắng nghe (không bắt buộc)",
+    "listenHint": "Cổng mà các ứng dụng dùng để tới đầu vào này, như :49494. Để trống để dùng một cổng trống.",
+    "upnpAddressHint": "URL mô tả của renderer, như Tìm thiết bị đưa ra, hoặc địa chỉ IP của một loa Sonos.",
+    "format": "Định dạng luồng (không bắt buộc)",
+    "formatHint": "wav hoặc mp3. Để trống để dùng MP3 cho Sonos và WAV cho mọi thiết bị khác. MP3 cần ffmpeg."
   },
   "pairing": {
     "title": "Ghép đôi AirPlay",

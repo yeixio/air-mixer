@@ -4,10 +4,13 @@ import (
 	"context"
 	"errors"
 	"net"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/libp2p/zeroconf/v2"
+
+	"github.com/yeixio/air-mixer/internal/protocols/upnp"
 )
 
 func entry(instance string, ip string, port int, txt ...string) *zeroconf.ServiceEntry {
@@ -108,6 +111,33 @@ func TestCastDiscover(t *testing.T) {
 	}
 }
 
+func TestUPnPDiscover(t *testing.T) {
+	u := &UPnP{
+		search: func(context.Context, string, time.Duration) ([]upnp.SearchResult, error) {
+			return []upnp.SearchResult{
+				{Location: "http://192.168.1.50:1400/xml/device_description.xml", USN: "uuid:RINCON_1::urn:schemas-upnp-org:device:MediaRenderer:1"},
+				{Location: "http://192.168.1.60:49152/desc.xml"},
+			}, nil
+		},
+		name: func(_ context.Context, loc string) (string, string, error) {
+			if strings.Contains(loc, "1400") {
+				return "Living Room", "Sonos One", nil
+			}
+			return "", "", errors.New("timeout")
+		},
+	}
+	devices, err := u.Discover(context.Background(), time.Millisecond)
+	if err != nil || len(devices) != 2 {
+		t.Fatalf("%v %+v", err, devices)
+	}
+	if d := devices[0]; d.Name != "Living Room" || d.Description != "UPnP/DLNA renderer: Sonos One" || d.Port != 1400 || d.Protocol != "upnp" {
+		t.Errorf("device %+v", d)
+	}
+	if devices[1].Name != "192.168.1.60:49152" {
+		t.Errorf("unnamed device %+v", devices[1])
+	}
+}
+
 type stubDiscoverer struct {
 	protocol string
 	devices  []Device
@@ -144,7 +174,7 @@ func TestService(t *testing.T) {
 	if _, err := failing.DiscoverAll(ctx, time.Millisecond); err == nil {
 		t.Error("total failure swallowed")
 	}
-	if got := NewService().Protocols(); len(got) != 3 || got[0] != "airplay" || got[1] != "cast" || got[2] != "snapcast" {
+	if got := NewService().Protocols(); len(got) != 4 || got[0] != "airplay" || got[1] != "cast" || got[2] != "snapcast" || got[3] != "upnp" {
 		t.Errorf("default protocols = %v", got)
 	}
 }

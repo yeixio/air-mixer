@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire או PulseAudio: הקלט כניסת קו, ממשק שמע USB או טלפון שמנגן דרך Bluetooth",
     "castClient": "Google Cast: נגן ב-Chromecast, ברמקולי Nest ו-Google Home, בקבוצות רמקולים ובטלוויזיות עם Cast",
     "pulseClient": "PipeWire או PulseAudio: נגן בכרטיס קול או ברמקול Bluetooth מוצמד",
-    "snapcastClient": "Snapcast: נגן בסנכרון בכל לקוחות Snapcast"
+    "snapcastClient": "Snapcast: נגן בסנכרון בכל לקוחות Snapcast",
+    "upnpServer": "UPnP/DLNA: מופיע כרמקול באפליקציות DLNA כמו BubbleUPnP ומנגן את מה שהן שולחות",
+    "upnpClient": "UPnP/DLNA: נגן ב-Sonos, במקלטי AV, בטלוויזיות חכמות ובנגני DLNA אחרים"
   },
   "servers": {
     "title": "שרתי קלט",
@@ -151,7 +153,12 @@
     "sampleRate": "קצב דגימה (רשות)",
     "sampleRateHint": "הקצב ב-sampleformat של מקור snapserver. השאר ריק ל-48000, ברירת המחדל של snapserver.",
     "snapcastAddressHint": "המארח של snapserver, ופורט מקור ה-TCP שלו אם הוא לא 4953.",
-    "castAddressHint": "כתובת ה-IP של המכשיר, והפורט שלו אם הוא לא 8009 (קבוצות רמקולים משתמשות בפורט אחר). מכשירי Cast מנגנים באיחור של כמה שניות, לכן השהה את שאר הרמקולים בהתאם."
+    "castAddressHint": "כתובת ה-IP של המכשיר, והפורט שלו אם הוא לא 8009 (קבוצות רמקולים משתמשות בפורט אחר). מכשירי Cast מנגנים באיחור של כמה שניות, לכן השהה את שאר הרמקולים בהתאם.",
+    "listen": "כתובת האזנה (רשות)",
+    "listenHint": "הפורט שדרכו אפליקציות מגיעות לקלט הזה, למשל ‎:49494. השאר ריק לפורט פנוי.",
+    "upnpAddressHint": "כתובת ה-URL של תיאור הנגן כפי ש'חיפוש מכשירים' נותן, או כתובת ה-IP של נגן Sonos.",
+    "format": "פורמט הזרם (רשות)",
+    "formatHint": "wav או mp3. השאר ריק ל-MP3 ב-Sonos ו-WAV בכל השאר. MP3 דורש ffmpeg."
   },
   "pairing": {
     "title": "צימוד AirPlay",

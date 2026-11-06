@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire أو PulseAudio: سجّل مدخل الخط أو واجهة صوت USB أو هاتفًا يشغّل عبر Bluetooth",
     "castClient": "Google Cast: شغّل على Chromecast وسماعات Nest وGoogle Home ومجموعات السماعات وأجهزة التلفزيون التي تدعم Cast",
     "pulseClient": "PipeWire أو PulseAudio: شغّل على بطاقة صوت أو سماعة Bluetooth مقترنة",
-    "snapcastClient": "Snapcast: شغّل بتزامن على كل عملاء Snapcast"
+    "snapcastClient": "Snapcast: شغّل بتزامن على كل عملاء Snapcast",
+    "upnpServer": "UPnP/DLNA: يظهر كسماعة في تطبيقات DLNA مثل BubbleUPnP ويشغّل ما ترسله",
+    "upnpClient": "UPnP/DLNA: شغّل على Sonos ومستقبلات AV وأجهزة التلفزيون الذكية وعارضات DLNA الأخرى"
   },
   "servers": {
     "title": "خوادم الإدخال",
@@ -154,7 +156,12 @@
     "sampleRate": "معدل العينات (اختياري)",
     "sampleRateHint": "المعدل في sampleformat لمصدر snapserver. اتركه فارغًا لـ 48000، القيمة الافتراضية في snapserver.",
     "snapcastAddressHint": "مضيف snapserver، ومنفذ مصدر TCP الخاص به إن لم يكن 4953.",
-    "castAddressHint": "عنوان IP للجهاز، ومنفذه إن لم يكن 8009 (تستخدم مجموعات السماعات منفذًا آخر). تعمل أجهزة Cast متأخرة بضع ثوانٍ، لذا أخّر السماعات الأخرى بالقدر نفسه."
+    "castAddressHint": "عنوان IP للجهاز، ومنفذه إن لم يكن 8009 (تستخدم مجموعات السماعات منفذًا آخر). تعمل أجهزة Cast متأخرة بضع ثوانٍ، لذا أخّر السماعات الأخرى بالقدر نفسه.",
+    "listen": "عنوان الاستماع (اختياري)",
+    "listenHint": "المنفذ الذي تصل منه التطبيقات إلى هذا المدخل، مثل ‎:49494. اتركه فارغًا لمنفذ متاح.",
+    "upnpAddressHint": "عنوان URL لوصف العارض كما يعطيه البحث عن الأجهزة، أو عنوان IP لمشغّل Sonos.",
+    "format": "صيغة البث (اختياري)",
+    "formatHint": "wav أو mp3. اتركه فارغًا لاستخدام MP3 على Sonos وWAV على غيره. تحتاج MP3 إلى ffmpeg."
   },
   "pairing": {
     "title": "إقران AirPlay",

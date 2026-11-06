@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire or PulseAudio: record a line-in, a USB audio interface or a phone playing over Bluetooth",
     "castClient": "Google Cast: play on Chromecast, Nest and Google Home speakers, speaker groups and Cast TVs",
     "pulseClient": "PipeWire or PulseAudio: play on a sound card or a paired Bluetooth speaker",
-    "snapcastClient": "Snapcast: play in sync on every Snapcast client"
+    "snapcastClient": "Snapcast: play in sync on every Snapcast client",
+    "upnpServer": "UPnP/DLNA: shows up as a speaker in DLNA apps, such as BubbleUPnP, and plays what they send",
+    "upnpClient": "UPnP/DLNA: play on Sonos, AV receivers, smart TVs and other DLNA renderers"
   },
   "servers": {
     "title": "Input Servers",
@@ -150,7 +152,12 @@
     "sampleRate": "Sample rate (optional)",
     "sampleRateHint": "The rate in the snapserver source's sampleformat. Leave empty for 48000, snapserver's default.",
     "snapcastAddressHint": "The snapserver host, and the port of its TCP source if it isn't 4953.",
-    "castAddressHint": "The device's IP address, and its port if it isn't 8009 (speaker groups use another port). Cast devices play a few seconds late, so delay other speakers to match."
+    "castAddressHint": "The device's IP address, and its port if it isn't 8009 (speaker groups use another port). Cast devices play a few seconds late, so delay other speakers to match.",
+    "listen": "Listen address (optional)",
+    "listenHint": "The port apps reach this input on, such as :49494. Leave empty for a free port.",
+    "upnpAddressHint": "The renderer's description URL, as Find Devices gives it, or a Sonos player's IP address.",
+    "format": "Stream format (optional)",
+    "formatHint": "wav or mp3. Leave empty for MP3 on Sonos and WAV on everything else. MP3 needs ffmpeg."
   },
   "pairing": {
     "title": "AirPlay Pairing",

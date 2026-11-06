@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire atau PulseAudio: rakam line-in, antara muka audio USB atau telefon yang memainkan melalui Bluetooth",
     "castClient": "Google Cast: mainkan pada Chromecast, pembesar suara Nest dan Google Home, kumpulan pembesar suara dan TV dengan Cast",
     "pulseClient": "PipeWire atau PulseAudio: mainkan pada kad bunyi atau pembesar suara Bluetooth yang dipasangkan",
-    "snapcastClient": "Snapcast: mainkan serentak pada setiap klien Snapcast"
+    "snapcastClient": "Snapcast: mainkan serentak pada setiap klien Snapcast",
+    "upnpServer": "UPnP/DLNA: muncul sebagai pembesar suara dalam aplikasi DLNA seperti BubbleUPnP dan memainkan apa yang dihantar",
+    "upnpClient": "UPnP/DLNA: mainkan pada Sonos, penerima AV, TV pintar dan renderer DLNA lain"
   },
   "servers": {
     "title": "Pelayan input",
@@ -149,7 +151,12 @@
     "sampleRate": "Kadar sampel (pilihan)",
     "sampleRateHint": "Kadar dalam sampleformat sumber snapserver. Biarkan kosong untuk 48000, lalai snapserver.",
     "snapcastAddressHint": "Hos snapserver, dan port sumber TCP-nya jika bukan 4953.",
-    "castAddressHint": "Alamat IP peranti, dan port-nya jika bukan 8009 (kumpulan pembesar suara menggunakan port lain). Peranti Cast bermain beberapa saat lewat, jadi lengahkan pembesar suara lain supaya sepadan."
+    "castAddressHint": "Alamat IP peranti, dan port-nya jika bukan 8009 (kumpulan pembesar suara menggunakan port lain). Peranti Cast bermain beberapa saat lewat, jadi lengahkan pembesar suara lain supaya sepadan.",
+    "listen": "Alamat dengar (pilihan)",
+    "listenHint": "Port yang digunakan aplikasi untuk sampai ke input ini, seperti :49494. Biarkan kosong untuk port bebas.",
+    "upnpAddressHint": "URL perihalan renderer, seperti yang diberikan Cari Peranti, atau alamat IP pemain Sonos.",
+    "format": "Format strim (pilihan)",
+    "formatHint": "wav atau mp3. Biarkan kosong untuk MP3 pada Sonos dan WAV pada yang lain. MP3 memerlukan ffmpeg."
   },
   "pairing": {
     "title": "Gandingan AirPlay",

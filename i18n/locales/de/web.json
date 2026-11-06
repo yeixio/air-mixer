@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire oder PulseAudio: einen Line-in, ein USB-Audiointerface oder ein Handy aufnehmen, das über Bluetooth abspielt",
     "castClient": "Google Cast: auf Chromecast, Nest- und Google-Home-Lautsprechern, Lautsprechergruppen und Cast-Fernsehern abspielen",
     "pulseClient": "PipeWire oder PulseAudio: auf einer Soundkarte oder einem gekoppelten Bluetooth-Lautsprecher abspielen",
-    "snapcastClient": "Snapcast: synchron auf jedem Snapcast-Client abspielen"
+    "snapcastClient": "Snapcast: synchron auf jedem Snapcast-Client abspielen",
+    "upnpServer": "UPnP/DLNA: erscheint in DLNA-Apps wie BubbleUPnP als Lautsprecher und spielt ab, was sie senden",
+    "upnpClient": "UPnP/DLNA: auf Sonos, AV-Receivern, Smart-TVs und anderen DLNA-Renderern abspielen"
   },
   "servers": {
     "title": "Eingangsserver",
@@ -150,7 +152,12 @@
     "sampleRate": "Abtastrate (optional)",
     "sampleRateHint": "Die Rate im sampleformat der snapserver-Quelle. Leer lassen für 48000, den Standard von snapserver.",
     "snapcastAddressHint": "Der snapserver-Host und der Port seiner TCP-Quelle, falls er nicht 4953 ist.",
-    "castAddressHint": "Die IP-Adresse des Geräts und sein Port, falls er nicht 8009 ist (Lautsprechergruppen nutzen einen anderen). Cast-Geräte spielen ein paar Sekunden später, verzögere andere Lautsprecher entsprechend."
+    "castAddressHint": "Die IP-Adresse des Geräts und sein Port, falls er nicht 8009 ist (Lautsprechergruppen nutzen einen anderen). Cast-Geräte spielen ein paar Sekunden später, verzögere andere Lautsprecher entsprechend.",
+    "listen": "Lauschadresse (optional)",
+    "listenHint": "Der Port, über den Apps diesen Eingang erreichen, etwa :49494. Leer lassen für einen freien Port.",
+    "upnpAddressHint": "Die Beschreibungs-URL des Renderers, wie „Geräte finden“ sie liefert, oder die IP-Adresse eines Sonos-Players.",
+    "format": "Stream-Format (optional)",
+    "formatHint": "wav oder mp3. Leer lassen für MP3 auf Sonos und WAV auf allem anderen. MP3 braucht ffmpeg."
   },
   "pairing": {
     "title": "AirPlay-Kopplung",

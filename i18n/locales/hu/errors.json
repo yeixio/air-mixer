@@ -35,5 +35,7 @@
   "radio_bad_url": "Az url csak http, https, rtsp vagy rtmp cím lehet",
   "snapcast_needs_address": "A Snapcast-klienshez kell a snapserver címe",
   "sample_rate_range": "A sample_rate értéke 8000 és 192000 között legyen",
-  "cast_needs_address": "A Google Cast-klienshez kell az eszköz címe"
+  "cast_needs_address": "A Google Cast-klienshez kell az eszköz címe",
+  "upnp_needs_address": "A UPnP/DLNA-klienshez kell a renderer leíró URL-je vagy egy Sonos-lejátszó címe",
+  "upnp_bad_format": "A format értéke wav vagy mp3 lehet"
 }

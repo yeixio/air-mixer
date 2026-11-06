@@ -41,7 +41,9 @@
     "pulseServer": "PipeWire tai PulseAudio: tallenna linjatulo, USB-äänikortti tai Bluetoothilla soittava puhelin",
     "castClient": "Google Cast: toista Chromecastilla, Nest- ja Google Home -kaiuttimilla, kaiutinryhmillä ja Cast-televisioilla",
     "pulseClient": "PipeWire tai PulseAudio: toista äänikortilla tai paritetulla Bluetooth-kaiuttimella",
-    "snapcastClient": "Snapcast: toista tahdissa jokaisella Snapcast-asiakkaalla"
+    "snapcastClient": "Snapcast: toista tahdissa jokaisella Snapcast-asiakkaalla",
+    "upnpServer": "UPnP/DLNA: näkyy kaiuttimena DLNA-sovelluksissa, kuten BubbleUPnP:ssä, ja toistaa mitä ne lähettävät",
+    "upnpClient": "UPnP/DLNA: toista Sonosilla, AV-vahvistimilla, älytelevisioilla ja muilla DLNA-toistimilla"
   },
   "servers": {
     "title": "Tulopalvelimet",
@@ -150,7 +152,12 @@
     "sampleRate": "Näytteenottotaajuus (valinnainen)",
     "sampleRateHint": "snapserver-lähteen sampleformat-asetuksen taajuus. Jätä tyhjäksi, niin käytetään snapserverin oletusta 48000.",
     "snapcastAddressHint": "snapserverin isäntä ja sen TCP-lähteen portti, jos se ei ole 4953.",
-    "castAddressHint": "Laitteen IP-osoite ja portti, jos se ei ole 8009 (kaiutinryhmät käyttävät toista). Cast-laitteet soittavat muutaman sekunnin myöhässä, joten viivästä muita kaiuttimia saman verran."
+    "castAddressHint": "Laitteen IP-osoite ja portti, jos se ei ole 8009 (kaiutinryhmät käyttävät toista). Cast-laitteet soittavat muutaman sekunnin myöhässä, joten viivästä muita kaiuttimia saman verran.",
+    "listen": "Kuunteluosoite (valinnainen)",
+    "listenHint": "Portti, josta sovellukset tavoittavat tämän tulon, kuten :49494. Jätä tyhjäksi, niin käytetään vapaata porttia.",
+    "upnpAddressHint": "Toistimen kuvauksen URL, jonka Etsi laitteita antaa, tai Sonos-soittimen IP-osoite.",
+    "format": "Striimin muoto (valinnainen)",
+    "formatHint": "wav tai mp3. Jätä tyhjäksi, niin Sonos saa MP3:n ja kaikki muut WAV:n. MP3 vaatii ffmpegin."
   },
   "pairing": {
     "title": "AirPlay-pariliitos",

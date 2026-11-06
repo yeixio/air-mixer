@@ -35,5 +35,7 @@
   "radio_bad_url": "url は http、https、rtsp、rtmp のアドレスにしてください",
   "snapcast_needs_address": "Snapcast クライアントには snapserver のアドレスが必要です",
   "sample_rate_range": "sample_rate は 8000 から 192000 の間にしてください",
-  "cast_needs_address": "Google Cast クライアントにはデバイスのアドレスが必要です"
+  "cast_needs_address": "Google Cast クライアントにはデバイスのアドレスが必要です",
+  "upnp_needs_address": "UPnP/DLNA クライアントにはレンダラーの説明 URL か Sonos プレーヤーのアドレスが必要です",
+  "upnp_bad_format": "format は wav か mp3 にしてください"
 }
