@@ -33,9 +33,60 @@ type Discoverer interface {
 	Discover(ctx context.Context, timeout time.Duration) ([]Device, error)
 }
 
-// Service runs discovery across protocols.
+// Service runs discovery across protocols. It leaves out Air-Mixer's own
+// receivers, from this and every other Air-Mixer instance, so its sources
+// are never offered as speakers.
 type Service struct {
 	discoverers []Discoverer
+	exclude     func(Device) bool
+}
+
+// Exclude also leaves out the devices f reports, such as inputs this host
+// runs through other programs (shairport-sync) that carry no Air-Mixer
+// marker.
+func (s *Service) Exclude(f func(Device) bool) { s.exclude = f }
+
+// keep reports whether d is shown: not one of Air-Mixer's own receivers and
+// not excluded.
+func (s *Service) keep(d Device) bool {
+	return !IsAirMixer(d) && (s.exclude == nil || !s.exclude(d))
+}
+
+func (s *Service) filter(ds []Device) []Device {
+	out := make([]Device, 0, len(ds))
+	for _, d := range ds {
+		if s.keep(d) {
+			out = append(out, d)
+		}
+	}
+	return out
+}
+
+// IsAirMixer reports whether d is a receiver Air-Mixer itself advertises:
+// an AirPlay input (model AirMixer in its TXT record) or a DLNA renderer
+// input (an Air-Mixer SSDP server header or manufacturer).
+func IsAirMixer(d Device) bool {
+	m := d.Metadata
+	switch {
+	case m["am"] == "AirMixer":
+		return true
+	case strings.Contains(m["server"], "Air-Mixer/"):
+		return true
+	case d.Protocol == "upnp" && strings.HasPrefix(d.Description, "UPnP/DLNA renderer: Air-Mixer"):
+		return true
+	}
+	return false
+}
+
+// Host returns the IP address d answers on.
+func (d Device) Host() string {
+	if h := d.Metadata["host"]; h != "" {
+		return h
+	}
+	if h, _, err := net.SplitHostPort(d.Address); err == nil {
+		return h
+	}
+	return hostOf(d.Address)
 }
 
 // NewService returns a Service with the given discoverers, or every
@@ -80,7 +131,7 @@ func (s *Service) DiscoverAll(ctx context.Context, timeout time.Duration) ([]Dev
 			lastErr = r.err
 			continue
 		}
-		out = append(out, r.devices...)
+		out = append(out, s.filter(r.devices)...)
 	}
 	if failed > 0 && failed == len(s.discoverers) {
 		return nil, lastErr
@@ -101,6 +152,7 @@ func (s *Service) Discover(ctx context.Context, protocol string, timeout time.Du
 	for _, d := range s.discoverers {
 		if d.Protocol() == protocol {
 			devices, err := d.Discover(ctx, timeout)
+			devices = s.filter(devices)
 			sortDevices(devices)
 			return devices, err
 		}

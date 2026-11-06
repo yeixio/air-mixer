@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/yeixio/air-mixer/internal/api"
@@ -100,7 +101,9 @@ func Run(ctx context.Context, opts Options) error {
 
 	disc := opts.Discovery
 	if disc == nil {
-		disc = discovery.NewService()
+		d := discovery.NewService()
+		d.Exclude(ownInput(svc))
+		disc = d
 	}
 	srv := &http.Server{
 		Handler: api.New(api.Options{
@@ -134,4 +137,44 @@ func Run(ctx context.Context, opts Options) error {
 		return err
 	}
 	return nil
+}
+
+// ownInput reports devices that are inputs on this host under another
+// program's advertisement, such as a shairport-sync AirPlay 2 input: a
+// device on one of this host's addresses named like one of the sources.
+func ownInput(svc *service.Service) func(discovery.Device) bool {
+	return func(d discovery.Device) bool {
+		ip := net.ParseIP(d.Host())
+		if ip == nil || !isLocalIP(ip) {
+			return false
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+		defer cancel()
+		servers, err := svc.Servers(ctx)
+		if err != nil {
+			return false
+		}
+		for _, s := range servers {
+			if strings.EqualFold(strings.TrimSpace(s.Name), strings.TrimSpace(d.Name)) {
+				return true
+			}
+		}
+		return false
+	}
+}
+
+func isLocalIP(ip net.IP) bool {
+	if ip.IsLoopback() {
+		return true
+	}
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return false
+	}
+	for _, a := range addrs {
+		if n, ok := a.(*net.IPNet); ok && n.IP.Equal(ip) {
+			return true
+		}
+	}
+	return false
 }

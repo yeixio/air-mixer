@@ -196,3 +196,33 @@ func TestAirPlay2Discover(t *testing.T) {
 		t.Errorf("device %+v", d)
 	}
 }
+
+func TestServiceLeavesOutAirMixer(t *testing.T) {
+	devices := []Device{
+		{Name: "Kitchen", Protocol: "airplay", Address: "192.168.1.5:7000", Metadata: map[string]string{"am": "AudioAccessory5,1"}},
+		{Name: "Air-Mixer", Protocol: "airplay", Address: "192.168.1.9:49152", Metadata: map[string]string{"am": "AirMixer"}},
+		{Name: "Den", Protocol: "upnp", Address: "http://192.168.1.9:49200/description.xml",
+			Metadata: map[string]string{"host": "192.168.1.9", "server": "Linux/1.0 UPnP/1.1 Air-Mixer/1.0"}},
+		{Name: "Sonos", Protocol: "upnp", Address: "http://192.168.1.7:1400/xml/device_description.xml",
+			Metadata: map[string]string{"host": "192.168.1.7", "server": "Linux UPnP/1.0 Sonos/80.1"}},
+		{Name: "Shairport Input", Protocol: "airplay2", Address: "192.168.1.9:7000", Metadata: map[string]string{}},
+	}
+	s := NewService(stubDiscoverer{protocol: "mixed", devices: devices})
+	s.Exclude(func(d Device) bool { return d.Host() == "192.168.1.9" && d.Name == "Shairport Input" })
+
+	got, err := s.DiscoverAll(context.Background(), time.Second)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var names []string
+	for _, d := range got {
+		names = append(names, d.Name)
+	}
+	if want := []string{"Kitchen", "Sonos"}; !slices.Equal(names, want) {
+		t.Errorf("DiscoverAll = %v, want %v", names, want)
+	}
+	got, _ = s.Discover(context.Background(), "mixed", time.Second)
+	if len(got) != 2 {
+		t.Errorf("Discover kept %d devices, want 2", len(got))
+	}
+}
