@@ -8,8 +8,18 @@ generated from its pull requests.
 
 ## [Unreleased]
 
+### Fixed
+
+- Several AirPlay inputs on one host all showed up on iPhones and Macs as
+  only the newest one, because they advertised the same MAC address. Each
+  receiver now advertises a stable address of its own.
+
 ### Added
 
+- Each master build is also published as `sha-<short commit>`, and an
+  `edge` branch follows the newest published build, so an Argo CD app can
+  roll out every new build by itself (see "Following the latest build" in
+  docs/KUBERNETES.md).
 - `GET /api/protocols`, listing each protocol with the fields it takes;
   the web UI builds its protocol menus and settings from it, so PipeWire
   and Bluetooth outputs can be set up there now.

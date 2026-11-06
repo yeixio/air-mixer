@@ -1,7 +1,11 @@
 name: Image
 
 # Publishes multi-arch container images to the GitHub Container Registry:
-# "edge" from master, and a version tag plus "latest" for each v* tag.
+# "edge" and "sha-<short commit>" from master, and a version tag plus
+# "latest" for each v* tag. After a master image is published, the edge
+# branch moves to that commit, so clusters that follow it (an Argo CD app on
+# targetRevision edge with image.tag sha-$ARGOCD_APP_REVISION_SHORT) roll out
+# each new build by themselves, and only builds they can pull.
 on:
   push:
     branches: [master]
@@ -29,6 +33,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           tags: |
             type=edge,branch=master
+            type=sha,enable=${{ github.ref == 'refs/heads/master' }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
       - id: build
@@ -46,3 +51,27 @@ jobs:
             VERSION=${{ steps.build.outputs.version }}
             GIT_COMMIT=${{ github.sha }}
             BUILD_TIME=${{ steps.build.outputs.time }}
+
+  edge:
+    if: github.ref == 'refs/heads/master'
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: edge
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      # Fast-forward only, so a slow run for an older commit never moves edge
+      # back.
+      - name: Move edge to this commit
+        run: |
+          if git rev-parse -q --verify origin/edge > /dev/null &&
+            ! git merge-base --is-ancestor origin/edge "$GITHUB_SHA"; then
+            echo "edge is already past ${GITHUB_SHA}."
+            exit 0
+          fi
+          git push origin "${GITHUB_SHA}:refs/heads/edge"

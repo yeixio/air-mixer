@@ -587,3 +587,19 @@ func TestServerNextFreePort(t *testing.T) {
 		t.Errorf("exhausted range = %v", err)
 	}
 }
+
+func TestReceiverMACDistinct(t *testing.T) {
+	host := net.HardwareAddr{0x02, 0x42, 0xac, 0x11, 0x00, 0x02}
+	a, b := receiverMAC(host, "srv-a"), receiverMAC(host, "srv-b")
+	if a.String() == b.String() {
+		t.Fatalf("two receivers share MAC %s", a)
+	}
+	if again := receiverMAC(host, "srv-a"); again.String() != a.String() {
+		t.Fatalf("MAC not stable: %s then %s", a, again)
+	}
+	for _, m := range []net.HardwareAddr{a, b} {
+		if len(m) != 6 || m[0]&0x01 != 0 || m[0]&0x02 == 0 {
+			t.Fatalf("%s is not a unicast, locally administered address", m)
+		}
+	}
+}
