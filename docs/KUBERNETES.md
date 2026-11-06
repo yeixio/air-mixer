@@ -173,6 +173,30 @@ speakers that play earliest a `delayMs`, raising it until the echo goes
 away; a clap or a click track makes this easy to hear. Changing it with
 `helm upgrade` restarts the room's agent.
 
+## Following the latest build
+
+Every master commit publishes `ghcr.io/yeixio/air-mixer:sha-<short commit>`
+(and moves `:edge`), then moves the `edge` branch to that commit. An Argo CD
+application that follows `edge` and runs the image from the same commit
+rolls out each new build by itself, with no restart:
+
+```yaml
+spec:
+  source:
+    repoURL: https://github.com/yeixio/air-mixer.git
+    targetRevision: edge
+    path: deploy/helm/airmixer
+    helm:
+      parameters:
+        - name: image.tag
+          value: sha-$ARGOCD_APP_REVISION_SHORT
+  syncPolicy:
+    automated: {}
+```
+
+The `edge` branch only moves once the image is published, so Argo CD never
+asks for a tag that isn't there yet.
+
 ## Values
 
 The most useful values are below; [`values.yaml`](../deploy/helm/airmixer/values.yaml)
