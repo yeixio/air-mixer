@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha1"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
@@ -132,4 +133,16 @@ func hardwareAddrFor(ip net.IP) net.HardwareAddr {
 		}
 	}
 	return make(net.HardwareAddr, 6)
+}
+
+// receiverMAC derives a stable, locally administered MAC address for one
+// receiver from the host's address and the receiver's id, so receivers on
+// the same host advertise distinct addresses.
+func receiverMAC(host net.HardwareAddr, id string) net.HardwareAddr {
+	h := sha256.New()
+	h.Write(host)
+	h.Write([]byte(id))
+	mac := net.HardwareAddr(h.Sum(nil)[:6])
+	mac[0] = mac[0]&^0x01 | 0x02 // unicast, locally administered
+	return mac
 }

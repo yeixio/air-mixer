@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"encoding/binary"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -54,6 +55,9 @@ type Server struct {
 	mu       sync.Mutex
 	listener net.Listener
 	mdns     *zeroconf.Server
+	// mac is the hardware address this receiver advertises and signs
+	// Apple-Responses with, set before the first connection is accepted.
+	mac      net.HardwareAddr
 	active   *session
 	sessions map[*session]struct{}
 	stopped  bool
@@ -149,11 +153,15 @@ func (s *Server) advertise(port int) (*zeroconf.Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	// RAOP instance names are "<MAC>@<name>".
-	mac := strings.ToUpper(strings.ReplaceAll(iface.HardwareAddr.String(), ":", ""))
-	if mac == "" {
-		mac = "000000000000"
+	// RAOP instance names are "<MAC>@<name>". Senders treat receivers with
+	// the same MAC as one device and show only one of them, so each
+	// receiver gets an address of its own.
+	key := s.opts.ID
+	if key == "" {
+		key = s.opts.Name
 	}
+	s.mac = receiverMAC(iface.HardwareAddr, key)
+	mac := strings.ToUpper(hex.EncodeToString(s.mac))
 	srv, err := zeroconf.Register(mac+"@"+s.opts.Name, "_raop._tcp", "local.", port, txtRecord, []net.Interface{*iface})
 	if err != nil {
 		return nil, fmt.Errorf("airplay: mDNS advertisement on %s: %w", iface.Name, err)
@@ -290,7 +298,11 @@ func (ss *session) serve() {
 		resp.Header.Set("Server", "AirMixer/1.0")
 		if ch := req.Header.Get("Apple-Challenge"); ch != "" {
 			local := ss.conn.LocalAddr().(*net.TCPAddr).IP
-			if ar, err := appleResponse(ch, local, hardwareAddrFor(local)); err == nil {
+			mac := ss.srv.mac
+			if mac == nil {
+				mac = hardwareAddrFor(local)
+			}
+			if ar, err := appleResponse(ch, local, mac); err == nil {
 				resp.Header.Set("Apple-Response", ar)
 			} else {
 				ss.log.Warn("cannot answer Apple-Challenge", "err", err)
