@@ -29,6 +29,7 @@ type Router struct {
 	routes   map[string]*routeState
 	sources  map[string]*source
 	sinks    map[string]*sink
+	gains    map[string]float32 // sink ID -> the speaker's own volume
 	maxLag   int
 	ramp     int
 	sequence int64 // registration order, to resolve duplicate names
@@ -71,6 +72,7 @@ func New(logger *slog.Logger) *Router {
 		routes:  make(map[string]*routeState),
 		sources: make(map[string]*source),
 		sinks:   make(map[string]*sink),
+		gains:   make(map[string]float32),
 		maxLag:  defaultMaxLag,
 		ramp:    volumeRamp,
 	}
@@ -141,6 +143,21 @@ func (r *Router) RemoveRoute(id string) error {
 	delete(r.routes, id)
 	r.reconcile()
 	return nil
+}
+
+// SetSinkVolume sets a destination's own volume, 0 to 1, which scales
+// every route playing on it. It may be set before the sink registers and
+// is kept while the sink comes and goes. 1, the default, clears it.
+func (r *Router) SetSinkVolume(id string, volume float32) {
+	volume = max(0, min(1, volume))
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if volume == 1 {
+		delete(r.gains, id)
+	} else {
+		r.gains[id] = volume
+	}
+	r.reconcile()
 }
 
 // Route returns the route with the given ID.
@@ -313,7 +330,11 @@ func (r *Router) reconcile() {
 				if desired[sk.id] == nil {
 					desired[sk.id] = make(map[string]want)
 				}
-				desired[sk.id][rt.ID] = want{src, rt.Volume, rt.Priority, rt.Duck}
+				volume := rt.Volume
+				if g, ok := r.gains[sk.id]; ok {
+					volume *= g
+				}
+				desired[sk.id][rt.ID] = want{src, volume, rt.Priority, rt.Duck}
 			}
 		}
 	}

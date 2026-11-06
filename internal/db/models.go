@@ -20,12 +20,16 @@ type Server struct {
 
 // Client is an audio output: a speaker Air-Mixer plays to.
 type Client struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	Protocol  string    `json:"protocol"`
-	Address   string    `json:"address"`
-	Enabled   bool      `json:"enabled"`
-	Config    string    `json:"config"` // protocol-specific JSON
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Protocol string `json:"protocol"`
+	Address  string `json:"address"`
+	Enabled  bool   `json:"enabled"`
+	Config   string `json:"config"` // protocol-specific JSON
+	// Volume is the speaker's own level, 0 to 1, applied on top of every
+	// route that plays on it. UpdateClient leaves it alone; SetClientVolume
+	// changes it.
+	Volume    float64   `json:"volume"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -113,11 +117,11 @@ func (db *DB) DeleteServer(ctx context.Context, id string) error {
 
 // Clients
 
-const clientCols = `id, name, protocol, address, enabled, COALESCE(config, ''), created_at, updated_at`
+const clientCols = `id, name, protocol, address, enabled, COALESCE(config, ''), volume, created_at, updated_at`
 
 func scanClient(s scanner) (*Client, error) {
 	v := &Client{}
-	err := s.Scan(&v.ID, &v.Name, &v.Protocol, &v.Address, &v.Enabled, &v.Config, &v.CreatedAt, &v.UpdatedAt)
+	err := s.Scan(&v.ID, &v.Name, &v.Protocol, &v.Address, &v.Enabled, &v.Config, &v.Volume, &v.CreatedAt, &v.UpdatedAt)
 	return v, err
 }
 
@@ -149,8 +153,8 @@ func (db *DB) GetClient(ctx context.Context, id string) (*Client, error) {
 func (db *DB) CreateClient(ctx context.Context, v *Client) error {
 	ts := now()
 	_, err := db.conn.ExecContext(ctx,
-		`INSERT INTO clients (id, name, protocol, address, enabled, config, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-		v.ID, v.Name, v.Protocol, v.Address, v.Enabled, v.Config, ts, ts)
+		`INSERT INTO clients (id, name, protocol, address, enabled, config, volume, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		v.ID, v.Name, v.Protocol, v.Address, v.Enabled, v.Config, v.Volume, ts, ts)
 	if isConstraint(err) {
 		return ErrConflict
 	}
@@ -167,6 +171,12 @@ func (db *DB) UpdateClient(ctx context.Context, v *Client) error {
 	return affectedOne(db.conn.ExecContext(ctx,
 		`UPDATE clients SET name = ?, protocol = ?, address = ?, enabled = ?, config = ?, updated_at = ? WHERE id = ?`,
 		v.Name, v.Protocol, v.Address, v.Enabled, v.Config, v.UpdatedAt, v.ID))
+}
+
+// SetClientVolume saves a client's own volume.
+func (db *DB) SetClientVolume(ctx context.Context, id string, volume float64) error {
+	return affectedOne(db.conn.ExecContext(ctx,
+		`UPDATE clients SET volume = ?, updated_at = ? WHERE id = ?`, volume, now(), id))
 }
 
 // DeleteClient removes a client.

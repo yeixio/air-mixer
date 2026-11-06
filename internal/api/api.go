@@ -79,6 +79,8 @@ func New(opts Options) http.Handler {
 	mux.HandleFunc("PUT /api/clients/{id}", a.updateClient)
 	mux.HandleFunc("DELETE /api/clients/{id}", a.deleteClient)
 	mux.HandleFunc("POST /api/clients/{id}/pair", a.pairClient)
+	mux.HandleFunc("PUT /api/clients/{id}/volume", a.setClientVolume)
+	mux.HandleFunc("PUT /api/clients/{id}/source", a.setClientSource)
 
 	mux.HandleFunc("GET /api/routes", a.listRoutes)
 	mux.HandleFunc("POST /api/routes", a.createRoute)

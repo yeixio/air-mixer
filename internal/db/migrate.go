@@ -13,6 +13,7 @@ import (
 var migrations = []func(context.Context, *sql.Tx) error{
 	migrateBaseSchema,
 	migrateDestNamesToJSON,
+	migrateClientVolume,
 }
 
 func (db *DB) migrate(ctx context.Context) error {
@@ -225,6 +226,12 @@ func migrateDestNamesToJSON(ctx context.Context, tx *sql.Tx) error {
 		}
 	}
 	return nil
+}
+
+// migrateClientVolume gives every client its own volume, full by default.
+func migrateClientVolume(ctx context.Context, tx *sql.Tx) error {
+	_, err := tx.ExecContext(ctx, `ALTER TABLE clients ADD COLUMN volume REAL NOT NULL DEFAULT 1.0`)
+	return err
 }
 
 func splitList(s string) []string {

@@ -345,3 +345,33 @@ func TestErrorCodes(t *testing.T) {
 		}
 	}
 }
+
+func TestSpeakerSourceAndVolume(t *testing.T) {
+	a := newTestAPI(t, nil)
+	a.expect("POST", "/api/servers", `{"name":"Jazz FM","protocol":"fake"}`, 201, nil)
+	a.expect("POST", "/api/clients", `{"id":"client-1","name":"Kitchen","protocol":"fake"}`, 201, nil)
+	a.expect("POST", "/api/clients", `{"id":"client-2","name":"Den","protocol":"fake"}`, 201, nil)
+
+	var routes []router.RouteStatus
+	a.expect("PUT", "/api/clients/client-1/source", `{"source":"Jazz FM"}`, 200, &routes)
+	a.expect("PUT", "/api/clients/client-2/source", `{"source":"Jazz FM"}`, 200, &routes)
+	if len(routes) != 1 || len(routes[0].DestNames) != 2 || routes[0].SourceName != "Jazz FM" {
+		t.Fatalf("routes after grouping: %+v", routes)
+	}
+	a.expect("PUT", "/api/clients/client-1/source", `{"source":""}`, 200, &routes)
+	if len(routes) != 1 || len(routes[0].DestNames) != 1 || routes[0].DestNames[0] != "Den" {
+		t.Fatalf("routes after nothing: %+v", routes)
+	}
+	a.expect("PUT", "/api/clients/client-1/source", `{"source":"Nope"}`, 400, nil)
+	a.expect("PUT", "/api/clients/client-1/source", `{}`, 400, nil)
+	a.expect("PUT", "/api/clients/missing/source", `{"source":""}`, 404, nil)
+
+	var c db.Client
+	a.expect("PUT", "/api/clients/client-1/volume", `{"volume":0.25}`, 200, &c)
+	if c.Volume != 0.25 {
+		t.Fatalf("volume = %v", c.Volume)
+	}
+	a.expect("PUT", "/api/clients/client-1/volume", `{"volume":2}`, 400, nil)
+	a.expect("PUT", "/api/clients/client-1/volume", `{}`, 400, nil)
+	a.expect("PUT", "/api/clients/missing/volume", `{"volume":0.5}`, 404, nil)
+}

@@ -11,7 +11,9 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"slices"
 	"strings"
+	"sync"
 
 	"github.com/yeixio/air-mixer/internal/db"
 	"github.com/yeixio/air-mixer/internal/protocols"
@@ -33,6 +35,10 @@ type Service struct {
 	manager *protocols.Manager
 	factory Factory
 	log     *slog.Logger
+
+	// routesMu serialises changes that read stored routes and write them
+	// back, such as picking a speaker's source or renaming a device.
+	routesMu sync.Mutex
 }
 
 // New returns a Service. Call Load to start what the database describes.
@@ -63,6 +69,7 @@ func (s *Service) Load(ctx context.Context) error {
 		return err
 	}
 	for _, v := range clients {
+		s.router.SetSinkVolume(v.ID, float32(v.Volume))
 		if v.Enabled {
 			if err := s.startClient(v); err != nil {
 				s.log.Error("cannot start client", "id", v.ID, "err", err)
@@ -181,6 +188,9 @@ func (s *Service) UpdateServer(ctx context.Context, v *db.Server) error {
 	if err := s.db.UpdateServer(ctx, v); err != nil {
 		return err
 	}
+	if err := s.renameInRoutes(ctx, old.Name, v.Name, true); err != nil {
+		return err
+	}
 	s.stopServer(v.ID)
 	if v.Enabled {
 		if err := s.startServer(ctx, v); err != nil {
@@ -210,11 +220,13 @@ func (s *Service) Client(ctx context.Context, id string) (*db.Client, error) {
 }
 
 // CreateClient saves a client and, if enabled, starts connecting to it.
-// Connection happens in the background; see Status.
+// Connection happens in the background; see Status. A new client starts
+// at full volume; SetClientVolume changes it.
 func (s *Service) CreateClient(ctx context.Context, v *db.Client) error {
 	if v.ID == "" {
 		v.ID = NewID("client")
 	}
+	v.Volume = 1
 	if err := validateCommon(v.ID, v.Name, v.Protocol); err != nil {
 		return err
 	}
@@ -224,6 +236,7 @@ func (s *Service) CreateClient(ctx context.Context, v *db.Client) error {
 	if err := s.db.CreateClient(ctx, v); err != nil {
 		return err
 	}
+	s.router.SetSinkVolume(v.ID, 1)
 	if v.Enabled {
 		if err := s.startClient(v); err != nil {
 			if derr := s.db.DeleteClient(ctx, v.ID); derr != nil {
@@ -247,8 +260,11 @@ func (s *Service) UpdateClient(ctx context.Context, v *db.Client) error {
 	if err != nil {
 		return err
 	}
-	v.CreatedAt = old.CreatedAt
+	v.CreatedAt, v.Volume = old.CreatedAt, old.Volume
 	if err := s.db.UpdateClient(ctx, v); err != nil {
+		return err
+	}
+	if err := s.renameInRoutes(ctx, old.Name, v.Name, false); err != nil {
 		return err
 	}
 	s.stopClient(v.ID)
@@ -264,7 +280,126 @@ func (s *Service) DeleteClient(ctx context.Context, id string) error {
 		return err
 	}
 	s.stopClient(id)
-	return s.db.DeleteClient(ctx, id)
+	if err := s.db.DeleteClient(ctx, id); err != nil {
+		return err
+	}
+	s.router.SetSinkVolume(id, 1)
+	return nil
+}
+
+// SetClientVolume sets a speaker's own volume, 0 to 1, without
+// reconnecting it. It scales every route that plays on the speaker.
+func (s *Service) SetClientVolume(ctx context.Context, id string, volume float64) error {
+	if volume < 0 || volume > 1 {
+		return invalidCode("route_volume_range", map[string]any{"volume": volume})
+	}
+	if err := s.db.SetClientVolume(ctx, id, volume); err != nil {
+		return err
+	}
+	s.router.SetSinkVolume(id, float32(volume))
+	return nil
+}
+
+// SetClientSource makes a speaker play one source, named as its server is,
+// or nothing when source is empty. It edits the stored routes the way a
+// person would in the routes table: the speaker leaves every route from
+// another source, which is deleted once it has no speakers left, and
+// joins an enabled route from the new source, or a new route named after
+// the source when there is none. Speakers that pick the same source so
+// share one route, which is how speakers are grouped.
+func (s *Service) SetClientSource(ctx context.Context, id, source string) error {
+	c, err := s.db.GetClient(ctx, id)
+	if err != nil {
+		return err
+	}
+	if source != "" {
+		servers, err := s.db.ListServers(ctx)
+		if err != nil {
+			return err
+		}
+		if !slices.ContainsFunc(servers, func(v *db.Server) bool { return v.Name == source }) {
+			return invalidCode("source_unknown", map[string]any{"source": source})
+		}
+	}
+
+	s.routesMu.Lock()
+	defer s.routesMu.Unlock()
+	routes, err := s.db.ListRoutes(ctx)
+	if err != nil {
+		return err
+	}
+	joined := false
+	for _, v := range routes {
+		if !slices.Contains(v.DestNames, c.Name) {
+			continue
+		}
+		if !joined && source != "" && v.SourceName == source && v.Enabled {
+			joined = true // already playing it: keep this one
+			continue
+		}
+		v.DestNames = slices.DeleteFunc(slices.Clone(v.DestNames), func(n string) bool { return n == c.Name })
+		if len(v.DestNames) == 0 {
+			err = s.DeleteRoute(ctx, v.ID)
+		} else {
+			_, err = s.UpdateRoute(ctx, toRouter(v))
+		}
+		if err != nil {
+			return err
+		}
+	}
+	if source == "" || joined {
+		return nil
+	}
+	for _, v := range routes {
+		if v.SourceName == source && v.Enabled && !slices.Contains(v.DestNames, c.Name) {
+			v.DestNames = append(slices.Clone(v.DestNames), c.Name)
+			_, err := s.UpdateRoute(ctx, toRouter(v))
+			return err
+		}
+	}
+	_, err = s.CreateRoute(ctx, router.Route{
+		Name: source, SourceName: source, DestNames: []string{c.Name}, Volume: 1, Enabled: true,
+	})
+	return err
+}
+
+// renameInRoutes points stored routes at a server's or client's new name,
+// so renaming a device in the web UI keeps what it plays. A route named
+// after a renamed source takes the new name too.
+func (s *Service) renameInRoutes(ctx context.Context, from, to string, isSource bool) error {
+	if from == to {
+		return nil
+	}
+	s.routesMu.Lock()
+	defer s.routesMu.Unlock()
+	routes, err := s.db.ListRoutes(ctx)
+	if err != nil {
+		return err
+	}
+	for _, v := range routes {
+		changed := false
+		if isSource && v.SourceName == from {
+			v.SourceName, changed = to, true
+			if v.Name == from {
+				v.Name = to
+			}
+		}
+		if !isSource && slices.Contains(v.DestNames, from) {
+			v.DestNames = slices.Clone(v.DestNames)
+			for i, n := range v.DestNames {
+				if n == from {
+					v.DestNames[i] = to
+				}
+			}
+			changed = true
+		}
+		if changed {
+			if _, err := s.UpdateRoute(ctx, toRouter(v)); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 // Routes
