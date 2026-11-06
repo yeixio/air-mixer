@@ -54,13 +54,58 @@ On create, `id` is generated when omitted and `enabled` defaults to
 example the port is taken) nothing is saved and the error is returned.
 
 `config` may be sent as a JSON string, as stored, or as an object.
-A `matinee` server takes no config: it shows up in Matinee as a player
-named after the server (see [Matinee](#matinee)). AirPlay servers accept:
 
-| Key | Default | |
-|-----|---------|-|
-| `address` | `:<airplay_port>` | RTSP listen address. Each receiver needs its own port. |
-| `interface` | `server.interface` | Interface to advertise on |
+| Protocol | `config` keys |
+|----------|---------------|
+| `airplay` | `address` (RTSP listen address, default `:<airplay_port>`; each receiver needs its own port), `interface` (interface to advertise on, default `server.interface`) |
+| `radio` | `url` (required): an internet radio station, a PLS or M3U playlist, an HLS stream (`.m3u8`) or an audio file, over http, https, rtsp or rtmp |
+| `pulse` | `source` (name, description, a phone's Bluetooth address, or `<sink>.monitor`; default source if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`) |
+| `bluetooth` | `device` (a phone's Bluetooth address: record only that phone; default whichever device plays), `adapter` (default `hci0`), `hidden` (`true`: stay out of scans, for phones already paired), `server` (PulseAudio server string) |
+| `spotify` | `bitrate`: 96, 160 or 320 (default 320). Needs `librespot` |
+| `airplay2` | `address`: the RTSP port, such as `:7000` (default shairport-sync's 7000). Needs `shairport-sync` built with AirPlay 2 |
+| `upnp` | `address`: the HTTP listen address for control points, such as `:49494` (default: a free port, which SSDP advertises) |
+| `matinee` | none: it shows up in Matinee as a player named after the server (see [Matinee](#matinee)) |
+
+A `radio` server plays its URL for as long as it is on. A station that
+drops is reconnected with backoff (1 s, doubling up to a minute) and a
+file starts again when it ends. MP3 and WAV are decoded in Go; AAC, Ogg,
+Opus, FLAC, HLS, RTSP and RTMP need `ffmpeg` on the server's `$PATH`,
+which the Docker image includes.
+
+A `bluetooth` server makes the host a Bluetooth speaker named after the
+server. Over BlueZ's D-Bus API it powers the adapter, sets its alias,
+makes it discoverable and pairable with no timeout, and registers a
+pairing agent that accepts any phone without a PIN, trusts it, and
+authorises only audio (A2DP and AVRCP). It records whichever Bluetooth
+source PipeWire or PulseAudio creates when a phone plays, so the host
+needs BlueZ and PipeWire (or PulseAudio with its Bluetooth module), and
+the server needs access to the D-Bus system bus. Without BlueZ, it still
+records a phone that is already paired, and `/api/status` shows why
+pairing is off.
+
+A `spotify` server shows up in the Spotify app as a Connect speaker,
+through `librespot`. It keeps librespot's credentials under
+`<data_dir>/spotify/<id>`, so it stays signed in to the account that last
+played to it. An `airplay2` server shows up on Apple devices as an
+AirPlay 2 speaker, which they can add to multi-room groups, through
+`shairport-sync` built with AirPlay 2 support and with `nqptp` running.
+Each runs its program, reads its audio from the program's output, and
+starts it again when it exits. Creating either fails with
+`program_missing` when the program is not on the server's `$PATH`, and
+`GET /api/protocols` reports them with `"available": false`.
+
+A `upnp` server is a UPnP/DLNA media renderer named after the server:
+apps such as BubbleUPnP, Hi-Fi Cast, foobar2000 or Windows' "Cast to
+Device" list it as a speaker and send it a URL, which it plays like a
+`radio` server, once per track (with `SetNextAVTransportURI` for gapless
+queues). It handles play, pause, stop, volume and mute, and sends GENA
+events so apps show its state.
+
+A `pulse` server records from a PulseAudio or PipeWire source: a line-in,
+a USB audio interface, the monitor of a sink, or a phone playing to the
+host over Bluetooth (pair it with the host and give its address). It waits
+while the source is missing, such as while no phone is connected, and
+starts again when the source comes back.
 
 ## Clients (outputs)
 
@@ -84,8 +129,12 @@ reported by `/api/status`.
 | Protocol | `address` | `config` keys |
 |----------|-----------|---------------|
 | `airplay` | `host` or `host:port` (default port 5000) | `latency_ms` (default 2000), `disable_encryption` |
+| `airplay2` | `host` or `host:port` (default port 7000), as discovery gives it | `latency_ms` (default 2000) |
 | `local` | ignored | `delay_ms` |
 | `pulse` | ignored | `sink` (name, description or Bluetooth address; default sink if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`), `delay_ms` |
+| `cast` | the Cast device's `host` or `host:port` (default port 8009; speaker groups have their own port, which discovery gives) | none |
+| `upnp` | the renderer's device description URL, as discovery gives it; a bare host or `host:port` means a Sonos player | `format`: `wav`, `mp3` (needs ffmpeg), or empty for MP3 on Sonos with ffmpeg installed and WAV otherwise |
+| `snapcast` | snapserver's `host` or `host:port` of its TCP source (default port 4953) | `sample_rate` (default 48000, snapserver's default) |
 | `stream` | ignored | none; see [Streams](#streams) |
 | `matinee` | the Matinee player's id, from `/api/matinee/players` | `library_id`: the music library its station goes in (default: the first) |
 
@@ -94,6 +143,50 @@ speakers with different latencies, such as several Bluetooth speakers in
 one room. A `pulse` client keeps retrying while its sink is missing, for
 example while a Bluetooth speaker is off, and reconnects by itself when
 the speaker drops off and comes back.
+
+An `airplay2` client is **experimental** and has not been tried on
+Apple hardware yet. It plays on receivers that refuse classic AirPlay,
+such as HomePods and recent Apple TVs: it pairs with HomeKit's transient
+pairing (the receiver must allow "Anyone on the same network", without a
+password), encrypts the RTSP connection with ChaCha20-Poly1305, and sends
+ALAC audio as a realtime stream, each packet sealed with the session key.
+It uses NTP timing, so receivers that only accept PTP, such as
+shairport-sync's AirPlay 2 mode, do not play; those speak classic AirPlay
+anyway. A receiver that wants a PIN fails with "refused transient
+pairing". Please report what works with the device report form.
+
+A `cast` client plays on a Google Cast device (Chromecast, Nest and
+Google Home speakers, speaker groups, TVs with Chromecast built in). It
+serves its audio as a stream (see [Streams](#streams)) and has the device
+play it in Google's Default Media Receiver. The receiver starts when
+audio starts and stops after a minute of silence. If someone casts
+something else in between, Air-Mixer leaves it alone until its own audio
+stops and starts again. Cast devices buffer a live stream for a few
+seconds, so give the outputs that play alongside one a `delay_ms` to
+match. The device must be able to reach Air-Mixer's web port; set
+`server.public_url` if it can't be worked out.
+
+A `upnp` client plays on a UPnP/DLNA media renderer: Sonos, AV
+receivers, smart TVs, Kodi and the like. Like `cast`, it starts the
+renderer when audio starts (`SetAVTransportURI` and `Play`), stops it
+after a minute of silence, plays again if the renderer gives up on the
+stream, and steps aside when another app sets a different URI. Sonos gets
+MP3 through its `x-rincon-mp3radio` scheme, which it needs for endless
+streams; use a group's coordinator as the address. Renderers fetch the
+stream with `?raw=1`, a close-delimited body with DLNA's streaming
+headers, and `?format=mp3` when they get MP3.
+
+A `snapcast` client writes 16-bit stereo PCM into a TCP source on
+snapserver, which every Snapcast client then plays in sync. Add the source
+to `snapserver.conf`:
+
+```ini
+[stream]
+source = tcp://0.0.0.0:4953?name=Air-Mixer&mode=server
+```
+
+and set `sample_rate` if the source names another rate with
+`sampleformat`.
 
 `POST /api/clients/{id}/pair` returns 501: AirPlay 2 pairing is not
 implemented yet.
@@ -228,6 +321,45 @@ curl -X POST http://airmixer.local:9001/api/play \
   -d '{"url": "http://nas.local/sounds/doorbell.wav", "outputs": ["Kitchen", "Den"]}'
 ```
 
+## Protocols
+
+`GET /api/protocols` lists the protocols this build supports, inputs
+(`"kind": "server"`) first, with the fields each takes, so a client can
+build its forms. `label`, `hint` and `placeholder_key` are keys in the web
+UI's translations (`i18n/locales/<lang>/web.json`); `placeholder` is shown
+as it is. A field with `"key": "address"` is a client's `address`; every
+other key goes in `config`. `available` is `false` when the program
+named in `requires` is not installed, and creating that protocol fails.
+
+```json
+[
+  {
+    "name": "radio", "kind": "server", "title": "Internet radio",
+    "description": "protocols.radioServer", "available": true,
+    "fields": [
+      {"key": "url", "type": "url", "required": true, "label": "fields.url",
+       "hint": "fields.urlHint", "placeholder": "https://stream.example.com/radio.mp3"}
+    ]
+  },
+  {
+    "name": "spotify", "kind": "server", "title": "Spotify Connect",
+    "description": "protocols.spotifyServer",
+    "requires": "librespot", "available": false,
+    "fields": [
+      {"key": "bitrate", "type": "number", "label": "fields.bitrate", "placeholder": "320"}
+    ]
+  },
+  {
+    "name": "snapcast", "kind": "client", "title": "Snapcast",
+    "description": "protocols.snapcastClient", "discovery": true, "available": true,
+    "fields": [
+      {"key": "address", "type": "text", "required": true, "label": "common.address", "placeholder": "snapserver.local:4953"},
+      {"key": "sample_rate", "type": "number", "label": "fields.sampleRate", "placeholder": "48000"}
+    ]
+  }
+]
+```
+
 ## Status and health
 
 `GET /api/status`
@@ -239,7 +371,7 @@ curl -X POST http://airmixer.local:9001/api/play \
   "adapters": [
     {"id": "client-1", "name": "Kitchen", "protocol": "airplay", "kind": "client", "state": "connected"},
     {"id": "client-2", "name": "Apple TV", "protocol": "airplay", "kind": "client", "state": "failed",
-     "error": "airplay: device requires AirPlay 2 pairing, which is not supported yet: unsupported device"}
+     "error": "airplay: device requires AirPlay 2; add it as an AirPlay 2 output instead: unsupported device"}
   ],
   "version": "v0.2.0",
   "timestamp": 1793037600
@@ -257,7 +389,12 @@ the database is unavailable.
 
 `GET /api/discovery?timeout=5s` browses every protocol;
 `GET /api/discovery/{protocol}` browses one. `timeout` is optional, at
-most 30s.
+most 30s. AirPlay speakers (`_raop._tcp`), Google Cast devices and groups
+(`_googlecast._tcp`, named as in the Google Home app) and Snapcast servers
+(`_snapcast._tcp`, given with the TCP source port 4953) are found over
+mDNS, over IPv4 alone on hosts without IPv6. UPnP/DLNA renderers and Sonos
+players are found with an SSDP search for `MediaRenderer:1`; their
+address is their description URL.
 
 ```json
 {

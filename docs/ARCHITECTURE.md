@@ -63,6 +63,17 @@ Classic AirPlay (RAOP), both directions.
   every second, keeps the last 1024 packets to answer retransmit requests,
   and answers timing requests. Devices that demand AirPlay 2 pairing are
   reported with `ErrAirPlay2Required`.
+- **AirPlay 2 sender (`ClientOptions.AirPlay2`, experimental).** HomeKit
+  transient pair-setup (`hap.go`: TLV8, SRP-6a over the 3072-bit group
+  with SHA-512 and PIN 3939), then the RTSP connection is framed and
+  encrypted with ChaCha20-Poly1305 using HKDF-derived control keys.
+  `SETUP` bodies are binary plists (`bplist.go`): one for the session
+  (NTP timing, which opens the encrypted event channel) and one for a
+  realtime ALAC stream. Audio packets are sealed with the first 32 bytes of
+  the pairing secret, the RTP timestamp and SSRC as additional data; sync,
+  timing and retransmission are the classic ones. `POST /feedback` every
+  two seconds keeps the session alive, and two failures report
+  `ErrConnectionLost`.
 
 ### `internal/protocols/local` and `internal/protocols/pulse`
 
@@ -76,6 +87,71 @@ speakers. A pulse output checks every two seconds that its stream still
 plays on its sink; when PulseAudio moves it because the sink went away,
 it closes the stream and reports `ErrConnectionLost`, and the Manager
 reconnects it once the sink is back.
+
+### `internal/protocols/radio`, `snapcast` and the pulse input
+
+- **radio** plays a URL as an input. It follows PLS and M3U playlists to
+  their first stream, hands HLS, RTSP and RTMP to ffmpeg, decodes the rest
+  with `internal/audio/decode`, and paces files to real time (live
+  stations already are). A station that drops is reconnected with
+  backoff; a file starts again when it ends.
+- **snapcast** converts the output's audio to snapserver's rate and
+  writes it as 16-bit PCM to a snapserver TCP source. A failed write
+  reports `ErrConnectionLost`, so the Manager reconnects.
+- **pulse** also records: `pulse.Source` opens a record stream on a
+  source matched like a sink (name, description, Bluetooth address, never
+  a speaker's monitor for an address), retries every two seconds while it
+  is missing, and checks that PulseAudio hasn't moved the stream to
+  another source.
+
+### `internal/protocols/cast`
+
+Google Cast output. Each output serves a live WAV stream and keeps a Cast
+v2 control connection to the device: TLS to port 8009 carrying
+length-prefixed protobuf `CastMessage`s with JSON payloads, encoded by
+hand in `message.go`. It answers and sends heartbeats, launches the
+Default Media Receiver when sound arrives, `LOAD`s the stream into it,
+stops it after a minute of silence, and steps aside when a
+`RECEIVER_STATUS` shows another app took the device. A dropped connection
+or a device that stops answering for 20 seconds reports
+`ErrConnectionLost`.
+
+### `internal/protocols/upnp`
+
+UPnP AV both ways, with SSDP (`ssdp.go`: M-SEARCH for discovery, and an
+advertiser that answers searches and sends `NOTIFY`) and a small SOAP
+client and parser (`soap.go`).
+
+- **Client** reads the renderer's description (Sonos nests its
+  AVTransport in an embedded device), then drives it like the Cast output:
+  `SetAVTransportURI` and `Play` on sound, `GetTransportInfo` and
+  `GetMediaInfo` every five seconds to notice another app or a renderer
+  that stopped, `Stop` after a minute of silence. Three failed polls in a
+  row report `ErrConnectionLost`.
+- **Server** is a media renderer with AVTransport, RenderingControl and
+  ConnectionManager (`scpd.go` holds their descriptions) and GENA
+  eventing. Each track plays through a `radio.Server` with `Once` set, at
+  the renderer's volume.
+
+### `internal/protocols/bluetooth` and `internal/protocols/pipe`
+
+- **bluetooth** turns the host into a Bluetooth speaker over BlueZ's
+  D-Bus API (`github.com/godbus/dbus/v5`): it sets the adapter's alias,
+  makes it discoverable and pairable, and exports a `NoInputNoOutput`
+  agent that trusts phones and authorises only the A2DP and AVRCP
+  profiles. The audio comes from a `pulse.Source` that follows whichever
+  Bluetooth source appears. D-Bus failures go to `Err()` without
+  stopping capture.
+- **pipe** runs an external receiver that writes 16-bit stereo PCM to
+  stdout (`librespot --backend pipe`, `shairport-sync --output stdout`),
+  paces it to real time, and restarts the program with backoff when it
+  exits, keeping the last lines of stderr for `Err()`.
+
+### `internal/audio/decode`
+
+Turns encoded audio into samples for playback and radio inputs: MP3 and
+WAV in pure Go, anything else through an `ffmpeg` process when one is on
+`$PATH`.
 
 ### `internal/audio/alac`
 

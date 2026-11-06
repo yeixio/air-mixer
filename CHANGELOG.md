@@ -10,6 +10,37 @@ generated from its pull requests.
 
 ### Added
 
+- `GET /api/protocols`, listing each protocol with the fields it takes;
+  the web UI builds its protocol menus and settings from it, so PipeWire
+  and Bluetooth outputs can be set up there now.
+- An internet radio input: a station, playlist, HLS stream or audio file
+  from a URL, kept playing and reconnected when it drops.
+- A PulseAudio/PipeWire input that records a line-in, a USB interface, a
+  sink's monitor, or a phone playing to the host over Bluetooth.
+- A Google Cast output for Chromecast, Nest and Google Home speakers,
+  speaker groups and Cast TVs, with discovery.
+- UPnP/DLNA in both directions: an output for Sonos (MP3 through its
+  radio scheme), AV receivers, smart TVs and other renderers, found with
+  SSDP; and an input that is a DLNA media renderer apps can play to.
+- An experimental AirPlay 2 output for HomePods, Apple TVs and other
+  receivers that refuse classic AirPlay: HomeKit transient pairing, an
+  encrypted control channel and ChaCha20-Poly1305 audio, with discovery
+  over `_airplay._tcp`. Untested on Apple hardware.
+- A Bluetooth input: Air-Mixer shows up as a Bluetooth speaker that
+  phones pair with, accepting pairings through BlueZ and recording
+  through PipeWire or PulseAudio.
+- A Spotify Connect input through librespot and an AirPlay 2 input
+  through shairport-sync; the web UI greys them out until the program is
+  installed.
+- `controller.hostAudio` in the Helm chart, mounting the host's
+  PipeWire/PulseAudio socket and D-Bus system bus for line-in and
+  Bluetooth inputs.
+- Streams take `?raw=1` (close-delimited, DLNA headers) and
+  `?format=mp3` (through ffmpeg).
+- A Snapcast output that feeds a snapserver TCP source, and discovery of
+  Snapcast servers.
+- AAC, Ogg, Opus and FLAC through ffmpeg for playback and radio, when
+  ffmpeg is installed; the Docker image includes it.
 - A PulseAudio/PipeWire output that can drive paired Bluetooth speakers,
   with a per-output delay, and declarative setup from the config file.
 - A Helm chart with a per-room speaker agent, and multi-arch images on
@@ -32,6 +63,7 @@ generated from its pull requests.
 
 ### Changed
 
+- Discovery falls back to IPv4 alone on hosts and pods without IPv6.
 - The web UI wears Matinee's look: its warm dark theme with the coral
   accent, or its Light theme when the system asks for light, Inter and
   Fraunces (served by Air-Mixer, no internet needed), Matinee's cards,

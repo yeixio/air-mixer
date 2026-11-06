@@ -28,8 +28,7 @@
     "unexpected": "Đã xảy ra lỗi.",
     "httpStatus": "Máy chủ trả lời {{status}}. Hãy tải lại trang và thử lại.",
     "loadFailed": "Không kết nối được với Air-Mixer. Hãy kiểm tra xem nó có đang chạy không, rồi tải lại trang.",
-    "validation": "Kiểm tra lại biểu mẫu",
-    "comingSoon": "{{protocol}} (sắp có)"
+    "validation": "Kiểm tra lại biểu mẫu"
   },
   "protocols": {
     "airplayServer": "AirPlay: nhận âm thanh từ iPhone, iPad và Mac",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: hiện trong Matinee như một trình phát và phát những gì được gửi tới",
     "matineeClient": "Matinee: phát trên một trình phát Matinee (địa chỉ: ID của trình phát)",
     "streamClient": "Luồng: luồng WAV trực tiếp cho VLC hoặc trình duyệt",
-    "localClient": "Cục bộ: card âm thanh của máy này"
+    "localClient": "Cục bộ: card âm thanh của máy này",
+    "radioServer": "Radio internet: phát một đài, danh sách phát hoặc tệp âm thanh từ URL",
+    "pulseServer": "PipeWire hoặc PulseAudio: thu âm line-in, giao diện âm thanh USB hoặc điện thoại đang phát qua Bluetooth",
+    "castClient": "Google Cast: phát trên Chromecast, loa Nest và Google Home, nhóm loa và TV có Cast",
+    "pulseClient": "PipeWire hoặc PulseAudio: phát trên card âm thanh hoặc loa Bluetooth đã ghép đôi",
+    "snapcastClient": "Snapcast: phát đồng bộ trên mọi máy khách Snapcast",
+    "upnpServer": "UPnP/DLNA: hiện như một loa trong các ứng dụng DLNA như BubbleUPnP và phát những gì chúng gửi",
+    "upnpClient": "UPnP/DLNA: phát trên Sonos, ampli AV, TV thông minh và các renderer DLNA khác",
+    "bluetoothServer": "Bluetooth: hiện như một loa Bluetooth để điện thoại và máy tính xách tay ghép đôi",
+    "spotifyServer": "Spotify Connect: hiện như một loa trong ứng dụng Spotify",
+    "airplay2Server": "AirPlay 2: hiện như một loa AirPlay 2 trên iPhone, iPad và Mac, kể cả nhiều phòng",
+    "needs": "{{name}}: cần {{program}}, nhưng chưa được cài",
+    "airplay2Client": "AirPlay 2 (thử nghiệm): phát trên HomePod, Apple TV và các loa AirPlay 2 khác"
   },
   "servers": {
     "title": "Máy chủ đầu vào",
@@ -130,6 +141,35 @@
     "selectFailed": "Không chọn được thiết bị đó. Hãy tìm lại hoặc thiết lập thủ công.",
     "manual": "Thiết lập thủ công",
     "manualHint": "Dùng mục này nếu không tìm thấy thiết bị của bạn."
+  },
+  "fields": {
+    "url": "URL luồng",
+    "urlHint": "Một đài radio internet, danh sách phát (.pls, .m3u, .m3u8) hoặc tệp âm thanh. Tệp sẽ được phát lặp lại.",
+    "source": "Nguồn (không bắt buộc)",
+    "sourceHint": "Tên hoặc mô tả của một nguồn, địa chỉ Bluetooth của điện thoại đang phát tới máy này, hoặc tên một sink kèm .monitor. Để trống để dùng nguồn mặc định.",
+    "sink": "Sink (không bắt buộc)",
+    "sinkHint": "Tên hoặc mô tả của một sink, hoặc địa chỉ loa Bluetooth như AA:BB:CC:DD:EE:FF. Để trống để dùng sink mặc định.",
+    "pulseServer": "Máy chủ PulseAudio (không bắt buộc)",
+    "pulseServerHint": "Để trống để dùng máy chủ thông thường trên máy này.",
+    "delay": "Độ trễ tính bằng mili giây (không bắt buộc)",
+    "delayHint": "Giữ âm thanh lại để loa này khớp với các loa chậm hơn.",
+    "sampleRate": "Tần số lấy mẫu (không bắt buộc)",
+    "sampleRateHint": "Tần số trong sampleformat của nguồn snapserver. Để trống để dùng 48000, mặc định của snapserver.",
+    "snapcastAddressHint": "Máy chủ snapserver, và cổng của nguồn TCP nếu không phải 4953.",
+    "castAddressHint": "Địa chỉ IP của thiết bị, và cổng nếu không phải 8009 (nhóm loa dùng cổng khác). Thiết bị Cast phát trễ vài giây, nên hãy đặt độ trễ cho các loa khác cho khớp.",
+    "listen": "Địa chỉ lắng nghe (không bắt buộc)",
+    "listenHint": "Cổng mà các ứng dụng dùng để tới đầu vào này, như :49494. Để trống để dùng một cổng trống.",
+    "upnpAddressHint": "URL mô tả của renderer, như Tìm thiết bị đưa ra, hoặc địa chỉ IP của một loa Sonos.",
+    "format": "Định dạng luồng (không bắt buộc)",
+    "formatHint": "wav hoặc mp3. Để trống để dùng MP3 cho Sonos và WAV cho mọi thiết bị khác. MP3 cần ffmpeg.",
+    "btDevice": "Điện thoại (không bắt buộc)",
+    "btDeviceHint": "Chỉ ghi điện thoại này, theo địa chỉ Bluetooth. Để trống để ghi thiết bị đang phát.",
+    "btAdapter": "Bộ điều hợp Bluetooth (không bắt buộc)",
+    "btHidden": "Ẩn: chỉ điện thoại đã ghép đôi mới kết nối được",
+    "bitrate": "Tốc độ bit (không bắt buộc)",
+    "bitrateHint": "96, 160 hoặc 320 kbit/s. Để trống để dùng 320.",
+    "airplay2PortHint": "Cổng AirPlay 2 lắng nghe, như :7000. Mỗi đầu vào AirPlay cần một cổng riêng.",
+    "airplay2AddressHint": "Địa chỉ và cổng của đầu thu, như Tìm thiết bị đưa ra, ví dụ 192.168.1.60:7000. Đầu thu phải cho phép mọi người trong mạng phát mà không cần mật khẩu."
   },
   "pairing": {
     "title": "Ghép đôi AirPlay",

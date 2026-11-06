@@ -28,8 +28,7 @@
     "unexpected": "Terjadi kesalahan.",
     "httpStatus": "Server menjawab {{status}}. Muat ulang halaman dan coba lagi.",
     "loadFailed": "Tidak dapat menghubungi Air-Mixer. Pastikan Air-Mixer berjalan, lalu muat ulang halaman.",
-    "validation": "Periksa formulir",
-    "comingSoon": "{{protocol}} (segera hadir)"
+    "validation": "Periksa formulir"
   },
   "protocols": {
     "airplayServer": "AirPlay: terima audio dari iPhone, iPad, dan Mac",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: muncul di Matinee sebagai pemutar dan memutar apa yang dikirim",
     "matineeClient": "Matinee: putar di pemutar Matinee (alamat: ID pemutar)",
     "streamClient": "Stream: stream WAV langsung untuk VLC atau browser",
-    "localClient": "Lokal: kartu suara mesin ini"
+    "localClient": "Lokal: kartu suara mesin ini",
+    "radioServer": "Radio internet: putar stasiun, playlist, atau file audio dari URL",
+    "pulseServer": "PipeWire atau PulseAudio: rekam line-in, antarmuka audio USB, atau ponsel yang memutar lewat Bluetooth",
+    "castClient": "Google Cast: putar di Chromecast, speaker Nest dan Google Home, grup speaker, dan TV dengan Cast",
+    "pulseClient": "PipeWire atau PulseAudio: putar di kartu suara atau speaker Bluetooth yang dipasangkan",
+    "snapcastClient": "Snapcast: putar serempak di setiap klien Snapcast",
+    "upnpServer": "UPnP/DLNA: muncul sebagai speaker di aplikasi DLNA seperti BubbleUPnP dan memutar apa yang dikirim",
+    "upnpClient": "UPnP/DLNA: putar di Sonos, receiver AV, smart TV, dan renderer DLNA lainnya",
+    "bluetoothServer": "Bluetooth: muncul sebagai speaker Bluetooth yang bisa dipasangkan dengan ponsel dan laptop",
+    "spotifyServer": "Spotify Connect: muncul sebagai speaker di aplikasi Spotify",
+    "airplay2Server": "AirPlay 2: muncul sebagai speaker AirPlay 2 di iPhone, iPad, dan Mac, termasuk multiroom",
+    "needs": "{{name}}: memerlukan {{program}}, yang belum terpasang",
+    "airplay2Client": "AirPlay 2 (eksperimental): putar di HomePod, Apple TV, dan speaker AirPlay 2 lainnya"
   },
   "servers": {
     "title": "Server input",
@@ -130,6 +141,35 @@
     "selectFailed": "Tidak dapat memilih perangkat itu. Cari lagi, atau atur secara manual.",
     "manual": "Atur secara manual",
     "manualHint": "Gunakan ini jika perangkat Anda tidak ditemukan."
+  },
+  "fields": {
+    "url": "URL stream",
+    "urlHint": "Stasiun radio internet, playlist (.pls, .m3u, .m3u8), atau file audio. File diputar berulang-ulang.",
+    "source": "Sumber (opsional)",
+    "sourceHint": "Nama atau deskripsi sumber, alamat Bluetooth ponsel yang memutar ke mesin ini, atau nama sink diikuti .monitor. Kosongkan untuk sumber bawaan.",
+    "sink": "Sink (opsional)",
+    "sinkHint": "Nama atau deskripsi sink, atau alamat speaker Bluetooth seperti AA:BB:CC:DD:EE:FF. Kosongkan untuk sink bawaan.",
+    "pulseServer": "Server PulseAudio (opsional)",
+    "pulseServerHint": "Kosongkan untuk memakai yang biasa di mesin ini.",
+    "delay": "Jeda dalam milidetik (opsional)",
+    "delayHint": "Menahan audio agar speaker ini selaras dengan yang lebih lambat.",
+    "sampleRate": "Laju sampel (opsional)",
+    "sampleRateHint": "Laju pada sampleformat sumber snapserver. Kosongkan untuk 48000, bawaan snapserver.",
+    "snapcastAddressHint": "Host snapserver, dan port sumber TCP-nya jika bukan 4953.",
+    "castAddressHint": "Alamat IP perangkat, dan port-nya jika bukan 8009 (grup speaker memakai port lain). Perangkat Cast berbunyi beberapa detik lebih lambat, jadi tunda speaker lain agar selaras.",
+    "listen": "Alamat dengar (opsional)",
+    "listenHint": "Port yang dipakai aplikasi untuk menjangkau input ini, misalnya :49494. Kosongkan untuk port bebas.",
+    "upnpAddressHint": "URL deskripsi renderer, seperti yang diberikan Cari Perangkat, atau alamat IP pemutar Sonos.",
+    "format": "Format stream (opsional)",
+    "formatHint": "wav atau mp3. Kosongkan untuk MP3 di Sonos dan WAV di perangkat lain. MP3 memerlukan ffmpeg.",
+    "btDevice": "Ponsel (opsional)",
+    "btDeviceHint": "Rekam hanya ponsel ini, berdasarkan alamat Bluetooth. Kosongkan untuk merekam perangkat yang sedang memutar.",
+    "btAdapter": "Adaptor Bluetooth (opsional)",
+    "btHidden": "Tersembunyi: hanya ponsel yang sudah dipasangkan yang bisa terhubung",
+    "bitrate": "Bitrate (opsional)",
+    "bitrateHint": "96, 160, atau 320 kbit/s. Kosongkan untuk 320.",
+    "airplay2PortHint": "Port yang didengarkan AirPlay 2, misalnya :7000. Beri setiap input AirPlay port sendiri.",
+    "airplay2AddressHint": "Alamat dan port penerima, seperti yang diberikan Cari Perangkat, misalnya 192.168.1.60:7000. Penerima harus mengizinkan siapa pun di jaringan memutar tanpa kata sandi."
   },
   "pairing": {
     "title": "Pemasangan AirPlay",

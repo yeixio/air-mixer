@@ -30,5 +30,16 @@
   "matinee_needs_player": "Un client Matinee a besoin de l'identifiant du lecteur comme adresse (voir /api/matinee/players)",
   "matinee_not_signed_in": "Air-Mixer n'est pas encore connecté à Matinee",
   "matinee_link_failed": "Impossible d'obtenir un code de Matinee : {{detail}}",
-  "matinee_players_failed": "Impossible d'obtenir les lecteurs de Matinee : {{detail}}"
+  "matinee_players_failed": "Impossible d'obtenir les lecteurs de Matinee : {{detail}}",
+  "radio_needs_url": "Une entrée radio internet a besoin d'une url",
+  "radio_bad_url": "L'url doit être une adresse http, https, rtsp ou rtmp",
+  "snapcast_needs_address": "Un client Snapcast a besoin de l'adresse du snapserver",
+  "sample_rate_range": "sample_rate doit être compris entre 8000 et 192000",
+  "cast_needs_address": "Un client Google Cast a besoin de l'adresse de l'appareil",
+  "upnp_needs_address": "Un client UPnP/DLNA a besoin de l'URL de description du renderer ou de l'adresse d'un lecteur Sonos",
+  "upnp_bad_format": "format doit valoir wav ou mp3",
+  "bluetooth_bad_device": "device doit être une adresse Bluetooth, comme 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate doit valoir 96, 160 ou 320",
+  "program_missing": "{{program}} n'est pas installé sur cette machine",
+  "bad_port": "address doit être un port de 1 à 65535, comme :7000"
 }

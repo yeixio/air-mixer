@@ -73,6 +73,7 @@ func Run(ctx context.Context, opts Options) error {
 	if factory == nil {
 		factory = service.NewFactory(service.Defaults{
 			AirPlayPort: cfg.Server.AirPlayPort, Interface: cfg.Server.Interface,
+			DataDir: cfg.Server.DataDir,
 			Version: opts.Version, WebPort: cfg.Server.WebPort, PublicURL: cfg.Server.PublicURL,
 			Streams: streams, Matinee: account, Settings: store,
 		}, log)

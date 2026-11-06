@@ -30,5 +30,16 @@
   "matinee_needs_player": "Matinee کلائنٹ کو پتے کے طور پر پلیئر کی ID چاہیے (‎/api/matinee/players دیکھیں)",
   "matinee_not_signed_in": "Air-Mixer ابھی Matinee میں سائن اِن نہیں ہوا",
   "matinee_link_failed": "Matinee سے کوڈ نہیں مل سکا: {{detail}}",
-  "matinee_players_failed": "Matinee سے پلیئر نہیں مل سکے: {{detail}}"
+  "matinee_players_failed": "Matinee سے پلیئر نہیں مل سکے: {{detail}}",
+  "radio_needs_url": "انٹرنیٹ ریڈیو ان پٹ کو url چاہیے",
+  "radio_bad_url": "url کو http، https، rtsp یا rtmp پتا ہونا چاہیے",
+  "snapcast_needs_address": "Snapcast کلائنٹ کو snapserver کا پتا چاہیے",
+  "sample_rate_range": "sample_rate کو 8000 اور 192000 کے درمیان ہونا چاہیے",
+  "cast_needs_address": "Google Cast کلائنٹ کو ڈیوائس کا پتا چاہیے",
+  "upnp_needs_address": "UPnP/DLNA کلائنٹ کو رینڈرر کا تفصیلی URL یا کسی Sonos پلیئر کا پتا چاہیے",
+  "upnp_bad_format": "format کو wav یا mp3 ہونا چاہیے",
+  "bluetooth_bad_device": "device کو Bluetooth پتا ہونا چاہیے، جیسے 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate کو 96، 160 یا 320 ہونا چاہیے",
+  "program_missing": "{{program}} اس مشین پر انسٹال نہیں ہے",
+  "bad_port": "address کو 1 سے 65535 تک کا پورٹ ہونا چاہیے، جیسے ‎:7000"
 }

@@ -34,14 +34,13 @@ longer.
 
 | Feature | Size | Notes |
 |---------|------|-------|
-| AirPlay 2 output | L | HomeKit pairing (SRP-6a, Ed25519, ChaCha20-Poly1305) and buffered audio, for HomePods and recent Apple TVs. The highest-demand item, and the largest. |
-| AirPlay 2 receiver | L | Appear as an AirPlay 2 speaker, so Apple devices can include Air-Mixer in their own multi-room groups. |
-| Google Cast output | L | Cast to Chromecast Audio, Nest speakers and Cast-enabled TVs by serving a live stream to the default media receiver. |
-| UPnP/DLNA renderer output | M | Push a stream to Sonos (via UPnP) and other DLNA renderers. Includes SSDP discovery. |
-| UPnP/DLNA renderer input | M | Appear as a renderer so DLNA apps can play to Air-Mixer. |
-| Bluetooth input | M | Appear as an A2DP speaker so phones can play to Air-Mixer over Bluetooth. Output to Bluetooth speakers already works through the `pulse` output. |
-| Snapcast and Spotify Connect | M | Snapcast as an output for open-source multi-room setups; Spotify Connect input through librespot. |
-| Internet radio and file sources | S | Play a stream URL or a local file as a persistent input. One-off playback of MP3 and WAV URLs is done (`/api/play`); more formats (FLAC, Ogg, AAC) would help both. |
+| AirPlay 2 output, beyond experimental | L | The `airplay2` output does transient pairing, the encrypted channel and realtime audio with NTP timing. Still to do: confirm it on HomePods and Apple TVs, PTP timing (needed by some receivers), PIN pairing for receivers that require it, and buffered audio for multi-room sync. |
+| AirPlay 2 receiver, built in | L | The `airplay2` input runs shairport-sync. A built-in receiver would drop that dependency and the separate `nqptp` daemon. |
+| Receivers in the Docker image | S | Ship `librespot` and an AirPlay 2 build of `shairport-sync` with `nqptp`, in the image or a `-full` variant. Alpine's packages are AirPlay 1 only and librespot is in its testing repo. |
+| Cast volume and lower latency | M | Follow and set the Cast device's volume, and try a smaller buffer for the Default Media Receiver. The Cast output itself is done. |
+| Sonos groups and volume | M | Join Sonos players into groups and follow their volume. Playing on a Sonos player or a group's coordinator is done, as are other DLNA renderers and the DLNA renderer input. |
+| Bluetooth pairing from the web UI | S | List and forget paired phones, and pair Bluetooth speakers for `pulse` outputs, from the UI. The Bluetooth input itself is done. |
+| Spotify Connect metadata | S | Show the track librespot is playing and pass Spotify's volume through. The input itself is done. |
 
 ## Platform
 
@@ -59,8 +58,6 @@ Small, self-contained tasks for a first contribution:
 
 - Show adapter state and errors in the web UI's client and server tables.
 - Remove the AirPlay 2 pairing dialog and its code from `webui/index.html`.
-- Add `GET /api/protocols` listing supported protocols and their config
-  keys, and use it to build the UI's protocol dropdowns.
 - Add a `--data-dir` flag that overrides `server.data_dir`.
 - Add a Prometheus `/metrics` endpoint, starting with the dropped-audio
   counters the router already keeps per subscriber.

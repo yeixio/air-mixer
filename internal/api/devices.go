@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/yeixio/air-mixer/internal/db"
+	"github.com/yeixio/air-mixer/internal/service"
 )
 
 // config accepts a protocol config either as a JSON string, which is how
@@ -192,4 +193,10 @@ func (a *API) deleteClient(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// listProtocols lists the protocols inputs and outputs can use, with the
+// fields each takes, so a client can build its forms.
+func (a *API) listProtocols(w http.ResponseWriter, _ *http.Request) {
+	writeJSON(w, http.StatusOK, service.Protocols())
 }

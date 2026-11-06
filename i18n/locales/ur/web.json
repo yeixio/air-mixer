@@ -28,8 +28,7 @@
     "unexpected": "کچھ غلط ہو گیا۔",
     "httpStatus": "سرور نے {{status}} جواب دیا۔ صفحہ ریفریش کر کے دوبارہ کوشش کریں۔",
     "loadFailed": "Air-Mixer سے رابطہ نہیں ہو سکا۔ دیکھیں کہ یہ چل رہا ہے، پھر صفحہ ریفریش کریں۔",
-    "validation": "فارم چیک کریں",
-    "comingSoon": "{{protocol}} (جلد آ رہا ہے)"
+    "validation": "فارم چیک کریں"
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone، iPad اور Mac سے آڈیو وصول کریں",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: Matinee میں پلیئر کے طور پر نظر آتا ہے اور جو بھیجا جائے وہ چلاتا ہے",
     "matineeClient": "Matinee: Matinee پلیئر پر چلائیں (پتا: پلیئر کی ID)",
     "streamClient": "اسٹریم: VLC یا براؤزر کے لیے لائیو WAV اسٹریم",
-    "localClient": "مقامی: اس مشین کا ساؤنڈ کارڈ"
+    "localClient": "مقامی: اس مشین کا ساؤنڈ کارڈ",
+    "radioServer": "انٹرنیٹ ریڈیو: کسی URL سے اسٹیشن، پلے لسٹ یا آڈیو فائل چلائیں",
+    "pulseServer": "PipeWire یا PulseAudio: لائن اِن، USB آڈیو انٹرفیس یا Bluetooth پر چلنے والا فون ریکارڈ کریں",
+    "castClient": "Google Cast: Chromecast، Nest اور Google Home اسپیکرز، اسپیکر گروپس اور Cast والے ٹی وی پر چلائیں",
+    "pulseClient": "PipeWire یا PulseAudio: ساؤنڈ کارڈ یا جوڑے گئے Bluetooth اسپیکر پر چلائیں",
+    "snapcastClient": "Snapcast: ہر Snapcast کلائنٹ پر ایک ساتھ چلائیں",
+    "upnpServer": "UPnP/DLNA: BubbleUPnP جیسی DLNA ایپس میں اسپیکر کے طور پر دکھتا ہے اور جو وہ بھیجیں اسے چلاتا ہے",
+    "upnpClient": "UPnP/DLNA: Sonos، AV ریسیورز، سمارٹ ٹی وی اور دوسرے DLNA رینڈررز پر چلائیں",
+    "bluetoothServer": "Bluetooth: ایک Bluetooth اسپیکر کے طور پر دکھتا ہے جس سے فون اور لیپ ٹاپ پیئر ہوتے ہیں",
+    "spotifyServer": "Spotify Connect: Spotify ایپ میں اسپیکر کے طور پر دکھتا ہے",
+    "airplay2Server": "AirPlay 2: iPhone، iPad اور Mac پر AirPlay 2 اسپیکر کے طور پر دکھتا ہے، ملٹی روم سمیت",
+    "needs": "{{name}}: {{program}} چاہیے، جو انسٹال نہیں ہے",
+    "airplay2Client": "AirPlay 2 (تجرباتی): HomePod، Apple TV اور دوسرے AirPlay 2 اسپیکرز پر چلائیں"
   },
   "servers": {
     "title": "ان پٹ سرور",
@@ -131,6 +142,35 @@
     "selectFailed": "وہ آلہ چنا نہیں جا سکا۔ دوبارہ تلاش کریں یا خود سیٹ اپ کریں۔",
     "manual": "خود سیٹ اپ کریں",
     "manualHint": "اگر آپ کا آلہ نہیں ملا تو یہ استعمال کریں۔"
+  },
+  "fields": {
+    "url": "اسٹریم URL",
+    "urlHint": "کوئی انٹرنیٹ ریڈیو اسٹیشن، پلے لسٹ (.pls، .m3u، .m3u8) یا آڈیو فائل۔ فائل بار بار چلتی ہے۔",
+    "source": "ماخذ (اختیاری)",
+    "sourceHint": "کسی ماخذ کا نام یا تفصیل، اس مشین پر چلانے والے فون کا Bluetooth پتا، یا کسی sink کا نام اور اس کے بعد .monitor۔ ڈیفالٹ ماخذ کے لیے خالی چھوڑیں۔",
+    "sink": "Sink (اختیاری)",
+    "sinkHint": "کسی sink کا نام یا تفصیل، یا AA:BB:CC:DD:EE:FF جیسا Bluetooth اسپیکر کا پتا۔ ڈیفالٹ sink کے لیے خالی چھوڑیں۔",
+    "pulseServer": "PulseAudio سرور (اختیاری)",
+    "pulseServerHint": "اس مشین کے معمول کے سرور کے لیے خالی چھوڑیں۔",
+    "delay": "ملی سیکنڈ میں تاخیر (اختیاری)",
+    "delayHint": "آواز کو روک کر اس اسپیکر کو سست اسپیکروں کے ساتھ ملاتا ہے۔",
+    "sampleRate": "سیمپل ریٹ (اختیاری)",
+    "sampleRateHint": "snapserver ماخذ کے sampleformat کی ریٹ۔ snapserver کی ڈیفالٹ 48000 کے لیے خالی چھوڑیں۔",
+    "snapcastAddressHint": "snapserver ہوسٹ، اور اس کے TCP ماخذ کا پورٹ اگر وہ 4953 نہیں ہے۔",
+    "castAddressHint": "ڈیوائس کا IP پتا، اور اس کا پورٹ اگر وہ 8009 نہیں ہے (اسپیکر گروپس دوسرا پورٹ استعمال کرتے ہیں)۔ Cast ڈیوائسز چند سیکنڈ دیر سے بجتی ہیں، اس لیے باقی اسپیکرز میں اتنی ہی تاخیر رکھیں۔",
+    "listen": "سننے کا پتا (اختیاری)",
+    "listenHint": "وہ پورٹ جس سے ایپس اس ان پٹ تک پہنچتی ہیں، جیسے ‎:49494۔ خالی پورٹ کے لیے خالی چھوڑیں۔",
+    "upnpAddressHint": "رینڈرر کا تفصیلی URL، جیسا کہ ڈیوائسز تلاش کریں دیتا ہے، یا کسی Sonos پلیئر کا IP پتا۔",
+    "format": "اسٹریم فارمیٹ (اختیاری)",
+    "formatHint": "wav یا mp3۔ Sonos پر MP3 اور باقی سب پر WAV کے لیے خالی چھوڑیں۔ MP3 کے لیے ffmpeg چاہیے۔",
+    "btDevice": "فون (اختیاری)",
+    "btDeviceHint": "Bluetooth پتے کے مطابق صرف یہی فون ریکارڈ کریں۔ جو ڈیوائس چل رہی ہو اسے ریکارڈ کرنے کے لیے خالی چھوڑیں۔",
+    "btAdapter": "Bluetooth اڈاپٹر (اختیاری)",
+    "btHidden": "چھپا ہوا: صرف پہلے سے پیئر شدہ فون جڑ سکتے ہیں",
+    "bitrate": "بٹ ریٹ (اختیاری)",
+    "bitrateHint": "96، 160 یا 320 kbit/s۔ 320 کے لیے خالی چھوڑیں۔",
+    "airplay2PortHint": "وہ پورٹ جس پر AirPlay 2 سنتا ہے، جیسے ‎:7000۔ ہر AirPlay ان پٹ کو اپنا پورٹ دیں۔",
+    "airplay2AddressHint": "ریسیور کا پتا اور پورٹ، جیسا کہ ڈیوائسز تلاش کریں دیتا ہے، جیسے 192.168.1.60:7000۔ اسے نیٹ ورک پر کسی کو بھی بغیر پاس ورڈ چلانے کی اجازت دینی چاہیے۔"
   },
   "pairing": {
     "title": "AirPlay پیئرنگ",

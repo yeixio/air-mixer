@@ -136,6 +136,35 @@ its Bluetooth address. While a speaker is off, its output shows as
 speaker drops off mid-song, the agent notices within a few seconds and
 picks it up again when it comes back.
 
+## Phones playing over Bluetooth
+
+The controller can also be a Bluetooth speaker that phones pair with,
+through a `bluetooth` input. Run it on a node prepared as in steps 2 and
+3 above, pin the controller there, and give it the host's audio socket
+and D-Bus system bus:
+
+```yaml
+controller:
+  nodeSelector:
+    kubernetes.io/hostname: pi-living-room
+  hostAudio:
+    enabled: true
+    uid: 1000              # the user running PipeWire
+    gid: 1000
+    bluetooth: true
+    bluetoothGid: "112"    # getent group bluetooth
+  setup:
+    servers:
+      - name: Living Room
+        protocol: bluetooth
+```
+
+Air-Mixer makes the adapter discoverable as "Living Room" and accepts
+pairings without a PIN, for audio only. BlueZ only lets members of its
+group, or root, register a pairing agent; if pairing stays off,
+`/api/status` gives BlueZ's reason. `hostAudio` without `bluetooth`
+is enough for a `pulse` input recording a line-in or USB interface.
+
 ## Lining speakers up
 
 Bluetooth speakers each add their own delay, often between 100 and
@@ -155,6 +184,9 @@ has all of them with comments.
 | `controller.hostNetwork` | `true` | Needed to advertise AirPlay receivers and discover speakers over mDNS |
 | `controller.setup` | `{}` | Servers, clients and routes for the controller, as in the config file's `setup` section |
 | `controller.persistence.size` | `1Gi` | The database volume; kept on uninstall |
+| `controller.hostAudio.enabled` | `false` | Mount the host's PipeWire/PulseAudio socket, for `pulse` and `bluetooth` inputs; the controller then runs as `hostAudio.uid` |
+| `controller.hostAudio.bluetooth` | `false` | Also mount the D-Bus system bus, so `bluetooth` inputs can accept pairings |
+| `controller.hostAudio.bluetoothGid` | | Host group allowed to use BlueZ, added to the pod's groups |
 | `rooms[].name` | | Kubernetes name of the room, a DNS label |
 | `rooms[].displayName` | `name` | AirPlay name of the room |
 | `rooms[].nodeSelector` | | Required: picks the node the speakers are paired with |

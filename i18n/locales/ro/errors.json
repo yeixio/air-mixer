@@ -30,5 +30,16 @@
   "matinee_needs_player": "Un client Matinee are nevoie de ID-ul playerului ca adresă (vezi /api/matinee/players)",
   "matinee_not_signed_in": "Air-Mixer nu este încă conectat la Matinee",
   "matinee_link_failed": "Nu s-a putut obține un cod de la Matinee: {{detail}}",
-  "matinee_players_failed": "Nu s-au putut obține playerele de la Matinee: {{detail}}"
+  "matinee_players_failed": "Nu s-au putut obține playerele de la Matinee: {{detail}}",
+  "radio_needs_url": "O intrare de radio pe internet are nevoie de un url",
+  "radio_bad_url": "url trebuie să fie o adresă http, https, rtsp sau rtmp",
+  "snapcast_needs_address": "Un client Snapcast are nevoie de adresa snapserver-ului",
+  "sample_rate_range": "sample_rate trebuie să fie între 8000 și 192000",
+  "cast_needs_address": "Un client Google Cast are nevoie de adresa dispozitivului",
+  "upnp_needs_address": "Un client UPnP/DLNA are nevoie de URL-ul de descriere al rendererului sau de adresa unui player Sonos",
+  "upnp_bad_format": "format trebuie să fie wav sau mp3",
+  "bluetooth_bad_device": "device trebuie să fie o adresă Bluetooth, de exemplu 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate trebuie să fie 96, 160 sau 320",
+  "program_missing": "{{program}} nu este instalat pe această mașină",
+  "bad_port": "address trebuie să fie un port între 1 și 65535, de exemplu :7000"
 }

@@ -30,5 +30,16 @@
   "matinee_needs_player": "Matinee 用戶端需要以播放器 ID 作為位址（請參閱 /api/matinee/players）",
   "matinee_not_signed_in": "Air-Mixer 尚未登入 Matinee",
   "matinee_link_failed": "無法從 Matinee 取得代碼：{{detail}}",
-  "matinee_players_failed": "無法從 Matinee 取得播放器：{{detail}}"
+  "matinee_players_failed": "無法從 Matinee 取得播放器：{{detail}}",
+  "radio_needs_url": "網路電台輸入需要 url",
+  "radio_bad_url": "url 必須是 http、https、rtsp 或 rtmp 位址",
+  "snapcast_needs_address": "Snapcast 用戶端需要 snapserver 的位址",
+  "sample_rate_range": "sample_rate 必須介於 8000 到 192000 之間",
+  "cast_needs_address": "Google Cast 用戶端需要裝置的位址",
+  "upnp_needs_address": "UPnP/DLNA 用戶端需要渲染器的描述 URL 或 Sonos 播放器的位址",
+  "upnp_bad_format": "format 必須是 wav 或 mp3",
+  "bluetooth_bad_device": "device 必須是藍牙位址，例如 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate 必須是 96、160 或 320",
+  "program_missing": "這台機器未安裝 {{program}}",
+  "bad_port": "address 必須是 1 到 65535 之間的連接埠，例如 :7000"
 }

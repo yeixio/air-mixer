@@ -2,6 +2,7 @@ package playback
 
 import (
 	"context"
+	"encoding/binary"
 	"errors"
 	"io"
 	"log/slog"
@@ -25,7 +26,20 @@ func constWAV(d time.Duration, level int16) []byte {
 		s[i] = level
 	}
 	data := pcm16(s...)
-	return wavFile(wavPCM, 2, 44100, 16, data, uint32(len(data)), false)
+	h := make([]byte, 44)
+	copy(h, "RIFF")
+	binary.LittleEndian.PutUint32(h[4:], uint32(36+len(data)))
+	copy(h[8:], "WAVEfmt ")
+	binary.LittleEndian.PutUint32(h[16:], 16)
+	binary.LittleEndian.PutUint16(h[20:], 1) // PCM
+	binary.LittleEndian.PutUint16(h[22:], 2)
+	binary.LittleEndian.PutUint32(h[24:], 44100)
+	binary.LittleEndian.PutUint32(h[28:], 44100*4)
+	binary.LittleEndian.PutUint16(h[32:], 4)
+	binary.LittleEndian.PutUint16(h[34:], 16)
+	copy(h[36:], "data")
+	binary.LittleEndian.PutUint32(h[40:], uint32(len(data)))
+	return append(h, data...)
 }
 
 type fixture struct {
@@ -304,4 +318,12 @@ func TestRedact(t *testing.T) {
 	if got := redact("http://user:pw@ha.local:8123/api/tts_proxy/x.mp3?authSig=secret#f"); got != "http://ha.local:8123/api/tts_proxy/x.mp3" {
 		t.Errorf("redact = %q", got)
 	}
+}
+
+func pcm16(samples ...int16) []byte {
+	b := make([]byte, 2*len(samples))
+	for i, v := range samples {
+		binary.LittleEndian.PutUint16(b[2*i:], uint16(v))
+	}
+	return b
 }

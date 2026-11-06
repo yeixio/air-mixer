@@ -30,5 +30,16 @@
   "matinee_needs_player": "Klien Matinee memerlukan ID pemutar sebagai alamat (lihat /api/matinee/players)",
   "matinee_not_signed_in": "Air-Mixer belum masuk ke Matinee",
   "matinee_link_failed": "Tidak dapat memperoleh kode dari Matinee: {{detail}}",
-  "matinee_players_failed": "Tidak dapat memperoleh pemutar dari Matinee: {{detail}}"
+  "matinee_players_failed": "Tidak dapat memperoleh pemutar dari Matinee: {{detail}}",
+  "radio_needs_url": "Input radio internet memerlukan url",
+  "radio_bad_url": "url harus berupa alamat http, https, rtsp, atau rtmp",
+  "snapcast_needs_address": "Klien Snapcast memerlukan alamat snapserver",
+  "sample_rate_range": "sample_rate harus antara 8000 dan 192000",
+  "cast_needs_address": "Klien Google Cast memerlukan alamat perangkat",
+  "upnp_needs_address": "Klien UPnP/DLNA memerlukan URL deskripsi renderer atau alamat pemutar Sonos",
+  "upnp_bad_format": "format harus wav atau mp3",
+  "bluetooth_bad_device": "device harus berupa alamat Bluetooth, misalnya 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate harus 96, 160, atau 320",
+  "program_missing": "{{program}} belum terpasang di mesin ini",
+  "bad_port": "address harus berupa port 1 sampai 65535, misalnya :7000"
 }

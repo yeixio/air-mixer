@@ -30,5 +30,16 @@
   "matinee_needs_player": "לקוח Matinee צריך את המזהה של הנגן ככתובת (ראו ‎/api/matinee/players)",
   "matinee_not_signed_in": "Air-Mixer עדיין לא מחובר ל-Matinee",
   "matinee_link_failed": "לא ניתן היה לקבל קוד מ-Matinee: {{detail}}",
-  "matinee_players_failed": "לא ניתן היה לקבל את הנגנים מ-Matinee: {{detail}}"
+  "matinee_players_failed": "לא ניתן היה לקבל את הנגנים מ-Matinee: {{detail}}",
+  "radio_needs_url": "קלט רדיו אינטרנט צריך url",
+  "radio_bad_url": "url חייב להיות כתובת http, https, rtsp או rtmp",
+  "snapcast_needs_address": "לקוח Snapcast צריך את הכתובת של snapserver",
+  "sample_rate_range": "sample_rate חייב להיות בין 8000 ל-192000",
+  "cast_needs_address": "לקוח Google Cast צריך את כתובת המכשיר",
+  "upnp_needs_address": "לקוח UPnP/DLNA צריך את כתובת התיאור של הנגן או את הכתובת של נגן Sonos",
+  "upnp_bad_format": "format חייב להיות wav או mp3",
+  "bluetooth_bad_device": "device חייב להיות כתובת Bluetooth, למשל 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate חייב להיות 96, 160 או 320",
+  "program_missing": "{{program}} אינו מותקן במחשב הזה",
+  "bad_port": "address חייב להיות פורט בין 1 ל-65535, למשל ‎:7000"
 }

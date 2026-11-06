@@ -1,13 +1,17 @@
-package playback
+package decode
 
 import (
 	"bytes"
+	"context"
 	"encoding/binary"
 	"errors"
 	"io"
 	"math"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/yeixio/air-mixer/internal/audio"
 )
@@ -57,7 +61,7 @@ func pcm16(samples ...int16) []byte {
 	return b.Bytes()
 }
 
-func readAll(t *testing.T, d decoder) []float32 {
+func readAll(t *testing.T, d Decoder) []float32 {
 	t.Helper()
 	var out []float32
 	buf := make([]float32, 6)
@@ -116,7 +120,7 @@ func TestWAVFormats(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			d, err := newDecoder(bytes.NewReader(tt.file), "")
+			d, err := New(bytes.NewReader(tt.file), "")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -136,20 +140,23 @@ func TestWAVRejectsUnsupported(t *testing.T) {
 		"truncated": wavFile(wavPCM, 1, 8000, 16, nil, 0, false)[:20],
 		"no data":   wavFile(wavPCM, 1, 8000, 16, nil, 0, false)[:44],
 	} {
-		if _, err := newDecoder(bytes.NewReader(file), ""); !errors.Is(err, ErrUnsupportedFormat) {
+		if _, err := New(bytes.NewReader(file), ""); !errors.Is(err, ErrUnsupportedFormat) {
 			t.Errorf("%s: err = %v, want ErrUnsupportedFormat", name, err)
 		}
 	}
 }
 
 func TestDetectsUnsupportedFormats(t *testing.T) {
+	saved := FFmpeg
+	FFmpeg = ""
+	t.Cleanup(func() { FFmpeg = saved })
 	for name, data := range map[string]string{
 		"flac":  "fLaC\x00\x00\x00\x22",
 		"ogg":   "OggS\x00\x02",
 		"html":  "<html><body>not audio</body></html>",
 		"empty": "",
 	} {
-		if _, err := newDecoder(bytes.NewReader([]byte(data)), "text/html"); !errors.Is(err, ErrUnsupportedFormat) {
+		if _, err := New(bytes.NewReader([]byte(data)), "text/html"); !errors.Is(err, ErrUnsupportedFormat) {
 			t.Errorf("%s: err = %v, want ErrUnsupportedFormat", name, err)
 		}
 	}
@@ -161,7 +168,7 @@ func TestMP3(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer f.Close()
-	d, err := newDecoder(f, "audio/mpeg")
+	d, err := New(f, "audio/mpeg")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -179,5 +186,64 @@ func TestMP3(t *testing.T) {
 	}
 	if peak < 0.2 {
 		t.Errorf("peak %v: decoded audio is silent", peak)
+	}
+}
+
+// TestFFmpeg decodes a FLAC file, which needs ffmpeg.
+func TestFFmpeg(t *testing.T) {
+	if FFmpeg == "" {
+		t.Skip("ffmpeg is not installed")
+	}
+	dir := t.TempDir()
+	flac := filepath.Join(dir, "tone.flac")
+	cmd := exec.Command(FFmpeg, "-loglevel", "error", "-f", "lavfi", "-i", "sine=frequency=440:duration=0.5:sample_rate=48000", "-ac", "1", flac)
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("make FLAC: %v: %s", err, out)
+	}
+	f, err := os.Open(flac)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer f.Close()
+	d, err := New(f, "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer d.(io.Closer).Close()
+	if got := d.Format(); got != (audio.Format{SampleRate: audio.SampleRate, Channels: 2}) {
+		t.Fatalf("format = %+v", got)
+	}
+	samples := readAll(t, d)
+	// Half a second at 44.1 kHz stereo, give or take the resampler.
+	if n := len(samples); n < 43000 || n > 45200 {
+		t.Fatalf("decoded %d samples, want about 44100", n)
+	}
+	var peak float32
+	for _, v := range samples {
+		peak = max(peak, v)
+	}
+	if peak < 0.05 { // ffmpeg's sine is at 1/8
+		t.Errorf("peak = %v, want a tone", peak)
+	}
+}
+
+func TestFFmpegStopsEarly(t *testing.T) {
+	if FFmpeg == "" {
+		t.Skip("ffmpeg is not installed")
+	}
+	d, err := OpenURL(context.Background(), "anullsrc=r=44100:cl=stereo")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// anullsrc isn't a URL ffmpeg opens without -f lavfi, so this fails
+	// at the first read; closing must not hang.
+	buf := make([]float32, 1024)
+	_, _ = d.Read(buf)
+	done := make(chan struct{})
+	go func() { d.(io.Closer).Close(); close(done) }()
+	select {
+	case <-done:
+	case <-time.After(5 * time.Second):
+		t.Fatal("Close hung")
 	}
 }

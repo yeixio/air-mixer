@@ -28,8 +28,7 @@
     "unexpected": "कुछ गड़बड़ हो गई।",
     "httpStatus": "सर्वर ने {{status}} जवाब दिया। पेज रीफ़्रेश करके फिर कोशिश करें।",
     "loadFailed": "Air-Mixer से संपर्क नहीं हो सका। जाँचें कि यह चल रहा है, फिर पेज रीफ़्रेश करें।",
-    "validation": "फ़ॉर्म जाँचें",
-    "comingSoon": "{{protocol}} (जल्द आ रहा है)"
+    "validation": "फ़ॉर्म जाँचें"
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone, iPad और Mac से ऑडियो पाएँ",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: Matinee में प्लेयर के रूप में दिखता है और जो भेजा जाए उसे चलाता है",
     "matineeClient": "Matinee: Matinee प्लेयर पर चलाएँ (पता: प्लेयर की ID)",
     "streamClient": "स्ट्रीम: VLC या ब्राउज़र के लिए लाइव WAV स्ट्रीम",
-    "localClient": "स्थानीय: इस मशीन का साउंड कार्ड"
+    "localClient": "स्थानीय: इस मशीन का साउंड कार्ड",
+    "radioServer": "इंटरनेट रेडियो: किसी URL से स्टेशन, प्लेलिस्ट या ऑडियो फ़ाइल चलाएँ",
+    "pulseServer": "PipeWire या PulseAudio: लाइन-इन, USB ऑडियो इंटरफ़ेस या Bluetooth पर चल रहे फ़ोन को रिकॉर्ड करें",
+    "castClient": "Google Cast: Chromecast, Nest और Google Home स्पीकर, स्पीकर ग्रुप और Cast वाले टीवी पर चलाएँ",
+    "pulseClient": "PipeWire या PulseAudio: साउंड कार्ड या पेयर किए गए Bluetooth स्पीकर पर चलाएँ",
+    "snapcastClient": "Snapcast: हर Snapcast क्लाइंट पर एक साथ चलाएँ",
+    "upnpServer": "UPnP/DLNA: BubbleUPnP जैसे DLNA ऐप में स्पीकर के रूप में दिखता है और वे जो भेजें उसे चलाता है",
+    "upnpClient": "UPnP/DLNA: Sonos, AV रिसीवर, स्मार्ट टीवी और दूसरे DLNA रेंडरर पर चलाएँ",
+    "bluetoothServer": "Bluetooth: एक Bluetooth स्पीकर के रूप में दिखता है जिससे फ़ोन और लैपटॉप पेयर होते हैं",
+    "spotifyServer": "Spotify Connect: Spotify ऐप में स्पीकर के रूप में दिखता है",
+    "airplay2Server": "AirPlay 2: iPhone, iPad और Mac पर AirPlay 2 स्पीकर के रूप में दिखता है, मल्टी-रूम सहित",
+    "needs": "{{name}}: {{program}} चाहिए, जो इंस्टॉल नहीं है",
+    "airplay2Client": "AirPlay 2 (प्रायोगिक): HomePod, Apple TV और दूसरे AirPlay 2 स्पीकर पर चलाएँ"
   },
   "servers": {
     "title": "इनपुट सर्वर",
@@ -131,6 +142,35 @@
     "selectFailed": "वह डिवाइस नहीं चुना जा सका। फिर से खोजें या खुद सेट अप करें।",
     "manual": "खुद सेट अप करें",
     "manualHint": "अगर आपका डिवाइस नहीं मिला, तो इसका इस्तेमाल करें।"
+  },
+  "fields": {
+    "url": "स्ट्रीम URL",
+    "urlHint": "कोई इंटरनेट रेडियो स्टेशन, प्लेलिस्ट (.pls, .m3u, .m3u8) या ऑडियो फ़ाइल। फ़ाइल बार-बार चलती है।",
+    "source": "स्रोत (वैकल्पिक)",
+    "sourceHint": "किसी स्रोत का नाम या विवरण, इस मशीन पर चला रहे फ़ोन का Bluetooth पता, या किसी sink का नाम और उसके बाद .monitor। डिफ़ॉल्ट स्रोत के लिए खाली छोड़ें।",
+    "sink": "Sink (वैकल्पिक)",
+    "sinkHint": "किसी sink का नाम या विवरण, या AA:BB:CC:DD:EE:FF जैसा Bluetooth स्पीकर का पता। डिफ़ॉल्ट sink के लिए खाली छोड़ें।",
+    "pulseServer": "PulseAudio सर्वर (वैकल्पिक)",
+    "pulseServerHint": "इस मशीन के सामान्य सर्वर के लिए खाली छोड़ें।",
+    "delay": "मिलीसेकंड में देरी (वैकल्पिक)",
+    "delayHint": "ऑडियो को रोककर इस स्पीकर को धीमे स्पीकरों के साथ मिलाता है।",
+    "sampleRate": "सैंपल रेट (वैकल्पिक)",
+    "sampleRateHint": "snapserver स्रोत के sampleformat में दी गई रेट। snapserver की डिफ़ॉल्ट 48000 के लिए खाली छोड़ें।",
+    "snapcastAddressHint": "snapserver होस्ट, और उसके TCP स्रोत का पोर्ट अगर वह 4953 नहीं है।",
+    "castAddressHint": "डिवाइस का IP पता, और उसका पोर्ट अगर वह 8009 नहीं है (स्पीकर ग्रुप दूसरा पोर्ट इस्तेमाल करते हैं)। Cast डिवाइस कुछ सेकंड देर से बजते हैं, इसलिए बाकी स्पीकरों में उतनी देरी जोड़ें।",
+    "listen": "सुनने का पता (वैकल्पिक)",
+    "listenHint": "वह पोर्ट जिससे ऐप इस इनपुट तक पहुँचते हैं, जैसे :49494। खाली पोर्ट के लिए खाली छोड़ें।",
+    "upnpAddressHint": "रेंडरर का विवरण URL, जैसा डिवाइस खोजें देता है, या किसी Sonos प्लेयर का IP पता।",
+    "format": "स्ट्रीम फ़ॉर्मैट (वैकल्पिक)",
+    "formatHint": "wav या mp3। Sonos पर MP3 और बाकी सब पर WAV के लिए खाली छोड़ें। MP3 के लिए ffmpeg चाहिए।",
+    "btDevice": "फ़ोन (वैकल्पिक)",
+    "btDeviceHint": "Bluetooth पते से सिर्फ़ इसी फ़ोन को रिकॉर्ड करें। जो डिवाइस चल रहा हो उसे रिकॉर्ड करने के लिए खाली छोड़ें।",
+    "btAdapter": "Bluetooth अडैप्टर (वैकल्पिक)",
+    "btHidden": "छिपा हुआ: सिर्फ़ पहले से पेयर किए फ़ोन जुड़ सकते हैं",
+    "bitrate": "बिटरेट (वैकल्पिक)",
+    "bitrateHint": "96, 160 या 320 kbit/s। 320 के लिए खाली छोड़ें।",
+    "airplay2PortHint": "वह पोर्ट जिस पर AirPlay 2 सुनता है, जैसे :7000। हर AirPlay इनपुट को अलग पोर्ट दें।",
+    "airplay2AddressHint": "रिसीवर का पता और पोर्ट, जैसा डिवाइस खोजें देता है, जैसे 192.168.1.60:7000। उसे नेटवर्क पर किसी को भी बिना पासवर्ड चलाने देना चाहिए।"
   },
   "pairing": {
     "title": "AirPlay पेयरिंग",

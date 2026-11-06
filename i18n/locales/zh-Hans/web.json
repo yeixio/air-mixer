@@ -28,8 +28,7 @@
     "unexpected": "出了点问题。",
     "httpStatus": "服务器返回 {{status}}。请刷新页面后重试。",
     "loadFailed": "无法连接 Air-Mixer。请确认它正在运行，然后刷新页面。",
-    "validation": "请检查表单",
-    "comingSoon": "{{protocol}}（即将推出）"
+    "validation": "请检查表单"
   },
   "protocols": {
     "airplayServer": "AirPlay：接收来自 iPhone、iPad 和 Mac 的音频",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee：在 Matinee 中显示为播放器，播放发送给它的内容",
     "matineeClient": "Matinee：在 Matinee 播放器上播放（地址：播放器 ID）",
     "streamClient": "流：供 VLC 或浏览器使用的实时 WAV 流",
-    "localClient": "本地：这台机器的声卡"
+    "localClient": "本地：这台机器的声卡",
+    "radioServer": "网络电台：从 URL 播放电台、播放列表或音频文件",
+    "pulseServer": "PipeWire 或 PulseAudio：录制线路输入、USB 音频接口或通过蓝牙播放的手机",
+    "castClient": "Google Cast：在 Chromecast、Nest 和 Google Home 音箱、音箱组以及支持 Cast 的电视上播放",
+    "pulseClient": "PipeWire 或 PulseAudio：在声卡或已配对的蓝牙音箱上播放",
+    "snapcastClient": "Snapcast：在每个 Snapcast 客户端上同步播放",
+    "upnpServer": "UPnP/DLNA：在 BubbleUPnP 等 DLNA 应用中显示为音箱，并播放它们发送的内容",
+    "upnpClient": "UPnP/DLNA：在 Sonos、AV 功放、智能电视和其他 DLNA 渲染器上播放",
+    "bluetoothServer": "Bluetooth：显示为可供手机和笔记本电脑配对的蓝牙音箱",
+    "spotifyServer": "Spotify Connect：在 Spotify 应用中显示为音箱",
+    "airplay2Server": "AirPlay 2：在 iPhone、iPad 和 Mac 上显示为 AirPlay 2 音箱，支持多房间",
+    "needs": "{{name}}：需要 {{program}}，但尚未安装",
+    "airplay2Client": "AirPlay 2（实验性）：在 HomePod、Apple TV 和其他 AirPlay 2 音箱上播放"
   },
   "servers": {
     "title": "输入服务器",
@@ -130,6 +141,35 @@
     "selectFailed": "无法选择该设备。请重新查找或手动设置。",
     "manual": "手动设置",
     "manualHint": "如果没有找到你的设备，请使用此项。"
+  },
+  "fields": {
+    "url": "流 URL",
+    "urlHint": "网络电台、播放列表（.pls、.m3u、.m3u8）或音频文件。文件会循环播放。",
+    "source": "音源（可选）",
+    "sourceHint": "音源的名称或描述、正在向本机播放的手机的蓝牙地址，或在 sink 名称后加 .monitor。留空则使用默认音源。",
+    "sink": "Sink（可选）",
+    "sinkHint": "sink 的名称或描述，或蓝牙音箱的地址，如 AA:BB:CC:DD:EE:FF。留空则使用默认 sink。",
+    "pulseServer": "PulseAudio 服务器（可选）",
+    "pulseServerHint": "留空则使用本机常用的服务器。",
+    "delay": "延迟（毫秒，可选）",
+    "delayHint": "延后音频，让这个音箱与较慢的音箱对齐。",
+    "sampleRate": "采样率（可选）",
+    "sampleRateHint": "snapserver 音源 sampleformat 中的采样率。留空则使用 snapserver 默认的 48000。",
+    "snapcastAddressHint": "snapserver 主机；如果 TCP 音源端口不是 4953，再加上端口。",
+    "castAddressHint": "设备的 IP 地址；如果端口不是 8009，再加上端口（音箱组使用其他端口）。Cast 设备会晚几秒发声，请给其他音箱设置相同的延迟。",
+    "listen": "监听地址（可选）",
+    "listenHint": "应用访问此输入的端口，如 :49494。留空则使用空闲端口。",
+    "upnpAddressHint": "渲染器的描述 URL（“查找设备”会给出），或 Sonos 播放器的 IP 地址。",
+    "format": "流格式（可选）",
+    "formatHint": "wav 或 mp3。留空则 Sonos 用 MP3，其他设备用 WAV。MP3 需要 ffmpeg。",
+    "btDevice": "手机（可选）",
+    "btDeviceHint": "只录制此蓝牙地址的手机。留空则录制正在播放的设备。",
+    "btAdapter": "蓝牙适配器（可选）",
+    "btHidden": "隐藏：只有已配对的手机可以连接",
+    "bitrate": "比特率（可选）",
+    "bitrateHint": "96、160 或 320 kbit/s。留空则为 320。",
+    "airplay2PortHint": "AirPlay 2 监听的端口，如 :7000。每个 AirPlay 输入使用不同的端口。",
+    "airplay2AddressHint": "接收器的地址和端口（“查找设备”会给出），如 192.168.1.60:7000。它必须允许网络上的任何人无需密码即可播放。"
   },
   "pairing": {
     "title": "AirPlay 配对",

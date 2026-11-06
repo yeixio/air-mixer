@@ -28,8 +28,7 @@
     "unexpected": "Sesuatu tidak kena.",
     "httpStatus": "Pelayan menjawab {{status}}. Muat semula halaman dan cuba lagi.",
     "loadFailed": "Tidak dapat menghubungi Air-Mixer. Pastikan ia sedang berjalan, kemudian muat semula halaman.",
-    "validation": "Semak borang",
-    "comingSoon": "{{protocol}} (akan datang)"
+    "validation": "Semak borang"
   },
   "protocols": {
     "airplayServer": "AirPlay: terima audio daripada iPhone, iPad dan Mac",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: muncul dalam Matinee sebagai pemain dan memainkan apa yang dihantar",
     "matineeClient": "Matinee: main pada pemain Matinee (alamat: ID pemain)",
     "streamClient": "Strim: strim WAV langsung untuk VLC atau pelayar",
-    "localClient": "Setempat: kad bunyi mesin ini"
+    "localClient": "Setempat: kad bunyi mesin ini",
+    "radioServer": "Radio internet: mainkan stesen, senarai main atau fail audio dari URL",
+    "pulseServer": "PipeWire atau PulseAudio: rakam line-in, antara muka audio USB atau telefon yang memainkan melalui Bluetooth",
+    "castClient": "Google Cast: mainkan pada Chromecast, pembesar suara Nest dan Google Home, kumpulan pembesar suara dan TV dengan Cast",
+    "pulseClient": "PipeWire atau PulseAudio: mainkan pada kad bunyi atau pembesar suara Bluetooth yang dipasangkan",
+    "snapcastClient": "Snapcast: mainkan serentak pada setiap klien Snapcast",
+    "upnpServer": "UPnP/DLNA: muncul sebagai pembesar suara dalam aplikasi DLNA seperti BubbleUPnP dan memainkan apa yang dihantar",
+    "upnpClient": "UPnP/DLNA: mainkan pada Sonos, penerima AV, TV pintar dan renderer DLNA lain",
+    "bluetoothServer": "Bluetooth: muncul sebagai pembesar suara Bluetooth yang boleh dipasangkan dengan telefon dan komputer riba",
+    "spotifyServer": "Spotify Connect: muncul sebagai pembesar suara dalam aplikasi Spotify",
+    "airplay2Server": "AirPlay 2: muncul sebagai pembesar suara AirPlay 2 pada iPhone, iPad dan Mac, termasuk berbilang bilik",
+    "needs": "{{name}}: memerlukan {{program}}, yang tidak dipasang",
+    "airplay2Client": "AirPlay 2 (percubaan): mainkan pada HomePod, Apple TV dan pembesar suara AirPlay 2 lain"
   },
   "servers": {
     "title": "Pelayan input",
@@ -130,6 +141,35 @@
     "selectFailed": "Tidak dapat memilih peranti itu. Cari lagi, atau sediakannya secara manual.",
     "manual": "Sediakan secara manual",
     "manualHint": "Gunakan ini jika peranti anda tidak dijumpai."
+  },
+  "fields": {
+    "url": "URL strim",
+    "urlHint": "Stesen radio internet, senarai main (.pls, .m3u, .m3u8) atau fail audio. Fail dimainkan berulang kali.",
+    "source": "Sumber (pilihan)",
+    "sourceHint": "Nama atau perihalan sumber, alamat Bluetooth telefon yang memainkan ke mesin ini, atau nama sink diikuti .monitor. Biarkan kosong untuk sumber lalai.",
+    "sink": "Sink (pilihan)",
+    "sinkHint": "Nama atau perihalan sink, atau alamat pembesar suara Bluetooth seperti AA:BB:CC:DD:EE:FF. Biarkan kosong untuk sink lalai.",
+    "pulseServer": "Pelayan PulseAudio (pilihan)",
+    "pulseServerHint": "Biarkan kosong untuk yang biasa pada mesin ini.",
+    "delay": "Lengahan dalam milisaat (pilihan)",
+    "delayHint": "Menahan audio supaya pembesar suara ini selari dengan yang lebih perlahan.",
+    "sampleRate": "Kadar sampel (pilihan)",
+    "sampleRateHint": "Kadar dalam sampleformat sumber snapserver. Biarkan kosong untuk 48000, lalai snapserver.",
+    "snapcastAddressHint": "Hos snapserver, dan port sumber TCP-nya jika bukan 4953.",
+    "castAddressHint": "Alamat IP peranti, dan port-nya jika bukan 8009 (kumpulan pembesar suara menggunakan port lain). Peranti Cast bermain beberapa saat lewat, jadi lengahkan pembesar suara lain supaya sepadan.",
+    "listen": "Alamat dengar (pilihan)",
+    "listenHint": "Port yang digunakan aplikasi untuk sampai ke input ini, seperti :49494. Biarkan kosong untuk port bebas.",
+    "upnpAddressHint": "URL perihalan renderer, seperti yang diberikan Cari Peranti, atau alamat IP pemain Sonos.",
+    "format": "Format strim (pilihan)",
+    "formatHint": "wav atau mp3. Biarkan kosong untuk MP3 pada Sonos dan WAV pada yang lain. MP3 memerlukan ffmpeg.",
+    "btDevice": "Telefon (pilihan)",
+    "btDeviceHint": "Rakam telefon ini sahaja, mengikut alamat Bluetooth. Biarkan kosong untuk merakam peranti yang sedang bermain.",
+    "btAdapter": "Penyesuai Bluetooth (pilihan)",
+    "btHidden": "Tersembunyi: hanya telefon yang sudah dipasangkan boleh bersambung",
+    "bitrate": "Kadar bit (pilihan)",
+    "bitrateHint": "96, 160 atau 320 kbit/s. Biarkan kosong untuk 320.",
+    "airplay2PortHint": "Port yang didengar oleh AirPlay 2, seperti :7000. Beri setiap input AirPlay port sendiri.",
+    "airplay2AddressHint": "Alamat dan port penerima, seperti yang diberikan Cari Peranti, seperti 192.168.1.60:7000. Ia mesti membenarkan sesiapa dalam rangkaian bermain tanpa kata laluan."
   },
   "pairing": {
     "title": "Gandingan AirPlay",

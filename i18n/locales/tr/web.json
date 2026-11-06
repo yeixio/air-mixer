@@ -28,8 +28,7 @@
     "unexpected": "Bir şeyler ters gitti.",
     "httpStatus": "Sunucu {{status}} yanıtını verdi. Sayfayı yenileyip tekrar deneyin.",
     "loadFailed": "Air-Mixer'a ulaşılamıyor. Çalıştığını kontrol edin, sonra sayfayı yenileyin.",
-    "validation": "Formu kontrol edin",
-    "comingSoon": "{{protocol}} (yakında)"
+    "validation": "Formu kontrol edin"
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone, iPad ve Mac'ten ses alın",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: Matinee'de oynatıcı olarak görünür ve gönderileni çalar",
     "matineeClient": "Matinee: bir Matinee oynatıcısında çal (adres: oynatıcının kimliği)",
     "streamClient": "Akış: VLC veya bir tarayıcı için canlı WAV akışı",
-    "localClient": "Yerel: bu makinenin ses kartı"
+    "localClient": "Yerel: bu makinenin ses kartı",
+    "radioServer": "İnternet radyosu: bir URL'den istasyon, çalma listesi veya ses dosyası çal",
+    "pulseServer": "PipeWire veya PulseAudio: hat girişini, USB ses arabirimini veya Bluetooth ile çalan bir telefonu kaydet",
+    "castClient": "Google Cast: Chromecast'te, Nest ve Google Home hoparlörlerde, hoparlör gruplarında ve Cast destekli TV'lerde çal",
+    "pulseClient": "PipeWire veya PulseAudio: bir ses kartında veya eşleştirilmiş bir Bluetooth hoparlörde çal",
+    "snapcastClient": "Snapcast: her Snapcast istemcisinde senkronize çal",
+    "upnpServer": "UPnP/DLNA: BubbleUPnP gibi DLNA uygulamalarında hoparlör olarak görünür ve gönderdiklerini çalar",
+    "upnpClient": "UPnP/DLNA: Sonos, AV alıcılar, akıllı TV'ler ve diğer DLNA oynatıcılarda çal",
+    "bluetoothServer": "Bluetooth: telefonların ve dizüstülerin eşleştiği bir Bluetooth hoparlör olarak görünür",
+    "spotifyServer": "Spotify Connect: Spotify uygulamasında hoparlör olarak görünür",
+    "airplay2Server": "AirPlay 2: iPhone, iPad ve Mac'te çok odalı dahil AirPlay 2 hoparlör olarak görünür",
+    "needs": "{{name}}: yüklü olmayan {{program}} gerekir",
+    "airplay2Client": "AirPlay 2 (deneysel): HomePod, Apple TV ve diğer AirPlay 2 hoparlörlerde çal"
   },
   "servers": {
     "title": "Giriş sunucuları",
@@ -131,6 +142,35 @@
     "selectFailed": "Bu cihaz seçilemedi. Yeniden arayın veya elle kurun.",
     "manual": "Elle kur",
     "manualHint": "Cihazınız bulunamadıysa bunu kullanın."
+  },
+  "fields": {
+    "url": "Yayın URL'si",
+    "urlHint": "Bir internet radyo istasyonu, çalma listesi (.pls, .m3u, .m3u8) veya ses dosyası. Dosya sürekli tekrarlanır.",
+    "source": "Kaynak (isteğe bağlı)",
+    "sourceHint": "Bir kaynağın adı veya açıklaması, bu makineye çalan bir telefonun Bluetooth adresi ya da sonuna .monitor eklenmiş bir sink adı. Varsayılan kaynak için boş bırak.",
+    "sink": "Sink (isteğe bağlı)",
+    "sinkHint": "Bir sink'in adı veya açıklaması ya da AA:BB:CC:DD:EE:FF gibi bir Bluetooth hoparlör adresi. Varsayılan sink için boş bırak.",
+    "pulseServer": "PulseAudio sunucusu (isteğe bağlı)",
+    "pulseServerHint": "Bu makinedeki olağan sunucu için boş bırak.",
+    "delay": "Milisaniye cinsinden gecikme (isteğe bağlı)",
+    "delayHint": "Bu hoparlörü daha yavaş olanlarla hizalamak için sesi geciktirir.",
+    "sampleRate": "Örnekleme hızı (isteğe bağlı)",
+    "sampleRateHint": "snapserver kaynağının sampleformat değerindeki hız. snapserver'ın varsayılanı olan 48000 için boş bırak.",
+    "snapcastAddressHint": "snapserver ana makinesi ve 4953 değilse TCP kaynağının bağlantı noktası.",
+    "castAddressHint": "Cihazın IP adresi ve 8009 değilse bağlantı noktası (hoparlör grupları başka bir bağlantı noktası kullanır). Cast cihazları birkaç saniye geç çalar; diğer hoparlörleri buna göre geciktir.",
+    "listen": "Dinleme adresi (isteğe bağlı)",
+    "listenHint": "Uygulamaların bu girişe ulaştığı bağlantı noktası, örneğin :49494. Boş bir bağlantı noktası için boş bırak.",
+    "upnpAddressHint": "Oynatıcının Cihazları bul ile gelen açıklama URL'si veya bir Sonos oynatıcının IP adresi.",
+    "format": "Yayın biçimi (isteğe bağlı)",
+    "formatHint": "wav veya mp3. Sonos'ta MP3, diğer her şeyde WAV için boş bırak. MP3 için ffmpeg gerekir.",
+    "btDevice": "Telefon (isteğe bağlı)",
+    "btDeviceHint": "Bluetooth adresine göre yalnızca bu telefonu kaydet. Çalan cihazı kaydetmek için boş bırak.",
+    "btAdapter": "Bluetooth adaptörü (isteğe bağlı)",
+    "btHidden": "Gizli: yalnızca zaten eşleşmiş telefonlar bağlanabilir",
+    "bitrate": "Bit hızı (isteğe bağlı)",
+    "bitrateHint": "96, 160 veya 320 kbit/s. 320 için boş bırak.",
+    "airplay2PortHint": "AirPlay 2'nin dinlediği bağlantı noktası, örneğin :7000. Her AirPlay girişine ayrı bir bağlantı noktası ver.",
+    "airplay2AddressHint": "Alıcının Cihazları bul ile gelen adresi ve bağlantı noktası, örneğin 192.168.1.60:7000. Ağdaki herkesin parolasız çalmasına izin vermeli."
   },
   "pairing": {
     "title": "AirPlay eşleştirme",

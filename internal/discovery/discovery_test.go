@@ -4,10 +4,14 @@ import (
 	"context"
 	"errors"
 	"net"
+	"slices"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/libp2p/zeroconf/v2"
+
+	"github.com/yeixio/air-mixer/internal/protocols/upnp"
 )
 
 func entry(instance string, ip string, port int, txt ...string) *zeroconf.ServiceEntry {
@@ -24,8 +28,12 @@ func entry(instance string, ip string, port int, txt ...string) *zeroconf.Servic
 }
 
 func fakeBrowse(entries []*zeroconf.ServiceEntry, err error) browseFunc {
+	return fakeBrowseService("_raop._tcp", entries, err)
+}
+
+func fakeBrowseService(want string, entries []*zeroconf.ServiceEntry, err error) browseFunc {
 	return func(ctx context.Context, service, _ string, out chan<- *zeroconf.ServiceEntry, _ ...zeroconf.ClientOption) error {
-		if service != "_raop._tcp" {
+		if service != want {
 			return errors.New("wrong service " + service)
 		}
 		if err != nil {
@@ -70,6 +78,67 @@ func TestAirPlayDiscover(t *testing.T) {
 	}
 }
 
+func TestSnapcastDiscover(t *testing.T) {
+	s := &Snapcast{browse: fakeBrowseService("_snapcast._tcp", []*zeroconf.ServiceEntry{
+		entry(`Snapcast`, "192.168.1.30", 1704),
+	}, nil)}
+	devices, err := s.Discover(context.Background(), 50*time.Millisecond)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(devices) != 1 || devices[0].Address != "192.168.1.30:4953" || devices[0].Protocol != "snapcast" {
+		t.Fatalf("devices %+v", devices)
+	}
+}
+
+func TestCastDiscover(t *testing.T) {
+	c := &Cast{browse: fakeBrowseService("_googlecast._tcp", []*zeroconf.ServiceEntry{
+		entry("Google-Nest-Mini-0123abcd", "192.168.1.40", 8009, "fn=Kitchen speaker", "md=Google Nest Mini", "id=0123abcd"),
+		entry("Google-Cast-Group-77", "192.168.1.40", 32187, "fn=Downstairs"),
+	}, nil)}
+	devices, err := c.Discover(context.Background(), 50*time.Millisecond)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(devices) != 2 {
+		t.Fatalf("devices %+v", devices)
+	}
+	d := devices[0]
+	if d.Name != "Kitchen speaker" || d.Address != "192.168.1.40:8009" || d.Protocol != "cast" || d.Description != "Google Cast device: Google Nest Mini" {
+		t.Errorf("device %+v", d)
+	}
+	if devices[1].Name != "Downstairs" || devices[1].Port != 32187 {
+		t.Errorf("group %+v", devices[1])
+	}
+}
+
+func TestUPnPDiscover(t *testing.T) {
+	u := &UPnP{
+		search: func(context.Context, string, time.Duration) ([]upnp.SearchResult, error) {
+			return []upnp.SearchResult{
+				{Location: "http://192.168.1.50:1400/xml/device_description.xml", USN: "uuid:RINCON_1::urn:schemas-upnp-org:device:MediaRenderer:1"},
+				{Location: "http://192.168.1.60:49152/desc.xml"},
+			}, nil
+		},
+		name: func(_ context.Context, loc string) (string, string, error) {
+			if strings.Contains(loc, "1400") {
+				return "Living Room", "Sonos One", nil
+			}
+			return "", "", errors.New("timeout")
+		},
+	}
+	devices, err := u.Discover(context.Background(), time.Millisecond)
+	if err != nil || len(devices) != 2 {
+		t.Fatalf("%v %+v", err, devices)
+	}
+	if d := devices[0]; d.Name != "Living Room" || d.Description != "UPnP/DLNA renderer: Sonos One" || d.Port != 1400 || d.Protocol != "upnp" {
+		t.Errorf("device %+v", d)
+	}
+	if devices[1].Name != "192.168.1.60:49152" {
+		t.Errorf("unnamed device %+v", devices[1])
+	}
+}
+
 type stubDiscoverer struct {
 	protocol string
 	devices  []Device
@@ -106,7 +175,24 @@ func TestService(t *testing.T) {
 	if _, err := failing.DiscoverAll(ctx, time.Millisecond); err == nil {
 		t.Error("total failure swallowed")
 	}
-	if got := NewService().Protocols(); len(got) != 1 || got[0] != "airplay" {
+	if got := NewService().Protocols(); !slices.Equal(got, []string{"airplay", "airplay2", "cast", "snapcast", "upnp"}) {
 		t.Errorf("default protocols = %v", got)
+	}
+}
+
+func TestAirPlay2Discover(t *testing.T) {
+	a := &AirPlay2{browse: fakeBrowseService("_airplay._tcp", []*zeroconf.ServiceEntry{
+		entry("Bedroom HomePod", "192.168.1.30", 7000, "model=AudioAccessory5,1", "features=0x4A7FCA00,0xBC354BD0"),
+	}, nil)}
+	devices, err := a.Discover(context.Background(), 50*time.Millisecond)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(devices) != 1 {
+		t.Fatalf("got %d devices", len(devices))
+	}
+	d := devices[0]
+	if d.Protocol != "airplay2" || d.Name != "Bedroom HomePod" || d.Address != "192.168.1.30:7000" || d.Metadata["model"] != "AudioAccessory5,1" {
+		t.Errorf("device %+v", d)
 	}
 }

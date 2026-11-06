@@ -28,8 +28,7 @@
     "unexpected": "Ceva n-a mers bine.",
     "httpStatus": "Serverul a răspuns {{status}}. Reîncarcă pagina și încearcă din nou.",
     "loadFailed": "Nu se poate ajunge la Air-Mixer. Verifică dacă rulează, apoi reîncarcă pagina.",
-    "validation": "Verifică formularul",
-    "comingSoon": "{{protocol}} (în curând)"
+    "validation": "Verifică formularul"
   },
   "protocols": {
     "airplayServer": "AirPlay: primește sunet de pe iPhone, iPad și Mac",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: apare în Matinee ca player și redă ce primește",
     "matineeClient": "Matinee: redă pe un player Matinee (adresa: ID-ul playerului)",
     "streamClient": "Stream: un stream WAV live pentru VLC sau un browser",
-    "localClient": "Local: placa de sunet a acestui calculator"
+    "localClient": "Local: placa de sunet a acestui calculator",
+    "radioServer": "Radio pe internet: redă un post, un playlist sau un fișier audio de la un URL",
+    "pulseServer": "PipeWire sau PulseAudio: înregistrează o intrare line-in, o interfață audio USB sau un telefon care redă prin Bluetooth",
+    "castClient": "Google Cast: redă pe Chromecast, boxe Nest și Google Home, grupuri de boxe și televizoare cu Cast",
+    "pulseClient": "PipeWire sau PulseAudio: redă pe o placă de sunet sau pe o boxă Bluetooth asociată",
+    "snapcastClient": "Snapcast: redă sincronizat pe fiecare client Snapcast",
+    "upnpServer": "UPnP/DLNA: apare ca boxă în aplicațiile DLNA, precum BubbleUPnP, și redă ce trimit",
+    "upnpClient": "UPnP/DLNA: redă pe Sonos, receivere AV, televizoare smart și alte renderere DLNA",
+    "bluetoothServer": "Bluetooth: apare ca boxă Bluetooth la care se împerechează telefoanele și laptopurile",
+    "spotifyServer": "Spotify Connect: apare ca boxă în aplicația Spotify",
+    "airplay2Server": "AirPlay 2: apare ca boxă AirPlay 2 pe iPhone, iPad și Mac, inclusiv multiroom",
+    "needs": "{{name}}: necesită {{program}}, care nu este instalat",
+    "airplay2Client": "AirPlay 2 (experimental): redă pe HomePod, Apple TV și alte boxe AirPlay 2"
   },
   "servers": {
     "title": "Servere de intrare",
@@ -132,6 +143,35 @@
     "selectFailed": "Dispozitivul nu a putut fi ales. Caută din nou sau configurează-l manual.",
     "manual": "Configurare manuală",
     "manualHint": "Folosește asta dacă dispozitivul tău nu a fost găsit."
+  },
+  "fields": {
+    "url": "URL-ul stream-ului",
+    "urlHint": "Un post de radio pe internet, un playlist (.pls, .m3u, .m3u8) sau un fișier audio. Un fișier se redă în buclă.",
+    "source": "Sursă (opțional)",
+    "sourceHint": "Numele sau descrierea unei surse, adresa Bluetooth a unui telefon care redă pe acest calculator sau numele unui sink urmat de .monitor. Lasă gol pentru sursa implicită.",
+    "sink": "Sink (opțional)",
+    "sinkHint": "Numele sau descrierea unui sink, sau adresa unei boxe Bluetooth, cum ar fi AA:BB:CC:DD:EE:FF. Lasă gol pentru sink-ul implicit.",
+    "pulseServer": "Server PulseAudio (opțional)",
+    "pulseServerHint": "Lasă gol pentru cel obișnuit de pe acest calculator.",
+    "delay": "Întârziere în milisecunde (opțional)",
+    "delayHint": "Reține sunetul ca boxa să fie aliniată cu altele mai lente.",
+    "sampleRate": "Rată de eșantionare (opțional)",
+    "sampleRateHint": "Rata din sampleformat a sursei snapserver. Lasă gol pentru 48000, valoarea implicită a snapserver.",
+    "snapcastAddressHint": "Gazda snapserver și portul sursei sale TCP, dacă nu este 4953.",
+    "castAddressHint": "Adresa IP a dispozitivului și portul, dacă nu este 8009 (grupurile de boxe folosesc altul). Dispozitivele Cast redau cu câteva secunde mai târziu, așa că întârzie celelalte boxe la fel.",
+    "listen": "Adresă de ascultare (opțional)",
+    "listenHint": "Portul prin care aplicațiile ajung la această intrare, de exemplu :49494. Lasă gol pentru un port liber.",
+    "upnpAddressHint": "URL-ul de descriere al rendererului, cum îl dă Găsește dispozitive, sau adresa IP a unui player Sonos.",
+    "format": "Formatul stream-ului (opțional)",
+    "formatHint": "wav sau mp3. Lasă gol pentru MP3 pe Sonos și WAV pe orice altceva. MP3 necesită ffmpeg.",
+    "btDevice": "Telefon (opțional)",
+    "btDeviceHint": "Înregistrează doar acest telefon, după adresa Bluetooth. Lasă gol pentru a înregistra dispozitivul care redă.",
+    "btAdapter": "Adaptor Bluetooth (opțional)",
+    "btHidden": "Ascuns: se pot conecta doar telefoanele deja împerecheate",
+    "bitrate": "Rată de biți (opțional)",
+    "bitrateHint": "96, 160 sau 320 kbit/s. Lasă gol pentru 320.",
+    "airplay2PortHint": "Portul pe care ascultă AirPlay 2, de exemplu :7000. Dă fiecărei intrări AirPlay propriul port.",
+    "airplay2AddressHint": "Adresa și portul receptorului, cum le dă Găsește dispozitive, de exemplu 192.168.1.60:7000. Trebuie să permită oricui din rețea să redea, fără parolă."
   },
   "pairing": {
     "title": "Asociere AirPlay",

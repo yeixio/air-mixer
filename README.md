@@ -26,10 +26,12 @@ ecosystems behind one web UI and one REST API. It receives audio from your
 devices, mixes it, and plays it on any combination of speakers, whatever
 protocol they speak.
 
-Today it speaks classic AirPlay in both directions and plays on the
-machine's own sound card or any PulseAudio or PipeWire sink, including
-paired Bluetooth speakers. Google Cast, UPnP/DLNA and AirPlay 2 are on the
-[roadmap](ROADMAP.md).
+Today it receives classic AirPlay and AirPlay 2, Bluetooth, Spotify
+Connect, DLNA and internet radio, records any PulseAudio or PipeWire
+source, and plays on AirPlay speakers, the machine's own sound card, any
+PulseAudio or PipeWire sink including paired Bluetooth speakers, Google
+Cast devices, Sonos and other UPnP/DLNA renderers, and Snapcast. The
+AirPlay 2 output, for HomePods and recent Apple TVs, is experimental.
 
 <p align="center">
   <img src="docs/assets/web-ui.png" alt="The Air-Mixer web UI with AirPlay inputs, speakers and two routes" width="85%">
@@ -41,6 +43,32 @@ paired Bluetooth speakers. Google Cast, UPnP/DLNA and AirPlay 2 are on the
   an AirPlay speaker. Pick it in Control Center and play.
 - **AirPlay sender.** Plays to AirPort Express, shairport-sync, most
   AV receivers and other classic AirPlay (RAOP) speakers.
+- **AirPlay 2 sender (experimental).** Plays to HomePods, Apple TVs and
+  other receivers that refuse classic AirPlay, using HomeKit's transient
+  pairing. Not yet tried on Apple hardware; reports are welcome.
+- **Internet radio input.** Plays a station, a PLS, M3U or HLS playlist
+  or an audio file from a URL for as long as it is on, reconnecting when
+  the station drops. AAC, Ogg, Opus and FLAC go through ffmpeg, which the
+  Docker image includes.
+- **Bluetooth input.** Air-Mixer shows up as a Bluetooth speaker: phones
+  and laptops pair with it from their Bluetooth settings and play. It
+  drives BlueZ over D-Bus and records through PipeWire or PulseAudio.
+- **Spotify Connect input.** Shows up as a speaker in the Spotify app,
+  through [librespot](https://github.com/librespot-org/librespot).
+- **AirPlay 2 input.** Shows up as an AirPlay 2 speaker that Apple devices
+  can add to multi-room groups, through
+  [shairport-sync](https://github.com/mikebrady/shairport-sync) built with
+  AirPlay 2 support.
+- **Line-in input.** Records any PulseAudio or PipeWire source: a
+  line-in, a USB audio interface, or a sink's monitor.
+- **Google Cast output.** Plays on Chromecast, Nest and Google Home
+  speakers, speaker groups and Cast TVs, and lets go of them when it goes
+  quiet or someone casts something else.
+- **UPnP/DLNA, both ways.** Plays on Sonos, AV receivers, smart TVs and
+  other DLNA renderers, and appears as a renderer that apps like
+  BubbleUPnP and Windows' "Cast to Device" can play to.
+- **Snapcast output.** Feeds a snapserver TCP source, so every Snapcast
+  client in the house plays in sync.
 - **Local output.** Plays on the server's own default audio device.
 - **PulseAudio and Bluetooth output.** Plays to any PulseAudio or PipeWire
   sink, picked by name or by a Bluetooth speaker's address, so one
@@ -65,7 +93,8 @@ paired Bluetooth speakers. Google Cast, UPnP/DLNA and AirPlay 2 are on the
 - **Home Assistant.** A [custom integration](docs/HOME_ASSISTANT.md)
   makes every output a media player, so Home Assistant can send speech,
   doorbells and house-wide alarms.
-- **Discovery.** Finds AirPlay speakers on your network.
+- **Discovery.** Finds AirPlay speakers, Google Cast devices, Sonos and
+  other DLNA renderers, and Snapcast servers on your network.
 - **Web UI and REST API.** Everything the UI does is available over a
   [documented JSON API](docs/API.md).
 - **32 languages.** The web UI and API errors come in the same languages as
@@ -186,10 +215,17 @@ airmixer version    Print version information
 
 ## Current limitations
 
-- **AirPlay 2.** Air-Mixer speaks classic AirPlay (RAOP). Devices that only
-  accept AirPlay 2, such as recent Apple TVs and HomePods, need HomeKit
-  pairing, which is not implemented yet; they show as `failed` in
-  `/api/status`. AirPlay 2 support is the top roadmap item.
+- **AirPlay 2 output.** The `airplay2` output is experimental and untested
+  on Apple hardware. It needs the receiver to allow anyone on the network
+  to play without a password, and uses NTP timing, so receivers that only
+  accept PTP don't play yet.
+- **Receiver programs.** The Spotify Connect and AirPlay 2 inputs run
+  `librespot` and `shairport-sync` (built with AirPlay 2, with `nqptp`
+  running), which are not in the Docker image yet. The web UI greys these
+  inputs out until the programs are on the server's `$PATH`.
+- **Google Cast input, Spotify Connect output.** Neither can be built:
+  a Cast receiver needs device certificates signed by Google, and Spotify
+  offers no way to send audio to a Connect speaker from outside its apps.
 - **Synchronisation.** Each output plays with its own buffering, so
   speakers in different rooms are not sample-aligned yet.
 - **Mix modes.** All routes into an output are mixed. The `mix_mode` field

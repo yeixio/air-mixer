@@ -28,8 +28,7 @@
     "unexpected": "حدث خطأ ما.",
     "httpStatus": "ردّ الخادم بالرمز {{status}}. حدّث الصفحة وحاول مرة أخرى.",
     "loadFailed": "تعذّر الوصول إلى Air-Mixer. تأكد من أنه يعمل، ثم حدّث الصفحة.",
-    "validation": "راجع النموذج",
-    "comingSoon": "{{protocol}} (قريبًا)"
+    "validation": "راجع النموذج"
   },
   "protocols": {
     "airplayServer": "AirPlay: استقبال الصوت من iPhone وiPad وMac",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: يظهر في Matinee كمشغّل ويشغّل ما يُرسل إليه",
     "matineeClient": "Matinee: التشغيل على مشغّل Matinee (العنوان: معرّف المشغّل)",
     "streamClient": "بث: بث WAV مباشر لـ VLC أو لمتصفح",
-    "localClient": "محلي: بطاقة الصوت في هذا الجهاز"
+    "localClient": "محلي: بطاقة الصوت في هذا الجهاز",
+    "radioServer": "راديو الإنترنت: شغّل محطة أو قائمة تشغيل أو ملفًا صوتيًا من عنوان URL",
+    "pulseServer": "PipeWire أو PulseAudio: سجّل مدخل الخط أو واجهة صوت USB أو هاتفًا يشغّل عبر Bluetooth",
+    "castClient": "Google Cast: شغّل على Chromecast وسماعات Nest وGoogle Home ومجموعات السماعات وأجهزة التلفزيون التي تدعم Cast",
+    "pulseClient": "PipeWire أو PulseAudio: شغّل على بطاقة صوت أو سماعة Bluetooth مقترنة",
+    "snapcastClient": "Snapcast: شغّل بتزامن على كل عملاء Snapcast",
+    "upnpServer": "UPnP/DLNA: يظهر كسماعة في تطبيقات DLNA مثل BubbleUPnP ويشغّل ما ترسله",
+    "upnpClient": "UPnP/DLNA: شغّل على Sonos ومستقبلات AV وأجهزة التلفزيون الذكية وعارضات DLNA الأخرى",
+    "bluetoothServer": "Bluetooth: يظهر كسماعة Bluetooth تقترن بها الهواتف والحواسيب المحمولة",
+    "spotifyServer": "Spotify Connect: يظهر كسماعة في تطبيق Spotify",
+    "airplay2Server": "AirPlay 2: يظهر كسماعة AirPlay 2 على iPhone وiPad وMac، بما في ذلك تعدد الغرف",
+    "needs": "{{name}}: يحتاج إلى {{program}} وهو غير مثبّت",
+    "airplay2Client": "AirPlay 2 (تجريبي): شغّل على HomePod وApple TV وسماعات AirPlay 2 الأخرى"
   },
   "servers": {
     "title": "خوادم الإدخال",
@@ -135,6 +146,35 @@
     "selectFailed": "تعذّر اختيار هذا الجهاز. ابحث مرة أخرى أو أعدّه يدويًا.",
     "manual": "إعداد يدوي",
     "manualHint": "استخدم هذا إذا لم يُعثر على جهازك."
+  },
+  "fields": {
+    "url": "عنوان URL للبث",
+    "urlHint": "محطة راديو إنترنت أو قائمة تشغيل (.pls أو .m3u أو .m3u8) أو ملف صوتي. يُعاد تشغيل الملف باستمرار.",
+    "source": "المصدر (اختياري)",
+    "sourceHint": "اسم المصدر أو وصفه، أو عنوان Bluetooth لهاتف يشغّل على هذا الجهاز، أو اسم sink متبوعًا بـ .monitor. اتركه فارغًا للمصدر الافتراضي.",
+    "sink": "Sink (اختياري)",
+    "sinkHint": "اسم sink أو وصفه، أو عنوان سماعة Bluetooth مثل AA:BB:CC:DD:EE:FF. اتركه فارغًا للـ sink الافتراضي.",
+    "pulseServer": "خادم PulseAudio (اختياري)",
+    "pulseServerHint": "اتركه فارغًا لاستخدام الخادم المعتاد على هذا الجهاز.",
+    "delay": "التأخير بالمللي ثانية (اختياري)",
+    "delayHint": "يؤخّر الصوت لتتوافق هذه السماعة مع السماعات الأبطأ.",
+    "sampleRate": "معدل العينات (اختياري)",
+    "sampleRateHint": "المعدل في sampleformat لمصدر snapserver. اتركه فارغًا لـ 48000، القيمة الافتراضية في snapserver.",
+    "snapcastAddressHint": "مضيف snapserver، ومنفذ مصدر TCP الخاص به إن لم يكن 4953.",
+    "castAddressHint": "عنوان IP للجهاز، ومنفذه إن لم يكن 8009 (تستخدم مجموعات السماعات منفذًا آخر). تعمل أجهزة Cast متأخرة بضع ثوانٍ، لذا أخّر السماعات الأخرى بالقدر نفسه.",
+    "listen": "عنوان الاستماع (اختياري)",
+    "listenHint": "المنفذ الذي تصل منه التطبيقات إلى هذا المدخل، مثل ‎:49494. اتركه فارغًا لمنفذ متاح.",
+    "upnpAddressHint": "عنوان URL لوصف العارض كما يعطيه البحث عن الأجهزة، أو عنوان IP لمشغّل Sonos.",
+    "format": "صيغة البث (اختياري)",
+    "formatHint": "wav أو mp3. اتركه فارغًا لاستخدام MP3 على Sonos وWAV على غيره. تحتاج MP3 إلى ffmpeg.",
+    "btDevice": "الهاتف (اختياري)",
+    "btDeviceHint": "سجّل هذا الهاتف فقط حسب عنوان Bluetooth. اتركه فارغًا لتسجيل الجهاز الذي يشغّل.",
+    "btAdapter": "محوّل Bluetooth (اختياري)",
+    "btHidden": "مخفي: لا تتصل إلا الهواتف المقترنة مسبقًا",
+    "bitrate": "معدل البت (اختياري)",
+    "bitrateHint": "96 أو 160 أو 320 كيلوبت/ث. اتركه فارغًا لـ 320.",
+    "airplay2PortHint": "المنفذ الذي يستمع عليه AirPlay 2، مثل ‎:7000. أعطِ كل مدخل AirPlay منفذًا خاصًا به.",
+    "airplay2AddressHint": "عنوان المستقبل ومنفذه كما يعطيهما البحث عن الأجهزة، مثل 192.168.1.60:7000. يجب أن يسمح لأي شخص على الشبكة بالتشغيل دون كلمة مرور."
   },
   "pairing": {
     "title": "إقران AirPlay",

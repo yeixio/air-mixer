@@ -28,8 +28,7 @@
     "unexpected": "問題が発生しました。",
     "httpStatus": "サーバーの応答は {{status}} でした。ページを再読み込みして、もう一度お試しください。",
     "loadFailed": "Air-Mixer に接続できません。実行中か確認してから、ページを再読み込みしてください。",
-    "validation": "入力内容を確認してください",
-    "comingSoon": "{{protocol}}(近日対応)"
+    "validation": "入力内容を確認してください"
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone、iPad、Mac からオーディオを受信",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: Matinee にプレーヤーとして表示され、送られた音声を再生します",
     "matineeClient": "Matinee: Matinee のプレーヤーで再生（アドレス：プレーヤーの ID）",
     "streamClient": "ストリーム: VLC やブラウザ向けのライブ WAV ストリーム",
-    "localClient": "ローカル: このマシンのサウンドカード"
+    "localClient": "ローカル: このマシンのサウンドカード",
+    "radioServer": "インターネットラジオ：URL から局、プレイリスト、オーディオファイルを再生",
+    "pulseServer": "PipeWire または PulseAudio：ライン入力、USB オーディオインターフェイス、Bluetooth で再生中のスマートフォンを録音",
+    "castClient": "Google Cast：Chromecast、Nest や Google Home のスピーカー、スピーカーグループ、Cast 対応テレビで再生",
+    "pulseClient": "PipeWire または PulseAudio：サウンドカードやペアリング済みの Bluetooth スピーカーで再生",
+    "snapcastClient": "Snapcast：すべての Snapcast クライアントで同期して再生",
+    "upnpServer": "UPnP/DLNA：BubbleUPnP などの DLNA アプリにスピーカーとして表示され、送られたものを再生",
+    "upnpClient": "UPnP/DLNA：Sonos、AV アンプ、スマートテレビなどの DLNA レンダラーで再生",
+    "bluetoothServer": "Bluetooth：スマートフォンやノートPCとペアリングできる Bluetooth スピーカーとして表示",
+    "spotifyServer": "Spotify Connect：Spotify アプリにスピーカーとして表示",
+    "airplay2Server": "AirPlay 2：iPhone、iPad、Mac に AirPlay 2 スピーカーとして表示（マルチルーム対応）",
+    "needs": "{{name}}：{{program}} が必要ですが、インストールされていません",
+    "airplay2Client": "AirPlay 2（試験的）：HomePod、Apple TV などの AirPlay 2 スピーカーで再生"
   },
   "servers": {
     "title": "入力サーバー",
@@ -130,6 +141,35 @@
     "selectFailed": "そのデバイスを選択できませんでした。もう一度探すか、手動で設定してください。",
     "manual": "手動で設定",
     "manualHint": "デバイスが見つからなかったときに使います。"
+  },
+  "fields": {
+    "url": "ストリーム URL",
+    "urlHint": "インターネットラジオ局、プレイリスト（.pls、.m3u、.m3u8）、またはオーディオファイル。ファイルは繰り返し再生されます。",
+    "source": "ソース（任意）",
+    "sourceHint": "ソースの名前か説明、このマシンに再生しているスマートフォンの Bluetooth アドレス、またはシンク名の後に .monitor を付けたもの。空欄ならデフォルトのソースです。",
+    "sink": "シンク（任意）",
+    "sinkHint": "シンクの名前か説明、または AA:BB:CC:DD:EE:FF のような Bluetooth スピーカーのアドレス。空欄ならデフォルトのシンクです。",
+    "pulseServer": "PulseAudio サーバー（任意）",
+    "pulseServerHint": "空欄ならこのマシンの通常のサーバーを使います。",
+    "delay": "遅延（ミリ秒、任意）",
+    "delayHint": "音を遅らせて、このスピーカーを遅いスピーカーにそろえます。",
+    "sampleRate": "サンプルレート（任意）",
+    "sampleRateHint": "snapserver ソースの sampleformat のレート。空欄なら snapserver のデフォルトの 48000 です。",
+    "snapcastAddressHint": "snapserver のホスト。TCP ソースのポートが 4953 でなければそのポートも。",
+    "castAddressHint": "デバイスの IP アドレス。ポートが 8009 でなければそのポートも（スピーカーグループは別のポートを使います）。Cast デバイスは数秒遅れて鳴るので、ほかのスピーカーにも同じだけ遅延を設定してください。",
+    "listen": "待ち受けアドレス（任意）",
+    "listenHint": "アプリがこの入力に接続するポート（例：:49494）。空欄なら空いているポートを使います。",
+    "upnpAddressHint": "「デバイスを探す」で得られるレンダラーの説明 URL、または Sonos プレーヤーの IP アドレス。",
+    "format": "ストリーム形式（任意）",
+    "formatHint": "wav または mp3。空欄なら Sonos には MP3、それ以外には WAV を送ります。MP3 には ffmpeg が必要です。",
+    "btDevice": "スマートフォン（任意）",
+    "btDeviceHint": "この Bluetooth アドレスのスマートフォンだけを録音します。空欄なら再生中のデバイスを録音します。",
+    "btAdapter": "Bluetooth アダプター（任意）",
+    "btHidden": "非表示：ペアリング済みのスマートフォンだけが接続できます",
+    "bitrate": "ビットレート（任意）",
+    "bitrateHint": "96、160、320 kbit/s のいずれか。空欄なら 320 です。",
+    "airplay2PortHint": "AirPlay 2 が待ち受けるポート（例：:7000）。AirPlay 入力ごとに別のポートにしてください。",
+    "airplay2AddressHint": "「デバイスを探す」で得られるレシーバーのアドレスとポート（例：192.168.1.60:7000）。ネットワーク上の誰でもパスワードなしで再生できる設定にしてください。"
   },
   "pairing": {
     "title": "AirPlay のペアリング",

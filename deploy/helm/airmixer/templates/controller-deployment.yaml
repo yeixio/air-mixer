@@ -37,11 +37,23 @@ spec:
       # Keep cluster DNS, so room addresses resolve.
       dnsPolicy: ClusterFirstWithHostNet
       {{- end }}
+      {{- $audio := $c.hostAudio }}
       securityContext:
         runAsNonRoot: true
+        {{- if $audio.enabled }}
+        # The same user as the host's PipeWire or PulseAudio, so the
+        # socket opens.
+        runAsUser: {{ $audio.uid }}
+        runAsGroup: {{ $audio.gid }}
+        fsGroup: {{ $audio.gid }}
+        {{- if and $audio.bluetooth $audio.bluetoothGid }}
+        supplementalGroups: [{{ $audio.bluetoothGid }}]
+        {{- end }}
+        {{- else }}
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
+        {{- end }}
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -49,9 +61,23 @@ spec:
           image: {{ include "airmixer.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args: ["server", "--config", "/etc/airmixer/config.yaml"]
-          {{- with $c.env }}
+          {{- if or $c.env $audio.enabled }}
           env:
+            {{- if $audio.enabled }}
+            - name: PULSE_SERVER
+              value: unix:/run/pulse/native
+            {{- if $audio.cookie }}
+            - name: PULSE_COOKIE
+              value: /run/pulse-cookie/cookie
+            {{- end }}
+            {{- if $audio.bluetooth }}
+            - name: DBUS_SYSTEM_BUS_ADDRESS
+              value: unix:path=/run/dbus/system_bus_socket
+            {{- end }}
+            {{- end }}
+            {{- with $c.env }}
             {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           ports:
             - name: http
@@ -86,6 +112,19 @@ spec:
               readOnly: true
             - name: data
               mountPath: /data
+            {{- if $audio.enabled }}
+            - name: pulse
+              mountPath: /run/pulse
+            {{- if $audio.cookie }}
+            - name: pulse-cookie
+              mountPath: /run/pulse-cookie/cookie
+              readOnly: true
+            {{- end }}
+            {{- if $audio.bluetooth }}
+            - name: dbus
+              mountPath: /run/dbus/system_bus_socket
+            {{- end }}
+            {{- end }}
       volumes:
         - name: config
           configMap:
@@ -97,6 +136,24 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        {{- if $audio.enabled }}
+        - name: pulse
+          hostPath:
+            path: {{ default (printf "/run/user/%v/pulse" $audio.uid) $audio.socketDir }}
+            type: Directory
+        {{- if $audio.cookie }}
+        - name: pulse-cookie
+          hostPath:
+            path: {{ $audio.cookie }}
+            type: File
+        {{- end }}
+        {{- if $audio.bluetooth }}
+        - name: dbus
+          hostPath:
+            path: /run/dbus/system_bus_socket
+            type: Socket
+        {{- end }}
+        {{- end }}
       {{- with $c.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

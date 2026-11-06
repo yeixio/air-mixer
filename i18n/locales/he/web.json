@@ -28,8 +28,7 @@
     "unexpected": "משהו השתבש.",
     "httpStatus": "השרת השיב {{status}}. רעננו את הדף ונסו שוב.",
     "loadFailed": "אין חיבור ל-Air-Mixer. ודאו שהוא פועל ורעננו את הדף.",
-    "validation": "בדקו את הטופס",
-    "comingSoon": "{{protocol}} (בקרוב)"
+    "validation": "בדקו את הטופס"
   },
   "protocols": {
     "airplayServer": "AirPlay: קבלת שמע מ-iPhone, iPad ו-Mac",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: מופיע ב-Matinee כנגן ומשמיע את מה שנשלח אליו",
     "matineeClient": "Matinee: השמעה בנגן Matinee (כתובת: המזהה של הנגן)",
     "streamClient": "זרם: זרם WAV חי ל-VLC או לדפדפן",
-    "localClient": "מקומי: כרטיס הקול של המחשב הזה"
+    "localClient": "מקומי: כרטיס הקול של המחשב הזה",
+    "radioServer": "רדיו אינטרנט: נגן תחנה, רשימת השמעה או קובץ שמע מכתובת URL",
+    "pulseServer": "PipeWire או PulseAudio: הקלט כניסת קו, ממשק שמע USB או טלפון שמנגן דרך Bluetooth",
+    "castClient": "Google Cast: נגן ב-Chromecast, ברמקולי Nest ו-Google Home, בקבוצות רמקולים ובטלוויזיות עם Cast",
+    "pulseClient": "PipeWire או PulseAudio: נגן בכרטיס קול או ברמקול Bluetooth מוצמד",
+    "snapcastClient": "Snapcast: נגן בסנכרון בכל לקוחות Snapcast",
+    "upnpServer": "UPnP/DLNA: מופיע כרמקול באפליקציות DLNA כמו BubbleUPnP ומנגן את מה שהן שולחות",
+    "upnpClient": "UPnP/DLNA: נגן ב-Sonos, במקלטי AV, בטלוויזיות חכמות ובנגני DLNA אחרים",
+    "bluetoothServer": "Bluetooth: מופיע כרמקול Bluetooth שטלפונים ומחשבים ניידים מתאימים אליו",
+    "spotifyServer": "Spotify Connect: מופיע כרמקול באפליקציית Spotify",
+    "airplay2Server": "AirPlay 2: מופיע כרמקול AirPlay 2 ב-iPhone, ב-iPad וב-Mac, כולל ריבוי חדרים",
+    "needs": "{{name}}: דורש את {{program}}, שאינו מותקן",
+    "airplay2Client": "AirPlay 2 (ניסיוני): נגן ב-HomePod, ב-Apple TV וברמקולי AirPlay 2 אחרים"
   },
   "servers": {
     "title": "שרתי קלט",
@@ -132,6 +143,35 @@
     "selectFailed": "לא ניתן לבחור את המכשיר הזה. חפשו שוב או הגדירו אותו ידנית.",
     "manual": "הגדרה ידנית",
     "manualHint": "השתמשו בזה אם המכשיר שלכם לא נמצא."
+  },
+  "fields": {
+    "url": "כתובת URL של הזרם",
+    "urlHint": "תחנת רדיו אינטרנט, רשימת השמעה (.pls, .m3u, .m3u8) או קובץ שמע. קובץ מתנגן שוב ושוב.",
+    "source": "מקור (רשות)",
+    "sourceHint": "שם או תיאור של מקור, כתובת Bluetooth של טלפון שמנגן למחשב הזה, או שם של sink ואחריו .monitor. השאר ריק למקור ברירת המחדל.",
+    "sink": "Sink (רשות)",
+    "sinkHint": "שם או תיאור של sink, או כתובת של רמקול Bluetooth כמו AA:BB:CC:DD:EE:FF. השאר ריק ל-sink ברירת המחדל.",
+    "pulseServer": "שרת PulseAudio (רשות)",
+    "pulseServerHint": "השאר ריק לשרת הרגיל במחשב הזה.",
+    "delay": "השהיה במילישניות (רשות)",
+    "delayHint": "מעכב את השמע כדי שהרמקול הזה יתאים לרמקולים איטיים יותר.",
+    "sampleRate": "קצב דגימה (רשות)",
+    "sampleRateHint": "הקצב ב-sampleformat של מקור snapserver. השאר ריק ל-48000, ברירת המחדל של snapserver.",
+    "snapcastAddressHint": "המארח של snapserver, ופורט מקור ה-TCP שלו אם הוא לא 4953.",
+    "castAddressHint": "כתובת ה-IP של המכשיר, והפורט שלו אם הוא לא 8009 (קבוצות רמקולים משתמשות בפורט אחר). מכשירי Cast מנגנים באיחור של כמה שניות, לכן השהה את שאר הרמקולים בהתאם.",
+    "listen": "כתובת האזנה (רשות)",
+    "listenHint": "הפורט שדרכו אפליקציות מגיעות לקלט הזה, למשל ‎:49494. השאר ריק לפורט פנוי.",
+    "upnpAddressHint": "כתובת ה-URL של תיאור הנגן כפי ש'חיפוש מכשירים' נותן, או כתובת ה-IP של נגן Sonos.",
+    "format": "פורמט הזרם (רשות)",
+    "formatHint": "wav או mp3. השאר ריק ל-MP3 ב-Sonos ו-WAV בכל השאר. MP3 דורש ffmpeg.",
+    "btDevice": "טלפון (רשות)",
+    "btDeviceHint": "הקלט רק את הטלפון הזה, לפי כתובת ה-Bluetooth. השאר ריק כדי להקליט את המכשיר שמנגן.",
+    "btAdapter": "מתאם Bluetooth (רשות)",
+    "btHidden": "מוסתר: רק טלפונים שכבר הותאמו יכולים להתחבר",
+    "bitrate": "קצב סיביות (רשות)",
+    "bitrateHint": "96, 160 או 320 קילוביט לשנייה. השאר ריק ל-320.",
+    "airplay2PortHint": "הפורט ש-AirPlay 2 מאזין עליו, למשל ‎:7000. תן לכל קלט AirPlay פורט משלו.",
+    "airplay2AddressHint": "הכתובת והפורט של המקלט כפי ש'חיפוש מכשירים' נותן, למשל 192.168.1.60:7000. הוא חייב לאפשר לכל מי שברשת לנגן, בלי סיסמה."
   },
   "pairing": {
     "title": "צימוד AirPlay",

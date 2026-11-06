@@ -28,8 +28,7 @@
     "unexpected": "Něco se pokazilo.",
     "httpStatus": "Server odpověděl {{status}}. Obnovte stránku a zkuste to znovu.",
     "loadFailed": "Nelze se spojit s Air-Mixer. Zkontrolujte, že běží, a obnovte stránku.",
-    "validation": "Zkontrolujte formulář",
-    "comingSoon": "{{protocol}} (brzy)"
+    "validation": "Zkontrolujte formulář"
   },
   "protocols": {
     "airplayServer": "AirPlay: přijímat zvuk z iPhonu, iPadu a Macu",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: zobrazí se v Matinee jako přehrávač a přehrává, co dostane",
     "matineeClient": "Matinee: přehrávat na přehrávači Matinee (adresa: ID přehrávače)",
     "streamClient": "Stream: živý WAV stream pro VLC nebo prohlížeč",
-    "localClient": "Místní: zvuková karta tohoto počítače"
+    "localClient": "Místní: zvuková karta tohoto počítače",
+    "radioServer": "Internetové rádio: přehrávej stanici, playlist nebo zvukový soubor z URL",
+    "pulseServer": "PipeWire nebo PulseAudio: nahrávej linkový vstup, USB zvukové rozhraní nebo telefon hrající přes Bluetooth",
+    "castClient": "Google Cast: přehrávej na Chromecastu, reproduktorech Nest a Google Home, skupinách reproduktorů a televizích s Cast",
+    "pulseClient": "PipeWire nebo PulseAudio: přehrávej na zvukové kartě nebo spárovaném Bluetooth reproduktoru",
+    "snapcastClient": "Snapcast: přehrávej synchronně na všech klientech Snapcast",
+    "upnpServer": "UPnP/DLNA: zobrazí se jako reproduktor v DLNA aplikacích, jako je BubbleUPnP, a přehraje, co pošlou",
+    "upnpClient": "UPnP/DLNA: přehrávej na Sonos, AV receiverech, chytrých televizích a dalších DLNA rendererech",
+    "bluetoothServer": "Bluetooth: zobrazí se jako Bluetooth reproduktor, se kterým se spárují telefony a notebooky",
+    "spotifyServer": "Spotify Connect: zobrazí se jako reproduktor v aplikaci Spotify",
+    "airplay2Server": "AirPlay 2: zobrazí se jako reproduktor AirPlay 2 na iPhonu, iPadu a Macu, i pro multiroom",
+    "needs": "{{name}}: potřebuje {{program}}, který není nainstalovaný",
+    "airplay2Client": "AirPlay 2 (experimentální): přehrávej na HomePodech, Apple TV a dalších reproduktorech AirPlay 2"
   },
   "servers": {
     "title": "Vstupní servery",
@@ -133,6 +144,35 @@
     "selectFailed": "Toto zařízení se nepodařilo vybrat. Hledejte znovu, nebo ho nastavte ručně.",
     "manual": "Nastavit ručně",
     "manualHint": "Použijte, pokud se vaše zařízení nenašlo."
+  },
+  "fields": {
+    "url": "URL streamu",
+    "urlHint": "Stanice internetového rádia, playlist (.pls, .m3u, .m3u8) nebo zvukový soubor. Soubor se přehrává stále dokola.",
+    "source": "Zdroj (nepovinné)",
+    "sourceHint": "Název nebo popis zdroje, Bluetooth adresa telefonu, který hraje do tohoto počítače, nebo název sinku s příponou .monitor. Pro výchozí zdroj nech prázdné.",
+    "sink": "Sink (nepovinné)",
+    "sinkHint": "Název nebo popis sinku, nebo adresa Bluetooth reproduktoru, například AA:BB:CC:DD:EE:FF. Pro výchozí sink nech prázdné.",
+    "pulseServer": "Server PulseAudio (nepovinné)",
+    "pulseServerHint": "Nech prázdné pro obvyklý server na tomto počítači.",
+    "delay": "Zpoždění v milisekundách (nepovinné)",
+    "delayHint": "Zadrží zvuk, aby tento reproduktor hrál v souladu s pomalejšími.",
+    "sampleRate": "Vzorkovací frekvence (nepovinné)",
+    "sampleRateHint": "Frekvence v sampleformat zdroje snapserveru. Nech prázdné pro 48000, výchozí hodnotu snapserveru.",
+    "snapcastAddressHint": "Hostitel snapserveru a port jeho TCP zdroje, pokud to není 4953.",
+    "castAddressHint": "IP adresa zařízení a jeho port, pokud to není 8009 (skupiny reproduktorů používají jiný). Zařízení Cast hrají o pár sekund později, proto ostatní reproduktory odpovídajícím způsobem zpozdi.",
+    "listen": "Adresa pro naslouchání (nepovinné)",
+    "listenHint": "Port, na kterém aplikace tento vstup najdou, například :49494. Pro volný port nech prázdné.",
+    "upnpAddressHint": "URL popisu rendereru, jak ji vrátí Najít zařízení, nebo IP adresa přehrávače Sonos.",
+    "format": "Formát streamu (nepovinné)",
+    "formatHint": "wav nebo mp3. Nech prázdné pro MP3 na Sonos a WAV na všem ostatním. MP3 potřebuje ffmpeg.",
+    "btDevice": "Telefon (nepovinné)",
+    "btDeviceHint": "Nahrávej jen tento telefon podle Bluetooth adresy. Nech prázdné pro nahrávání zařízení, které hraje.",
+    "btAdapter": "Bluetooth adaptér (nepovinné)",
+    "btHidden": "Skrytý: připojit se mohou jen už spárované telefony",
+    "bitrate": "Datový tok (nepovinné)",
+    "bitrateHint": "96, 160 nebo 320 kbit/s. Pro 320 nech prázdné.",
+    "airplay2PortHint": "Port, na kterém AirPlay 2 naslouchá, například :7000. Každý vstup AirPlay potřebuje vlastní port.",
+    "airplay2AddressHint": "Adresa a port přijímače, jak je vrátí Najít zařízení, například 192.168.1.60:7000. Musí dovolit přehrávat komukoli v síti bez hesla."
   },
   "pairing": {
     "title": "Párování AirPlay",

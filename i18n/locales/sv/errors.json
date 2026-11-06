@@ -30,5 +30,16 @@
   "matinee_needs_player": "En Matinee-klient behöver spelarens ID som adress (se /api/matinee/players)",
   "matinee_not_signed_in": "Air-Mixer är inte inloggad på Matinee än",
   "matinee_link_failed": "Det gick inte att få en kod från Matinee: {{detail}}",
-  "matinee_players_failed": "Det gick inte att hämta spelarna från Matinee: {{detail}}"
+  "matinee_players_failed": "Det gick inte att hämta spelarna från Matinee: {{detail}}",
+  "radio_needs_url": "En internetradioingång behöver en url",
+  "radio_bad_url": "url måste vara en http-, https-, rtsp- eller rtmp-adress",
+  "snapcast_needs_address": "En Snapcast-klient behöver snapserverns adress",
+  "sample_rate_range": "sample_rate måste vara mellan 8000 och 192000",
+  "cast_needs_address": "En Google Cast-klient behöver enhetens adress",
+  "upnp_needs_address": "En UPnP/DLNA-klient behöver rendererns beskrivnings-URL eller adressen till en Sonos-spelare",
+  "upnp_bad_format": "format måste vara wav eller mp3",
+  "bluetooth_bad_device": "device måste vara en Bluetooth-adress, som 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate måste vara 96, 160 eller 320",
+  "program_missing": "{{program}} är inte installerat på den här datorn",
+  "bad_port": "address måste vara en port från 1 till 65535, som :7000"
 }

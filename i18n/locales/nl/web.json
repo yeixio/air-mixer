@@ -28,8 +28,7 @@
     "unexpected": "Er ging iets mis.",
     "httpStatus": "De server antwoordde {{status}}. Vernieuw de pagina en probeer het opnieuw.",
     "loadFailed": "Air-Mixer is niet bereikbaar. Controleer of het draait en vernieuw de pagina.",
-    "validation": "Controleer het formulier",
-    "comingSoon": "{{protocol}} (binnenkort)"
+    "validation": "Controleer het formulier"
   },
   "protocols": {
     "airplayServer": "AirPlay: ontvang audio van iPhone, iPad en Mac",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: verschijnt in Matinee als speler en speelt af wat hij krijgt",
     "matineeClient": "Matinee: afspelen op een Matinee-speler (adres: de ID van de speler)",
     "streamClient": "Stream: een live WAV-stream voor VLC of een browser",
-    "localClient": "Lokaal: de geluidskaart van deze computer"
+    "localClient": "Lokaal: de geluidskaart van deze computer",
+    "radioServer": "Internetradio: speel een zender, afspeellijst of audiobestand af vanaf een URL",
+    "pulseServer": "PipeWire of PulseAudio: neem een line-in, een USB-audio-interface of een telefoon op die via Bluetooth afspeelt",
+    "castClient": "Google Cast: speel af op Chromecast, Nest- en Google Home-speakers, speakergroepen en Cast-tv's",
+    "pulseClient": "PipeWire of PulseAudio: speel af op een geluidskaart of een gekoppelde Bluetooth-speaker",
+    "snapcastClient": "Snapcast: speel synchroon af op elke Snapcast-client",
+    "upnpServer": "UPnP/DLNA: verschijnt als speaker in DLNA-apps zoals BubbleUPnP en speelt af wat ze sturen",
+    "upnpClient": "UPnP/DLNA: speel af op Sonos, AV-receivers, smart-tv's en andere DLNA-renderers",
+    "bluetoothServer": "Bluetooth: verschijnt als Bluetooth-speaker waarmee telefoons en laptops koppelen",
+    "spotifyServer": "Spotify Connect: verschijnt als speaker in de Spotify-app",
+    "airplay2Server": "AirPlay 2: verschijnt als AirPlay 2-speaker op iPhone, iPad en Mac, ook voor multiroom",
+    "needs": "{{name}}: heeft {{program}} nodig, dat niet is geïnstalleerd",
+    "airplay2Client": "AirPlay 2 (experimenteel): speel af op HomePods, Apple TV's en andere AirPlay 2-speakers"
   },
   "servers": {
     "title": "Invoerservers",
@@ -131,6 +142,35 @@
     "selectFailed": "Kan dat apparaat niet kiezen. Zoek opnieuw of stel het met de hand in.",
     "manual": "Met de hand instellen",
     "manualHint": "Gebruik dit als je apparaat niet is gevonden."
+  },
+  "fields": {
+    "url": "Stream-URL",
+    "urlHint": "Een internetradiozender, een afspeellijst (.pls, .m3u, .m3u8) of een audiobestand. Een bestand wordt steeds herhaald.",
+    "source": "Bron (optioneel)",
+    "sourceHint": "De naam of beschrijving van een bron, het Bluetooth-adres van een telefoon die naar deze computer afspeelt, of de naam van een sink gevolgd door .monitor. Laat leeg voor de standaardbron.",
+    "sink": "Sink (optioneel)",
+    "sinkHint": "De naam of beschrijving van een sink, of het adres van een Bluetooth-speaker zoals AA:BB:CC:DD:EE:FF. Laat leeg voor de standaardsink.",
+    "pulseServer": "PulseAudio-server (optioneel)",
+    "pulseServerHint": "Laat leeg voor de gewone op deze computer.",
+    "delay": "Vertraging in milliseconden (optioneel)",
+    "delayHint": "Houdt audio vast om deze speaker gelijk te laten lopen met tragere.",
+    "sampleRate": "Samplefrequentie (optioneel)",
+    "sampleRateHint": "De frequentie in het sampleformat van de snapserver-bron. Laat leeg voor 48000, de standaard van snapserver.",
+    "snapcastAddressHint": "De snapserver-host, en de poort van zijn TCP-bron als die niet 4953 is.",
+    "castAddressHint": "Het IP-adres van het apparaat, en de poort als die niet 8009 is (speakergroepen gebruiken een andere). Cast-apparaten spelen een paar seconden later, dus vertraag andere speakers net zoveel.",
+    "listen": "Luisteradres (optioneel)",
+    "listenHint": "De poort waarop apps deze invoer bereiken, zoals :49494. Laat leeg voor een vrije poort.",
+    "upnpAddressHint": "De beschrijvings-URL van de renderer, zoals Apparaten zoeken die geeft, of het IP-adres van een Sonos-speler.",
+    "format": "Streamformaat (optioneel)",
+    "formatHint": "wav of mp3. Laat leeg voor MP3 op Sonos en WAV op al het andere. MP3 heeft ffmpeg nodig.",
+    "btDevice": "Telefoon (optioneel)",
+    "btDeviceHint": "Neem alleen deze telefoon op, via het Bluetooth-adres. Laat leeg om het apparaat op te nemen dat speelt.",
+    "btAdapter": "Bluetooth-adapter (optioneel)",
+    "btHidden": "Verborgen: alleen al gekoppelde telefoons kunnen verbinden",
+    "bitrate": "Bitrate (optioneel)",
+    "bitrateHint": "96, 160 of 320 kbit/s. Laat leeg voor 320.",
+    "airplay2PortHint": "De poort waarop AirPlay 2 luistert, zoals :7000. Geef elke AirPlay-invoer een eigen poort.",
+    "airplay2AddressHint": "Het adres en de poort van de ontvanger, zoals Apparaten zoeken die geeft, zoals 192.168.1.60:7000. Iedereen op het netwerk moet er zonder wachtwoord op mogen afspelen."
   },
   "pairing": {
     "title": "AirPlay-koppeling",

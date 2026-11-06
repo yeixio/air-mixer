@@ -8,9 +8,12 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/libp2p/zeroconf/v2"
+
+	"github.com/yeixio/air-mixer/internal/protocols/upnp"
 )
 
 // Device is a speaker found on the network.
@@ -39,7 +42,7 @@ type Service struct {
 // built-in one if none are given.
 func NewService(ds ...Discoverer) *Service {
 	if len(ds) == 0 {
-		ds = []Discoverer{NewAirPlay()}
+		ds = []Discoverer{NewAirPlay(), NewAirPlay2(), NewCast(), NewSnapcast(), NewUPnP()}
 	}
 	return &Service{discoverers: ds}
 }
@@ -130,35 +133,10 @@ func (*AirPlay) Protocol() string { return "airplay" }
 
 // Discover browses _raop._tcp for timeout.
 func (a *AirPlay) Discover(ctx context.Context, timeout time.Duration) ([]Device, error) {
-	ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
-	entries := make(chan *zeroconf.ServiceEntry, 16)
-	errc := make(chan error, 1)
-	go func() { errc <- a.browse(ctx, "_raop._tcp", "local.", entries) }()
-
-	devices := []Device{}
-	seen := make(map[string]bool)
-	for {
-		select {
-		case e, ok := <-entries:
-			if !ok {
-				return devices, nil
-			}
-			d, ok := airplayDevice(e)
-			if ok && !seen[d.Address] {
-				seen[d.Address] = true
-				devices = append(devices, d)
-			}
-		case err := <-errc:
-			if err != nil {
-				return nil, fmt.Errorf("mDNS browse: %w", err)
-			}
-			errc = nil // browsing ended; keep reading until the timeout
-		case <-ctx.Done():
-			return devices, nil
-		}
-	}
+	return browseMDNS(ctx, a.browse, "_raop._tcp", timeout, func(e *zeroconf.ServiceEntry, _ net.IP) Device {
+		d, _ := airplayDevice(e)
+		return d
+	})
 }
 
 func airplayDevice(e *zeroconf.ServiceEntry) (Device, bool) {
@@ -195,10 +173,214 @@ func airplayDevice(e *zeroconf.ServiceEntry) (Device, bool) {
 	return d, true
 }
 
+// AirPlay2 discovers AirPlay 2 receivers (_airplay._tcp): HomePods,
+// Apple TVs and other speakers that need AirPlay 2.
+type AirPlay2 struct {
+	browse browseFunc
+}
+
+// NewAirPlay2 returns an AirPlay 2 discoverer.
+func NewAirPlay2() *AirPlay2 { return &AirPlay2{browse: zeroconf.Browse} }
+
+// Protocol returns "airplay2".
+func (*AirPlay2) Protocol() string { return "airplay2" }
+
+// Discover browses _airplay._tcp for timeout.
+func (a *AirPlay2) Discover(ctx context.Context, timeout time.Duration) ([]Device, error) {
+	return browseMDNS(ctx, a.browse, "_airplay._tcp", timeout, func(e *zeroconf.ServiceEntry, _ net.IP) Device {
+		d, ok := airplayDevice(e)
+		if ok {
+			d.Protocol = "airplay2"
+			d.Description = "AirPlay 2 device: " + d.Name
+		}
+		return d
+	})
+}
+
 // airplayName turns a RAOP instance name, "<MAC>@<name>", into the name.
 func airplayName(instance string) string {
 	if _, name, ok := strings.Cut(instance, "@"); ok && name != "" {
 		instance = name
 	}
 	return strings.ReplaceAll(instance, `\`, "")
+}
+
+// Snapcast discovers Snapcast servers over mDNS (_snapcast._tcp). Their
+// address points at the TCP source port Air-Mixer writes to (4953 by
+// convention, see package snapcast), not the advertised client port.
+type Snapcast struct {
+	browse browseFunc
+}
+
+// NewSnapcast returns a Snapcast discoverer.
+func NewSnapcast() *Snapcast { return &Snapcast{browse: zeroconf.Browse} }
+
+// Protocol returns "snapcast".
+func (*Snapcast) Protocol() string { return "snapcast" }
+
+// Discover browses _snapcast._tcp for timeout.
+func (s *Snapcast) Discover(ctx context.Context, timeout time.Duration) ([]Device, error) {
+	return browseMDNS(ctx, s.browse, "_snapcast._tcp", timeout, func(e *zeroconf.ServiceEntry, ip net.IP) Device {
+		name := strings.ReplaceAll(e.Instance, `\`, "")
+		return Device{
+			Name:        name,
+			Protocol:    "snapcast",
+			Address:     net.JoinHostPort(ip.String(), "4953"),
+			Port:        4953,
+			Description: "Snapcast server: " + name,
+			Metadata:    map[string]string{"hostname": e.HostName, "client_port": strconv.Itoa(e.Port)},
+		}
+	})
+}
+
+// browseMDNS browses one mDNS service for timeout and turns each answer
+// with an address into a Device, once per address.
+func browseMDNS(ctx context.Context, browse browseFunc, service string, timeout time.Duration, device func(*zeroconf.ServiceEntry, net.IP) Device) ([]Device, error) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	entries := make(chan *zeroconf.ServiceEntry, 16)
+	errc := make(chan error, 1)
+	go func() {
+		err := browse(ctx, service, "local.", entries)
+		if err != nil && ctx.Err() == nil {
+			// Hosts and pods without IPv6 can't open the IPv6 socket;
+			// browse over IPv4 alone instead.
+			err = browse(ctx, service, "local.", entries, zeroconf.SelectIPTraffic(zeroconf.IPv4))
+		}
+		errc <- err
+	}()
+
+	devices := []Device{}
+	seen := make(map[string]bool)
+	for {
+		select {
+		case e, ok := <-entries:
+			if !ok {
+				return devices, nil
+			}
+			ip := entryIP(e)
+			if ip == nil {
+				continue
+			}
+			d := device(e, ip)
+			if !seen[d.Address] {
+				seen[d.Address] = true
+				devices = append(devices, d)
+			}
+		case err := <-errc:
+			if err != nil {
+				return nil, fmt.Errorf("mDNS browse: %w", err)
+			}
+			errc = nil // browsing ended; keep reading until the timeout
+		case <-ctx.Done():
+			return devices, nil
+		}
+	}
+}
+
+func entryIP(e *zeroconf.ServiceEntry) net.IP {
+	switch {
+	case e == nil:
+		return nil
+	case len(e.AddrIPv4) > 0:
+		return e.AddrIPv4[0]
+	case len(e.AddrIPv6) > 0:
+		return e.AddrIPv6[0]
+	}
+	return nil
+}
+
+// Cast discovers Google Cast devices and speaker groups over mDNS
+// (_googlecast._tcp).
+type Cast struct {
+	browse browseFunc
+}
+
+// NewCast returns a Google Cast discoverer.
+func NewCast() *Cast { return &Cast{browse: zeroconf.Browse} }
+
+// Protocol returns "cast".
+func (*Cast) Protocol() string { return "cast" }
+
+// Discover browses _googlecast._tcp for timeout.
+func (c *Cast) Discover(ctx context.Context, timeout time.Duration) ([]Device, error) {
+	return browseMDNS(ctx, c.browse, "_googlecast._tcp", timeout, func(e *zeroconf.ServiceEntry, ip net.IP) Device {
+		meta := map[string]string{"service_name": e.Instance, "hostname": e.HostName}
+		for _, txt := range e.Text {
+			if k, v, ok := strings.Cut(txt, "="); ok {
+				meta[k] = v
+			}
+		}
+		name := meta["fn"] // the name people gave it in Google Home
+		if name == "" {
+			name = strings.ReplaceAll(e.Instance, `\`, "")
+		}
+		desc := "Google Cast device"
+		if md := meta["md"]; md != "" {
+			desc += ": " + md
+		}
+		return Device{
+			Name:        name,
+			Protocol:    "cast",
+			Address:     net.JoinHostPort(ip.String(), strconv.Itoa(e.Port)),
+			Port:        e.Port,
+			Description: desc,
+			Metadata:    meta,
+		}
+	})
+}
+
+// UPnP discovers UPnP/DLNA media renderers, Sonos players among them,
+// with an SSDP search, and reads each one's name from its description.
+type UPnP struct {
+	search func(ctx context.Context, target string, timeout time.Duration) ([]upnp.SearchResult, error)
+	name   func(ctx context.Context, location string) (name, model string, err error)
+}
+
+// NewUPnP returns a UPnP discoverer.
+func NewUPnP() *UPnP { return &UPnP{search: upnp.Search, name: upnp.Describe} }
+
+// Protocol returns "upnp".
+func (*UPnP) Protocol() string { return "upnp" }
+
+// Discover searches for media renderers for timeout.
+func (u *UPnP) Discover(ctx context.Context, timeout time.Duration) ([]Device, error) {
+	found, err := u.search(ctx, "urn:schemas-upnp-org:device:MediaRenderer:1", timeout)
+	if err != nil {
+		return nil, err
+	}
+	devices := make([]Device, len(found))
+	var wg sync.WaitGroup
+	for i, r := range found {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			d := Device{Protocol: "upnp", Address: r.Location, Metadata: map[string]string{"usn": r.USN, "server": r.Server}}
+			if host, port, err := net.SplitHostPort(hostOf(r.Location)); err == nil {
+				d.Port, _ = strconv.Atoi(port)
+				d.Metadata["host"] = host
+			}
+			ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+			name, model, err := u.name(ctx, r.Location)
+			cancel()
+			if err != nil || name == "" {
+				name = hostOf(r.Location)
+			}
+			d.Name = name
+			d.Description = "UPnP/DLNA renderer"
+			if model != "" {
+				d.Description += ": " + model
+			}
+			devices[i] = d
+		}()
+	}
+	wg.Wait()
+	return devices, nil
+}
+
+func hostOf(location string) string {
+	rest := strings.TrimPrefix(strings.TrimPrefix(location, "http://"), "https://")
+	host, _, _ := strings.Cut(rest, "/")
+	return host
 }

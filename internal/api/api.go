@@ -96,6 +96,7 @@ func New(opts Options) http.Handler {
 	mux.HandleFunc("DELETE /api/matinee/link", a.unlinkMatinee)
 	mux.HandleFunc("GET /api/matinee/players", a.matineePlayers)
 
+	mux.HandleFunc("GET /api/protocols", a.listProtocols)
 	mux.HandleFunc("GET /api/status", a.status)
 	mux.HandleFunc("GET /api/discovery", a.discoverAll)
 	mux.HandleFunc("GET /api/discovery/{protocol}", a.discoverProtocol)

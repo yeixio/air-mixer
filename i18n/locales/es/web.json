@@ -28,8 +28,7 @@
     "unexpected": "Algo salió mal.",
     "httpStatus": "El servidor respondió {{status}}. Recarga la página e inténtalo de nuevo.",
     "loadFailed": "No se pudo conectar con Air-Mixer. Comprueba que está en marcha y recarga la página.",
-    "validation": "Revisa el formulario",
-    "comingSoon": "{{protocol}} (próximamente)"
+    "validation": "Revisa el formulario"
   },
   "protocols": {
     "airplayServer": "AirPlay: recibe audio de iPhone, iPad y Mac",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: aparece en Matinee como reproductor y reproduce lo que recibe",
     "matineeClient": "Matinee: reproducir en un reproductor de Matinee (dirección: el ID del reproductor)",
     "streamClient": "Stream: una transmisión WAV en directo para VLC o un navegador",
-    "localClient": "Local: la tarjeta de sonido de este equipo"
+    "localClient": "Local: la tarjeta de sonido de este equipo",
+    "radioServer": "Radio por internet: reproduce una emisora, una lista o un archivo de audio desde una URL",
+    "pulseServer": "PipeWire o PulseAudio: graba una entrada de línea, una interfaz de audio USB o un teléfono que reproduce por Bluetooth",
+    "castClient": "Google Cast: reproduce en Chromecast, altavoces Nest y Google Home, grupos de altavoces y televisores con Cast",
+    "pulseClient": "PipeWire o PulseAudio: reproduce en una tarjeta de sonido o en un altavoz Bluetooth emparejado",
+    "snapcastClient": "Snapcast: reproduce sincronizado en todos los clientes de Snapcast",
+    "upnpServer": "UPnP/DLNA: aparece como altavoz en apps DLNA como BubbleUPnP y reproduce lo que envían",
+    "upnpClient": "UPnP/DLNA: reproduce en Sonos, receptores AV, televisores inteligentes y otros renderizadores DLNA",
+    "bluetoothServer": "Bluetooth: aparece como altavoz Bluetooth que los móviles y portátiles pueden emparejar",
+    "spotifyServer": "Spotify Connect: aparece como altavoz en la app de Spotify",
+    "airplay2Server": "AirPlay 2: aparece como altavoz AirPlay 2 en iPhone, iPad y Mac, también en multisala",
+    "needs": "{{name}}: necesita {{program}}, que no está instalado",
+    "airplay2Client": "AirPlay 2 (experimental): reproduce en HomePod, Apple TV y otros altavoces AirPlay 2"
   },
   "servers": {
     "title": "Servidores de entrada",
@@ -132,6 +143,35 @@
     "selectFailed": "No se pudo elegir ese dispositivo. Vuelve a buscar o configúralo a mano.",
     "manual": "Configurar a mano",
     "manualHint": "Usa esto si no se encontró tu dispositivo."
+  },
+  "fields": {
+    "url": "URL del stream",
+    "urlHint": "Una emisora de radio por internet, una lista (.pls, .m3u, .m3u8) o un archivo de audio. Un archivo se repite sin fin.",
+    "source": "Fuente (opcional)",
+    "sourceHint": "El nombre o la descripción de una fuente, la dirección Bluetooth de un teléfono que reproduce en este equipo, o el nombre de un sink seguido de .monitor. Déjalo vacío para la fuente predeterminada.",
+    "sink": "Sink (opcional)",
+    "sinkHint": "El nombre o la descripción de un sink, o la dirección de un altavoz Bluetooth como AA:BB:CC:DD:EE:FF. Déjalo vacío para el sink predeterminado.",
+    "pulseServer": "Servidor PulseAudio (opcional)",
+    "pulseServerHint": "Déjalo vacío para usar el habitual de este equipo.",
+    "delay": "Retardo en milisegundos (opcional)",
+    "delayHint": "Retiene el audio para alinear este altavoz con otros más lentos.",
+    "sampleRate": "Frecuencia de muestreo (opcional)",
+    "sampleRateHint": "La frecuencia del sampleformat de la fuente de snapserver. Déjalo vacío para 48000, el valor predeterminado de snapserver.",
+    "snapcastAddressHint": "El host de snapserver y el puerto de su fuente TCP si no es 4953.",
+    "castAddressHint": "La dirección IP del dispositivo y su puerto si no es 8009 (los grupos de altavoces usan otro). Los dispositivos Cast suenan unos segundos más tarde, así que retrasa los demás altavoces para igualarlos.",
+    "listen": "Dirección de escucha (opcional)",
+    "listenHint": "El puerto por el que las apps llegan a esta entrada, como :49494. Déjalo vacío para un puerto libre.",
+    "upnpAddressHint": "La URL de descripción del renderizador, tal como la da Buscar dispositivos, o la dirección IP de un reproductor Sonos.",
+    "format": "Formato del stream (opcional)",
+    "formatHint": "wav o mp3. Déjalo vacío para MP3 en Sonos y WAV en todo lo demás. MP3 necesita ffmpeg.",
+    "btDevice": "Teléfono (opcional)",
+    "btDeviceHint": "Graba solo este teléfono, por su dirección Bluetooth. Déjalo vacío para grabar el dispositivo que esté sonando.",
+    "btAdapter": "Adaptador Bluetooth (opcional)",
+    "btHidden": "Oculto: solo pueden conectarse los teléfonos ya emparejados",
+    "bitrate": "Tasa de bits (opcional)",
+    "bitrateHint": "96, 160 o 320 kbit/s. Déjalo vacío para 320.",
+    "airplay2PortHint": "El puerto en el que escucha AirPlay 2, como :7000. Da a cada entrada AirPlay su propio puerto.",
+    "airplay2AddressHint": "La dirección y el puerto del receptor, tal como los da Buscar dispositivos, como 192.168.1.60:7000. Debe permitir reproducir a cualquiera de la red, sin contraseña."
   },
   "pairing": {
     "title": "Emparejamiento AirPlay",

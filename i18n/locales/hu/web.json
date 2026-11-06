@@ -28,8 +28,7 @@
     "unexpected": "Valami hiba történt.",
     "httpStatus": "A szerver ezt válaszolta: {{status}}. Frissítsd az oldalt, és próbáld újra.",
     "loadFailed": "Az Air-Mixer nem érhető el. Ellenőrizd, hogy fut-e, majd frissítsd az oldalt.",
-    "validation": "Ellenőrizd az űrlapot",
-    "comingSoon": "{{protocol}} (hamarosan)"
+    "validation": "Ellenőrizd az űrlapot"
   },
   "protocols": {
     "airplayServer": "AirPlay: hang fogadása iPhone-ról, iPadről és Macről",
@@ -37,7 +36,19 @@
     "matineeServer": "Matinee: lejátszóként jelenik meg a Matinee-ben, és lejátssza, amit kap",
     "matineeClient": "Matinee: lejátszás Matinee-lejátszón (cím: a lejátszó azonosítója)",
     "streamClient": "Stream: élő WAV-stream VLC-hez vagy böngészőhöz",
-    "localClient": "Helyi: a gép hangkártyája"
+    "localClient": "Helyi: a gép hangkártyája",
+    "radioServer": "Internetes rádió: állomás, lejátszási lista vagy hangfájl lejátszása URL-ről",
+    "pulseServer": "PipeWire vagy PulseAudio: vonalbemenet, USB-s hangkártya vagy Bluetooth-on lejátszó telefon felvétele",
+    "castClient": "Google Cast: lejátszás Chromecaston, Nest és Google Home hangszórókon, hangszórócsoportokon és Cast-os tévéken",
+    "pulseClient": "PipeWire vagy PulseAudio: lejátszás hangkártyán vagy párosított Bluetooth-hangszórón",
+    "snapcastClient": "Snapcast: szinkron lejátszás minden Snapcast-kliensen",
+    "upnpServer": "UPnP/DLNA: hangszóróként jelenik meg a DLNA-appokban, például a BubbleUPnP-ben, és lejátssza, amit küldenek",
+    "upnpClient": "UPnP/DLNA: lejátszás Sonoson, AV-erősítőkön, okostévéken és más DLNA-renderereken",
+    "bluetoothServer": "Bluetooth: Bluetooth-hangszóróként jelenik meg, amelyhez telefonok és laptopok párosíthatók",
+    "spotifyServer": "Spotify Connect: hangszóróként jelenik meg a Spotify appban",
+    "airplay2Server": "AirPlay 2: AirPlay 2 hangszóróként jelenik meg iPhone-on, iPaden és Macen, több szobához is",
+    "needs": "{{name}}: kell hozzá a(z) {{program}}, ami nincs telepítve",
+    "airplay2Client": "AirPlay 2 (kísérleti): lejátszás HomePodon, Apple TV-n és más AirPlay 2 hangszórókon"
   },
   "servers": {
     "title": "Bemeneti szerverek",
@@ -131,6 +142,35 @@
     "selectFailed": "Nem sikerült kiválasztani ezt az eszközt. Keress újra, vagy állítsd be kézzel.",
     "manual": "Beállítás kézzel",
     "manualHint": "Használd ezt, ha az eszközöd nem található."
+  },
+  "fields": {
+    "url": "Stream URL-je",
+    "urlHint": "Internetes rádióállomás, lejátszási lista (.pls, .m3u, .m3u8) vagy hangfájl. A fájl ismétlődve szól.",
+    "source": "Forrás (nem kötelező)",
+    "sourceHint": "Egy forrás neve vagy leírása, egy erre a gépre lejátszó telefon Bluetooth-címe, vagy egy sink neve .monitor végződéssel. Hagyd üresen az alapértelmezett forráshoz.",
+    "sink": "Sink (nem kötelező)",
+    "sinkHint": "Egy sink neve vagy leírása, vagy egy Bluetooth-hangszóró címe, például AA:BB:CC:DD:EE:FF. Hagyd üresen az alapértelmezett sinkhez.",
+    "pulseServer": "PulseAudio-szerver (nem kötelező)",
+    "pulseServerHint": "Hagyd üresen a gép szokásos szerveréhez.",
+    "delay": "Késleltetés ezredmásodpercben (nem kötelező)",
+    "delayHint": "Visszatartja a hangot, hogy ez a hangszóró együtt szóljon a lassabbakkal.",
+    "sampleRate": "Mintavételezési frekvencia (nem kötelező)",
+    "sampleRateHint": "A snapserver-forrás sampleformat beállításában szereplő frekvencia. Hagyd üresen a snapserver alapértelmezett 48000 értékéhez.",
+    "snapcastAddressHint": "A snapserver gépe, és TCP-forrásának portja, ha az nem 4953.",
+    "castAddressHint": "Az eszköz IP-címe, és a portja, ha az nem 8009 (a hangszórócsoportok másikat használnak). A Cast-eszközök néhány másodperccel később szólnak, ezért késleltesd ennyivel a többi hangszórót.",
+    "listen": "Figyelési cím (nem kötelező)",
+    "listenHint": "A port, amelyen az appok elérik ezt a bemenetet, például :49494. Hagyd üresen egy szabad porthoz.",
+    "upnpAddressHint": "A renderer leíró URL-je, ahogy az Eszközök keresése megadja, vagy egy Sonos-lejátszó IP-címe.",
+    "format": "Streamformátum (nem kötelező)",
+    "formatHint": "wav vagy mp3. Hagyd üresen, és a Sonos MP3-at, minden más WAV-ot kap. Az MP3-hoz ffmpeg kell.",
+    "btDevice": "Telefon (nem kötelező)",
+    "btDeviceHint": "Csak ezt a telefont rögzíti, Bluetooth-cím alapján. Hagyd üresen, hogy a lejátszó eszközt rögzítse.",
+    "btAdapter": "Bluetooth-adapter (nem kötelező)",
+    "btHidden": "Rejtett: csak a már párosított telefonok csatlakozhatnak",
+    "bitrate": "Bitráta (nem kötelező)",
+    "bitrateHint": "96, 160 vagy 320 kbit/s. Hagyd üresen a 320-hoz.",
+    "airplay2PortHint": "A port, amelyen az AirPlay 2 figyel, például :7000. Minden AirPlay-bemenet kapjon saját portot.",
+    "airplay2AddressHint": "A vevő címe és portja, ahogy az Eszközök keresése megadja, például 192.168.1.60:7000. Engednie kell, hogy a hálózaton bárki jelszó nélkül játsszon le rajta."
   },
   "pairing": {
     "title": "AirPlay-párosítás",

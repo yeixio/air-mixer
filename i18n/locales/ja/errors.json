@@ -30,5 +30,16 @@
   "matinee_needs_player": "Matinee クライアントにはアドレスとしてプレーヤーの ID が必要です（/api/matinee/players を参照）",
   "matinee_not_signed_in": "Air-Mixer はまだ Matinee にサインインしていません",
   "matinee_link_failed": "Matinee からコードを取得できませんでした：{{detail}}",
-  "matinee_players_failed": "Matinee からプレーヤーを取得できませんでした：{{detail}}"
+  "matinee_players_failed": "Matinee からプレーヤーを取得できませんでした：{{detail}}",
+  "radio_needs_url": "インターネットラジオ入力には url が必要です",
+  "radio_bad_url": "url は http、https、rtsp、rtmp のアドレスにしてください",
+  "snapcast_needs_address": "Snapcast クライアントには snapserver のアドレスが必要です",
+  "sample_rate_range": "sample_rate は 8000 から 192000 の間にしてください",
+  "cast_needs_address": "Google Cast クライアントにはデバイスのアドレスが必要です",
+  "upnp_needs_address": "UPnP/DLNA クライアントにはレンダラーの説明 URL か Sonos プレーヤーのアドレスが必要です",
+  "upnp_bad_format": "format は wav か mp3 にしてください",
+  "bluetooth_bad_device": "device は Bluetooth アドレス（例：11:22:33:44:55:66）にしてください",
+  "spotify_bitrate": "bitrate は 96、160、320 のいずれかにしてください",
+  "program_missing": "このマシンには {{program}} がインストールされていません",
+  "bad_port": "address は 1〜65535 のポート（例：:7000）にしてください"
 }

@@ -76,6 +76,28 @@ controller:
   # Extra environment variables, for example AIRMIXER_* settings.
   env: []
 
+  # Host audio for inputs that record on the controller's node: pulse
+  # (line-in, USB audio) and bluetooth (Air-Mixer pairs as a Bluetooth
+  # speaker). Pin the controller to that node with nodeSelector.
+  hostAudio:
+    enabled: false
+    # The host user running PipeWire or PulseAudio; the controller runs
+    # as this user so it can open the socket.
+    uid: 1000
+    gid: 1000
+    # Directory holding the "native" socket. Defaults to
+    # /run/user/<uid>/pulse.
+    socketDir: ""
+    # PulseAudio's auth cookie on the host, if the server needs one.
+    cookie: ""
+    # Mount the host's D-Bus system socket, so bluetooth inputs can make
+    # the adapter discoverable and accept pairings through BlueZ.
+    bluetooth: false
+    # Group allowed to talk to BlueZ on the host, often "bluetooth"
+    # (getent group bluetooth). Leave empty if the D-Bus policy allows
+    # the uid above.
+    bluetoothGid: ""
+
   resources:
     requests:
       cpu: 50m
