@@ -409,3 +409,28 @@ func TestDuckingFades(t *testing.T) {
 		t.Errorf("fade = %v", got)
 	}
 }
+
+func TestSinkVolumeScalesEveryRoute(t *testing.T) {
+	r := newTestRouter(t)
+	// Set before the sink exists: it applies once the sink registers.
+	r.SetSinkVolume("c1", 0.5)
+	src := sourceFor(r, "s1", "radio")
+	out := sinkFor(r, "c1", "Kitchen")
+	if err := r.AddRoute(Route{ID: "r1", Name: "r1", SourceName: "radio", DestNames: []string{"Kitchen"}, Volume: 0.8, Enabled: true}); err != nil {
+		t.Fatal(err)
+	}
+	src <- []float32{1, 1}
+	if got, want := recv(t, out), []float32{0.4, 0.4}; !approx(got, want) {
+		t.Fatalf("got %v, want %v (route 0.8 x speaker 0.5)", got, want)
+	}
+	r.SetSinkVolume("c1", 1)
+	src <- []float32{1, 1}
+	if got, want := recv(t, out), []float32{0.8, 0.8}; !approx(got, want) {
+		t.Fatalf("after reset got %v, want %v", got, want)
+	}
+	r.SetSinkVolume("c1", 7) // clamped to 1
+	src <- []float32{1, 1}
+	if got, want := recv(t, out), []float32{0.8, 0.8}; !approx(got, want) {
+		t.Fatalf("after clamp got %v, want %v", got, want)
+	}
+}

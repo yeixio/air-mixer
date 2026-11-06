@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device חייב להיות כתובת Bluetooth, למשל 11:22:33:44:55:66",
   "spotify_bitrate": "bitrate חייב להיות 96, 160 או 320",
   "program_missing": "{{program}} אינו מותקן במחשב הזה",
-  "bad_port": "address חייב להיות פורט בין 1 ל-65535, למשל ‎:7000"
+  "bad_port": "address חייב להיות פורט בין 1 ל-65535, למשל ‎:7000",
+  "source_unknown": "אין מקור בשם „{{source}}”",
+  "source_required": "השדה source נדרש: שם של מקור, או \"\" כדי לא לנגן כלום",
+  "volume_required": "השדה volume נדרש, מ‑0 עד 1"
 }

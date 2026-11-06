@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device phải là địa chỉ Bluetooth, như 11:22:33:44:55:66",
   "spotify_bitrate": "bitrate phải là 96, 160 hoặc 320",
   "program_missing": "{{program}} chưa được cài trên máy này",
-  "bad_port": "address phải là cổng từ 1 đến 65535, như :7000"
+  "bad_port": "address phải là cổng từ 1 đến 65535, như :7000",
+  "source_unknown": "Không có nguồn nào tên \"{{source}}\"",
+  "source_required": "cần có source: tên một nguồn, hoặc \"\" để không phát gì",
+  "volume_required": "cần có volume, từ 0 đến 1"
 }

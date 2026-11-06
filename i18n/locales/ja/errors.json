@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device は Bluetooth アドレス（例：11:22:33:44:55:66）にしてください",
   "spotify_bitrate": "bitrate は 96、160、320 のいずれかにしてください",
   "program_missing": "このマシンには {{program}} がインストールされていません",
-  "bad_port": "address は 1〜65535 のポート（例：:7000）にしてください"
+  "bad_port": "address は 1〜65535 のポート（例：:7000）にしてください",
+  "source_unknown": "「{{source}}」という名前のソースはありません",
+  "source_required": "source は必須です: ソースの名前、または何も再生しない場合は \"\"",
+  "volume_required": "volume は必須です (0 から 1)"
 }

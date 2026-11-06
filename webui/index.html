@@ -1240,6 +1240,342 @@
             transition: max-height 0.5s ease-in;
         }
 
+        /* Tabs: Speakers, Advanced, Settings. */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+            overflow-x: auto;
+        }
+
+        .tabs button {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            padding: 10px 14px;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .tabs button:hover {
+            color: var(--text);
+        }
+
+        .tabs button[aria-selected="true"] {
+            color: var(--text);
+            border-bottom-color: var(--accent);
+        }
+
+        /* The board: speakers first on a phone, sources beside them on a
+           wide screen. */
+        .board {
+            display: grid;
+            gap: 24px;
+            grid-template-columns: minmax(0, 1fr);
+            margin-bottom: 24px;
+        }
+
+        .board .section {
+            margin-bottom: 0;
+            min-width: 0;
+        }
+
+        @media (min-width: 1000px) {
+            .board {
+                grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+                grid-template-areas: "sources speakers";
+                align-items: start;
+            }
+
+            .board .speakers-section { grid-area: speakers; }
+            .board .sources-section { grid-area: sources; }
+        }
+
+        .empty-note {
+            list-style: none;
+            grid-column: 1 / -1;
+            padding: 32px 16px;
+            text-align: center;
+            color: var(--faint);
+            font-size: 14px;
+        }
+
+        .speaker-grid {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+
+        .speaker-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+            background: color-mix(in srgb, var(--ink) 40%, transparent);
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .speaker-card.selected {
+            border-color: var(--accent);
+            box-shadow: inset 0 0 0 1px var(--accent);
+        }
+
+        .speaker-card.off .speaker-body {
+            opacity: 0.55;
+        }
+
+        .speaker-head,
+        .source-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .speaker-title,
+        .source-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .speaker-title h3 {
+            font-family: var(--font-sans);
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .speaker-kind,
+        .source-sub {
+            color: var(--muted);
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .speaker-body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .speaker-body label {
+            margin-bottom: -4px;
+        }
+
+        .pick {
+            display: flex;
+            margin: 2px 0 0;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .pick input,
+        .check-list input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            padding: 0;
+            flex: none;
+            accent-color: var(--accent);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 24px;
+            padding: 0 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--muted);
+            background: color-mix(in srgb, var(--text) 8%, transparent);
+        }
+
+        .badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .badge.playing { color: var(--ok); background: color-mix(in srgb, var(--ok) 15%, transparent); }
+        .badge.mixing { color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, transparent); }
+        .badge.connecting { color: var(--warn); background: color-mix(in srgb, var(--warn) 15%, transparent); }
+        .badge.offline,
+        .badge.problem { color: var(--danger); background: color-mix(in srgb, var(--danger) 15%, transparent); }
+        .badge.playing::before,
+        .badge.mixing::before { animation: pulse-soft 2s ease-in-out infinite; }
+
+        .speaker-note,
+        .source-note {
+            font-size: 13px;
+            color: var(--muted);
+            overflow-wrap: anywhere;
+        }
+
+        /* A connection error can be long and technical: two lines, the
+           rest on hover. */
+        .speaker-note.warn,
+        .source-note.warn {
+            color: var(--danger);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .speaker-note[hidden],
+        .source-note[hidden] {
+            display: none;
+        }
+
+        .volume-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .volume-row input[type="range"] {
+            flex: 1;
+            width: auto;
+            min-width: 0;
+        }
+
+        .volume-row output {
+            min-width: 5ch;
+            text-align: end;
+            font-size: 13px;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .card-actions,
+        .source-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-actions {
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid color-mix(in srgb, var(--line) 50%, transparent);
+        }
+
+        .card-actions .spacer,
+        .source-actions .spacer {
+            flex: 1;
+        }
+
+        .source-list {
+            list-style: none;
+            border: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+            border-radius: 12px;
+            background: color-mix(in srgb, var(--ink) 40%, transparent);
+        }
+
+        .source-item {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 14px 16px;
+        }
+
+        .source-item + .source-item {
+            border-top: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+        }
+
+        .source-item.off .source-main {
+            opacity: 0.55;
+        }
+
+        .source-name {
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .group-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 12px;
+            margin-bottom: 16px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+            background: color-mix(in srgb, var(--accent) 10%, transparent);
+        }
+
+        .group-bar[hidden] {
+            display: none;
+        }
+
+        .group-bar select {
+            flex: 1;
+            width: auto;
+            min-width: 160px;
+            height: 36px;
+        }
+
+        fieldset.form-group {
+            border: none;
+        }
+
+        legend {
+            margin-bottom: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .check-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding: 6px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--ink);
+        }
+
+        .check-list label.check-label {
+            margin: 0;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .check-list label.check-label:hover {
+            background: color-mix(in srgb, var(--text) 5%, transparent);
+        }
+
+        .route-temp {
+            display: block;
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--faint);
+        }
+
+        .row-actions {
+            display: inline-flex;
+            gap: 8px;
+        }
+
         @media (max-width: 640px) {
             th, td {
                 padding: 10px 12px;
@@ -1302,141 +1638,125 @@
 
     <main class="container">
         <div class="intro">
-            <h1 data-i18n="app.tagline">Universal Audio Protocol Translator & Mixer</h1>
+            <h1 data-i18n="app.tagline">Play anything on any speaker</h1>
             <p class="how">
                 <strong data-i18n="app.howTitle">How it works:</strong>
-                <span data-i18n="app.how">Add input servers to receive audio, create routes to connect sources to destinations, and add output clients to send audio to your speakers. Audio flows from inputs through routes to outputs.</span>
+                <span data-i18n="app.how">Pick a source on a speaker to play it there. Pick the same source on several speakers to play them together. Advanced has the routes behind them, for mixing sources.</span>
             </p>
         </div>
 
-        <div class="section">
-            <div class="section-header">
-                <div class="section-title">
-                    <h2><span class="icon-tile"><span class="icon icon-input"></span></span> <span data-i18n="servers.title">Input Servers</span></h2>
-                    <div class="section-doc">
-                        <strong data-i18n="servers.whatTitle">What are input servers?</strong><br>
-                        <span data-i18n="servers.what">Input servers receive audio from sources on your network. An AirPlay server shows up as an AirPlay speaker that your iPhone, iPad or Mac can play to. What it receives can be routed to your output clients.</span>
+        <nav class="tabs" role="tablist">
+            <button type="button" role="tab" id="tab-speakers" aria-controls="view-speakers" aria-selected="true" onclick="showView('speakers')" data-i18n="tabs.speakers">Speakers</button>
+            <button type="button" role="tab" id="tab-advanced" aria-controls="view-advanced" aria-selected="false" onclick="showView('advanced')" data-i18n="tabs.advanced">Advanced</button>
+            <button type="button" role="tab" id="tab-settings" aria-controls="view-settings" aria-selected="false" onclick="showView('settings')" data-i18n="tabs.settings">Settings</button>
+        </nav>
+
+        <div id="view-speakers" class="view" role="tabpanel" aria-labelledby="tab-speakers">
+            <div class="board">
+                <div class="section speakers-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <h2><span class="icon-tile"><span class="icon icon-output"></span></span> <span data-i18n="clients.title">Speakers</span></h2>
+                            <div class="section-doc" data-i18n="clients.what">Where audio plays. Pick what each speaker plays, or select several to play one source on all of them.</div>
+                        </div>
+                        <div class="section-actions">
+                            <button class="btn" onclick="showAddClientModal()" data-i18n="clients.add">Add Speaker</button>
+                        </div>
+                    </div>
+                    <div class="group-bar" id="groupBar" hidden>
+                        <strong id="groupCount"></strong>
+                        <select id="groupSource" data-i18n-aria-label="clients.source" aria-label="Source"></select>
+                        <button type="button" class="btn btn-small" onclick="playOnSelected()" data-i18n="clients.groupPlay">Play on all of them</button>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="clearSelection()" data-i18n="clients.groupClear">Clear</button>
+                    </div>
+                    <div class="speaker-grid" id="speakerGrid">
+                        <p class="empty-note" data-i18n="clients.empty">No speakers yet. Add one to start.</p>
                     </div>
                 </div>
-                <div class="section-actions">
-                    <button class="btn" onclick="showAddServerModal()" data-i18n="servers.add">Add Server</button>
+
+                <div class="section sources-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <h2><span class="icon-tile"><span class="icon icon-input"></span></span> <span data-i18n="servers.title">Sources</span></h2>
+                            <div class="section-doc" data-i18n="servers.what">Where audio comes from: a speaker your phone plays to over AirPlay, Bluetooth or Spotify Connect, a radio station, a line-in and more.</div>
+                        </div>
+                        <div class="section-actions">
+                            <button class="btn" onclick="showAddServerModal()" data-i18n="servers.add">Add Source</button>
+                        </div>
+                    </div>
+                    <ul class="source-list" id="sourceList">
+                        <li class="empty-note" data-i18n="servers.empty">No sources yet. Add one to start.</li>
+                    </ul>
                 </div>
-            </div>
-            <div class="table-wrap">
-                <table id="serversTable">
-                    <thead>
-                        <tr>
-                            <th data-i18n="common.name">Name</th>
-                            <th data-i18n="common.protocol">Protocol</th>
-                            <th data-i18n="common.status">Status</th>
-                            <th data-i18n="common.actions">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="serversBody">
-                        <tr><td colspan="4" class="empty" data-i18n="servers.empty">No servers yet</td></tr>
-                    </tbody>
-                </table>
             </div>
         </div>
 
-        <div class="section">
-            <div class="section-header">
-                <div class="section-title">
-                    <h2><span class="icon-tile"><span class="icon icon-output"></span></span> <span data-i18n="clients.title">Output Clients</span></h2>
-                    <div class="section-doc">
-                        <strong data-i18n="clients.whatTitle">What are output clients?</strong><br>
-                        <span data-i18n="clients.what">Output clients are where audio plays: the speakers and audio devices on your network. Add one for each speaker you want to control, then connect input servers to them with a route.</span>
+        <div id="view-advanced" class="view" role="tabpanel" aria-labelledby="tab-advanced" hidden>
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h2><span class="icon-tile"><span class="icon icon-route"></span></span> <span data-i18n="routes.title">Routes</span></h2>
+                        <div class="section-doc" data-i18n="routes.what">What the speaker cards are made of: each route sends one source to one or more speakers. Add routes here to mix several sources into one speaker or to set a source's level. A route plays only while it's on.</div>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn" onclick="showAddRouteModal()" data-i18n="routes.add">Add Route</button>
                     </div>
                 </div>
-                <div class="section-actions">
-                    <button class="btn" onclick="showAddClientModal()" data-i18n="clients.add">Add Client</button>
+                <div class="table-wrap">
+                    <table id="routesTable">
+                        <thead>
+                            <tr>
+                                <th data-i18n="common.name">Name</th>
+                                <th data-i18n="routes.source">Source</th>
+                                <th data-i18n="routes.destinations">Speakers</th>
+                                <th data-i18n="routes.volume">Volume</th>
+                                <th data-i18n="common.status">Status</th>
+                                <th data-i18n="common.on">On</th>
+                                <th data-i18n="common.actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="routesBody">
+                            <tr><td colspan="7" class="empty" data-i18n="routes.empty">No routes yet</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-            <div class="table-wrap">
-                <table id="clientsTable">
-                    <thead>
-                        <tr>
-                            <th data-i18n="common.name">Name</th>
-                            <th data-i18n="common.protocol">Protocol</th>
-                            <th data-i18n="common.address">Address</th>
-                            <th data-i18n="common.status">Status</th>
-                            <th data-i18n="common.actions">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clientsBody">
-                        <tr><td colspan="5" class="empty" data-i18n="clients.empty">No clients yet</td></tr>
-                    </tbody>
-                </table>
             </div>
         </div>
 
-        <div class="section">
-            <div class="section-header">
-                <div class="section-title">
-                    <h2><span class="icon-tile"><span class="icon icon-route"></span></span> <span data-i18n="routes.title">Audio Routes</span></h2>
-                    <div class="section-doc">
-                        <strong data-i18n="routes.whatTitle">What are routes?</strong><br>
-                        <span data-i18n="routes.what">Routes connect input servers to output clients. A route sends what one source receives, such as an AirPlay stream, to one or more speakers. Several routes can play into the same speaker. A route plays only while it's on.</span>
+        <div id="view-settings" class="view" role="tabpanel" aria-labelledby="tab-settings" hidden>
+            <div class="section" id="matineeSection">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h2><span class="icon-tile"><span class="icon icon-ticket"></span></span> <span data-i18n="matinee.title">Matinee</span></h2>
+                        <div class="section-doc">
+                            <strong data-i18n="matinee.whatTitle">Matinee speakers and players</strong><br>
+                            <span data-i18n="matinee.what">Connect Air-Mixer to your Matinee server and its players become speakers here (Add Speaker finds them), and Matinee sources show up in Matinee and Home Assistant as players. Sign in once, the way you sign in a TV: approve the code on Matinee's /link page as an admin.</span>
+                        </div>
                     </div>
                 </div>
-                <div class="section-actions">
-                    <button class="btn" onclick="showAddRouteModal()" data-i18n="routes.add">Add Route</button>
-                </div>
-            </div>
-            <div class="table-wrap">
-                <table id="routesTable">
-                    <thead>
-                        <tr>
-                            <th data-i18n="common.name">Name</th>
-                            <th data-i18n="routes.source">Source</th>
-                            <th data-i18n="routes.destinations">Destinations</th>
-                            <th data-i18n="common.status">Status</th>
-                            <th data-i18n="common.actions">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="routesBody">
-                        <tr><td colspan="5" class="empty" data-i18n="routes.empty">No routes yet</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="section" id="matineeSection">
-            <div class="section-header">
-                <div class="section-title">
-                    <h2><span class="icon-tile"><span class="icon icon-ticket"></span></span> <span data-i18n="matinee.title">Matinee</span></h2>
-                    <div class="section-doc">
-                        <strong data-i18n="matinee.whatTitle">Matinee speakers and players</strong><br>
-                        <span data-i18n="matinee.what">
-                        Connect Air-Mixer to your Matinee server and its players become speakers here (add an output
-                        client; Discover lists them), and Matinee inputs show up in Matinee and Home Assistant as players
-                        that play into your routes. Sign in once, the way you sign in a TV: approve the code on Matinee's
-                        /link page as an admin.</span>
+                <form id="matineeForm" class="matinee-form" onsubmit="saveMatinee(event)">
+                    <div class="form-group">
+                        <label data-i18n="matinee.server">Matinee server</label>
+                        <input type="text" name="url" id="matineeURL" placeholder="http://192.168.1.20:7171" dir="ltr">
                     </div>
-                </div>
+                    <button type="submit" class="btn btn-secondary" data-i18n="matinee.save">Save</button>
+                    <button type="button" class="btn" id="matineeSignIn" onclick="signInMatinee()" data-i18n="matinee.signIn">Sign in</button>
+                    <button type="button" class="btn btn-danger" id="matineeSignOut" onclick="signOutMatinee()" style="display: none;" data-i18n="matinee.signOut">Sign out</button>
+                </form>
+                <div id="matineeStatus" class="status-line"></div>
             </div>
-            <form id="matineeForm" class="matinee-form" onsubmit="saveMatinee(event)">
-                <div class="form-group">
-                    <label data-i18n="matinee.server">Matinee server</label>
-                    <input type="text" name="url" id="matineeURL" placeholder="http://192.168.1.20:7171" dir="ltr">
-                </div>
-                <button type="submit" class="btn btn-secondary" data-i18n="matinee.save">Save</button>
-                <button type="button" class="btn" id="matineeSignIn" onclick="signInMatinee()" data-i18n="matinee.signIn">Sign in</button>
-                <button type="button" class="btn btn-danger" id="matineeSignOut" onclick="signOutMatinee()" style="display: none;" data-i18n="matinee.signOut">Sign out</button>
-            </form>
-            <div id="matineeStatus" class="status-line"></div>
         </div>
     </main>
 
-    <!-- Add Server Modal -->
+    <!-- Add or Edit Source Modal -->
     <div id="serverModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('serverModal')" role="button" data-i18n-aria-label="common.close" aria-label="Close">&times;</span>
-            <h2 data-i18n="servers.addTitle">Add Input Server</h2>
+            <h2 id="serverModalTitle" data-i18n="servers.addTitle">Add Source</h2>
             <div class="section-doc" data-i18n="servers.addHint">
-                An input server receives audio from other devices. An AirPlay server shows up as an AirPlay speaker on your iPhone, iPad or Mac.
+                A source is where audio comes from. An AirPlay source shows up as an AirPlay speaker on your iPhone, iPad or Mac.
             </div>
-            <form id="serverForm" onsubmit="addServer(event)">
+            <form id="serverForm" onsubmit="saveServer(event)">
                 <div class="form-group">
                     <label data-i18n="common.name">Name</label>
                     <input type="text" name="name" required>
@@ -1449,26 +1769,26 @@
                 </div>
                 <!-- The protocol's own settings, from GET /api/protocols. -->
                 <div class="protocol-fields"></div>
-                <div class="form-group">
+                <div class="form-group" data-add-only>
                     <label><span data-i18n="common.id">ID</span> <span class="hint" data-i18n="common.idHint">(optional, made up if empty)</span></label>
                     <input type="text" name="id" placeholder="Leave empty to make one up" data-i18n-placeholder="common.idPlaceholder">
                 </div>
-                <button type="submit" class="btn" data-i18n="servers.add">Add Server</button>
+                <button type="submit" class="btn" id="serverSubmit" data-i18n="servers.add">Add Source</button>
             </form>
         </div>
     </div>
 
-    <!-- Add Client Modal -->
+    <!-- Add or Edit Speaker Modal -->
     <div id="clientModal" class="modal">
         <div class="modal-content wide">
             <span class="close" onclick="closeModal('clientModal')" role="button" data-i18n-aria-label="common.close" aria-label="Close">&times;</span>
-            <h2 data-i18n="clients.addTitle">Add Output Client</h2>
-            <div class="section-doc" data-i18n="clients.addHint">
-                An output client sends audio to a speaker or audio device. Find devices on your network, or set one up by hand if it isn't found.
+            <h2 id="clientModalTitle" data-i18n="clients.addTitle">Add Speaker</h2>
+            <div class="section-doc" id="clientModalHint" data-i18n="clients.addHint">
+                Find speakers on your network, or set one up by hand if it isn't found.
             </div>
 
             <!-- Discovery Section -->
-            <div class="panel">
+            <div class="panel" id="discoveryPanel">
                 <h3><span class="icon icon-search"></span> <span data-i18n="discovery.title">Find devices</span></h3>
                 <button type="button" class="btn btn-secondary" id="discoverBtn" onclick="startDiscovery()" data-i18n="discovery.start">
                     Find Devices
@@ -1478,14 +1798,14 @@
             </div>
 
             <!-- Manual Configuration (Collapsible) -->
-            <div class="modal-divider">
+            <div class="modal-divider" id="manualConfig">
                 <div class="collapsible-header" id="manualConfigHeader" onclick="toggleManualConfig()">
                     <h3><span class="icon icon-edit"></span> <span data-i18n="discovery.manual">Set Up by Hand</span></h3>
                     <span class="collapsible-icon">▶</span>
                 </div>
                 <div class="collapsible-content" id="manualConfigContent">
                     <p class="muted-note" data-i18n="discovery.manualHint">Use this if your device wasn't found.</p>
-                    <form id="clientForm" onsubmit="addClient(event)">
+                    <form id="clientForm" onsubmit="saveClient(event)">
                         <div class="form-group">
                             <label data-i18n="common.name">Name</label>
                             <input type="text" name="name" required>
@@ -1502,7 +1822,7 @@
                         </div>
                         <!-- The protocol's own settings, from GET /api/protocols. -->
                         <div class="protocol-fields"></div>
-                        <div class="form-group">
+                        <div class="form-group" data-add-only>
                             <label><span data-i18n="common.id">ID</span> <span class="hint" data-i18n="common.idHint">(optional, made up if empty)</span></label>
                             <input type="text" name="id" placeholder="Leave empty to make one up" data-i18n-placeholder="common.idPlaceholder">
                         </div>
@@ -1510,10 +1830,10 @@
                 </div>
             </div>
 
-            <!-- Add Client Button - Always visible outside collapsible section -->
+            <!-- Submit Button - Always visible outside collapsible section -->
             <div class="modal-divider modal-footer">
-                <button type="button" class="btn btn-wide" onclick="submitClientForm()" data-i18n="clients.add">
-                    Add Client
+                <button type="button" class="btn btn-wide" id="clientSubmit" onclick="submitClientForm()" data-i18n="clients.add">
+                    Add Speaker
                 </button>
             </div>
         </div>
@@ -1554,37 +1874,35 @@
         </div>
     </div>
 
-    <!-- Add Route Modal -->
+    <!-- Add or Edit Route Modal -->
     <div id="routeModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('routeModal')" role="button" data-i18n-aria-label="common.close" aria-label="Close">&times;</span>
-            <h2 data-i18n="routes.addTitle">Add Audio Route</h2>
+            <h2 id="routeModalTitle" data-i18n="routes.addTitle">Add Route</h2>
             <div class="section-doc" data-i18n="routes.addHint">
-                A route connects an input server, where audio comes from, to one or more output clients, where it plays.
+                A route sends one source to one or more speakers. Routes into the same speaker are mixed.
             </div>
-            <form id="routeForm" onsubmit="addRoute(event)">
+            <form id="routeForm" onsubmit="saveRoute(event)">
                 <div class="form-group">
                     <label data-i18n="common.name">Name</label>
                     <input type="text" name="name" required>
                 </div>
                 <div class="form-group">
-                    <label><span data-i18n="routes.sourceLabel">Source server</span> <span class="hint" data-i18n="routes.sourceHint">(where audio comes from)</span></label>
+                    <label><span data-i18n="routes.sourceLabel">Source</span> <span class="hint" data-i18n="routes.sourceHint">(where audio comes from)</span></label>
                     <select name="source_name" id="routeSourceSelect" required>
-                        <option value="" data-i18n="routes.sourcePick">Pick an input server</option>
+                        <option value="" data-i18n="routes.sourcePick">Pick a source</option>
                     </select>
                 </div>
+                <fieldset class="form-group">
+                    <legend><span data-i18n="routes.destinationsLabel">Speakers</span> <span class="hint" data-i18n="routes.destinationsHint">(where it plays)</span></legend>
+                    <div class="check-list" id="routeDestList"></div>
+                </fieldset>
                 <div class="form-group">
-                    <label><span data-i18n="routes.destinationsLabel">Destination clients</span> <span class="hint" data-i18n="routes.destinationsHint">(where audio goes; hold Ctrl or Cmd to pick several)</span></label>
-                    <select name="dest_names" id="routeDestSelect" multiple required size="4">
-                        <option value="" data-i18n="routes.destinationsPick">Pick one or more output clients</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label data-i18n="routes.volume">Volume</label>
-                    <input type="range" name="volume" min="0" max="100" value="100">
+                    <label for="routeVolume" data-i18n="routes.volume">Volume</label>
+                    <input type="range" name="volume" id="routeVolume" min="0" max="100" value="100">
                     <span id="volumeValue">100%</span>
                 </div>
-                <button type="submit" class="btn" data-i18n="routes.add">Add Route</button>
+                <button type="submit" class="btn" id="routeSubmit" data-i18n="routes.add">Add Route</button>
             </form>
         </div>
     </div>
@@ -1735,10 +2053,9 @@
             }
             await setLanguage(picked);
             // Text the page wrote itself follows the new language too.
-            loadStatus();
-            loadServers();
-            loadClients();
-            loadRoutes();
+            routesSig = '';
+            renderAll();
+            refresh();
             loadMatinee();
             renderDiscovery();
         }
@@ -1876,274 +2193,870 @@
         // Load data on page load
         window.onload = async function() {
             await initLanguage();
-            loadProtocols();
+            showView(location.hash.slice(1));
+            await loadProtocols();
             loadMatinee();
-            // Load status first to check if server is ready
-            loadStatus().then(() => {
-                // If status loads successfully, load other data
-                loadServers();
-                loadClients();
-                loadRoutes();
-            }).catch(() => {
-                // If status fails, still try to load data (might be a status endpoint issue)
-                console.warn('[Page Load] Status check failed, attempting to load data anyway');
-                loadServers();
-                loadClients();
-                loadRoutes();
-            });
-            
-            setInterval(loadStatus, 5000); // Refresh status every 5 seconds
+            await refresh();
+            // A second look soon after, so what's playing shows quickly.
+            setTimeout(refresh, 1000);
+            setInterval(refresh, POLL_MS);
         };
 
-        async function loadStatus() {
+        // ---- Live state ----
+        //
+        // The page keeps the API's lists and polls them, so speaker cards,
+        // sources and the routes table show what plays now. A route counts
+        // as playing while its sample counter grows between two polls.
+
+        const POLL_MS = 3000;
+        const JSON_HEADERS = { 'Content-Type': 'application/json' };
+        const live = { servers: [], clients: [], routes: [], adapters: {}, loaded: false, failed: false };
+        let lastSamples = new Map(); // route id -> samples_routed at the last poll
+        let flowing = new Set();     // route ids whose audio moved since the last poll
+        const selected = new Set();  // speaker ids picked to group
+        let refreshQueue = Promise.resolve();
+
+        async function fetchJSON(path) {
+            const res = await fetch(`${API_BASE}${path}`);
+            if (!res.ok) throw await readError(res);
+            return res.json();
+        }
+
+        // Loads everything and redraws. Calls queue, so a refresh asked for
+        // after a change always sees that change.
+        function refresh() {
+            refreshQueue = refreshQueue.then(loadAll, loadAll);
+            return refreshQueue;
+        }
+
+        async function loadAll() {
             try {
-                const res = await fetch(`${API_BASE}/status`);
-                
-                if (!res.ok) {
-                    console.warn('[Load Status] API returned non-OK status:', res.status);
-                    return;
+                const [servers, clients, routes, status] = await Promise.all([
+                    fetchJSON('/servers'), fetchJSON('/clients'), fetchJSON('/routes'), fetchJSON('/status')]);
+                live.servers = Array.isArray(servers) ? servers : [];
+                live.clients = Array.isArray(clients) ? clients : [];
+                live.routes = Array.isArray(routes) ? routes : [];
+                live.adapters = Object.fromEntries((status.adapters || []).map(a => [a.id, a]));
+                const samples = new Map();
+                const moving = new Set();
+                for (const r of live.routes) {
+                    const n = r.samples_routed || 0;
+                    samples.set(r.id, n);
+                    if (r.active && lastSamples.has(r.id) && n > lastSamples.get(r.id)) moving.add(r.id);
                 }
-                
-                const data = await res.json();
-                const statusEl = document.getElementById('status');
-                if (statusEl) {
-                    if (data.router_running) {
-                        statusEl.textContent = t('app.running');
-                        statusEl.dataset.i18n = 'app.running';
-                        statusEl.className = 'status running';
-                    } else {
-                        statusEl.textContent = t('app.stopped');
-                        statusEl.dataset.i18n = 'app.stopped';
-                        statusEl.className = 'status stopped';
-                    }
-                }
+                lastSamples = samples;
+                flowing = moving;
+                live.loaded = true;
+                live.failed = false;
+                renderStatus(status);
             } catch (err) {
-                console.error('[Load Status] Error:', err);
-                // Don't show notification for status polling errors, but log them
+                console.error('[Refresh]', err);
+                if (!live.failed) {
+                    showNotification('error', t('clients.loadFailed'), err && err.code ? apiError(err) : t('common.loadFailed'));
+                }
+                live.failed = true;
+                renderStatus(null);
+            }
+            renderAll();
+        }
+
+        function renderStatus(data) {
+            const el = document.getElementById('status');
+            if (!el) return;
+            const running = !!(data && data.router_running);
+            el.dataset.i18n = running ? 'app.running' : 'app.stopped';
+            el.textContent = t(el.dataset.i18n);
+            el.className = 'status ' + (running ? 'running' : 'stopped');
+        }
+
+        function renderAll() {
+            renderSpeakers();
+            renderSources();
+            renderGroupBar();
+            renderRoutes();
+        }
+
+        function protocolTitle(kind, name) {
+            const p = protocolCatalog.find(p => p.kind === kind && p.name === name);
+            return p ? p.title : name;
+        }
+
+        // "Kitchen, Den and Patio" in the page's language.
+        function joinNames(names) {
+            try {
+                return new Intl.ListFormat(language, { style: 'long', type: 'conjunction' }).format(names);
+            } catch (err) {
+                return names.join(', ');
             }
         }
 
-        async function loadServers() {
-            try {
-                const res = await fetch(`${API_BASE}/servers`);
-                
-                if (!res.ok) {
-                    const errorData = await readError(res);
-                    console.error('[Load Servers] API error:', res.status, errorData);
-                    showNotification('error', t('servers.loadFailed'), apiError(errorData));
-                    return;
-                }
-                
-                const servers = await res.json();
-                const tbody = document.getElementById('serversBody');
-                
-                if (!tbody) {
-                    console.error('[Load Servers] serversBody element not found');
-                    return;
-                }
-                
-                // Handle null/undefined response
-                if (!servers || !Array.isArray(servers)) {
-                    console.warn('[Load Servers] Invalid response format, expected array:', servers);
-                    tbody.innerHTML = `<tr><td colspan="4" class="empty">${escapeHtml(t('servers.empty'))}</td></tr>`;
-                    return;
-                }
-                
-                if (servers.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="4" class="empty">${escapeHtml(t('servers.empty'))}</td></tr>`;
-                    return;
-                }
+        // Routes that are on and send to a speaker, by its name.
+        function speakerRoutes(name) {
+            return live.routes.filter(r => r.enabled && (r.dest_names || []).includes(name));
+        }
 
-                // Clear and rebuild table using DOM methods to avoid escape character issues
-                tbody.innerHTML = '';
-                servers.forEach(s => {
-                    const row = document.createElement('tr');
-                    
-                    const nameCell = document.createElement('td');
-                    nameCell.textContent = s.name || '';
-                    row.appendChild(nameCell);
-                    
-                    const protocolCell = document.createElement('td');
-                    protocolCell.textContent = s.protocol || '';
-                    row.appendChild(protocolCell);
-                    
-                    const statusCell = document.createElement('td');
-                    const toggleSwitch = document.createElement('label');
-                    toggleSwitch.className = 'toggle-switch';
-                    toggleSwitch.innerHTML = `
-                        <input type="checkbox" ${s.enabled ? 'checked' : ''} onchange="toggleServer('${s.id}', this.checked)">
-                        <span class="toggle-slider"></span>
-                    `;
-                    statusCell.appendChild(toggleSwitch);
-                    row.appendChild(statusCell);
-                    
-                    const actionCell = document.createElement('td');
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'btn btn-danger btn-small';
-                    deleteBtn.textContent = t('common.delete');
-                    deleteBtn.onclick = () => deleteServer(s.id);
-                    actionCell.appendChild(deleteBtn);
-                    row.appendChild(actionCell);
-                    
-                    tbody.appendChild(row);
-                });
-            } catch (err) {
-                console.error('[Load Servers] Exception:', err);
-                console.error('[Load Servers] Stack:', err.stack);
-                showNotification('error', t('servers.loadFailed'), t('common.loadFailed'));
+        function speakerState(c) {
+            if (!c.enabled) return { state: 'off' };
+            const a = live.adapters[c.id];
+            if (a && a.state === 'failed') return { state: 'offline', error: a.error };
+            const playing = speakerRoutes(c.name).filter(r => flowing.has(r.id) && (r.active_dests || []).includes(c.name));
+            const announcement = playing.some(r => r.transient);
+            const sources = new Set(playing.filter(r => !r.transient).map(r => r.source_name));
+            if (a && a.state === 'connecting') return { state: 'connecting', error: a.error, announcement };
+            if (sources.size > 1) return { state: 'mixing', announcement };
+            if (playing.length) return { state: 'playing', announcement };
+            return { state: 'idle' };
+        }
+
+        function sourceState(s) {
+            const routes = live.routes.filter(r => r.enabled && !r.transient && r.source_name === s.name);
+            const on = [...new Set(routes.flatMap(r => r.dest_names || []))].map(cleanDeviceName);
+            if (!s.enabled) return { state: 'off', on };
+            const a = live.adapters[s.id];
+            if (a && a.error) return { state: 'problem', error: a.error, on };
+            return { state: routes.some(r => flowing.has(r.id)) ? 'playing' : 'idle', on };
+        }
+
+        // Spelled out so the catalog test sees every key.
+        const STATE_KEYS = {
+            playing: 'state.playing', mixing: 'state.mixing', idle: 'state.idle', off: 'state.off',
+            connecting: 'state.connecting', offline: 'state.offline', problem: 'state.problem',
+        };
+
+        function setBadge(el, state) {
+            el.className = 'badge ' + state;
+            el.dataset.i18n = STATE_KEYS[state];
+            el.textContent = t(STATE_KEYS[state]);
+        }
+
+        // A source picker: Nothing, then every source by name. A name the
+        // routes use but no source has any more stays pickable, so the
+        // picker never claims something else is playing.
+        function fillSourceSelect(select, value) {
+            const names = live.servers.map(s => s.name);
+            if (value && !names.includes(value)) names.push(value);
+            const sig = JSON.stringify([language, names]);
+            if (select.dataset.sig !== sig) {
+                select.dataset.sig = sig;
+                select.innerHTML = '';
+                select.add(new Option(t('clients.nothing'), ''));
+                for (const n of names) select.add(new Option(n, n));
+            }
+            select.value = value;
+        }
+
+        // Puts nodes in a container in order, moving only what is out of
+        // place, so a control someone is using keeps its focus.
+        function placeInOrder(container, nodes) {
+            const keep = new Set(nodes);
+            for (const child of [...container.children]) if (!keep.has(child)) child.remove();
+            nodes.forEach((node, i) => {
+                if (container.children[i] !== node) container.insertBefore(node, container.children[i] || null);
+            });
+        }
+
+        // ---- Speakers ----
+
+        const cards = new Map(); // speaker id -> its card
+        let cardSeq = 0;
+
+        function renderSpeakers() {
+            const grid = document.getElementById('speakerGrid');
+            for (const [id, card] of cards) {
+                if (!live.clients.some(c => c.id === id)) cards.delete(id);
+            }
+            const nodes = live.clients.map(c => {
+                let card = cards.get(c.id);
+                if (!card) {
+                    card = buildSpeakerCard(c.id);
+                    cards.set(c.id, card);
+                }
+                updateSpeakerCard(card, c);
+                return card;
+            });
+            if (!nodes.length) {
+                const empty = grid.querySelector('.empty-note') || document.createElement('p');
+                empty.className = 'empty-note';
+                empty.dataset.i18n = live.failed ? 'common.loadFailed' : 'clients.empty';
+                empty.textContent = live.loaded || live.failed ? t(empty.dataset.i18n) : '';
+                nodes.push(empty);
+            }
+            placeInOrder(grid, nodes);
+        }
+
+        function buildSpeakerCard(id) {
+            const n = ++cardSeq;
+            const card = document.createElement('article');
+            card.className = 'speaker-card';
+            card.innerHTML = `
+                <div class="speaker-head">
+                    <label class="pick"><input type="checkbox" data-i18n-aria-label="clients.select"></label>
+                    <div class="speaker-title"><h3 id="speaker-name-${n}"></h3><div class="speaker-kind"></div></div>
+                    <span class="badge"></span>
+                </div>
+                <div class="speaker-body">
+                    <label for="speaker-source-${n}" data-i18n="clients.source"></label>
+                    <select id="speaker-source-${n}"></select>
+                    <p class="speaker-note mix" hidden></p>
+                    <p class="speaker-note announce" data-i18n="clients.announcement" hidden></p>
+                    <p class="speaker-note warn" hidden></p>
+                    <div class="volume-row">
+                        <input type="range" min="0" max="100" step="1" data-i18n-aria-label="clients.volume">
+                        <output></output>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <label class="toggle-switch"><input type="checkbox" data-i18n-aria-label="common.on"><span class="toggle-slider"></span></label>
+                    <span class="spacer"></span>
+                    <button type="button" class="btn btn-secondary btn-small" data-i18n="common.edit"></button>
+                    <button type="button" class="btn btn-danger btn-small" data-i18n="common.delete"></button>
+                </div>`;
+            card.setAttribute('aria-labelledby', `speaker-name-${n}`);
+            const [pick, toggle] = card.querySelectorAll('input[type="checkbox"]');
+            const [editBtn, deleteBtn] = card.querySelectorAll('.card-actions button');
+            const el = {
+                pick, toggle,
+                title: card.querySelector('h3'),
+                kind: card.querySelector('.speaker-kind'),
+                badge: card.querySelector('.badge'),
+                picker: card.querySelector('select'),
+                mix: card.querySelector('.speaker-note.mix'),
+                announce: card.querySelector('.speaker-note.announce'),
+                warn: card.querySelector('.speaker-note.warn'),
+                slider: card.querySelector('input[type="range"]'),
+                out: card.querySelector('output'),
+            };
+            card._el = el;
+            pick.onchange = () => {
+                if (pick.checked) selected.add(id);
+                else selected.delete(id);
+                card.classList.toggle('selected', pick.checked);
+                renderGroupBar();
+            };
+            el.picker.onchange = () => setSpeakerSource(card, id, el.picker.value);
+            el.slider.oninput = () => { el.out.textContent = formatPercent(Number(el.slider.value)); };
+            el.slider.onchange = () => setSpeakerVolume(id, Number(el.slider.value) / 100);
+            toggle.onchange = () => setEnabled('clients', id, toggle.checked);
+            editBtn.onclick = () => showEditClientModal(id);
+            deleteBtn.onclick = () => deleteItem('clients', id);
+            translatePage(card);
+            return card;
+        }
+
+        function updateSpeakerCard(card, c) {
+            const el = card._el;
+            el.title.textContent = cleanDeviceName(c.name);
+            el.kind.textContent = protocolTitle('client', c.protocol);
+            const st = speakerState(c);
+            setBadge(el.badge, st.state);
+            card.classList.toggle('off', !c.enabled);
+            el.toggle.checked = !!c.enabled;
+            el.pick.checked = selected.has(c.id);
+            card.classList.toggle('selected', el.pick.checked);
+
+            // What it plays: the sources of the routes that are on. A
+            // speaker fed by several is mixing them; the picker shows the
+            // first and the note names the rest.
+            const sources = [...new Set(speakerRoutes(c.name).filter(r => !r.transient).map(r => r.source_name))];
+            if (!card._pending) fillSourceSelect(el.picker, sources[0] || '');
+            el.mix.hidden = sources.length < 2;
+            el.mix.textContent = sources.length > 1 ? t('clients.alsoMixing', { names: joinNames(sources.slice(1)) }) : '';
+            el.announce.hidden = !st.announcement;
+            el.warn.hidden = !st.error;
+            el.warn.textContent = st.error || '';
+            el.warn.title = st.error || '';
+            if (document.activeElement !== el.slider) {
+                const v = Math.round((c.volume ?? 1) * 100);
+                el.slider.value = v;
+                el.out.textContent = formatPercent(v);
             }
         }
 
-        async function loadClients() {
-            try {
-                const res = await fetch(`${API_BASE}/clients`);
-                
-                if (!res.ok) {
-                    const errorData = await readError(res);
-                    console.error('[Load Clients] API error:', res.status, errorData);
-                    showNotification('error', t('clients.loadFailed'), apiError(errorData));
-                    return;
-                }
-                
-                const clients = await res.json();
-                const tbody = document.getElementById('clientsBody');
-                
-                if (!tbody) {
-                    console.error('[Load Clients] clientsBody element not found');
-                    return;
-                }
-                
-                // Handle null/undefined response
-                if (!clients || !Array.isArray(clients)) {
-                    console.warn('[Load Clients] Invalid response format, expected array:', clients);
-                    tbody.innerHTML = `<tr><td colspan="5" class="empty">${escapeHtml(t('clients.empty'))}</td></tr>`;
-                    return;
-                }
-                
-                if (clients.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="empty">${escapeHtml(t('clients.empty'))}</td></tr>`;
-                    return;
-                }
+        async function putSource(id, source) {
+            const res = await fetch(`${API_BASE}/clients/${encodeURIComponent(id)}/source`, {
+                method: 'PUT', headers: JSON_HEADERS, body: JSON.stringify({ source })
+            });
+            if (!res.ok) throw await readError(res);
+        }
 
-                // Clear and rebuild table using DOM methods to avoid escape character issues
-                tbody.innerHTML = '';
-                clients.forEach(c => {
-                    const row = document.createElement('tr');
-                    
-                    const nameCell = document.createElement('td');
-                    nameCell.textContent = cleanDeviceName(c.name) || '';
-                    row.appendChild(nameCell);
-                    
-                    const protocolCell = document.createElement('td');
-                    protocolCell.textContent = c.protocol || '';
-                    row.appendChild(protocolCell);
-                    
-                    const addressCell = document.createElement('td');
-                    addressCell.textContent = c.address || '';
-                    row.appendChild(addressCell);
-                    
-                    const statusCell = document.createElement('td');
-                    const toggleSwitch = document.createElement('label');
-                    toggleSwitch.className = 'toggle-switch';
-                    toggleSwitch.innerHTML = `
-                        <input type="checkbox" ${c.enabled ? 'checked' : ''} onchange="toggleClient('${c.id}', this.checked)">
-                        <span class="toggle-slider"></span>
-                    `;
-                    statusCell.appendChild(toggleSwitch);
-                    row.appendChild(statusCell);
-                    
-                    const actionCell = document.createElement('td');
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'btn btn-danger btn-small';
-                    deleteBtn.textContent = t('common.delete');
-                    deleteBtn.onclick = () => deleteClient(c.id);
-                    actionCell.appendChild(deleteBtn);
-                    row.appendChild(actionCell);
-                    
-                    tbody.appendChild(row);
-                });
+        async function setSpeakerSource(card, id, source) {
+            card._pending = true;
+            try {
+                await putSource(id, source);
             } catch (err) {
-                console.error('[Load Clients] Exception:', err);
-                console.error('[Load Clients] Stack:', err.stack);
-                showNotification('error', t('clients.loadFailed'), t('common.loadFailed'));
+                showNotification('error', t('clients.sourceFailed'), apiError(err));
+            }
+            card._pending = false;
+            await refresh();
+        }
+
+        async function setSpeakerVolume(id, volume) {
+            try {
+                const res = await fetch(`${API_BASE}/clients/${encodeURIComponent(id)}/volume`, {
+                    method: 'PUT', headers: JSON_HEADERS, body: JSON.stringify({ volume })
+                });
+                if (!res.ok) throw await readError(res);
+            } catch (err) {
+                showNotification('error', t('clients.volumeFailed'), apiError(err));
+            }
+            await refresh();
+        }
+
+        // ---- Grouping: one source on every selected speaker ----
+
+        function renderGroupBar() {
+            for (const id of [...selected]) {
+                if (!live.clients.some(c => c.id === id)) selected.delete(id);
+            }
+            const bar = document.getElementById('groupBar');
+            bar.hidden = selected.size === 0;
+            document.getElementById('groupCount').textContent = t('clients.selected', { count: selected.size });
+            const select = document.getElementById('groupSource');
+            const first = live.servers.length ? live.servers[0].name : '';
+            fillSourceSelect(select, select.dataset.sig ? select.value : first);
+        }
+
+        async function playOnSelected() {
+            const source = document.getElementById('groupSource').value;
+            // One at a time: the first makes the route, the rest join it.
+            for (const id of live.clients.map(c => c.id).filter(id => selected.has(id))) {
+                try {
+                    await putSource(id, source);
+                } catch (err) {
+                    showNotification('error', t('clients.sourceFailed'), apiError(err));
+                    break;
+                }
+            }
+            selected.clear();
+            await refresh();
+        }
+
+        function clearSelection() {
+            selected.clear();
+            renderAll();
+        }
+
+        // ---- Sources ----
+
+        const sourceItems = new Map(); // source id -> its list item
+
+        function renderSources() {
+            const list = document.getElementById('sourceList');
+            for (const [id] of sourceItems) {
+                if (!live.servers.some(s => s.id === id)) sourceItems.delete(id);
+            }
+            const nodes = live.servers.map(s => {
+                let item = sourceItems.get(s.id);
+                if (!item) {
+                    item = buildSourceItem(s.id);
+                    sourceItems.set(s.id, item);
+                }
+                updateSourceItem(item, s);
+                return item;
+            });
+            if (!nodes.length) {
+                const empty = list.querySelector('.empty-note') || document.createElement('li');
+                empty.className = 'empty-note';
+                empty.dataset.i18n = live.failed ? 'common.loadFailed' : 'servers.empty';
+                empty.textContent = live.loaded || live.failed ? t(empty.dataset.i18n) : '';
+                nodes.push(empty);
+            }
+            placeInOrder(list, nodes);
+        }
+
+        function buildSourceItem(id) {
+            const item = document.createElement('li');
+            item.className = 'source-item';
+            item.innerHTML = `
+                <div class="source-row">
+                    <div class="source-main"><div class="source-name"></div><div class="source-sub"></div></div>
+                    <span class="badge"></span>
+                </div>
+                <p class="source-note warn" hidden></p>
+                <div class="source-actions">
+                    <label class="toggle-switch"><input type="checkbox" data-i18n-aria-label="common.on"><span class="toggle-slider"></span></label>
+                    <span class="spacer"></span>
+                    <button type="button" class="btn btn-secondary btn-small" data-i18n="common.edit"></button>
+                    <button type="button" class="btn btn-danger btn-small" data-i18n="common.delete"></button>
+                </div>`;
+            const toggle = item.querySelector('input[type="checkbox"]');
+            const [editBtn, deleteBtn] = item.querySelectorAll('.source-actions button');
+            item._el = {
+                toggle,
+                name: item.querySelector('.source-name'),
+                sub: item.querySelector('.source-sub'),
+                badge: item.querySelector('.badge'),
+                warn: item.querySelector('.source-note.warn'),
+            };
+            toggle.onchange = () => setEnabled('servers', id, toggle.checked);
+            editBtn.onclick = () => showEditServerModal(id);
+            deleteBtn.onclick = () => deleteItem('servers', id);
+            translatePage(item);
+            return item;
+        }
+
+        function updateSourceItem(item, s) {
+            const el = item._el;
+            const st = sourceState(s);
+            el.name.textContent = s.name;
+            el.sub.textContent = protocolTitle('server', s.protocol) + ' · ' +
+                (st.on.length ? t('servers.playsOn', { names: joinNames(st.on) }) : t('servers.playsNowhere'));
+            setBadge(el.badge, st.state);
+            item.classList.toggle('off', !s.enabled);
+            el.toggle.checked = !!s.enabled;
+            el.warn.hidden = !st.error;
+            el.warn.textContent = st.error || '';
+            el.warn.title = st.error || '';
+        }
+
+        // ---- Routes (Advanced) ----
+
+        let routesSig = '';
+
+        function renderRoutes() {
+            const tbody = document.getElementById('routesBody');
+            const rows = live.routes.map(r => ({
+                id: r.id, name: r.name, source: r.source_name, dests: r.dest_names || [], volume: r.volume,
+                enabled: !!r.enabled, transient: !!r.transient, playing: flowing.has(r.id),
+            }));
+            const sig = JSON.stringify([language, live.loaded, live.failed, rows]);
+            if (sig === routesSig) return;
+            routesSig = sig;
+            tbody.innerHTML = '';
+            if (!rows.length) {
+                const key = live.failed ? 'common.loadFailed' : 'routes.empty';
+                tbody.innerHTML = `<tr><td colspan="7" class="empty">${live.loaded || live.failed ? escapeHtml(t(key)) : ''}</td></tr>`;
+                return;
+            }
+            for (const r of rows) {
+                const tr = document.createElement('tr');
+                const cell = text => {
+                    const td = document.createElement('td');
+                    td.textContent = text;
+                    tr.appendChild(td);
+                    return td;
+                };
+                const name = cell(r.name);
+                if (r.transient) {
+                    const note = document.createElement('span');
+                    note.className = 'route-temp';
+                    note.textContent = t('routes.temporary');
+                    name.appendChild(note);
+                }
+                cell(r.source);
+                cell(joinNames(r.dests.map(cleanDeviceName)));
+                cell(formatPercent(Math.round((r.volume ?? 1) * 100)));
+                const badge = document.createElement('span');
+                setBadge(badge, !r.enabled ? 'off' : r.playing ? 'playing' : 'idle');
+                cell('').appendChild(badge);
+
+                const on = cell('');
+                const actions = cell('');
+                if (!r.transient) {
+                    const toggle = document.createElement('label');
+                    toggle.className = 'toggle-switch';
+                    toggle.innerHTML = '<input type="checkbox"><span class="toggle-slider"></span>';
+                    const input = toggle.querySelector('input');
+                    input.checked = r.enabled;
+                    input.setAttribute('aria-label', t('common.on'));
+                    input.onchange = () => setEnabled('routes', r.id, input.checked);
+                    on.appendChild(toggle);
+
+                    const wrap = document.createElement('div');
+                    wrap.className = 'row-actions';
+                    const edit = document.createElement('button');
+                    edit.className = 'btn btn-secondary btn-small';
+                    edit.textContent = t('common.edit');
+                    edit.onclick = () => showEditRouteModal(r.id);
+                    const del = document.createElement('button');
+                    del.className = 'btn btn-danger btn-small';
+                    del.textContent = t('common.delete');
+                    del.onclick = () => deleteItem('routes', r.id);
+                    wrap.append(edit, del);
+                    actions.appendChild(wrap);
+                }
+                tbody.appendChild(tr);
             }
         }
 
-        async function loadRoutes() {
-            try {
-                const res = await fetch(`${API_BASE}/routes`);
-                
-                if (!res.ok) {
-                    const errorData = await readError(res);
-                    console.error('[Load Routes] API error:', res.status, errorData);
-                    showNotification('error', t('routes.loadFailed'), apiError(errorData));
-                    return;
-                }
-                
-                const routes = await res.json();
-                console.log('[Load Routes] Received routes:', routes);
-                const tbody = document.getElementById('routesBody');
-                
-                if (!tbody) {
-                    console.error('[Load Routes] routesBody element not found');
-                    return;
-                }
-                
-                // Handle null/undefined response
-                if (!routes || !Array.isArray(routes)) {
-                    console.warn('[Load Routes] Invalid response format, expected array:', routes);
-                    tbody.innerHTML = `<tr><td colspan="5" class="empty">${escapeHtml(t('routes.empty'))}</td></tr>`;
-                    return;
-                }
-                
-                if (routes.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="empty">${escapeHtml(t('routes.empty'))}</td></tr>`;
-                    return;
-                }
+        // ---- Switching on and off, deleting ----
 
-                // Clear and rebuild table using DOM methods to avoid escape character issues
-                tbody.innerHTML = '';
-                routes.forEach(r => {
-                    console.log('[Load Routes] Processing route:', r);
-                    const row = document.createElement('tr');
-                    
-                    const nameCell = document.createElement('td');
-                    nameCell.textContent = r.name || '';
-                    row.appendChild(nameCell);
-                    
-                    const sourceCell = document.createElement('td');
-                    sourceCell.textContent = r.source_name || '';
-                    row.appendChild(sourceCell);
-                    
-                    const destCell = document.createElement('td');
-                    const destNames = Array.isArray(r.dest_names) ? r.dest_names : (r.dest_names || '').split(',').map(s => s.trim());
-                    destCell.textContent = destNames.join(', ');
-                    row.appendChild(destCell);
-                    
-                    const statusCell = document.createElement('td');
-                    const toggleSwitch = document.createElement('label');
-                    toggleSwitch.className = 'toggle-switch';
-                    toggleSwitch.innerHTML = `
-                        <input type="checkbox" ${r.enabled ? 'checked' : ''} onchange="toggleRoute('${r.id}', this.checked)">
-                        <span class="toggle-slider"></span>
-                    `;
-                    statusCell.appendChild(toggleSwitch);
-                    row.appendChild(statusCell);
-                    
-                    const actionCell = document.createElement('td');
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'btn btn-danger btn-small';
-                    deleteBtn.textContent = t('common.delete');
-                    deleteBtn.onclick = () => deleteRoute(r.id);
-                    actionCell.appendChild(deleteBtn);
-                    row.appendChild(actionCell);
-                    
-                    tbody.appendChild(row);
+        async function setEnabled(kind, id, enabled) {
+            try {
+                const res = await fetch(`${API_BASE}/${kind}/${encodeURIComponent(id)}`, {
+                    method: 'PUT', headers: JSON_HEADERS, body: JSON.stringify({ enabled })
                 });
+                if (!res.ok) throw await readError(res);
+                showNotification('success', t(`${kind}.${enabled ? 'enabled' : 'disabled'}`), '');
             } catch (err) {
-                console.error('[Load Routes] Exception:', err);
-                console.error('[Load Routes] Stack:', err.stack);
-                showNotification('error', t('routes.loadFailed'), t('common.loadFailed'));
+                showNotification('error', t(`${kind}.updateFailed`), apiError(err));
+            }
+            routesSig = '';
+            await refresh();
+        }
+
+        async function deleteItem(kind, id) {
+            if (!await showConfirmNotification(t(`${kind}.deleteTitle`), t(`${kind}.deleteMessage`))) return;
+            try {
+                const res = await fetch(`${API_BASE}/${kind}/${encodeURIComponent(id)}`, { method: 'DELETE' });
+                if (!res.ok) throw await readError(res);
+                showNotification('success', t(`${kind}.deleted`), '');
+            } catch (err) {
+                showNotification('error', t(`${kind}.deleteFailed`), apiError(err));
+            }
+            await refresh();
+        }
+
+        // ---- Tabs ----
+
+        const VIEWS = ['speakers', 'advanced', 'settings'];
+
+        function showView(name, focus = false) {
+            if (!VIEWS.includes(name) || document.getElementById('tab-' + name).hidden) name = 'speakers';
+            for (const v of VIEWS) {
+                const tab = document.getElementById('tab-' + v);
+                const on = v === name;
+                tab.setAttribute('aria-selected', on ? 'true' : 'false');
+                tab.tabIndex = on ? 0 : -1;
+                document.getElementById('view-' + v).hidden = !on;
+                if (on && focus) tab.focus();
+            }
+            const hash = name === 'speakers' ? '' : '#' + name;
+            if (location.hash !== hash) history.replaceState(null, '', hash || location.pathname + location.search);
+        }
+
+        window.addEventListener('hashchange', () => showView(location.hash.slice(1)));
+
+        document.addEventListener('keydown', e => {
+            if (!e.target.matches || !e.target.matches('.tabs [role="tab"]')) return;
+            const shown = VIEWS.filter(v => !document.getElementById('tab-' + v).hidden);
+            let step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+            if (!step && e.key !== 'Home' && e.key !== 'End') return;
+            e.preventDefault();
+            if (document.documentElement.dir === 'rtl') step = -step;
+            const at = shown.indexOf(e.target.id.slice('tab-'.length));
+            const next = e.key === 'Home' ? 0 : e.key === 'End' ? shown.length - 1 : (at + step + shown.length) % shown.length;
+            showView(shown[next], true);
+        });
+
+        // ---- Dialogs: add and edit ----
+
+        let editingServerId = null;
+        let editingClientId = null;
+        let editingRouteId = null;
+
+        function setModalMode(titleId, submitId, titleKey, submitKey) {
+            const title = document.getElementById(titleId);
+            const submit = document.getElementById(submitId);
+            title.dataset.i18n = titleKey;
+            title.textContent = t(titleKey);
+            submit.dataset.i18n = submitKey;
+            submit.textContent = t(submitKey);
+        }
+
+        function parseConfig(json) {
+            try {
+                const v = json ? JSON.parse(json) : {};
+                return v && typeof v === 'object' ? v : {};
+            } catch (err) {
+                return {};
+            }
+        }
+
+        // Fills a protocol's fields from a stored config.
+        function fillProtocolFields(kind, json) {
+            const config = parseConfig(json);
+            for (const input of protocolForm(kind).querySelectorAll('.protocol-fields [name^="config."]')) {
+                const key = input.name.slice('config.'.length);
+                if (input.type === 'checkbox') input.checked = config[key] === true;
+                else input.value = config[key] ?? '';
+            }
+        }
+
+        // On edit, keeps config keys the form has no field for, so saving
+        // never drops a setting made through the API.
+        function mergeConfig(kind, protocol, storedJSON, data) {
+            const stored = parseConfig(storedJSON);
+            const p = protocolCatalog.find(p => p.kind === kind && p.name === protocol);
+            for (const f of (p ? p.fields : [])) delete stored[f.key];
+            Object.assign(stored, parseConfig(data.config));
+            data.config = Object.keys(stored).length ? JSON.stringify(stored) : '';
+        }
+
+        // Shows a stored protocol in a select even if the catalog lacks it.
+        function pickProtocol(select, protocol) {
+            if (![...select.options].some(o => o.value === protocol)) select.add(new Option(protocol, protocol));
+            select.value = protocol;
+        }
+
+        function showAddServerModal() {
+            editingServerId = null;
+            const form = document.getElementById('serverForm');
+            form.reset();
+            form.elements.protocol.disabled = false;
+            form.querySelectorAll('[data-add-only]').forEach(el => { el.hidden = false; });
+            fillProtocolSelect('server');
+            setModalMode('serverModalTitle', 'serverSubmit', 'servers.addTitle', 'servers.add');
+            document.getElementById('serverModal').style.display = 'block';
+        }
+
+        function showEditServerModal(id) {
+            const s = live.servers.find(s => s.id === id);
+            if (!s) return;
+            editingServerId = id;
+            const form = document.getElementById('serverForm');
+            form.reset();
+            form.elements.namedItem('name').value = s.name;
+            pickProtocol(form.elements.protocol, s.protocol);
+            form.elements.protocol.disabled = true;
+            renderProtocolFields('server');
+            fillProtocolFields('server', s.config);
+            form.querySelectorAll('[data-add-only]').forEach(el => { el.hidden = true; });
+            setModalMode('serverModalTitle', 'serverSubmit', 'servers.editTitle', 'common.save');
+            document.getElementById('serverModal').style.display = 'block';
+        }
+
+        async function saveServer(e) {
+            e.preventDefault();
+            const form = e.target;
+            const data = Object.fromEntries(new FormData(form));
+            collectConfig('server', data);
+            const editing = editingServerId ? live.servers.find(s => s.id === editingServerId) : null;
+            let url = `${API_BASE}/servers`;
+            let method = 'POST';
+            if (editing) {
+                url += '/' + encodeURIComponent(editing.id);
+                method = 'PUT';
+                delete data.id;
+                delete data.protocol;
+                mergeConfig('server', editing.protocol, editing.config, data);
+            } else {
+                if (!data.id || !data.id.trim()) delete data.id;
+                data.enabled = true;
+            }
+            const failKey = editing ? 'servers.updateFailed' : 'servers.addFailed';
+            try {
+                const res = await fetch(url, { method, headers: JSON_HEADERS, body: JSON.stringify(data) });
+                if (!res.ok) throw await readError(res);
+                closeModal('serverModal');
+                showNotification('success', t(editing ? 'servers.saved' : 'servers.added'), '');
+            } catch (err) {
+                console.error('[Save Source]', err);
+                showNotification('error', t(failKey), err && (err.code || err.error) ? apiError(err) : (err.message || t('common.unexpected')));
+            }
+            await refresh();
+        }
+
+        function setClientModalMode(editing) {
+            document.getElementById('discoveryPanel').hidden = editing;
+            document.getElementById('clientModalHint').hidden = editing;
+            document.querySelectorAll('#clientForm [data-add-only]').forEach(el => { el.hidden = editing; });
+            document.getElementById('clientForm').elements.protocol.disabled = editing;
+            const header = document.getElementById('manualConfigHeader');
+            const content = document.getElementById('manualConfigContent');
+            header.hidden = editing;
+            header.classList.toggle('expanded', editing);
+            content.classList.toggle('expanded', editing);
+            setModalMode('clientModalTitle', 'clientSubmit',
+                editing ? 'clients.editTitle' : 'clients.addTitle', editing ? 'common.save' : 'clients.add');
+        }
+
+        function showAddClientModal() {
+            editingClientId = null;
+            document.getElementById('clientForm').reset();
+            fillProtocolSelect('client');
+            setClientModalMode(false);
+            document.getElementById('clientModal').style.display = 'block';
+
+            // Reset discovery and start looking at once.
+            selectedDiscoveredDevice = null;
+            discoveredDevicesList = [];
+            discoveryState = 'idle';
+            renderDiscovery();
+            setTimeout(startDiscovery, 100);
+        }
+
+        function showEditClientModal(id) {
+            const c = live.clients.find(c => c.id === id);
+            if (!c) return;
+            editingClientId = id;
+            selectedDiscoveredDevice = null;
+            const form = document.getElementById('clientForm');
+            form.reset();
+            form.elements.namedItem('name').value = cleanDeviceName(c.name);
+            pickProtocol(form.elements.protocol, c.protocol);
+            renderProtocolFields('client');
+            fillProtocolFields('client', c.config);
+            const address = form.querySelector('input[name="address"]:not(:disabled)');
+            if (address) address.value = c.address || '';
+            setClientModalMode(true);
+            document.getElementById('clientModal').style.display = 'block';
+        }
+
+        function toggleManualConfig() {
+            document.getElementById('manualConfigHeader').classList.toggle('expanded');
+            document.getElementById('manualConfigContent').classList.toggle('expanded');
+        }
+
+        function submitClientForm() {
+            const form = document.getElementById('clientForm');
+            if ((editingClientId || !selectedDiscoveredDevice) && !form.checkValidity()) {
+                // Open the form so the browser can point at what's missing.
+                document.getElementById('manualConfigHeader').classList.add('expanded');
+                document.getElementById('manualConfigContent').classList.add('expanded');
+                form.reportValidity();
+                return;
+            }
+            saveClient({ preventDefault: () => {}, target: form });
+        }
+
+        async function saveClient(e) {
+            e.preventDefault();
+            const form = e.target;
+            const editing = editingClientId ? live.clients.find(c => c.id === editingClientId) : null;
+            let data;
+            if (!editing && selectedDiscoveredDevice) {
+                const typed = form.elements.namedItem('name').value;
+                data = {
+                    name: cleanDeviceName(selectedDiscoveredDevice.name || typed),
+                    protocol: selectedDiscoveredDevice.protocol,
+                    address: selectedDiscoveredDevice.address,
+                };
+            } else {
+                data = Object.fromEntries(new FormData(form));
+                collectConfig('client', data);
+                if (!data.id || !data.id.trim()) delete data.id;
+            }
+            let url = `${API_BASE}/clients`;
+            let method = 'POST';
+            if (editing) {
+                url += '/' + encodeURIComponent(editing.id);
+                method = 'PUT';
+                delete data.id;
+                delete data.protocol;
+                mergeConfig('client', editing.protocol, editing.config, data);
+                if (data.address === undefined) data.address = '';
+            }
+            const failKey = editing ? 'clients.updateFailed' : 'clients.addFailed';
+            try {
+                const res = await fetch(url, { method, headers: JSON_HEADERS, body: JSON.stringify(data) });
+                if (!editing && res.status === 202) {
+                    // Pairing needed (202 Accepted): ask for the PIN.
+                    const reply = await res.json().catch(() => ({}));
+                    if (!reply.pairing_required) throw await readError(res);
+                    closeModal('clientModal');
+                    showPairingDialog(reply.id || data.id, t('pairing.prompt'), {
+                        id: reply.id || data.id,
+                        name: reply.name || data.name,
+                        protocol: reply.protocol || data.protocol,
+                        address: reply.address || data.address
+                    });
+                } else if (res.ok) {
+                    closeModal('clientModal');
+                    showNotification('success', t(editing ? 'clients.saved' : 'clients.added'), '');
+                } else {
+                    throw await readError(res);
+                }
+                selectedDiscoveredDevice = null;
+            } catch (err) {
+                console.error('[Save Speaker]', err);
+                showNotification('error', t(failKey), err && (err.code || err.error) ? apiError(err) : (err.message || t('common.unexpected')));
+            }
+            await refresh();
+        }
+
+        function showAddRouteModal() {
+            openRouteModal(null);
+        }
+
+        function showEditRouteModal(id) {
+            const r = live.routes.find(r => r.id === id && !r.transient);
+            if (r) openRouteModal(r);
+        }
+
+        function openRouteModal(r) {
+            editingRouteId = r ? r.id : null;
+            const form = document.getElementById('routeForm');
+            form.reset();
+            form.elements.namedItem('name').value = r ? r.name : '';
+
+            const source = document.getElementById('routeSourceSelect');
+            source.innerHTML = '';
+            source.add(new Option(t('routes.sourcePick'), ''));
+            const sources = live.servers.map(s => s.name);
+            if (r && !sources.includes(r.source_name)) sources.push(r.source_name);
+            for (const n of sources) source.add(new Option(n, n));
+            source.value = r ? r.source_name : '';
+
+            const list = document.getElementById('routeDestList');
+            list.innerHTML = '';
+            const dests = live.clients.map(c => c.name);
+            for (const n of (r ? r.dest_names : [])) if (!dests.includes(n)) dests.push(n);
+            if (!dests.length) {
+                const p = document.createElement('p');
+                p.className = 'muted-note';
+                p.textContent = t('clients.empty');
+                list.appendChild(p);
+            }
+            for (const n of dests) {
+                const label = document.createElement('label');
+                label.className = 'check-label';
+                const box = document.createElement('input');
+                box.type = 'checkbox';
+                box.name = 'dest_names';
+                box.value = n;
+                box.checked = !!r && r.dest_names.includes(n);
+                const text = document.createElement('span');
+                text.textContent = cleanDeviceName(n);
+                label.append(box, text);
+                list.appendChild(label);
+            }
+
+            const volume = r ? Math.round(r.volume * 100) : 100;
+            document.getElementById('routeVolume').value = volume;
+            document.getElementById('volumeValue').textContent = formatPercent(volume);
+            setModalMode('routeModalTitle', 'routeSubmit',
+                r ? 'routes.editTitle' : 'routes.addTitle', r ? 'common.save' : 'routes.add');
+            document.getElementById('routeModal').style.display = 'block';
+        }
+
+        async function saveRoute(e) {
+            e.preventDefault();
+            const form = new FormData(e.target);
+            const name = (form.get('name') || '').trim();
+            const source = form.get('source_name') || '';
+            const dests = form.getAll('dest_names').filter(Boolean);
+            if (!name) return showNotification('warning', t('common.validation'), t('routes.needName'));
+            if (!source) return showNotification('warning', t('common.validation'), t('routes.needSource'));
+            if (!dests.length) return showNotification('warning', t('common.validation'), t('routes.needDestination'));
+            const data = { name, source_name: source, dest_names: dests, volume: Number(form.get('volume') || 100) / 100 };
+            const editing = editingRouteId;
+            if (!editing) Object.assign(data, { mix_mode: 'replace', enabled: true, priority: 0 });
+            const url = `${API_BASE}/routes` + (editing ? '/' + encodeURIComponent(editing) : '');
+            try {
+                const res = await fetch(url, { method: editing ? 'PUT' : 'POST', headers: JSON_HEADERS, body: JSON.stringify(data) });
+                if (!res.ok) throw await readError(res);
+                closeModal('routeModal');
+                showNotification('success', t(editing ? 'routes.saved' : 'routes.added'), '');
+            } catch (err) {
+                console.error('[Save Route]', err);
+                showNotification('error', t(editing ? 'routes.updateFailed' : 'routes.addFailed'), err && (err.code || err.error) ? apiError(err) : (err.message || t('common.unexpected')));
+            }
+            routesSig = '';
+            await refresh();
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            modal.style.display = 'none';
+            if (modalId === 'serverModal') editingServerId = null;
+            if (modalId === 'clientModal') editingClientId = null;
+            if (modalId === 'routeModal') editingRouteId = null;
+            if (modalId === 'pairingModal') {
+                currentPairingClientId = null;
+                document.getElementById('pairingForm').reset();
+                document.getElementById('pairingStatus').innerHTML = '';
             }
         }
 
@@ -2268,541 +3181,9 @@
             if (Object.keys(config).length) data.config = JSON.stringify(config);
         }
 
-        function showAddServerModal() {
-            document.getElementById('serverModal').style.display = 'block';
-        }
-
-        function showAddClientModal() {
-            const modal = document.getElementById('clientModal');
-            modal.style.display = 'block';
-            
-            // Reset form
-            const form = document.getElementById('clientForm');
-            if (form) {
-                form.reset();
-            }
-            
-            // Reset discovery state
-            selectedDiscoveredDevice = null;
-            discoveredDevicesList = [];
-            discoveryState = 'idle';
-            renderDiscovery();
-            
-            // Collapse manual configuration by default
-            const header = document.getElementById('manualConfigHeader');
-            const content = document.getElementById('manualConfigContent');
-            if (header && content) {
-                header.classList.remove('expanded');
-                content.classList.remove('expanded');
-            }
-            
-            // Automatically start discovery
-            console.log('[Client Modal] Auto-starting discovery...');
-            setTimeout(() => {
-                startDiscovery();
-            }, 100); // Small delay to ensure modal is fully rendered
-        }
-
-        function toggleManualConfig() {
-            const header = document.getElementById('manualConfigHeader');
-            const content = document.getElementById('manualConfigContent');
-            
-            if (header && content) {
-                const isExpanded = header.classList.contains('expanded');
-                
-                if (isExpanded) {
-                    header.classList.remove('expanded');
-                    content.classList.remove('expanded');
-                } else {
-                    header.classList.add('expanded');
-                    content.classList.add('expanded');
-                }
-            }
-        }
-
-        function submitClientForm() {
-            const form = document.getElementById('clientForm');
-            if (form) {
-                // Create a submit event with the form as target
-                const event = {
-                    preventDefault: () => {},
-                    target: form
-                };
-                addClient(event);
-            }
-        }
-
-        async function showAddRouteModal() {
-            // Reset form first
-            const form = document.getElementById('routeForm');
-            if (form) {
-                form.reset();
-            }
-            
-            // Reset volume slider display
-            const volumeValue = document.getElementById('volumeValue');
-            if (volumeValue) {
-                volumeValue.textContent = formatPercent(100);
-            }
-            
-            // Load servers and clients first
-            await Promise.all([loadServers(), loadClients()]);
-            
-            // Populate source select
-            const sourceSelect = document.getElementById('routeSourceSelect');
-            if (sourceSelect) {
-                sourceSelect.innerHTML = `<option value="">${escapeHtml(t('routes.sourcePick'))}</option>`;
-                const serversRes = await fetch(`${API_BASE}/servers`);
-                if (serversRes.ok) {
-                    const servers = await serversRes.json();
-                    if (servers && Array.isArray(servers)) {
-                        servers.forEach(s => {
-                            const option = document.createElement('option');
-                            option.value = s.name;
-                            option.textContent = `${s.name} (${s.protocol})`;
-                            sourceSelect.appendChild(option);
-                        });
-                    }
-                }
-            }
-            
-            // Populate destination select
-            const destSelect = document.getElementById('routeDestSelect');
-            if (destSelect) {
-                destSelect.innerHTML = `<option value="">${escapeHtml(t('routes.destinationsPick'))}</option>`;
-                const clientsRes = await fetch(`${API_BASE}/clients`);
-                if (clientsRes.ok) {
-                    const clients = await clientsRes.json();
-                    if (clients && Array.isArray(clients)) {
-                        clients.forEach(c => {
-                            const option = document.createElement('option');
-                            option.value = c.name;
-                            option.textContent = `${c.name} (${c.protocol}) - ${c.address}`;
-                            destSelect.appendChild(option);
-                        });
-                    }
-                }
-            }
-            
-            document.getElementById('routeModal').style.display = 'block';
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.style.display = 'none';
-                
-                // Reset form when closing route modal
-                if (modalId === 'routeModal') {
-                    const form = document.getElementById('routeForm');
-                    if (form) {
-                        form.reset();
-                    }
-                    // Reset volume slider display
-                    const volumeValue = document.getElementById('volumeValue');
-                    if (volumeValue) {
-                        volumeValue.textContent = formatPercent(100);
-                    }
-                }
-                
-                // Reset pairing modal
-                if (modalId === 'pairingModal') {
-                    currentPairingClientId = null;
-                    const form = document.getElementById('pairingForm');
-                    if (form) {
-                        form.reset();
-                    }
-                    const statusDiv = document.getElementById('pairingStatus');
-                    if (statusDiv) {
-                        statusDiv.innerHTML = '';
-                    }
-                }
-            }
-        }
-
-        async function addServer(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
-            
-            if (!data.id || data.id.trim() === '') {
-                data.id = 'server-' + Date.now();
-            }
-            
-            // Ensure enabled is set to true for new servers
-            data.enabled = true;
-            
-            collectConfig('server', data);
-
-            try {
-                const res = await fetch(`${API_BASE}/servers`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                
-                if (res.ok) {
-                    closeModal('serverModal');
-                    loadServers();
-                    showNotification('success', t('servers.added'), '');
-                } else {
-                    const errorData = await readError(res);
-                    console.error('[Add Server] API error:', res.status, errorData);
-                    showNotification('error', t('servers.addFailed'), apiError(errorData));
-                }
-            } catch (err) {
-                console.error('[Add Server] Exception:', err);
-                console.error('[Add Server] Stack:', err.stack);
-                showNotification('error', t('servers.addFailed'), err.message || t('common.unexpected'));
-            }
-        }
-
-        async function addClient(e) {
-            e.preventDefault();
-            
-            // If a discovered device was selected, use its data
-            let data;
-            if (selectedDiscoveredDevice) {
-                const nameValue = selectedDiscoveredDevice.name || document.querySelector('input[name="name"]').value;
-                data = {
-                    name: cleanDeviceName(nameValue),
-                    protocol: selectedDiscoveredDevice.protocol,
-                    address: selectedDiscoveredDevice.address,
-                    id: 'client-' + Date.now()
-                };
-            } else {
-                const formData = new FormData(e.target);
-                data = Object.fromEntries(formData);
-                collectConfig('client', data);
-                
-                if (!data.id || data.id.trim() === '') {
-                    data.id = 'client-' + Date.now();
-                }
-            }
-
-            try {
-                const res = await fetch(`${API_BASE}/clients`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                
-                if (res.status === 202) {
-                    // Pairing required (202 Accepted) - check this FIRST before res.ok
-                    const responseData = await res.json().catch(() => ({}));
-                    console.log('[Add Client] Got 202 response:', responseData);
-                    if (responseData.pairing_required) {
-                        // Close the add client modal
-                        closeModal('clientModal');
-                        // Store client data for pairing (client not yet in DB)
-                        const clientData = {
-                            id: responseData.id || data.id,
-                            name: responseData.name || data.name,
-                            protocol: responseData.protocol || data.protocol,
-                            address: responseData.address || data.address
-                        };
-                        // Show PIN input dialog with client data
-                        showPairingDialog(responseData.id || data.id, t('pairing.prompt'), clientData);
-                        selectedDiscoveredDevice = null; // Reset selection
-                    } else {
-                        // Unexpected 202 response
-                        const errorData = await readError(res);
-                        showNotification('error', t('clients.addFailed'), apiError(errorData));
-                    }
-                } else if (res.ok) {
-                    closeModal('clientModal');
-                    loadClients();
-                    showNotification('success', t('clients.added'), '');
-                    selectedDiscoveredDevice = null; // Reset selection
-                } else {
-                    const errorData = await readError(res);
-                    console.error('[Add Client] API error:', res.status, errorData);
-                    showNotification('error', t('clients.addFailed'), apiError(errorData));
-                }
-            } catch (err) {
-                console.error('[Add Client] Exception:', err);
-                console.error('[Add Client] Stack:', err.stack);
-                console.error('[Add Client] Data being sent:', data);
-                showNotification('error', t('clients.addFailed'), err.message || t('common.unexpected'));
-            }
-        }
-
-        async function addRoute(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            
-            // Get form values
-            const name = formData.get('name');
-            const sourceName = formData.get('source_name');
-            const destNames = Array.from(formData.getAll('dest_names')).filter(name => name && name.trim() !== '');
-            const volume = formData.get('volume');
-            
-            console.log('[Add Route] Form data:', {
-                name: name,
-                source_name: sourceName,
-                dest_names: destNames,
-                volume: volume
-            });
-            
-            if (!name || !name.trim()) {
-                showNotification('warning', t('common.validation'), t('routes.needName'));
-                return;
-            }
-            
-            if (!sourceName || sourceName.trim() === '') {
-                showNotification('warning', t('common.validation'), t('routes.needSource'));
-                return;
-            }
-            
-            if (destNames.length === 0) {
-                showNotification('warning', t('common.validation'), t('routes.needDestination'));
-                return;
-            }
-            
-            const data = {
-                name: name.trim(),
-                source_name: sourceName,
-                dest_names: destNames,
-                mix_mode: 'replace',
-                volume: parseFloat(volume || '100') / 100.0, // Convert 0-100 to 0.0-1.0
-                enabled: true,
-                priority: 0
-            };
-            
-            console.log('[Add Route] Data being sent:', data);
-
-            try {
-                const res = await fetch(`${API_BASE}/routes`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                
-                if (res.ok) {
-                    closeModal('routeModal');
-                    loadRoutes();
-                    showNotification('success', t('routes.added'), '');
-                } else {
-                    const errorData = await readError(res);
-                    console.error('[Add Route] API error:', res.status, errorData);
-                    showNotification('error', t('routes.addFailed'), apiError(errorData));
-                }
-            } catch (err) {
-                console.error('[Add Route] Exception:', err);
-                console.error('[Add Route] Stack:', err.stack);
-                console.error('[Add Route] Data being sent:', data);
-                showNotification('error', t('routes.addFailed'), err.message || t('common.unexpected'));
-            }
-        }
-
-        async function deleteServer(id) {
-            const confirmed = await showConfirmNotification(t('servers.deleteTitle'), t('servers.deleteMessage'));
-            
-            if (!confirmed) {
-                console.log('[Delete Server] Deletion cancelled by user');
-                return;
-            }
-            
-            try {
-                console.log('[Delete Server] Deleting server:', id);
-                const res = await fetch(`${API_BASE}/servers/${id}`, { method: 'DELETE' });
-                if (res.ok) {
-                    loadServers();
-                    showNotification('success', t('servers.deleted'), '');
-                } else {
-                    const errorData = await readError(res);
-                    console.error('[Delete Server] API error:', res.status, errorData);
-                    showNotification('error', t('servers.deleteFailed'), apiError(errorData));
-                }
-            } catch (err) {
-                console.error('[Delete Server] Exception:', err);
-                console.error('[Delete Server] Stack:', err.stack);
-                showNotification('error', t('servers.deleteFailed'), err.message || t('common.unexpected'));
-            }
-        }
-
-        async function deleteClient(id) {
-            const confirmed = await showConfirmNotification(t('clients.deleteTitle'), t('clients.deleteMessage'));
-            
-            if (!confirmed) {
-                console.log('[Delete Client] Deletion cancelled by user');
-                return;
-            }
-            
-            try {
-                console.log('[Delete Client] Deleting client:', id);
-                const res = await fetch(`${API_BASE}/clients/${id}`, { method: 'DELETE' });
-                if (res.ok) {
-                    loadClients();
-                    showNotification('success', t('clients.deleted'), '');
-                } else {
-                    const errorData = await readError(res);
-                    console.error('[Delete Client] API error:', res.status, errorData);
-                    showNotification('error', t('clients.deleteFailed'), apiError(errorData));
-                }
-            } catch (err) {
-                console.error('[Delete Client] Exception:', err);
-                console.error('[Delete Client] Stack:', err.stack);
-                showNotification('error', t('clients.deleteFailed'), err.message || t('common.unexpected'));
-            }
-        }
-
-        async function toggleServer(id, enabled) {
-            try {
-                console.log(`[Toggle Server] ${id}: ${enabled ? 'enabling' : 'disabling'}`);
-                
-                // First get the current server data
-                const getRes = await fetch(`${API_BASE}/servers/${id}`);
-                if (!getRes.ok) {
-                    const errorData = await readError(getRes);
-                    console.error('[Toggle Server] Failed to get server:', errorData);
-                    showNotification('error', t('servers.updateFailed'), apiError(errorData));
-                    loadServers(); // Reload to reset toggle
-                    return;
-                }
-                
-                const server = await getRes.json();
-                server.enabled = enabled;
-                
-                const res = await fetch(`${API_BASE}/servers/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(server)
-                });
-                
-                if (res.ok) {
-                    loadServers();
-                    showNotification('success', enabled ? t('servers.enabled') : t('servers.disabled'), '');
-                } else {
-                    const errorData = await readError(res);
-                    console.error('[Toggle Server] API error:', res.status, errorData);
-                    showNotification('error', t('servers.updateFailed'), apiError(errorData));
-                    loadServers(); // Reload to reset toggle
-                }
-            } catch (err) {
-                console.error('[Toggle Server] Exception:', err);
-                showNotification('error', t('servers.updateFailed'), err.message || t('common.unexpected'));
-                loadServers(); // Reload to reset toggle
-            }
-        }
-
-        async function toggleClient(id, enabled) {
-            try {
-                console.log(`[Toggle Client] ${id}: ${enabled ? 'enabling' : 'disabling'}`);
-                
-                // First get the current client data
-                const getRes = await fetch(`${API_BASE}/clients/${id}`);
-                if (!getRes.ok) {
-                    const errorData = await readError(getRes);
-                    console.error('[Toggle Client] Failed to get client:', errorData);
-                    showNotification('error', t('clients.updateFailed'), apiError(errorData));
-                    loadClients(); // Reload to reset toggle
-                    return;
-                }
-                
-                const client = await getRes.json();
-                client.enabled = enabled;
-                
-                const res = await fetch(`${API_BASE}/clients/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(client)
-                });
-                
-                if (res.ok) {
-                    loadClients();
-                    showNotification('success', enabled ? t('clients.enabled') : t('clients.disabled'), '');
-                } else {
-                    const errorData = await readError(res);
-                    console.error('[Toggle Client] API error:', res.status, errorData);
-                    showNotification('error', t('clients.updateFailed'), apiError(errorData));
-                    loadClients(); // Reload to reset toggle
-                }
-            } catch (err) {
-                console.error('[Toggle Client] Exception:', err);
-                showNotification('error', t('clients.updateFailed'), err.message || t('common.unexpected'));
-                loadClients(); // Reload to reset toggle
-            }
-        }
-
-        async function toggleRoute(id, enabled) {
-            try {
-                console.log(`[Toggle Route] ${id}: ${enabled ? 'enabling' : 'disabling'}`);
-                
-                // First get the current route data
-                const getRes = await fetch(`${API_BASE}/routes/${id}`);
-                if (!getRes.ok) {
-                    const errorData = await readError(getRes);
-                    console.error('[Toggle Route] Failed to get route:', errorData);
-                    showNotification('error', t('routes.updateFailed'), apiError(errorData));
-                    loadRoutes(); // Reload to reset toggle
-                    return;
-                }
-                
-                const route = await getRes.json();
-                
-                // Format request to match createRouteRequest structure
-                const updateData = {
-                    name: route.name,
-                    source_name: route.source_name,
-                    dest_names: Array.isArray(route.dest_names) ? route.dest_names : (route.dest_names ? route.dest_names.split(',') : []),
-                    mix_mode: route.mix_mode || 'replace',
-                    volume: route.volume || 1.0,
-                    enabled: enabled,
-                    priority: route.priority || 0
-                };
-                
-                const res = await fetch(`${API_BASE}/routes/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updateData)
-                });
-                
-                if (res.ok) {
-                    loadRoutes();
-                    showNotification('success', enabled ? t('routes.enabled') : t('routes.disabled'), '');
-                } else {
-                    const errorData = await readError(res);
-                    console.error('[Toggle Route] API error:', res.status, errorData);
-                    showNotification('error', t('routes.updateFailed'), apiError(errorData));
-                    loadRoutes(); // Reload to reset toggle
-                }
-            } catch (err) {
-                console.error('[Toggle Route] Exception:', err);
-                showNotification('error', t('routes.updateFailed'), err.message || t('common.unexpected'));
-                loadRoutes(); // Reload to reset toggle
-            }
-        }
-
-        async function deleteRoute(id) {
-            const confirmed = await showConfirmNotification(t('routes.deleteTitle'), t('routes.deleteMessage'));
-            
-            if (!confirmed) {
-                console.log('[Delete Route] Deletion cancelled by user');
-                return;
-            }
-            
-            try {
-                console.log('[Delete Route] Deleting route:', id);
-                const res = await fetch(`${API_BASE}/routes/${id}`, { method: 'DELETE' });
-                if (res.ok) {
-                    loadRoutes();
-                    showNotification('success', t('routes.deleted'), '');
-                } else {
-                    const errorData = await readError(res);
-                    console.error('[Delete Route] API error:', res.status, errorData);
-                    showNotification('error', t('routes.deleteFailed'), apiError(errorData));
-                }
-            } catch (err) {
-                console.error('[Delete Route] Exception:', err);
-                console.error('[Delete Route] Stack:', err.stack);
-                showNotification('error', t('routes.deleteFailed'), err.message || t('common.unexpected'));
-            }
-        }
-
         // Volume slider and PIN input formatting
         document.addEventListener('DOMContentLoaded', function() {
-            const volumeSlider = document.querySelector('input[name="volume"]');
+            const volumeSlider = document.getElementById('routeVolume');
             if (volumeSlider) {
                 volumeSlider.addEventListener('input', function(e) {
                     document.getElementById('volumeValue').textContent = formatPercent(Number(e.target.value));
@@ -2852,7 +3233,10 @@
             try {
                 const res = await fetch(`${API_BASE}/matinee`);
                 if (!res.ok) {
+                    // Settings holds only Matinee for now: without it, hide the tab.
                     document.getElementById('matineeSection').style.display = 'none';
+                    document.getElementById('tab-settings').hidden = true;
+                    if (!document.getElementById('view-settings').hidden) showView('speakers');
                     return;
                 }
                 st = await res.json();
@@ -3119,7 +3503,7 @@
                 if (res.ok && responseData.success) {
                     // Pairing successful
                     closeModal('pairingModal');
-                    loadClients();
+                    refresh();
                     showNotification('success', t('pairing.done'), t('pairing.doneMessage'));
                     currentPairingClientId = null;
                     currentPairingClientData = null; // Clear client data

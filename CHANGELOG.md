@@ -16,6 +16,15 @@ generated from its pull requests.
 
 ### Added
 
+- A speaker-first web UI: a card for each speaker shows what it's playing
+  and lets you pick its source and volume, or select several speakers and
+  play one source on all of them. Routes moved to an Advanced tab and the
+  Matinee connection to a Settings tab, sources, speakers and routes can
+  be edited in place, and the UI says "sources" and "speakers" for servers
+  and clients.
+- `PUT /api/clients/{id}/source` and `PUT /api/clients/{id}/volume`: pick
+  what a speaker plays (the routes are edited for you) and set a speaker's
+  own volume, which scales every route into it.
 - Each master build is also published as `sha-<short commit>`, and an
   `edge` branch follows the newest published build, so an Argo CD app can
   roll out every new build by itself (see "Following the latest build" in

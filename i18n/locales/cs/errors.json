@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device musí být Bluetooth adresa, například 11:22:33:44:55:66",
   "spotify_bitrate": "bitrate musí být 96, 160 nebo 320",
   "program_missing": "{{program}} není na tomto počítači nainstalovaný",
-  "bad_port": "address musí být port od 1 do 65535, například :7000"
+  "bad_port": "address musí být port od 1 do 65535, například :7000",
+  "source_unknown": "Žádný zdroj s názvem „{{source}}“ neexistuje",
+  "source_required": "source je povinné: název zdroje, nebo \"\", aby nic nehrálo",
+  "volume_required": "volume je povinné, od 0 do 1"
 }

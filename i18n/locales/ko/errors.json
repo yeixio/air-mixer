@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device는 Bluetooth 주소여야 합니다(예: 11:22:33:44:55:66)",
   "spotify_bitrate": "bitrate는 96, 160 또는 320이어야 합니다",
   "program_missing": "이 컴퓨터에 {{program}}이(가) 설치되어 있지 않습니다",
-  "bad_port": "address는 1~65535 사이의 포트여야 합니다(예: :7000)"
+  "bad_port": "address는 1~65535 사이의 포트여야 합니다(예: :7000)",
+  "source_unknown": "\"{{source}}\"(이)라는 소스가 없습니다",
+  "source_required": "source가 필요합니다: 소스 이름, 또는 아무것도 재생하지 않으려면 \"\"",
+  "volume_required": "volume이 필요합니다(0~1)"
 }

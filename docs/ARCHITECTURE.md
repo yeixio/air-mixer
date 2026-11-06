@@ -1,7 +1,9 @@
 # Architecture
 
-Air-Mixer receives audio from devices (inputs, called **servers**), routes
-and mixes it, and plays it on speakers (outputs, called **clients**).
+Air-Mixer receives audio from devices (inputs, called **servers** in the
+code and API and **sources** in the web UI), routes and mixes it, and plays
+it on speakers (outputs, called **clients** in the code and API and
+**speakers** in the web UI).
 
 ```text
   senders                 inputs                                   outputs                speakers

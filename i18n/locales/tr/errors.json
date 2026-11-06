@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device bir Bluetooth adresi olmalı, örneğin 11:22:33:44:55:66",
   "spotify_bitrate": "bitrate 96, 160 veya 320 olmalı",
   "program_missing": "{{program}} bu makinede yüklü değil",
-  "bad_port": "address 1 ile 65535 arasında bir bağlantı noktası olmalı, örneğin :7000"
+  "bad_port": "address 1 ile 65535 arasında bir bağlantı noktası olmalı, örneğin :7000",
+  "source_unknown": "\"{{source}}\" adında bir kaynak yok",
+  "source_required": "source gerekli: bir kaynağın adı ya da hiçbir şey çalmamak için \"\"",
+  "volume_required": "volume gerekli, 0 ile 1 arasında"
 }

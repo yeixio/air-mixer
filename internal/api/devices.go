@@ -195,6 +195,46 @@ func (a *API) deleteClient(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// setClientVolume sets a speaker's own volume: {"volume": 0.6}.
+func (a *API) setClientVolume(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		Volume *float64 `json:"volume"`
+	}
+	if !decode(w, r, &req) {
+		return
+	}
+	if req.Volume == nil {
+		writeCode(w, http.StatusBadRequest, "volume_required", nil)
+		return
+	}
+	if err := a.svc.SetClientVolume(r.Context(), r.PathValue("id"), *req.Volume); err != nil {
+		a.fail(w, r, err)
+		return
+	}
+	a.getClient(w, r)
+}
+
+// setClientSource makes a speaker play one source, by the server's name,
+// or nothing: {"source": "Jazz FM"} or {"source": ""}. It answers with
+// the routes as they now are.
+func (a *API) setClientSource(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		Source *string `json:"source"`
+	}
+	if !decode(w, r, &req) {
+		return
+	}
+	if req.Source == nil {
+		writeCode(w, http.StatusBadRequest, "source_required", nil)
+		return
+	}
+	if err := a.svc.SetClientSource(r.Context(), r.PathValue("id"), *req.Source); err != nil {
+		a.fail(w, r, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, a.svc.Routes())
+}
+
 // listProtocols lists the protocols inputs and outputs can use, with the
 // fields each takes, so a client can build its forms.
 func (a *API) listProtocols(w http.ResponseWriter, _ *http.Request) {

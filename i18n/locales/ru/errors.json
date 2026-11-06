@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device должен быть Bluetooth-адресом, например 11:22:33:44:55:66",
   "spotify_bitrate": "bitrate должен быть 96, 160 или 320",
   "program_missing": "{{program}} не установлен на этой машине",
-  "bad_port": "address должен быть портом от 1 до 65535, например :7000"
+  "bad_port": "address должен быть портом от 1 до 65535, например :7000",
+  "source_unknown": "Нет источника с именем «{{source}}»",
+  "source_required": "требуется поле source: имя источника или \"\", чтобы ничего не играть",
+  "volume_required": "требуется поле volume, от 0 до 1"
 }

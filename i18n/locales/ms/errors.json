@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device mesti alamat Bluetooth, seperti 11:22:33:44:55:66",
   "spotify_bitrate": "bitrate mesti 96, 160 atau 320",
   "program_missing": "{{program}} tidak dipasang pada mesin ini",
-  "bad_port": "address mesti port dari 1 hingga 65535, seperti :7000"
+  "bad_port": "address mesti port dari 1 hingga 65535, seperti :7000",
+  "source_unknown": "Tiada sumber bernama \"{{source}}\"",
+  "source_required": "source diperlukan: nama sumber, atau \"\" untuk tidak memainkan apa-apa",
+  "volume_required": "volume diperlukan, dari 0 hingga 1"
 }

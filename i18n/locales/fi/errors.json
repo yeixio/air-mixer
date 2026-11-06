@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device-arvon on oltava Bluetooth-osoite, kuten 11:22:33:44:55:66",
   "spotify_bitrate": "bitrate-arvon on oltava 96, 160 tai 320",
   "program_missing": "{{program}} ei ole asennettu tähän koneeseen",
-  "bad_port": "address-arvon on oltava portti väliltä 1–65535, kuten :7000"
+  "bad_port": "address-arvon on oltava portti väliltä 1–65535, kuten :7000",
+  "source_unknown": "Lähdettä nimeltä ”{{source}}” ei ole",
+  "source_required": "source vaaditaan: lähteen nimi tai \"\", jos mitään ei soiteta",
+  "volume_required": "volume vaaditaan, väliltä 0–1"
 }

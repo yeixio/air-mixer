@@ -117,6 +117,7 @@ starts again when the source comes back.
   "address": "192.168.1.20:7000",
   "enabled": true,
   "config": "{\"latency_ms\":2000}",
+  "volume": 1,
   "created_at": "2026-10-26T18:00:00Z",
   "updated_at": "2026-10-26T18:00:00Z"
 }
@@ -190,6 +191,30 @@ and set `sample_rate` if the source names another rate with
 
 `POST /api/clients/{id}/pair` returns 501: AirPlay 2 pairing is not
 implemented yet.
+
+### Speaker volume and source
+
+The web UI shows clients as **speakers** and servers as **sources**, and
+these two calls are what each speaker's card uses.
+
+| Method | Path | Body | |
+|--------|------|------|-|
+| PUT | `/api/clients/{id}/volume` | `{"volume": 0.6}` | Sets the speaker's own volume, 0 to 1; returns the client |
+| PUT | `/api/clients/{id}/source` | `{"source": "Jazz FM"}` | Makes the speaker play one source, by the server's name, or nothing with `""`; returns the routes as they now are |
+
+A speaker's `volume` scales every route that plays on it, on top of the
+route's own volume, and changes without reconnecting the speaker. New
+clients start at 1; `POST` and `PUT /api/clients` ignore the field.
+
+Picking a source edits the stored routes, so the routes table always
+shows what plays where. The speaker leaves every enabled route from
+another source, and a route left with no speakers is deleted; routes
+that are switched off are left alone. It then joins an
+enabled route from the new source, or a new route named after the
+source when there is none, so speakers that pick the same source share
+one route and play together. A speaker mixing several routes ends up in
+just the one. Renaming a server or client in its `PUT` carries the new
+name into the routes that use it.
 
 ## Routes
 
