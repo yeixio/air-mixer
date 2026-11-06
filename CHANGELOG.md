@@ -16,6 +16,10 @@ generated from its pull requests.
 
 ### Added
 
+- Each master build is also published as `sha-<short commit>`, and an
+  `edge` branch follows the newest published build, so an Argo CD app can
+  roll out every new build by itself (see "Following the latest build" in
+  docs/KUBERNETES.md).
 - `GET /api/protocols`, listing each protocol with the fields it takes;
   the web UI builds its protocol menus and settings from it, so PipeWire
   and Bluetooth outputs can be set up there now.
