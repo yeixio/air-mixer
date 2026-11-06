@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire atau PulseAudio: putar di kartu suara atau speaker Bluetooth yang dipasangkan",
     "snapcastClient": "Snapcast: putar serempak di setiap klien Snapcast",
     "upnpServer": "UPnP/DLNA: muncul sebagai speaker di aplikasi DLNA seperti BubbleUPnP dan memutar apa yang dikirim",
-    "upnpClient": "UPnP/DLNA: putar di Sonos, receiver AV, smart TV, dan renderer DLNA lainnya"
+    "upnpClient": "UPnP/DLNA: putar di Sonos, receiver AV, smart TV, dan renderer DLNA lainnya",
+    "bluetoothServer": "Bluetooth: muncul sebagai speaker Bluetooth yang bisa dipasangkan dengan ponsel dan laptop",
+    "spotifyServer": "Spotify Connect: muncul sebagai speaker di aplikasi Spotify",
+    "airplay2Server": "AirPlay 2: muncul sebagai speaker AirPlay 2 di iPhone, iPad, dan Mac, termasuk multiroom",
+    "needs": "{{name}}: memerlukan {{program}}, yang belum terpasang"
   },
   "servers": {
     "title": "Server input",
@@ -156,7 +160,14 @@
     "listenHint": "Port yang dipakai aplikasi untuk menjangkau input ini, misalnya :49494. Kosongkan untuk port bebas.",
     "upnpAddressHint": "URL deskripsi renderer, seperti yang diberikan Cari Perangkat, atau alamat IP pemutar Sonos.",
     "format": "Format stream (opsional)",
-    "formatHint": "wav atau mp3. Kosongkan untuk MP3 di Sonos dan WAV di perangkat lain. MP3 memerlukan ffmpeg."
+    "formatHint": "wav atau mp3. Kosongkan untuk MP3 di Sonos dan WAV di perangkat lain. MP3 memerlukan ffmpeg.",
+    "btDevice": "Ponsel (opsional)",
+    "btDeviceHint": "Rekam hanya ponsel ini, berdasarkan alamat Bluetooth. Kosongkan untuk merekam perangkat yang sedang memutar.",
+    "btAdapter": "Adaptor Bluetooth (opsional)",
+    "btHidden": "Tersembunyi: hanya ponsel yang sudah dipasangkan yang bisa terhubung",
+    "bitrate": "Bitrate (opsional)",
+    "bitrateHint": "96, 160, atau 320 kbit/s. Kosongkan untuk 320.",
+    "airplay2PortHint": "Port yang didengarkan AirPlay 2, misalnya :7000. Beri setiap input AirPlay port sendiri."
   },
   "pairing": {
     "title": "Pemasangan AirPlay",

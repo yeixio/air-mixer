@@ -329,3 +329,18 @@ func TestClientReconnectsAfterLoss(t *testing.T) {
 		}
 	}
 }
+
+type troubledServer struct{ fakeServer }
+
+func (s *troubledServer) Err() error { return errors.New("pairing is off") }
+
+func TestServerStatusShowsErr(t *testing.T) {
+	m := NewManager(newFakeRouter(), quiet)
+	defer m.Close()
+	if err := m.AddServer(context.Background(), &troubledServer{fakeServer{id: "s1", audio: make(chan Packet)}}); err != nil {
+		t.Fatal(err)
+	}
+	if st := waitState(t, m, "s1", StateRunning); st.Error != "pairing is off" {
+		t.Errorf("status %+v", st)
+	}
+}

@@ -37,5 +37,9 @@
   "sample_rate_range": "sample_rate 8000 ile 192000 arasında olmalı",
   "cast_needs_address": "Google Cast istemcisi için cihazın adresi gerekir",
   "upnp_needs_address": "UPnP/DLNA istemcisi için oynatıcının açıklama URL'si veya bir Sonos oynatıcının adresi gerekir",
-  "upnp_bad_format": "format wav veya mp3 olmalı"
+  "upnp_bad_format": "format wav veya mp3 olmalı",
+  "bluetooth_bad_device": "device bir Bluetooth adresi olmalı, örneğin 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate 96, 160 veya 320 olmalı",
+  "program_missing": "{{program}} bu makinede yüklü değil",
+  "bad_port": "address 1 ile 65535 arasında bir bağlantı noktası olmalı, örneğin :7000"
 }

@@ -42,7 +42,10 @@ type SourceOptions struct {
 	// followed by ".monitor" to record what plays on it. Empty means the
 	// default source.
 	Source string
-	Logger *slog.Logger
+	// Bluetooth, when Source is empty, records whichever phone is
+	// playing to the host over Bluetooth.
+	Bluetooth bool
+	Logger    *slog.Logger
 }
 
 // recorder is an open record stream.
@@ -201,7 +204,12 @@ func dialPulseRecord(o SourceOptions, write func([]float32)) (recorder, error) {
 	if err != nil {
 		return nil, fmt.Errorf("pulse: connect to server: %w", err)
 	}
-	src, err := findSource(client, o.Source)
+	var src *pa.Source
+	if o.Source == "" && o.Bluetooth {
+		src, err = findBluetoothSource(client)
+	} else {
+		src, err = findSource(client, o.Source)
+	}
 	if err != nil {
 		client.Close()
 		return nil, err
@@ -275,6 +283,28 @@ func findSource(c *pa.Client, spec string) (*pa.Source, error) {
 		return nil, err
 	}
 	return sources[i], nil
+}
+
+// findBluetoothSource returns the source of a phone playing to the host
+// over Bluetooth, if one is.
+func findBluetoothSource(c *pa.Client) (*pa.Source, error) {
+	sources, err := c.ListSources()
+	if err != nil {
+		return nil, fmt.Errorf("pulse: list sources: %w", err)
+	}
+	for _, s := range sources {
+		if isBluetoothInput(s.ID()) {
+			return s, nil
+		}
+	}
+	return nil, fmt.Errorf("%w: no phone is playing over Bluetooth", ErrNoSource)
+}
+
+// isBluetoothInput reports whether a source is audio a Bluetooth device
+// sends (bluez_input.* on PipeWire, bluez_source.* on PulseAudio), not a
+// speaker's monitor.
+func isBluetoothInput(id string) bool {
+	return (strings.HasPrefix(id, "bluez_input.") || strings.HasPrefix(id, "bluez_source.")) && !isMonitor(id)
 }
 
 func matchSource(sources []sinkInfo, spec string) (int, error) {

@@ -37,5 +37,9 @@
   "sample_rate_range": "يجب أن تكون قيمة sample_rate بين 8000 و192000",
   "cast_needs_address": "يحتاج عميل Google Cast إلى عنوان الجهاز",
   "upnp_needs_address": "يحتاج عميل UPnP/DLNA إلى عنوان URL لوصف العارض أو عنوان مشغّل Sonos",
-  "upnp_bad_format": "يجب أن تكون قيمة format هي wav أو mp3"
+  "upnp_bad_format": "يجب أن تكون قيمة format هي wav أو mp3",
+  "bluetooth_bad_device": "يجب أن تكون قيمة device عنوان Bluetooth، مثل 11:22:33:44:55:66",
+  "spotify_bitrate": "يجب أن تكون قيمة bitrate هي 96 أو 160 أو 320",
+  "program_missing": "{{program}} غير مثبّت على هذا الجهاز",
+  "bad_port": "يجب أن تكون قيمة address منفذًا من 1 إلى 65535، مثل ‎:7000"
 }

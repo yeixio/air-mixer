@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire vagy PulseAudio: lejátszás hangkártyán vagy párosított Bluetooth-hangszórón",
     "snapcastClient": "Snapcast: szinkron lejátszás minden Snapcast-kliensen",
     "upnpServer": "UPnP/DLNA: hangszóróként jelenik meg a DLNA-appokban, például a BubbleUPnP-ben, és lejátssza, amit küldenek",
-    "upnpClient": "UPnP/DLNA: lejátszás Sonoson, AV-erősítőkön, okostévéken és más DLNA-renderereken"
+    "upnpClient": "UPnP/DLNA: lejátszás Sonoson, AV-erősítőkön, okostévéken és más DLNA-renderereken",
+    "bluetoothServer": "Bluetooth: Bluetooth-hangszóróként jelenik meg, amelyhez telefonok és laptopok párosíthatók",
+    "spotifyServer": "Spotify Connect: hangszóróként jelenik meg a Spotify appban",
+    "airplay2Server": "AirPlay 2: AirPlay 2 hangszóróként jelenik meg iPhone-on, iPaden és Macen, több szobához is",
+    "needs": "{{name}}: kell hozzá a(z) {{program}}, ami nincs telepítve"
   },
   "servers": {
     "title": "Bemeneti szerverek",
@@ -157,7 +161,14 @@
     "listenHint": "A port, amelyen az appok elérik ezt a bemenetet, például :49494. Hagyd üresen egy szabad porthoz.",
     "upnpAddressHint": "A renderer leíró URL-je, ahogy az Eszközök keresése megadja, vagy egy Sonos-lejátszó IP-címe.",
     "format": "Streamformátum (nem kötelező)",
-    "formatHint": "wav vagy mp3. Hagyd üresen, és a Sonos MP3-at, minden más WAV-ot kap. Az MP3-hoz ffmpeg kell."
+    "formatHint": "wav vagy mp3. Hagyd üresen, és a Sonos MP3-at, minden más WAV-ot kap. Az MP3-hoz ffmpeg kell.",
+    "btDevice": "Telefon (nem kötelező)",
+    "btDeviceHint": "Csak ezt a telefont rögzíti, Bluetooth-cím alapján. Hagyd üresen, hogy a lejátszó eszközt rögzítse.",
+    "btAdapter": "Bluetooth-adapter (nem kötelező)",
+    "btHidden": "Rejtett: csak a már párosított telefonok csatlakozhatnak",
+    "bitrate": "Bitráta (nem kötelező)",
+    "bitrateHint": "96, 160 vagy 320 kbit/s. Hagyd üresen a 320-hoz.",
+    "airplay2PortHint": "A port, amelyen az AirPlay 2 figyel, például :7000. Minden AirPlay-bemenet kapjon saját portot."
   },
   "pairing": {
     "title": "AirPlay-párosítás",

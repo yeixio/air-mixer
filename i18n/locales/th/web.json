@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire หรือ PulseAudio: เล่นบนการ์ดเสียงหรือลำโพง Bluetooth ที่จับคู่ไว้",
     "snapcastClient": "Snapcast: เล่นพร้อมกันบนไคลเอนต์ Snapcast ทุกเครื่อง",
     "upnpServer": "UPnP/DLNA: ปรากฏเป็นลำโพงในแอป DLNA เช่น BubbleUPnP และเล่นสิ่งที่แอปส่งมา",
-    "upnpClient": "UPnP/DLNA: เล่นบน Sonos, เครื่องรับ AV, สมาร์ททีวี และ DLNA renderer อื่นๆ"
+    "upnpClient": "UPnP/DLNA: เล่นบน Sonos, เครื่องรับ AV, สมาร์ททีวี และ DLNA renderer อื่นๆ",
+    "bluetoothServer": "Bluetooth: ปรากฏเป็นลำโพง Bluetooth ที่โทรศัพท์และแล็ปท็อปจับคู่ได้",
+    "spotifyServer": "Spotify Connect: ปรากฏเป็นลำโพงในแอป Spotify",
+    "airplay2Server": "AirPlay 2: ปรากฏเป็นลำโพง AirPlay 2 บน iPhone, iPad และ Mac รวมถึงแบบหลายห้อง",
+    "needs": "{{name}}: ต้องใช้ {{program}} ซึ่งยังไม่ได้ติดตั้ง"
   },
   "servers": {
     "title": "เซิร์ฟเวอร์ขาเข้า",
@@ -156,7 +160,14 @@
     "listenHint": "พอร์ตที่แอปใช้เข้าถึงอินพุตนี้ เช่น :49494 เว้นว่างไว้เพื่อใช้พอร์ตที่ว่าง",
     "upnpAddressHint": "URL คำอธิบายของ renderer ตามที่ค้นหาอุปกรณ์ให้มา หรือที่อยู่ IP ของเครื่องเล่น Sonos",
     "format": "รูปแบบสตรีม (ไม่บังคับ)",
-    "formatHint": "wav หรือ mp3 เว้นว่างไว้เพื่อใช้ MP3 กับ Sonos และ WAV กับอุปกรณ์อื่นทั้งหมด MP3 ต้องใช้ ffmpeg"
+    "formatHint": "wav หรือ mp3 เว้นว่างไว้เพื่อใช้ MP3 กับ Sonos และ WAV กับอุปกรณ์อื่นทั้งหมด MP3 ต้องใช้ ffmpeg",
+    "btDevice": "โทรศัพท์ (ไม่บังคับ)",
+    "btDeviceHint": "บันทึกเฉพาะโทรศัพท์เครื่องนี้ ตามที่อยู่ Bluetooth เว้นว่างไว้เพื่อบันทึกอุปกรณ์ที่กำลังเล่น",
+    "btAdapter": "อะแดปเตอร์ Bluetooth (ไม่บังคับ)",
+    "btHidden": "ซ่อน: เชื่อมต่อได้เฉพาะโทรศัพท์ที่จับคู่แล้ว",
+    "bitrate": "บิตเรต (ไม่บังคับ)",
+    "bitrateHint": "96, 160 หรือ 320 kbit/s เว้นว่างไว้เพื่อใช้ 320",
+    "airplay2PortHint": "พอร์ตที่ AirPlay 2 รอรับ เช่น :7000 ให้อินพุต AirPlay แต่ละตัวมีพอร์ตของตัวเอง"
   },
   "pairing": {
     "title": "การจับคู่ AirPlay",

@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire nebo PulseAudio: přehrávej na zvukové kartě nebo spárovaném Bluetooth reproduktoru",
     "snapcastClient": "Snapcast: přehrávej synchronně na všech klientech Snapcast",
     "upnpServer": "UPnP/DLNA: zobrazí se jako reproduktor v DLNA aplikacích, jako je BubbleUPnP, a přehraje, co pošlou",
-    "upnpClient": "UPnP/DLNA: přehrávej na Sonos, AV receiverech, chytrých televizích a dalších DLNA rendererech"
+    "upnpClient": "UPnP/DLNA: přehrávej na Sonos, AV receiverech, chytrých televizích a dalších DLNA rendererech",
+    "bluetoothServer": "Bluetooth: zobrazí se jako Bluetooth reproduktor, se kterým se spárují telefony a notebooky",
+    "spotifyServer": "Spotify Connect: zobrazí se jako reproduktor v aplikaci Spotify",
+    "airplay2Server": "AirPlay 2: zobrazí se jako reproduktor AirPlay 2 na iPhonu, iPadu a Macu, i pro multiroom",
+    "needs": "{{name}}: potřebuje {{program}}, který není nainstalovaný"
   },
   "servers": {
     "title": "Vstupní servery",
@@ -159,7 +163,14 @@
     "listenHint": "Port, na kterém aplikace tento vstup najdou, například :49494. Pro volný port nech prázdné.",
     "upnpAddressHint": "URL popisu rendereru, jak ji vrátí Najít zařízení, nebo IP adresa přehrávače Sonos.",
     "format": "Formát streamu (nepovinné)",
-    "formatHint": "wav nebo mp3. Nech prázdné pro MP3 na Sonos a WAV na všem ostatním. MP3 potřebuje ffmpeg."
+    "formatHint": "wav nebo mp3. Nech prázdné pro MP3 na Sonos a WAV na všem ostatním. MP3 potřebuje ffmpeg.",
+    "btDevice": "Telefon (nepovinné)",
+    "btDeviceHint": "Nahrávej jen tento telefon podle Bluetooth adresy. Nech prázdné pro nahrávání zařízení, které hraje.",
+    "btAdapter": "Bluetooth adaptér (nepovinné)",
+    "btHidden": "Skrytý: připojit se mohou jen už spárované telefony",
+    "bitrate": "Datový tok (nepovinné)",
+    "bitrateHint": "96, 160 nebo 320 kbit/s. Pro 320 nech prázdné.",
+    "airplay2PortHint": "Port, na kterém AirPlay 2 naslouchá, například :7000. Každý vstup AirPlay potřebuje vlastní port."
   },
   "pairing": {
     "title": "Párování AirPlay",

@@ -323,6 +323,13 @@ func (m *Manager) Status() []Status {
 		if st.State == "" {
 			continue // a server still starting
 		}
+		if e, ok := a.server.(interface{ Err() error }); ok && st.Error == "" {
+			// A running server can still have a problem worth showing,
+			// such as a receiver program that keeps exiting.
+			if err := e.Err(); err != nil {
+				st.Error = err.Error()
+			}
+		}
 		out = append(out, st)
 	}
 	slices.SortFunc(out, func(a, b Status) int { return cmp.Compare(a.ID, b.ID) })

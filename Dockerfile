@@ -30,6 +30,9 @@ ENV AIRMIXER_SERVER_DATA_DIR=/data
 VOLUME /data
 # 9001: web UI and API. 49152: default AirPlay receiver (RTSP); audio uses
 # dynamic UDP ports, so run with host networking.
+# The spotify and airplay2 inputs need librespot and an AirPlay 2 build of
+# shairport-sync (with nqptp), which Alpine doesn't package yet; see
+# ROADMAP.md. The web UI greys them out without them.
 # pulse outputs need no extra packages: mount the host's PulseAudio or
 # PipeWire socket and set PULSE_SERVER, as docs/KUBERNETES.md shows.
 EXPOSE 9001 49152

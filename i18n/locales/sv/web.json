@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire eller PulseAudio: spela på ett ljudkort eller en parkopplad Bluetooth-högtalare",
     "snapcastClient": "Snapcast: spela synkroniserat på alla Snapcast-klienter",
     "upnpServer": "UPnP/DLNA: syns som högtalare i DLNA-appar som BubbleUPnP och spelar det de skickar",
-    "upnpClient": "UPnP/DLNA: spela på Sonos, AV-receivrar, smarta tv-apparater och andra DLNA-renderare"
+    "upnpClient": "UPnP/DLNA: spela på Sonos, AV-receivrar, smarta tv-apparater och andra DLNA-renderare",
+    "bluetoothServer": "Bluetooth: syns som en Bluetooth-högtalare som telefoner och datorer parkopplar med",
+    "spotifyServer": "Spotify Connect: syns som en högtalare i Spotify-appen",
+    "airplay2Server": "AirPlay 2: syns som en AirPlay 2-högtalare på iPhone, iPad och Mac, även för multirum",
+    "needs": "{{name}}: kräver {{program}}, som inte är installerat"
   },
   "servers": {
     "title": "Ingångsservrar",
@@ -157,7 +161,14 @@
     "listenHint": "Porten som appar når den här ingången på, som :49494. Lämna tomt för en ledig port.",
     "upnpAddressHint": "Rendererns beskrivnings-URL, som Hitta enheter ger den, eller IP-adressen till en Sonos-spelare.",
     "format": "Strömformat (valfritt)",
-    "formatHint": "wav eller mp3. Lämna tomt för MP3 på Sonos och WAV på allt annat. MP3 kräver ffmpeg."
+    "formatHint": "wav eller mp3. Lämna tomt för MP3 på Sonos och WAV på allt annat. MP3 kräver ffmpeg.",
+    "btDevice": "Telefon (valfritt)",
+    "btDeviceHint": "Spela bara in den här telefonen, via Bluetooth-adressen. Lämna tomt för att spela in den enhet som spelar.",
+    "btAdapter": "Bluetooth-adapter (valfritt)",
+    "btHidden": "Dold: bara redan parkopplade telefoner kan ansluta",
+    "bitrate": "Bithastighet (valfritt)",
+    "bitrateHint": "96, 160 eller 320 kbit/s. Lämna tomt för 320.",
+    "airplay2PortHint": "Porten som AirPlay 2 lyssnar på, som :7000. Ge varje AirPlay-ingång en egen port."
   },
   "pairing": {
     "title": "AirPlay-parkoppling",

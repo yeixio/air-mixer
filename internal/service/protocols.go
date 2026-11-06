@@ -25,6 +25,10 @@ type Protocol struct {
 	Description string  `json:"description"`
 	Fields      []Field `json:"fields"`
 	Discovery   bool    `json:"discovery,omitempty"`
+	// Requires names a program the protocol runs, and Available whether
+	// it is installed.
+	Requires  string `json:"requires,omitempty"`
+	Available bool   `json:"available"`
 }
 
 var (
@@ -49,6 +53,18 @@ var protocolCatalog = []Protocol{
 	{Name: "pulse", Kind: "server", Title: "PipeWire / PulseAudio", Description: "protocols.pulseServer", Fields: []Field{
 		{Key: "source", Type: "text", Label: "fields.source", Hint: "fields.sourceHint", Placeholder: "alsa_input.usb-…"},
 		fieldPulseServer,
+	}},
+	{Name: "bluetooth", Kind: "server", Title: "Bluetooth", Description: "protocols.bluetoothServer", Fields: []Field{
+		{Key: "device", Type: "text", Label: "fields.btDevice", Hint: "fields.btDeviceHint", Placeholder: "11:22:33:44:55:66"},
+		{Key: "adapter", Type: "text", Label: "fields.btAdapter", Placeholder: "hci0"},
+		{Key: "hidden", Type: "bool", Label: "fields.btHidden"},
+		fieldPulseServer,
+	}},
+	{Name: "spotify", Kind: "server", Title: "Spotify Connect", Description: "protocols.spotifyServer", Requires: "librespot", Fields: []Field{
+		{Key: "bitrate", Type: "number", Label: "fields.bitrate", Hint: "fields.bitrateHint", Placeholder: "320"},
+	}},
+	{Name: "airplay2", Kind: "server", Title: "AirPlay 2", Description: "protocols.airplay2Server", Requires: "shairport-sync", Fields: []Field{
+		{Key: "address", Type: "text", Label: "fields.listen", Hint: "fields.airplay2PortHint", Placeholder: ":7000"},
 	}},
 	{Name: "upnp", Kind: "server", Title: "UPnP/DLNA", Description: "protocols.upnpServer", Fields: []Field{
 		{Key: "address", Type: "text", Label: "fields.listen", Hint: "fields.listenHint", Placeholder: ":49494"},
@@ -80,9 +96,13 @@ var protocolCatalog = []Protocol{
 	{Name: "local", Kind: "client", Title: "Local", Description: "protocols.localClient", Fields: []Field{fieldDelay}},
 }
 
-// Protocols lists the protocols this build supports, inputs first.
+// Protocols lists the protocols this build supports, inputs first, and
+// whether the programs they need are installed.
 func Protocols() []Protocol {
 	out := make([]Protocol, len(protocolCatalog))
 	copy(out, protocolCatalog)
+	for i := range out {
+		out[i].Available = out[i].Requires == "" || needProgram(out[i].Requires) == nil
+	}
 	return out
 }

@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire lub PulseAudio: odtwarzaj na karcie dźwiękowej lub sparowanym głośniku Bluetooth",
     "snapcastClient": "Snapcast: odtwarzaj synchronicznie na każdym kliencie Snapcast",
     "upnpServer": "UPnP/DLNA: widoczny jako głośnik w aplikacjach DLNA, takich jak BubbleUPnP, i odtwarza to, co wysyłają",
-    "upnpClient": "UPnP/DLNA: odtwarzaj na Sonos, amplitunerach AV, telewizorach smart i innych rendererach DLNA"
+    "upnpClient": "UPnP/DLNA: odtwarzaj na Sonos, amplitunerach AV, telewizorach smart i innych rendererach DLNA",
+    "bluetoothServer": "Bluetooth: widoczny jako głośnik Bluetooth, z którym parują się telefony i laptopy",
+    "spotifyServer": "Spotify Connect: widoczny jako głośnik w aplikacji Spotify",
+    "airplay2Server": "AirPlay 2: widoczny jako głośnik AirPlay 2 na iPhonie, iPadzie i Macu, także w multiroom",
+    "needs": "{{name}}: wymaga programu {{program}}, który nie jest zainstalowany"
   },
   "servers": {
     "title": "Serwery wejściowe",
@@ -159,7 +163,14 @@
     "listenHint": "Port, przez który aplikacje docierają do tego wejścia, np. :49494. Zostaw puste dla wolnego portu.",
     "upnpAddressHint": "Adres URL opisu renderera, taki jak podaje Znajdź urządzenia, albo adres IP odtwarzacza Sonos.",
     "format": "Format strumienia (opcjonalny)",
-    "formatHint": "wav lub mp3. Zostaw puste dla MP3 na Sonos i WAV na wszystkim innym. MP3 wymaga ffmpeg."
+    "formatHint": "wav lub mp3. Zostaw puste dla MP3 na Sonos i WAV na wszystkim innym. MP3 wymaga ffmpeg.",
+    "btDevice": "Telefon (opcjonalny)",
+    "btDeviceHint": "Nagrywaj tylko ten telefon, po adresie Bluetooth. Zostaw puste, aby nagrywać urządzenie, które gra.",
+    "btAdapter": "Adapter Bluetooth (opcjonalny)",
+    "btHidden": "Ukryty: połączyć mogą się tylko już sparowane telefony",
+    "bitrate": "Bitrate (opcjonalny)",
+    "bitrateHint": "96, 160 lub 320 kbit/s. Zostaw puste dla 320.",
+    "airplay2PortHint": "Port, na którym nasłuchuje AirPlay 2, np. :7000. Każde wejście AirPlay potrzebuje własnego portu."
   },
   "pairing": {
     "title": "Parowanie AirPlay",

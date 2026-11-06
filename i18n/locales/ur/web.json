@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire یا PulseAudio: ساؤنڈ کارڈ یا جوڑے گئے Bluetooth اسپیکر پر چلائیں",
     "snapcastClient": "Snapcast: ہر Snapcast کلائنٹ پر ایک ساتھ چلائیں",
     "upnpServer": "UPnP/DLNA: BubbleUPnP جیسی DLNA ایپس میں اسپیکر کے طور پر دکھتا ہے اور جو وہ بھیجیں اسے چلاتا ہے",
-    "upnpClient": "UPnP/DLNA: Sonos، AV ریسیورز، سمارٹ ٹی وی اور دوسرے DLNA رینڈررز پر چلائیں"
+    "upnpClient": "UPnP/DLNA: Sonos، AV ریسیورز، سمارٹ ٹی وی اور دوسرے DLNA رینڈررز پر چلائیں",
+    "bluetoothServer": "Bluetooth: ایک Bluetooth اسپیکر کے طور پر دکھتا ہے جس سے فون اور لیپ ٹاپ پیئر ہوتے ہیں",
+    "spotifyServer": "Spotify Connect: Spotify ایپ میں اسپیکر کے طور پر دکھتا ہے",
+    "airplay2Server": "AirPlay 2: iPhone، iPad اور Mac پر AirPlay 2 اسپیکر کے طور پر دکھتا ہے، ملٹی روم سمیت",
+    "needs": "{{name}}: {{program}} چاہیے، جو انسٹال نہیں ہے"
   },
   "servers": {
     "title": "ان پٹ سرور",
@@ -157,7 +161,14 @@
     "listenHint": "وہ پورٹ جس سے ایپس اس ان پٹ تک پہنچتی ہیں، جیسے ‎:49494۔ خالی پورٹ کے لیے خالی چھوڑیں۔",
     "upnpAddressHint": "رینڈرر کا تفصیلی URL، جیسا کہ ڈیوائسز تلاش کریں دیتا ہے، یا کسی Sonos پلیئر کا IP پتا۔",
     "format": "اسٹریم فارمیٹ (اختیاری)",
-    "formatHint": "wav یا mp3۔ Sonos پر MP3 اور باقی سب پر WAV کے لیے خالی چھوڑیں۔ MP3 کے لیے ffmpeg چاہیے۔"
+    "formatHint": "wav یا mp3۔ Sonos پر MP3 اور باقی سب پر WAV کے لیے خالی چھوڑیں۔ MP3 کے لیے ffmpeg چاہیے۔",
+    "btDevice": "فون (اختیاری)",
+    "btDeviceHint": "Bluetooth پتے کے مطابق صرف یہی فون ریکارڈ کریں۔ جو ڈیوائس چل رہی ہو اسے ریکارڈ کرنے کے لیے خالی چھوڑیں۔",
+    "btAdapter": "Bluetooth اڈاپٹر (اختیاری)",
+    "btHidden": "چھپا ہوا: صرف پہلے سے پیئر شدہ فون جڑ سکتے ہیں",
+    "bitrate": "بٹ ریٹ (اختیاری)",
+    "bitrateHint": "96، 160 یا 320 kbit/s۔ 320 کے لیے خالی چھوڑیں۔",
+    "airplay2PortHint": "وہ پورٹ جس پر AirPlay 2 سنتا ہے، جیسے ‎:7000۔ ہر AirPlay ان پٹ کو اپنا پورٹ دیں۔"
   },
   "pairing": {
     "title": "AirPlay پیئرنگ",

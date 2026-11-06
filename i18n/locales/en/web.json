@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire or PulseAudio: play on a sound card or a paired Bluetooth speaker",
     "snapcastClient": "Snapcast: play in sync on every Snapcast client",
     "upnpServer": "UPnP/DLNA: shows up as a speaker in DLNA apps, such as BubbleUPnP, and plays what they send",
-    "upnpClient": "UPnP/DLNA: play on Sonos, AV receivers, smart TVs and other DLNA renderers"
+    "upnpClient": "UPnP/DLNA: play on Sonos, AV receivers, smart TVs and other DLNA renderers",
+    "bluetoothServer": "Bluetooth: shows up as a Bluetooth speaker that phones and laptops pair with",
+    "spotifyServer": "Spotify Connect: shows up as a speaker in the Spotify app",
+    "airplay2Server": "AirPlay 2: shows up as an AirPlay 2 speaker on iPhone, iPad and Mac, including multi-room",
+    "needs": "{{name}}: needs {{program}}, which isn't installed"
   },
   "servers": {
     "title": "Input Servers",
@@ -157,7 +161,14 @@
     "listenHint": "The port apps reach this input on, such as :49494. Leave empty for a free port.",
     "upnpAddressHint": "The renderer's description URL, as Find Devices gives it, or a Sonos player's IP address.",
     "format": "Stream format (optional)",
-    "formatHint": "wav or mp3. Leave empty for MP3 on Sonos and WAV on everything else. MP3 needs ffmpeg."
+    "formatHint": "wav or mp3. Leave empty for MP3 on Sonos and WAV on everything else. MP3 needs ffmpeg.",
+    "btDevice": "Phone (optional)",
+    "btDeviceHint": "Record only this phone, by Bluetooth address. Leave empty to record whichever device plays.",
+    "btAdapter": "Bluetooth adapter (optional)",
+    "btHidden": "Hidden: only phones already paired can connect",
+    "bitrate": "Bitrate (optional)",
+    "bitrateHint": "96, 160 or 320 kbit/s. Leave empty for 320.",
+    "airplay2PortHint": "The port AirPlay 2 listens on, such as :7000. Give each AirPlay input its own port."
   },
   "pairing": {
     "title": "AirPlay Pairing",

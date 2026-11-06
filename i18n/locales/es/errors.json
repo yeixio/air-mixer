@@ -37,5 +37,9 @@
   "sample_rate_range": "sample_rate debe estar entre 8000 y 192000",
   "cast_needs_address": "Un cliente de Google Cast necesita la dirección del dispositivo",
   "upnp_needs_address": "Un cliente UPnP/DLNA necesita la URL de descripción del renderizador o la dirección de un reproductor Sonos",
-  "upnp_bad_format": "format debe ser wav o mp3"
+  "upnp_bad_format": "format debe ser wav o mp3",
+  "bluetooth_bad_device": "device debe ser una dirección Bluetooth, como 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate debe ser 96, 160 o 320",
+  "program_missing": "{{program}} no está instalado en esta máquina",
+  "bad_port": "address debe ser un puerto del 1 al 65535, como :7000"
 }

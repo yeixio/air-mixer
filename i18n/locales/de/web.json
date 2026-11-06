@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire oder PulseAudio: auf einer Soundkarte oder einem gekoppelten Bluetooth-Lautsprecher abspielen",
     "snapcastClient": "Snapcast: synchron auf jedem Snapcast-Client abspielen",
     "upnpServer": "UPnP/DLNA: erscheint in DLNA-Apps wie BubbleUPnP als Lautsprecher und spielt ab, was sie senden",
-    "upnpClient": "UPnP/DLNA: auf Sonos, AV-Receivern, Smart-TVs und anderen DLNA-Renderern abspielen"
+    "upnpClient": "UPnP/DLNA: auf Sonos, AV-Receivern, Smart-TVs und anderen DLNA-Renderern abspielen",
+    "bluetoothServer": "Bluetooth: erscheint als Bluetooth-Lautsprecher, mit dem sich Handys und Laptops koppeln",
+    "spotifyServer": "Spotify Connect: erscheint als Lautsprecher in der Spotify-App",
+    "airplay2Server": "AirPlay 2: erscheint auf iPhone, iPad und Mac als AirPlay-2-Lautsprecher, auch für Multiroom",
+    "needs": "{{name}}: braucht {{program}}, das nicht installiert ist"
   },
   "servers": {
     "title": "Eingangsserver",
@@ -157,7 +161,14 @@
     "listenHint": "Der Port, über den Apps diesen Eingang erreichen, etwa :49494. Leer lassen für einen freien Port.",
     "upnpAddressHint": "Die Beschreibungs-URL des Renderers, wie „Geräte finden“ sie liefert, oder die IP-Adresse eines Sonos-Players.",
     "format": "Stream-Format (optional)",
-    "formatHint": "wav oder mp3. Leer lassen für MP3 auf Sonos und WAV auf allem anderen. MP3 braucht ffmpeg."
+    "formatHint": "wav oder mp3. Leer lassen für MP3 auf Sonos und WAV auf allem anderen. MP3 braucht ffmpeg.",
+    "btDevice": "Handy (optional)",
+    "btDeviceHint": "Nur dieses Handy aufnehmen, per Bluetooth-Adresse. Leer lassen, um das Gerät aufzunehmen, das gerade spielt.",
+    "btAdapter": "Bluetooth-Adapter (optional)",
+    "btHidden": "Versteckt: nur bereits gekoppelte Handys können sich verbinden",
+    "bitrate": "Bitrate (optional)",
+    "bitrateHint": "96, 160 oder 320 kbit/s. Leer lassen für 320.",
+    "airplay2PortHint": "Der Port, auf dem AirPlay 2 lauscht, etwa :7000. Gib jedem AirPlay-Eingang einen eigenen Port."
   },
   "pairing": {
     "title": "AirPlay-Kopplung",

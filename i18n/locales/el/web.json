@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire ή PulseAudio: παίξε σε κάρτα ήχου ή σε συζευγμένο ηχείο Bluetooth",
     "snapcastClient": "Snapcast: παίξε συγχρονισμένα σε κάθε πελάτη Snapcast",
     "upnpServer": "UPnP/DLNA: εμφανίζεται ως ηχείο σε εφαρμογές DLNA, όπως το BubbleUPnP, και παίζει ό,τι στέλνουν",
-    "upnpClient": "UPnP/DLNA: παίξε σε Sonos, ενισχυτές AV, έξυπνες τηλεοράσεις και άλλους renderer DLNA"
+    "upnpClient": "UPnP/DLNA: παίξε σε Sonos, ενισχυτές AV, έξυπνες τηλεοράσεις και άλλους renderer DLNA",
+    "bluetoothServer": "Bluetooth: εμφανίζεται ως ηχείο Bluetooth για σύζευξη με κινητά και φορητούς",
+    "spotifyServer": "Spotify Connect: εμφανίζεται ως ηχείο στην εφαρμογή Spotify",
+    "airplay2Server": "AirPlay 2: εμφανίζεται ως ηχείο AirPlay 2 σε iPhone, iPad και Mac, και για πολλά δωμάτια",
+    "needs": "{{name}}: χρειάζεται το {{program}}, που δεν είναι εγκατεστημένο"
   },
   "servers": {
     "title": "Διακομιστές εισόδου",
@@ -157,7 +161,14 @@
     "listenHint": "Η θύρα από την οποία οι εφαρμογές φτάνουν σε αυτή την είσοδο, π.χ. :49494. Άφησέ το κενό για ελεύθερη θύρα.",
     "upnpAddressHint": "Το URL περιγραφής του renderer, όπως το δίνει η Εύρεση συσκευών, ή η διεύθυνση IP ενός Sonos.",
     "format": "Μορφή ροής (προαιρετικό)",
-    "formatHint": "wav ή mp3. Άφησέ το κενό για MP3 στα Sonos και WAV σε όλα τα άλλα. Το MP3 χρειάζεται ffmpeg."
+    "formatHint": "wav ή mp3. Άφησέ το κενό για MP3 στα Sonos και WAV σε όλα τα άλλα. Το MP3 χρειάζεται ffmpeg.",
+    "btDevice": "Κινητό (προαιρετικό)",
+    "btDeviceHint": "Ηχογράφησε μόνο αυτό το κινητό, με βάση τη διεύθυνση Bluetooth. Άφησέ το κενό για τη συσκευή που παίζει.",
+    "btAdapter": "Προσαρμογέας Bluetooth (προαιρετικό)",
+    "btHidden": "Κρυφό: συνδέονται μόνο κινητά που έχουν ήδη συζευχθεί",
+    "bitrate": "Ρυθμός bit (προαιρετικό)",
+    "bitrateHint": "96, 160 ή 320 kbit/s. Άφησέ το κενό για 320.",
+    "airplay2PortHint": "Η θύρα στην οποία ακούει το AirPlay 2, π.χ. :7000. Δώσε σε κάθε είσοδο AirPlay δική της θύρα."
   },
   "pairing": {
     "title": "Σύζευξη AirPlay",

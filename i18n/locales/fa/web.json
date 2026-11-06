@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire یا PulseAudio: پخش روی کارت صدا یا بلندگوی Bluetooth جفت‌شده",
     "snapcastClient": "Snapcast: پخش هم‌زمان روی همهٔ کلاینت‌های Snapcast",
     "upnpServer": "UPnP/DLNA: در برنامه‌های DLNA مانند BubbleUPnP به‌صورت بلندگو دیده می‌شود و آنچه می‌فرستند را پخش می‌کند",
-    "upnpClient": "UPnP/DLNA: پخش روی Sonos، گیرنده‌های AV، تلویزیون‌های هوشمند و دیگر رندررهای DLNA"
+    "upnpClient": "UPnP/DLNA: پخش روی Sonos، گیرنده‌های AV، تلویزیون‌های هوشمند و دیگر رندررهای DLNA",
+    "bluetoothServer": "Bluetooth: به‌صورت بلندگوی بلوتوثی دیده می‌شود که تلفن‌ها و لپ‌تاپ‌ها با آن جفت می‌شوند",
+    "spotifyServer": "Spotify Connect: در برنامهٔ Spotify به‌صورت بلندگو دیده می‌شود",
+    "airplay2Server": "AirPlay 2: در iPhone، iPad و Mac به‌صورت بلندگوی AirPlay 2 دیده می‌شود، از جمله چنداتاقه",
+    "needs": "{{name}}: به {{program}} نیاز دارد که نصب نیست"
   },
   "servers": {
     "title": "سرورهای ورودی",
@@ -157,7 +161,14 @@
     "listenHint": "درگاهی که برنامه‌ها از آن به این ورودی می‌رسند، مانند ‎:49494. برای یک درگاه آزاد خالی بگذارید.",
     "upnpAddressHint": "URL توضیحات رندرر، همان‌طور که «یافتن دستگاه‌ها» می‌دهد، یا نشانی IP یک پخش‌کنندهٔ Sonos.",
     "format": "قالب جریان (اختیاری)",
-    "formatHint": "wav یا mp3. برای MP3 روی Sonos و WAV روی بقیه خالی بگذارید. MP3 به ffmpeg نیاز دارد."
+    "formatHint": "wav یا mp3. برای MP3 روی Sonos و WAV روی بقیه خالی بگذارید. MP3 به ffmpeg نیاز دارد.",
+    "btDevice": "تلفن (اختیاری)",
+    "btDeviceHint": "فقط همین تلفن را بر اساس نشانی بلوتوث ضبط کن. برای ضبط دستگاهی که پخش می‌کند خالی بگذارید.",
+    "btAdapter": "آداپتور بلوتوث (اختیاری)",
+    "btHidden": "پنهان: فقط تلفن‌هایی که قبلاً جفت شده‌اند می‌توانند وصل شوند",
+    "bitrate": "نرخ بیت (اختیاری)",
+    "bitrateHint": "96، 160 یا 320 کیلوبیت بر ثانیه. برای 320 خالی بگذارید.",
+    "airplay2PortHint": "درگاهی که AirPlay 2 روی آن گوش می‌دهد، مانند ‎:7000. به هر ورودی AirPlay درگاه جداگانه بدهید."
   },
   "pairing": {
     "title": "جفت‌سازی AirPlay",

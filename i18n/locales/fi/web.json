@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire tai PulseAudio: toista äänikortilla tai paritetulla Bluetooth-kaiuttimella",
     "snapcastClient": "Snapcast: toista tahdissa jokaisella Snapcast-asiakkaalla",
     "upnpServer": "UPnP/DLNA: näkyy kaiuttimena DLNA-sovelluksissa, kuten BubbleUPnP:ssä, ja toistaa mitä ne lähettävät",
-    "upnpClient": "UPnP/DLNA: toista Sonosilla, AV-vahvistimilla, älytelevisioilla ja muilla DLNA-toistimilla"
+    "upnpClient": "UPnP/DLNA: toista Sonosilla, AV-vahvistimilla, älytelevisioilla ja muilla DLNA-toistimilla",
+    "bluetoothServer": "Bluetooth: näkyy Bluetooth-kaiuttimena, johon puhelimet ja kannettavat voi pariliittää",
+    "spotifyServer": "Spotify Connect: näkyy kaiuttimena Spotify-sovelluksessa",
+    "airplay2Server": "AirPlay 2: näkyy AirPlay 2 -kaiuttimena iPhonessa, iPadissa ja Macissa, myös monihuoneessa",
+    "needs": "{{name}}: tarvitsee ohjelman {{program}}, jota ei ole asennettu"
   },
   "servers": {
     "title": "Tulopalvelimet",
@@ -157,7 +161,14 @@
     "listenHint": "Portti, josta sovellukset tavoittavat tämän tulon, kuten :49494. Jätä tyhjäksi, niin käytetään vapaata porttia.",
     "upnpAddressHint": "Toistimen kuvauksen URL, jonka Etsi laitteita antaa, tai Sonos-soittimen IP-osoite.",
     "format": "Striimin muoto (valinnainen)",
-    "formatHint": "wav tai mp3. Jätä tyhjäksi, niin Sonos saa MP3:n ja kaikki muut WAV:n. MP3 vaatii ffmpegin."
+    "formatHint": "wav tai mp3. Jätä tyhjäksi, niin Sonos saa MP3:n ja kaikki muut WAV:n. MP3 vaatii ffmpegin.",
+    "btDevice": "Puhelin (valinnainen)",
+    "btDeviceHint": "Tallenna vain tämä puhelin Bluetooth-osoitteen perusteella. Jätä tyhjäksi, niin tallennetaan soittava laite.",
+    "btAdapter": "Bluetooth-sovitin (valinnainen)",
+    "btHidden": "Piilotettu: vain jo pariliitetyt puhelimet voivat yhdistää",
+    "bitrate": "Bittinopeus (valinnainen)",
+    "bitrateHint": "96, 160 tai 320 kbit/s. Jätä tyhjäksi, niin käytetään 320:tä.",
+    "airplay2PortHint": "Portti, jota AirPlay 2 kuuntelee, kuten :7000. Anna jokaiselle AirPlay-tulolle oma portti."
   },
   "pairing": {
     "title": "AirPlay-pariliitos",

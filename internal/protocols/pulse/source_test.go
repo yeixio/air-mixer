@@ -129,3 +129,17 @@ func waitFor(t *testing.T, ok func() bool) {
 		time.Sleep(2 * time.Millisecond)
 	}
 }
+
+func TestIsBluetoothInput(t *testing.T) {
+	for id, want := range map[string]bool{
+		"bluez_input.11_22_33_44_55_66.2":            true,
+		"bluez_source.11_22_33_44_55_66.a2dp_source": true,
+		"bluez_output.AA_BB_CC_DD_EE_FF.1.monitor":   false,
+		"bluez_input.11_22_33_44_55_66.2.monitor":    false,
+		"alsa_input.pci-0000_00_1f.3.analog-stereo":  false,
+	} {
+		if got := isBluetoothInput(id); got != want {
+			t.Errorf("%s: %v", id, got)
+		}
+	}
+}

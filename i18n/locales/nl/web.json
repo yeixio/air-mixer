@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire of PulseAudio: speel af op een geluidskaart of een gekoppelde Bluetooth-speaker",
     "snapcastClient": "Snapcast: speel synchroon af op elke Snapcast-client",
     "upnpServer": "UPnP/DLNA: verschijnt als speaker in DLNA-apps zoals BubbleUPnP en speelt af wat ze sturen",
-    "upnpClient": "UPnP/DLNA: speel af op Sonos, AV-receivers, smart-tv's en andere DLNA-renderers"
+    "upnpClient": "UPnP/DLNA: speel af op Sonos, AV-receivers, smart-tv's en andere DLNA-renderers",
+    "bluetoothServer": "Bluetooth: verschijnt als Bluetooth-speaker waarmee telefoons en laptops koppelen",
+    "spotifyServer": "Spotify Connect: verschijnt als speaker in de Spotify-app",
+    "airplay2Server": "AirPlay 2: verschijnt als AirPlay 2-speaker op iPhone, iPad en Mac, ook voor multiroom",
+    "needs": "{{name}}: heeft {{program}} nodig, dat niet is geïnstalleerd"
   },
   "servers": {
     "title": "Invoerservers",
@@ -157,7 +161,14 @@
     "listenHint": "De poort waarop apps deze invoer bereiken, zoals :49494. Laat leeg voor een vrije poort.",
     "upnpAddressHint": "De beschrijvings-URL van de renderer, zoals Apparaten zoeken die geeft, of het IP-adres van een Sonos-speler.",
     "format": "Streamformaat (optioneel)",
-    "formatHint": "wav of mp3. Laat leeg voor MP3 op Sonos en WAV op al het andere. MP3 heeft ffmpeg nodig."
+    "formatHint": "wav of mp3. Laat leeg voor MP3 op Sonos en WAV op al het andere. MP3 heeft ffmpeg nodig.",
+    "btDevice": "Telefoon (optioneel)",
+    "btDeviceHint": "Neem alleen deze telefoon op, via het Bluetooth-adres. Laat leeg om het apparaat op te nemen dat speelt.",
+    "btAdapter": "Bluetooth-adapter (optioneel)",
+    "btHidden": "Verborgen: alleen al gekoppelde telefoons kunnen verbinden",
+    "bitrate": "Bitrate (optioneel)",
+    "bitrateHint": "96, 160 of 320 kbit/s. Laat leeg voor 320.",
+    "airplay2PortHint": "De poort waarop AirPlay 2 luistert, zoals :7000. Geef elke AirPlay-invoer een eigen poort."
   },
   "pairing": {
     "title": "AirPlay-koppeling",

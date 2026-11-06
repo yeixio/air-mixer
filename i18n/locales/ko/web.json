@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire 또는 PulseAudio: 사운드 카드나 페어링된 Bluetooth 스피커에서 재생",
     "snapcastClient": "Snapcast: 모든 Snapcast 클라이언트에서 동기화해 재생",
     "upnpServer": "UPnP/DLNA: BubbleUPnP 같은 DLNA 앱에 스피커로 표시되고 앱이 보내는 것을 재생",
-    "upnpClient": "UPnP/DLNA: Sonos, AV 리시버, 스마트 TV 및 기타 DLNA 렌더러에서 재생"
+    "upnpClient": "UPnP/DLNA: Sonos, AV 리시버, 스마트 TV 및 기타 DLNA 렌더러에서 재생",
+    "bluetoothServer": "Bluetooth: 휴대폰과 노트북이 페어링할 수 있는 Bluetooth 스피커로 표시",
+    "spotifyServer": "Spotify Connect: Spotify 앱에 스피커로 표시",
+    "airplay2Server": "AirPlay 2: iPhone, iPad, Mac에 AirPlay 2 스피커로 표시(멀티룸 포함)",
+    "needs": "{{name}}: {{program}}이(가) 필요하지만 설치되어 있지 않습니다"
   },
   "servers": {
     "title": "입력 서버",
@@ -156,7 +160,14 @@
     "listenHint": "앱이 이 입력에 접속하는 포트입니다(예: :49494). 빈 포트를 쓰려면 비워 두세요.",
     "upnpAddressHint": "기기 찾기에서 얻은 렌더러의 설명 URL 또는 Sonos 플레이어의 IP 주소입니다.",
     "format": "스트림 형식(선택)",
-    "formatHint": "wav 또는 mp3입니다. 비워 두면 Sonos에는 MP3, 그 외에는 WAV를 보냅니다. MP3에는 ffmpeg가 필요합니다."
+    "formatHint": "wav 또는 mp3입니다. 비워 두면 Sonos에는 MP3, 그 외에는 WAV를 보냅니다. MP3에는 ffmpeg가 필요합니다.",
+    "btDevice": "휴대폰(선택)",
+    "btDeviceHint": "이 Bluetooth 주소의 휴대폰만 녹음합니다. 비워 두면 재생 중인 기기를 녹음합니다.",
+    "btAdapter": "Bluetooth 어댑터(선택)",
+    "btHidden": "숨김: 이미 페어링된 휴대폰만 연결할 수 있습니다",
+    "bitrate": "비트레이트(선택)",
+    "bitrateHint": "96, 160 또는 320kbit/s입니다. 비워 두면 320입니다.",
+    "airplay2PortHint": "AirPlay 2가 수신하는 포트입니다(예: :7000). AirPlay 입력마다 다른 포트를 지정하세요."
   },
   "pairing": {
     "title": "AirPlay 페어링",

@@ -37,5 +37,9 @@
   "sample_rate_range": "sample_rate ต้องอยู่ระหว่าง 8000 ถึง 192000",
   "cast_needs_address": "ไคลเอนต์ Google Cast ต้องมีที่อยู่ของอุปกรณ์",
   "upnp_needs_address": "ไคลเอนต์ UPnP/DLNA ต้องมี URL คำอธิบายของ renderer หรือที่อยู่ของเครื่องเล่น Sonos",
-  "upnp_bad_format": "format ต้องเป็น wav หรือ mp3"
+  "upnp_bad_format": "format ต้องเป็น wav หรือ mp3",
+  "bluetooth_bad_device": "device ต้องเป็นที่อยู่ Bluetooth เช่น 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate ต้องเป็น 96, 160 หรือ 320",
+  "program_missing": "ยังไม่ได้ติดตั้ง {{program}} บนเครื่องนี้",
+  "bad_port": "address ต้องเป็นพอร์ตตั้งแต่ 1 ถึง 65535 เช่น :7000"
 }

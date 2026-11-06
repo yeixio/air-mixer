@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire または PulseAudio：サウンドカードやペアリング済みの Bluetooth スピーカーで再生",
     "snapcastClient": "Snapcast：すべての Snapcast クライアントで同期して再生",
     "upnpServer": "UPnP/DLNA：BubbleUPnP などの DLNA アプリにスピーカーとして表示され、送られたものを再生",
-    "upnpClient": "UPnP/DLNA：Sonos、AV アンプ、スマートテレビなどの DLNA レンダラーで再生"
+    "upnpClient": "UPnP/DLNA：Sonos、AV アンプ、スマートテレビなどの DLNA レンダラーで再生",
+    "bluetoothServer": "Bluetooth：スマートフォンやノートPCとペアリングできる Bluetooth スピーカーとして表示",
+    "spotifyServer": "Spotify Connect：Spotify アプリにスピーカーとして表示",
+    "airplay2Server": "AirPlay 2：iPhone、iPad、Mac に AirPlay 2 スピーカーとして表示（マルチルーム対応）",
+    "needs": "{{name}}：{{program}} が必要ですが、インストールされていません"
   },
   "servers": {
     "title": "入力サーバー",
@@ -156,7 +160,14 @@
     "listenHint": "アプリがこの入力に接続するポート（例：:49494）。空欄なら空いているポートを使います。",
     "upnpAddressHint": "「デバイスを探す」で得られるレンダラーの説明 URL、または Sonos プレーヤーの IP アドレス。",
     "format": "ストリーム形式（任意）",
-    "formatHint": "wav または mp3。空欄なら Sonos には MP3、それ以外には WAV を送ります。MP3 には ffmpeg が必要です。"
+    "formatHint": "wav または mp3。空欄なら Sonos には MP3、それ以外には WAV を送ります。MP3 には ffmpeg が必要です。",
+    "btDevice": "スマートフォン（任意）",
+    "btDeviceHint": "この Bluetooth アドレスのスマートフォンだけを録音します。空欄なら再生中のデバイスを録音します。",
+    "btAdapter": "Bluetooth アダプター（任意）",
+    "btHidden": "非表示：ペアリング済みのスマートフォンだけが接続できます",
+    "bitrate": "ビットレート（任意）",
+    "bitrateHint": "96、160、320 kbit/s のいずれか。空欄なら 320 です。",
+    "airplay2PortHint": "AirPlay 2 が待ち受けるポート（例：:7000）。AirPlay 入力ごとに別のポートにしてください。"
   },
   "pairing": {
     "title": "AirPlay のペアリング",

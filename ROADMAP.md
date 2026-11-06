@@ -35,11 +35,12 @@ longer.
 | Feature | Size | Notes |
 |---------|------|-------|
 | AirPlay 2 output | L | HomeKit pairing (SRP-6a, Ed25519, ChaCha20-Poly1305) and buffered audio, for HomePods and recent Apple TVs. The highest-demand item, and the largest. |
-| AirPlay 2 receiver | L | Appear as an AirPlay 2 speaker, so Apple devices can include Air-Mixer in their own multi-room groups. |
+| AirPlay 2 receiver, built in | L | The `airplay2` input runs shairport-sync. A built-in receiver would drop that dependency and the separate `nqptp` daemon. |
+| Receivers in the Docker image | S | Ship `librespot` and an AirPlay 2 build of `shairport-sync` with `nqptp`, in the image or a `-full` variant. Alpine's packages are AirPlay 1 only and librespot is in its testing repo. |
 | Cast volume and lower latency | M | Follow and set the Cast device's volume, and try a smaller buffer for the Default Media Receiver. The Cast output itself is done. |
 | Sonos groups and volume | M | Join Sonos players into groups and follow their volume. Playing on a Sonos player or a group's coordinator is done, as are other DLNA renderers and the DLNA renderer input. |
-| Bluetooth input | M | Appear as an A2DP speaker (make the host discoverable and accept pairing through BlueZ) so phones can pair from their Bluetooth settings. A phone already paired with the host can be recorded with the `pulse` input, and output to Bluetooth speakers works through the `pulse` output. |
-| Spotify Connect | M | Spotify Connect input through librespot. The Snapcast output is done. |
+| Bluetooth pairing from the web UI | S | List and forget paired phones, and pair Bluetooth speakers for `pulse` outputs, from the UI. The Bluetooth input itself is done. |
+| Spotify Connect metadata | S | Show the track librespot is playing and pass Spotify's volume through. The input itself is done. |
 
 ## Platform
 

@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire ou PulseAudio: toque em uma placa de som ou em um alto-falante Bluetooth pareado",
     "snapcastClient": "Snapcast: toque em sincronia em todos os clientes Snapcast",
     "upnpServer": "UPnP/DLNA: aparece como alto-falante em apps DLNA, como o BubbleUPnP, e toca o que eles enviam",
-    "upnpClient": "UPnP/DLNA: toque em Sonos, receivers AV, smart TVs e outros renderizadores DLNA"
+    "upnpClient": "UPnP/DLNA: toque em Sonos, receivers AV, smart TVs e outros renderizadores DLNA",
+    "bluetoothServer": "Bluetooth: aparece como alto-falante Bluetooth para celulares e notebooks parearem",
+    "spotifyServer": "Spotify Connect: aparece como alto-falante no app do Spotify",
+    "airplay2Server": "AirPlay 2: aparece como alto-falante AirPlay 2 no iPhone, iPad e Mac, inclusive em multiroom",
+    "needs": "{{name}}: precisa do {{program}}, que não está instalado"
   },
   "servers": {
     "title": "Servidores de entrada",
@@ -158,7 +162,14 @@
     "listenHint": "A porta pela qual os apps chegam a esta entrada, como :49494. Deixe vazio para uma porta livre.",
     "upnpAddressHint": "A URL de descrição do renderizador, como Encontrar dispositivos mostra, ou o endereço IP de um player Sonos.",
     "format": "Formato do stream (opcional)",
-    "formatHint": "wav ou mp3. Deixe vazio para MP3 no Sonos e WAV em todo o resto. MP3 precisa de ffmpeg."
+    "formatHint": "wav ou mp3. Deixe vazio para MP3 no Sonos e WAV em todo o resto. MP3 precisa de ffmpeg.",
+    "btDevice": "Celular (opcional)",
+    "btDeviceHint": "Grava só este celular, pelo endereço Bluetooth. Deixe vazio para gravar o aparelho que estiver tocando.",
+    "btAdapter": "Adaptador Bluetooth (opcional)",
+    "btHidden": "Oculto: só celulares já pareados podem se conectar",
+    "bitrate": "Taxa de bits (opcional)",
+    "bitrateHint": "96, 160 ou 320 kbit/s. Deixe vazio para 320.",
+    "airplay2PortHint": "A porta em que o AirPlay 2 escuta, como :7000. Dê a cada entrada AirPlay uma porta própria."
   },
   "pairing": {
     "title": "Pareamento AirPlay",

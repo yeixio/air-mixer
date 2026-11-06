@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire sau PulseAudio: redă pe o placă de sunet sau pe o boxă Bluetooth asociată",
     "snapcastClient": "Snapcast: redă sincronizat pe fiecare client Snapcast",
     "upnpServer": "UPnP/DLNA: apare ca boxă în aplicațiile DLNA, precum BubbleUPnP, și redă ce trimit",
-    "upnpClient": "UPnP/DLNA: redă pe Sonos, receivere AV, televizoare smart și alte renderere DLNA"
+    "upnpClient": "UPnP/DLNA: redă pe Sonos, receivere AV, televizoare smart și alte renderere DLNA",
+    "bluetoothServer": "Bluetooth: apare ca boxă Bluetooth la care se împerechează telefoanele și laptopurile",
+    "spotifyServer": "Spotify Connect: apare ca boxă în aplicația Spotify",
+    "airplay2Server": "AirPlay 2: apare ca boxă AirPlay 2 pe iPhone, iPad și Mac, inclusiv multiroom",
+    "needs": "{{name}}: necesită {{program}}, care nu este instalat"
   },
   "servers": {
     "title": "Servere de intrare",
@@ -158,7 +162,14 @@
     "listenHint": "Portul prin care aplicațiile ajung la această intrare, de exemplu :49494. Lasă gol pentru un port liber.",
     "upnpAddressHint": "URL-ul de descriere al rendererului, cum îl dă Găsește dispozitive, sau adresa IP a unui player Sonos.",
     "format": "Formatul stream-ului (opțional)",
-    "formatHint": "wav sau mp3. Lasă gol pentru MP3 pe Sonos și WAV pe orice altceva. MP3 necesită ffmpeg."
+    "formatHint": "wav sau mp3. Lasă gol pentru MP3 pe Sonos și WAV pe orice altceva. MP3 necesită ffmpeg.",
+    "btDevice": "Telefon (opțional)",
+    "btDeviceHint": "Înregistrează doar acest telefon, după adresa Bluetooth. Lasă gol pentru a înregistra dispozitivul care redă.",
+    "btAdapter": "Adaptor Bluetooth (opțional)",
+    "btHidden": "Ascuns: se pot conecta doar telefoanele deja împerecheate",
+    "bitrate": "Rată de biți (opțional)",
+    "bitrateHint": "96, 160 sau 320 kbit/s. Lasă gol pentru 320.",
+    "airplay2PortHint": "Portul pe care ascultă AirPlay 2, de exemplu :7000. Dă fiecărei intrări AirPlay propriul port."
   },
   "pairing": {
     "title": "Asociere AirPlay",

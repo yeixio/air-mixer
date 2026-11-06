@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire veya PulseAudio: bir ses kartında veya eşleştirilmiş bir Bluetooth hoparlörde çal",
     "snapcastClient": "Snapcast: her Snapcast istemcisinde senkronize çal",
     "upnpServer": "UPnP/DLNA: BubbleUPnP gibi DLNA uygulamalarında hoparlör olarak görünür ve gönderdiklerini çalar",
-    "upnpClient": "UPnP/DLNA: Sonos, AV alıcılar, akıllı TV'ler ve diğer DLNA oynatıcılarda çal"
+    "upnpClient": "UPnP/DLNA: Sonos, AV alıcılar, akıllı TV'ler ve diğer DLNA oynatıcılarda çal",
+    "bluetoothServer": "Bluetooth: telefonların ve dizüstülerin eşleştiği bir Bluetooth hoparlör olarak görünür",
+    "spotifyServer": "Spotify Connect: Spotify uygulamasında hoparlör olarak görünür",
+    "airplay2Server": "AirPlay 2: iPhone, iPad ve Mac'te çok odalı dahil AirPlay 2 hoparlör olarak görünür",
+    "needs": "{{name}}: yüklü olmayan {{program}} gerekir"
   },
   "servers": {
     "title": "Giriş sunucuları",
@@ -157,7 +161,14 @@
     "listenHint": "Uygulamaların bu girişe ulaştığı bağlantı noktası, örneğin :49494. Boş bir bağlantı noktası için boş bırak.",
     "upnpAddressHint": "Oynatıcının Cihazları bul ile gelen açıklama URL'si veya bir Sonos oynatıcının IP adresi.",
     "format": "Yayın biçimi (isteğe bağlı)",
-    "formatHint": "wav veya mp3. Sonos'ta MP3, diğer her şeyde WAV için boş bırak. MP3 için ffmpeg gerekir."
+    "formatHint": "wav veya mp3. Sonos'ta MP3, diğer her şeyde WAV için boş bırak. MP3 için ffmpeg gerekir.",
+    "btDevice": "Telefon (isteğe bağlı)",
+    "btDeviceHint": "Bluetooth adresine göre yalnızca bu telefonu kaydet. Çalan cihazı kaydetmek için boş bırak.",
+    "btAdapter": "Bluetooth adaptörü (isteğe bağlı)",
+    "btHidden": "Gizli: yalnızca zaten eşleşmiş telefonlar bağlanabilir",
+    "bitrate": "Bit hızı (isteğe bağlı)",
+    "bitrateHint": "96, 160 veya 320 kbit/s. 320 için boş bırak.",
+    "airplay2PortHint": "AirPlay 2'nin dinlediği bağlantı noktası, örneğin :7000. Her AirPlay girişine ayrı bir bağlantı noktası ver."
   },
   "pairing": {
     "title": "AirPlay eşleştirme",

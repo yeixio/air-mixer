@@ -37,5 +37,9 @@
   "sample_rate_range": "sample_rate має бути від 8000 до 192000",
   "cast_needs_address": "Клієнту Google Cast потрібна адреса пристрою",
   "upnp_needs_address": "Клієнту UPnP/DLNA потрібен URL опису рендерера або адреса плеєра Sonos",
-  "upnp_bad_format": "format має бути wav або mp3"
+  "upnp_bad_format": "format має бути wav або mp3",
+  "bluetooth_bad_device": "device має бути Bluetooth-адресою, наприклад 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate має бути 96, 160 або 320",
+  "program_missing": "{{program}} не встановлено на цій машині",
+  "bad_port": "address має бути портом від 1 до 65535, наприклад :7000"
 }

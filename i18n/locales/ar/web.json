@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire أو PulseAudio: شغّل على بطاقة صوت أو سماعة Bluetooth مقترنة",
     "snapcastClient": "Snapcast: شغّل بتزامن على كل عملاء Snapcast",
     "upnpServer": "UPnP/DLNA: يظهر كسماعة في تطبيقات DLNA مثل BubbleUPnP ويشغّل ما ترسله",
-    "upnpClient": "UPnP/DLNA: شغّل على Sonos ومستقبلات AV وأجهزة التلفزيون الذكية وعارضات DLNA الأخرى"
+    "upnpClient": "UPnP/DLNA: شغّل على Sonos ومستقبلات AV وأجهزة التلفزيون الذكية وعارضات DLNA الأخرى",
+    "bluetoothServer": "Bluetooth: يظهر كسماعة Bluetooth تقترن بها الهواتف والحواسيب المحمولة",
+    "spotifyServer": "Spotify Connect: يظهر كسماعة في تطبيق Spotify",
+    "airplay2Server": "AirPlay 2: يظهر كسماعة AirPlay 2 على iPhone وiPad وMac، بما في ذلك تعدد الغرف",
+    "needs": "{{name}}: يحتاج إلى {{program}} وهو غير مثبّت"
   },
   "servers": {
     "title": "خوادم الإدخال",
@@ -161,7 +165,14 @@
     "listenHint": "المنفذ الذي تصل منه التطبيقات إلى هذا المدخل، مثل ‎:49494. اتركه فارغًا لمنفذ متاح.",
     "upnpAddressHint": "عنوان URL لوصف العارض كما يعطيه البحث عن الأجهزة، أو عنوان IP لمشغّل Sonos.",
     "format": "صيغة البث (اختياري)",
-    "formatHint": "wav أو mp3. اتركه فارغًا لاستخدام MP3 على Sonos وWAV على غيره. تحتاج MP3 إلى ffmpeg."
+    "formatHint": "wav أو mp3. اتركه فارغًا لاستخدام MP3 على Sonos وWAV على غيره. تحتاج MP3 إلى ffmpeg.",
+    "btDevice": "الهاتف (اختياري)",
+    "btDeviceHint": "سجّل هذا الهاتف فقط حسب عنوان Bluetooth. اتركه فارغًا لتسجيل الجهاز الذي يشغّل.",
+    "btAdapter": "محوّل Bluetooth (اختياري)",
+    "btHidden": "مخفي: لا تتصل إلا الهواتف المقترنة مسبقًا",
+    "bitrate": "معدل البت (اختياري)",
+    "bitrateHint": "96 أو 160 أو 320 كيلوبت/ث. اتركه فارغًا لـ 320.",
+    "airplay2PortHint": "المنفذ الذي يستمع عليه AirPlay 2، مثل ‎:7000. أعطِ كل مدخل AirPlay منفذًا خاصًا به."
   },
   "pairing": {
     "title": "إقران AirPlay",

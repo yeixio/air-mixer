@@ -37,5 +37,9 @@
   "sample_rate_range": "A sample_rate értéke 8000 és 192000 között legyen",
   "cast_needs_address": "A Google Cast-klienshez kell az eszköz címe",
   "upnp_needs_address": "A UPnP/DLNA-klienshez kell a renderer leíró URL-je vagy egy Sonos-lejátszó címe",
-  "upnp_bad_format": "A format értéke wav vagy mp3 lehet"
+  "upnp_bad_format": "A format értéke wav vagy mp3 lehet",
+  "bluetooth_bad_device": "A device értéke Bluetooth-cím legyen, például 11:22:33:44:55:66",
+  "spotify_bitrate": "A bitrate értéke 96, 160 vagy 320 lehet",
+  "program_missing": "A(z) {{program}} nincs telepítve ezen a gépen",
+  "bad_port": "Az address értéke 1 és 65535 közötti port legyen, például :7000"
 }

@@ -60,6 +60,9 @@ example the port is taken) nothing is saved and the error is returned.
 | `airplay` | `address` (RTSP listen address, default `:<airplay_port>`; each receiver needs its own port), `interface` (interface to advertise on, default `server.interface`) |
 | `radio` | `url` (required): an internet radio station, a PLS or M3U playlist, an HLS stream (`.m3u8`) or an audio file, over http, https, rtsp or rtmp |
 | `pulse` | `source` (name, description, a phone's Bluetooth address, or `<sink>.monitor`; default source if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`) |
+| `bluetooth` | `device` (a phone's Bluetooth address: record only that phone; default whichever device plays), `adapter` (default `hci0`), `hidden` (`true`: stay out of scans, for phones already paired), `server` (PulseAudio server string) |
+| `spotify` | `bitrate`: 96, 160 or 320 (default 320). Needs `librespot` |
+| `airplay2` | `address`: the RTSP port, such as `:7000` (default shairport-sync's 7000). Needs `shairport-sync` built with AirPlay 2 |
 | `upnp` | `address`: the HTTP listen address for control points, such as `:49494` (default: a free port, which SSDP advertises) |
 | `matinee` | none: it shows up in Matinee as a player named after the server (see [Matinee](#matinee)) |
 
@@ -68,6 +71,28 @@ drops is reconnected with backoff (1 s, doubling up to a minute) and a
 file starts again when it ends. MP3 and WAV are decoded in Go; AAC, Ogg,
 Opus, FLAC, HLS, RTSP and RTMP need `ffmpeg` on the server's `$PATH`,
 which the Docker image includes.
+
+A `bluetooth` server makes the host a Bluetooth speaker named after the
+server. Over BlueZ's D-Bus API it powers the adapter, sets its alias,
+makes it discoverable and pairable with no timeout, and registers a
+pairing agent that accepts any phone without a PIN, trusts it, and
+authorises only audio (A2DP and AVRCP). It records whichever Bluetooth
+source PipeWire or PulseAudio creates when a phone plays, so the host
+needs BlueZ and PipeWire (or PulseAudio with its Bluetooth module), and
+the server needs access to the D-Bus system bus. Without BlueZ, it still
+records a phone that is already paired, and `/api/status` shows why
+pairing is off.
+
+A `spotify` server shows up in the Spotify app as a Connect speaker,
+through `librespot`. It keeps librespot's credentials under
+`<data_dir>/spotify/<id>`, so it stays signed in to the account that last
+played to it. An `airplay2` server shows up on Apple devices as an
+AirPlay 2 speaker, which they can add to multi-room groups, through
+`shairport-sync` built with AirPlay 2 support and with `nqptp` running.
+Each runs its program, reads its audio from the program's output, and
+starts it again when it exits. Creating either fails with
+`program_missing` when the program is not on the server's `$PATH`, and
+`GET /api/protocols` reports them with `"available": false`.
 
 A `upnp` server is a UPnP/DLNA media renderer named after the server:
 apps such as BubbleUPnP, Hi-Fi Cast, foobar2000 or Windows' "Cast to
@@ -291,21 +316,30 @@ curl -X POST http://airmixer.local:9001/api/play \
 build its forms. `label`, `hint` and `placeholder_key` are keys in the web
 UI's translations (`i18n/locales/<lang>/web.json`); `placeholder` is shown
 as it is. A field with `"key": "address"` is a client's `address`; every
-other key goes in `config`.
+other key goes in `config`. `available` is `false` when the program
+named in `requires` is not installed, and creating that protocol fails.
 
 ```json
 [
   {
     "name": "radio", "kind": "server", "title": "Internet radio",
-    "description": "protocols.radioServer",
+    "description": "protocols.radioServer", "available": true,
     "fields": [
       {"key": "url", "type": "url", "required": true, "label": "fields.url",
        "hint": "fields.urlHint", "placeholder": "https://stream.example.com/radio.mp3"}
     ]
   },
   {
+    "name": "spotify", "kind": "server", "title": "Spotify Connect",
+    "description": "protocols.spotifyServer",
+    "requires": "librespot", "available": false,
+    "fields": [
+      {"key": "bitrate", "type": "number", "label": "fields.bitrate", "placeholder": "320"}
+    ]
+  },
+  {
     "name": "snapcast", "kind": "client", "title": "Snapcast",
-    "description": "protocols.snapcastClient", "discovery": true,
+    "description": "protocols.snapcastClient", "discovery": true, "available": true,
     "fields": [
       {"key": "address", "type": "text", "required": true, "label": "common.address", "placeholder": "snapserver.local:4953"},
       {"key": "sample_rate", "type": "number", "label": "fields.sampleRate", "placeholder": "48000"}

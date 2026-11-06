@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire 或 PulseAudio：在音效卡或已配對的藍牙喇叭上播放",
     "snapcastClient": "Snapcast：在每個 Snapcast 用戶端上同步播放",
     "upnpServer": "UPnP/DLNA：在 BubbleUPnP 等 DLNA App 中顯示為喇叭，並播放它們傳送的內容",
-    "upnpClient": "UPnP/DLNA：在 Sonos、AV 擴大機、智慧電視和其他 DLNA 渲染器上播放"
+    "upnpClient": "UPnP/DLNA：在 Sonos、AV 擴大機、智慧電視和其他 DLNA 渲染器上播放",
+    "bluetoothServer": "Bluetooth：顯示為可供手機和筆電配對的藍牙喇叭",
+    "spotifyServer": "Spotify Connect：在 Spotify App 中顯示為喇叭",
+    "airplay2Server": "AirPlay 2：在 iPhone、iPad 和 Mac 上顯示為 AirPlay 2 喇叭，支援多房間",
+    "needs": "{{name}}：需要 {{program}}，但尚未安裝"
   },
   "servers": {
     "title": "輸入伺服器",
@@ -156,7 +160,14 @@
     "listenHint": "App 連到此輸入的連接埠，例如 :49494。留空則使用可用的連接埠。",
     "upnpAddressHint": "渲染器的描述 URL（「尋找裝置」會提供），或 Sonos 播放器的 IP 位址。",
     "format": "串流格式（選填）",
-    "formatHint": "wav 或 mp3。留空則 Sonos 用 MP3，其他裝置用 WAV。MP3 需要 ffmpeg。"
+    "formatHint": "wav 或 mp3。留空則 Sonos 用 MP3，其他裝置用 WAV。MP3 需要 ffmpeg。",
+    "btDevice": "手機（選填）",
+    "btDeviceHint": "只錄製此藍牙位址的手機。留空則錄製正在播放的裝置。",
+    "btAdapter": "藍牙轉接器（選填）",
+    "btHidden": "隱藏：只有已配對的手機可以連線",
+    "bitrate": "位元率（選填）",
+    "bitrateHint": "96、160 或 320 kbit/s。留空則為 320。",
+    "airplay2PortHint": "AirPlay 2 監聽的連接埠，例如 :7000。每個 AirPlay 輸入使用不同的連接埠。"
   },
   "pairing": {
     "title": "AirPlay 配對",

@@ -643,6 +643,27 @@
             border-color: var(--accent);
         }
 
+        label.check-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .modal-content label.check-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            flex: none;
+            margin: 0;
+            padding: 0;
+            accent-color: var(--accent);
+        }
+
         input[type="range"] {
             height: auto;
             padding: 0;
@@ -2157,10 +2178,22 @@
                 for (const p of list) {
                     const option = document.createElement('option');
                     option.value = p.name;
-                    option.dataset.i18n = p.description;
+                    if (p.available === false) {
+                        // The program this protocol runs isn't installed.
+                        option.disabled = true;
+                        option.dataset.i18n = 'protocols.needs';
+                        option.setAttribute('data-i18n-name', p.title);
+                        option.setAttribute('data-i18n-program', p.requires);
+                    } else {
+                        option.dataset.i18n = p.description;
+                    }
                     select.appendChild(option);
                 }
-                if (list.some(p => p.name === current)) select.value = current;
+                if (list.some(p => p.name === current && p.available !== false)) select.value = current;
+                else if (select.selectedOptions[0] && select.selectedOptions[0].disabled) {
+                    const first = [...select.options].find(o => !o.disabled);
+                    if (first) select.value = first.value;
+                }
                 translatePage(select);
             }
             renderProtocolFields(kind);
@@ -2189,6 +2222,7 @@
                 input.dataset.type = f.type;
                 if (f.type === 'bool') {
                     input.type = 'checkbox';
+                    label.className = 'check-label';
                     label.appendChild(input);
                     const text = document.createElement('span');
                     text.dataset.i18n = f.label;

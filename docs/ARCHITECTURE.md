@@ -122,6 +122,20 @@ client and parser (`soap.go`).
   eventing. Each track plays through a `radio.Server` with `Once` set, at
   the renderer's volume.
 
+### `internal/protocols/bluetooth` and `internal/protocols/pipe`
+
+- **bluetooth** turns the host into a Bluetooth speaker over BlueZ's
+  D-Bus API (`github.com/godbus/dbus/v5`): it sets the adapter's alias,
+  makes it discoverable and pairable, and exports a `NoInputNoOutput`
+  agent that trusts phones and authorises only the A2DP and AVRCP
+  profiles. The audio comes from a `pulse.Source` that follows whichever
+  Bluetooth source appears. D-Bus failures go to `Err()` without
+  stopping capture.
+- **pipe** runs an external receiver that writes 16-bit stereo PCM to
+  stdout (`librespot --backend pipe`, `shairport-sync --output stdout`),
+  paces it to real time, and restarts the program with backoff when it
+  exits, keeping the last lines of stderr for `Err()`.
+
 ### `internal/audio/decode`
 
 Turns encoded audio into samples for playback and radio inputs: MP3 and

@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire o PulseAudio: riproduci su una scheda audio o su un altoparlante Bluetooth associato",
     "snapcastClient": "Snapcast: riproduci in sincrono su ogni client Snapcast",
     "upnpServer": "UPnP/DLNA: appare come altoparlante nelle app DLNA come BubbleUPnP e riproduce ciò che inviano",
-    "upnpClient": "UPnP/DLNA: riproduci su Sonos, sintoamplificatori AV, smart TV e altri renderer DLNA"
+    "upnpClient": "UPnP/DLNA: riproduci su Sonos, sintoamplificatori AV, smart TV e altri renderer DLNA",
+    "bluetoothServer": "Bluetooth: appare come altoparlante Bluetooth da associare a telefoni e portatili",
+    "spotifyServer": "Spotify Connect: appare come altoparlante nell'app Spotify",
+    "airplay2Server": "AirPlay 2: appare come altoparlante AirPlay 2 su iPhone, iPad e Mac, anche in multiroom",
+    "needs": "{{name}}: richiede {{program}}, che non è installato"
   },
   "servers": {
     "title": "Server di ingresso",
@@ -158,7 +162,14 @@
     "listenHint": "La porta da cui le app raggiungono questo ingresso, come :49494. Lascia vuoto per una porta libera.",
     "upnpAddressHint": "L'URL di descrizione del renderer, come lo fornisce Trova dispositivi, o l'indirizzo IP di un lettore Sonos.",
     "format": "Formato dello stream (facoltativo)",
-    "formatHint": "wav o mp3. Lascia vuoto per MP3 su Sonos e WAV su tutto il resto. MP3 richiede ffmpeg."
+    "formatHint": "wav o mp3. Lascia vuoto per MP3 su Sonos e WAV su tutto il resto. MP3 richiede ffmpeg.",
+    "btDevice": "Telefono (facoltativo)",
+    "btDeviceHint": "Registra solo questo telefono, tramite l'indirizzo Bluetooth. Lascia vuoto per registrare il dispositivo che suona.",
+    "btAdapter": "Adattatore Bluetooth (facoltativo)",
+    "btHidden": "Nascosto: possono connettersi solo i telefoni già associati",
+    "bitrate": "Bitrate (facoltativo)",
+    "bitrateHint": "96, 160 o 320 kbit/s. Lascia vuoto per 320.",
+    "airplay2PortHint": "La porta su cui ascolta AirPlay 2, come :7000. Dai a ogni ingresso AirPlay una porta diversa."
   },
   "pairing": {
     "title": "Abbinamento AirPlay",

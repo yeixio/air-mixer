@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire atau PulseAudio: mainkan pada kad bunyi atau pembesar suara Bluetooth yang dipasangkan",
     "snapcastClient": "Snapcast: mainkan serentak pada setiap klien Snapcast",
     "upnpServer": "UPnP/DLNA: muncul sebagai pembesar suara dalam aplikasi DLNA seperti BubbleUPnP dan memainkan apa yang dihantar",
-    "upnpClient": "UPnP/DLNA: mainkan pada Sonos, penerima AV, TV pintar dan renderer DLNA lain"
+    "upnpClient": "UPnP/DLNA: mainkan pada Sonos, penerima AV, TV pintar dan renderer DLNA lain",
+    "bluetoothServer": "Bluetooth: muncul sebagai pembesar suara Bluetooth yang boleh dipasangkan dengan telefon dan komputer riba",
+    "spotifyServer": "Spotify Connect: muncul sebagai pembesar suara dalam aplikasi Spotify",
+    "airplay2Server": "AirPlay 2: muncul sebagai pembesar suara AirPlay 2 pada iPhone, iPad dan Mac, termasuk berbilang bilik",
+    "needs": "{{name}}: memerlukan {{program}}, yang tidak dipasang"
   },
   "servers": {
     "title": "Pelayan input",
@@ -156,7 +160,14 @@
     "listenHint": "Port yang digunakan aplikasi untuk sampai ke input ini, seperti :49494. Biarkan kosong untuk port bebas.",
     "upnpAddressHint": "URL perihalan renderer, seperti yang diberikan Cari Peranti, atau alamat IP pemain Sonos.",
     "format": "Format strim (pilihan)",
-    "formatHint": "wav atau mp3. Biarkan kosong untuk MP3 pada Sonos dan WAV pada yang lain. MP3 memerlukan ffmpeg."
+    "formatHint": "wav atau mp3. Biarkan kosong untuk MP3 pada Sonos dan WAV pada yang lain. MP3 memerlukan ffmpeg.",
+    "btDevice": "Telefon (pilihan)",
+    "btDeviceHint": "Rakam telefon ini sahaja, mengikut alamat Bluetooth. Biarkan kosong untuk merakam peranti yang sedang bermain.",
+    "btAdapter": "Penyesuai Bluetooth (pilihan)",
+    "btHidden": "Tersembunyi: hanya telefon yang sudah dipasangkan boleh bersambung",
+    "bitrate": "Kadar bit (pilihan)",
+    "bitrateHint": "96, 160 atau 320 kbit/s. Biarkan kosong untuk 320.",
+    "airplay2PortHint": "Port yang didengar oleh AirPlay 2, seperti :7000. Beri setiap input AirPlay port sendiri."
   },
   "pairing": {
     "title": "Gandingan AirPlay",

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"testing"
@@ -49,6 +50,10 @@ func TestCatalogMatchesFactory(t *testing.T) {
 	f := NewFactory(Defaults{AirPlayPort: 5000, Streams: httpstream.NewRegistry(), Matinee: account, Settings: store}, quiet)
 
 	for _, p := range Protocols() {
+		if !p.Available {
+			// TestReceiverPrograms covers protocols whose program is missing.
+			continue
+		}
 		address, config := sample(p)
 		var name string
 		var err error
@@ -140,5 +145,58 @@ func TestNewProtocols(t *testing.T) {
 	}
 	if _, err := f.Client(&db.Client{Protocol: "snapcast", Address: "s", Config: `{"sample_rate":1}`}); !isInvalid(err) {
 		t.Errorf("bad sample_rate = %v", err)
+	}
+}
+
+// TestReceiverPrograms checks the protocols that run an external program:
+// a clear error while it's missing, and validation once it's installed.
+func TestReceiverPrograms(t *testing.T) {
+	f := NewFactory(Defaults{DataDir: t.TempDir()}, quiet)
+	code := func(err error) string {
+		var ie *InvalidError
+		if errors.As(err, &ie) {
+			return ie.Code
+		}
+		return ""
+	}
+
+	t.Setenv("PATH", t.TempDir())
+	for _, name := range []string{"spotify", "airplay2"} {
+		if _, err := f.Server(&db.Server{ID: "x", Name: "X", Protocol: name}); code(err) != "program_missing" {
+			t.Errorf("%s without its program = %v", name, err)
+		}
+		for _, p := range Protocols() {
+			if p.Name == name && p.Available {
+				t.Errorf("%s is available without its program", name)
+			}
+		}
+	}
+
+	bin := t.TempDir()
+	for _, prog := range []string{"librespot", "shairport-sync"} {
+		if err := os.WriteFile(filepath.Join(bin, prog), []byte("#!/bin/sh\n"), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	t.Setenv("PATH", bin)
+	for _, tc := range []struct{ protocol, config, code string }{
+		{"spotify", ``, ""},
+		{"spotify", `{"bitrate":160}`, ""},
+		{"spotify", `{"bitrate":128}`, "spotify_bitrate"},
+		{"airplay2", `{"address":":7100"}`, ""},
+		{"airplay2", `{"address":"7100"}`, ""},
+		{"airplay2", `{"address":":http"}`, "bad_port"},
+		{"airplay2", `{"address":":70000"}`, "bad_port"},
+		{"bluetooth", `{"device":"11:22:33:44:55:66","hidden":true}`, ""},
+		{"bluetooth", `{"device":"phone"}`, "bluetooth_bad_device"},
+	} {
+		s, err := f.Server(&db.Server{ID: "x", Name: "X", Protocol: tc.protocol, Config: tc.config})
+		if code(err) != tc.code || (tc.code == "" && err != nil) {
+			t.Errorf("%s %s = %v, want %q", tc.protocol, tc.config, err, tc.code)
+			continue
+		}
+		if err == nil && s.Protocol() != tc.protocol {
+			t.Errorf("%s builds %q", tc.protocol, s.Protocol())
+		}
 	}
 }

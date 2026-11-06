@@ -37,5 +37,9 @@
   "sample_rate_range": "sample_rate musí být mezi 8000 a 192000",
   "cast_needs_address": "Klient Google Cast potřebuje adresu zařízení",
   "upnp_needs_address": "Klient UPnP/DLNA potřebuje URL popisu rendereru nebo adresu přehrávače Sonos",
-  "upnp_bad_format": "format musí být wav nebo mp3"
+  "upnp_bad_format": "format musí být wav nebo mp3",
+  "bluetooth_bad_device": "device musí být Bluetooth adresa, například 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate musí být 96, 160 nebo 320",
+  "program_missing": "{{program}} není na tomto počítači nainstalovaný",
+  "bad_port": "address musí být port od 1 do 65535, například :7000"
 }

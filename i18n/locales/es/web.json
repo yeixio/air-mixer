@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire o PulseAudio: reproduce en una tarjeta de sonido o en un altavoz Bluetooth emparejado",
     "snapcastClient": "Snapcast: reproduce sincronizado en todos los clientes de Snapcast",
     "upnpServer": "UPnP/DLNA: aparece como altavoz en apps DLNA como BubbleUPnP y reproduce lo que envían",
-    "upnpClient": "UPnP/DLNA: reproduce en Sonos, receptores AV, televisores inteligentes y otros renderizadores DLNA"
+    "upnpClient": "UPnP/DLNA: reproduce en Sonos, receptores AV, televisores inteligentes y otros renderizadores DLNA",
+    "bluetoothServer": "Bluetooth: aparece como altavoz Bluetooth que los móviles y portátiles pueden emparejar",
+    "spotifyServer": "Spotify Connect: aparece como altavoz en la app de Spotify",
+    "airplay2Server": "AirPlay 2: aparece como altavoz AirPlay 2 en iPhone, iPad y Mac, también en multisala",
+    "needs": "{{name}}: necesita {{program}}, que no está instalado"
   },
   "servers": {
     "title": "Servidores de entrada",
@@ -158,7 +162,14 @@
     "listenHint": "El puerto por el que las apps llegan a esta entrada, como :49494. Déjalo vacío para un puerto libre.",
     "upnpAddressHint": "La URL de descripción del renderizador, tal como la da Buscar dispositivos, o la dirección IP de un reproductor Sonos.",
     "format": "Formato del stream (opcional)",
-    "formatHint": "wav o mp3. Déjalo vacío para MP3 en Sonos y WAV en todo lo demás. MP3 necesita ffmpeg."
+    "formatHint": "wav o mp3. Déjalo vacío para MP3 en Sonos y WAV en todo lo demás. MP3 necesita ffmpeg.",
+    "btDevice": "Teléfono (opcional)",
+    "btDeviceHint": "Graba solo este teléfono, por su dirección Bluetooth. Déjalo vacío para grabar el dispositivo que esté sonando.",
+    "btAdapter": "Adaptador Bluetooth (opcional)",
+    "btHidden": "Oculto: solo pueden conectarse los teléfonos ya emparejados",
+    "bitrate": "Tasa de bits (opcional)",
+    "bitrateHint": "96, 160 o 320 kbit/s. Déjalo vacío para 320.",
+    "airplay2PortHint": "El puerto en el que escucha AirPlay 2, como :7000. Da a cada entrada AirPlay su propio puerto."
   },
   "pairing": {
     "title": "Emparejamiento AirPlay",

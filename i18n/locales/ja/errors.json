@@ -37,5 +37,9 @@
   "sample_rate_range": "sample_rate は 8000 から 192000 の間にしてください",
   "cast_needs_address": "Google Cast クライアントにはデバイスのアドレスが必要です",
   "upnp_needs_address": "UPnP/DLNA クライアントにはレンダラーの説明 URL か Sonos プレーヤーのアドレスが必要です",
-  "upnp_bad_format": "format は wav か mp3 にしてください"
+  "upnp_bad_format": "format は wav か mp3 にしてください",
+  "bluetooth_bad_device": "device は Bluetooth アドレス（例：11:22:33:44:55:66）にしてください",
+  "spotify_bitrate": "bitrate は 96、160、320 のいずれかにしてください",
+  "program_missing": "このマシンには {{program}} がインストールされていません",
+  "bad_port": "address は 1〜65535 のポート（例：:7000）にしてください"
 }

@@ -37,5 +37,9 @@
   "sample_rate_range": "sample_rate 必须在 8000 到 192000 之间",
   "cast_needs_address": "Google Cast 客户端需要设备的地址",
   "upnp_needs_address": "UPnP/DLNA 客户端需要渲染器的描述 URL 或 Sonos 播放器的地址",
-  "upnp_bad_format": "format 必须是 wav 或 mp3"
+  "upnp_bad_format": "format 必须是 wav 或 mp3",
+  "bluetooth_bad_device": "device 必须是蓝牙地址，如 11:22:33:44:55:66",
+  "spotify_bitrate": "bitrate 必须是 96、160 或 320",
+  "program_missing": "此机器上未安装 {{program}}",
+  "bad_port": "address 必须是 1 到 65535 之间的端口，如 :7000"
 }

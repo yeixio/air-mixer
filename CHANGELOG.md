@@ -22,6 +22,15 @@ generated from its pull requests.
 - UPnP/DLNA in both directions: an output for Sonos (MP3 through its
   radio scheme), AV receivers, smart TVs and other renderers, found with
   SSDP; and an input that is a DLNA media renderer apps can play to.
+- A Bluetooth input: Air-Mixer shows up as a Bluetooth speaker that
+  phones pair with, accepting pairings through BlueZ and recording
+  through PipeWire or PulseAudio.
+- A Spotify Connect input through librespot and an AirPlay 2 input
+  through shairport-sync; the web UI greys them out until the program is
+  installed.
+- `controller.hostAudio` in the Helm chart, mounting the host's
+  PipeWire/PulseAudio socket and D-Bus system bus for line-in and
+  Bluetooth inputs.
 - Streams take `?raw=1` (close-delimited, DLNA headers) and
   `?format=mp3` (through ffmpeg).
 - A Snapcast output that feeds a snapserver TCP source, and discovery of

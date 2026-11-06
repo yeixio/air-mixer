@@ -4,19 +4,26 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"net"
 	"net/url"
+	"os/exec"
+	"path/filepath"
+	"regexp"
 	"slices"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/yeixio/air-mixer/i18n"
 	"github.com/yeixio/air-mixer/internal/db"
 	"github.com/yeixio/air-mixer/internal/protocols"
 	"github.com/yeixio/air-mixer/internal/protocols/airplay"
+	"github.com/yeixio/air-mixer/internal/protocols/bluetooth"
 	"github.com/yeixio/air-mixer/internal/protocols/cast"
 	"github.com/yeixio/air-mixer/internal/protocols/httpstream"
 	"github.com/yeixio/air-mixer/internal/protocols/local"
 	"github.com/yeixio/air-mixer/internal/protocols/matinee"
+	"github.com/yeixio/air-mixer/internal/protocols/pipe"
 	"github.com/yeixio/air-mixer/internal/protocols/pulse"
 	"github.com/yeixio/air-mixer/internal/protocols/radio"
 	"github.com/yeixio/air-mixer/internal/protocols/snapcast"
@@ -33,6 +40,9 @@ type Factory interface {
 type Defaults struct {
 	AirPlayPort int    // RTSP port for AirPlay receivers
 	Interface   string // network interface to advertise on
+
+	// DataDir is where adapters keep state, such as Spotify credentials.
+	DataDir string
 
 	// For stream and Matinee adapters.
 	Version   string
@@ -57,9 +67,27 @@ type ServerConfig struct {
 	// description, a phone's Bluetooth address, or "<sink>.monitor".
 	// Empty means the default source.
 	Source string `json:"source,omitempty"`
-	// Server is the PulseAudio server for a pulse input; empty means
-	// $PULSE_SERVER or the default.
+	// Server is the PulseAudio server for a pulse or bluetooth input;
+	// empty means $PULSE_SERVER or the default.
 	Server string `json:"server,omitempty"`
+	// Adapter, Device and Hidden configure a bluetooth input: the adapter
+	// (default hci0), the one phone to record by address (default: any),
+	// and whether to stay out of scans.
+	Adapter string `json:"adapter,omitempty"`
+	Device  string `json:"device,omitempty"`
+	Hidden  bool   `json:"hidden,omitempty"`
+	// Bitrate is a Spotify input's quality: 96, 160 or 320 (default).
+	Bitrate int `json:"bitrate,omitempty"`
+}
+
+var macAddress = regexp.MustCompile(`^(?i)[0-9a-f]{2}(:[0-9a-f]{2}){5}$`)
+
+// needProgram reports a receiver program that isn't installed.
+func needProgram(name string) error {
+	if _, err := exec.LookPath(name); err != nil {
+		return invalidCode("program_missing", map[string]any{"program": name})
+	}
+	return nil
 }
 
 // ClientConfig is the JSON stored in db.Client.Config.
@@ -143,6 +171,40 @@ func (f *factory) Server(s *db.Server) (protocols.Server, error) {
 		return pulse.NewSource(pulse.SourceOptions{
 			ID: s.ID, Name: s.Name, Server: cfg.Server, Source: cfg.Source, Logger: f.log,
 		}), nil
+	case "bluetooth":
+		if cfg.Device != "" && !macAddress.MatchString(cfg.Device) {
+			return nil, invalidCode("bluetooth_bad_device", nil)
+		}
+		return bluetooth.New(bluetooth.Options{
+			ID: s.ID, Name: s.Name, Adapter: cfg.Adapter, Device: cfg.Device, Hidden: cfg.Hidden, Server: cfg.Server, Logger: f.log,
+		}), nil
+	case "spotify":
+		if err := needProgram(pipe.Librespot); err != nil {
+			return nil, err
+		}
+		if cfg.Bitrate != 0 && cfg.Bitrate != 96 && cfg.Bitrate != 160 && cfg.Bitrate != 320 {
+			return nil, invalidCode("spotify_bitrate", nil)
+		}
+		var cache string
+		if f.defaults.DataDir != "" {
+			cache = filepath.Join(f.defaults.DataDir, "spotify", s.ID)
+		}
+		return pipe.Spotify(pipe.SpotifyOptions{ID: s.ID, Name: s.Name, Bitrate: cfg.Bitrate, CacheDir: cache, Logger: f.log}), nil
+	case "airplay2":
+		if err := needProgram(pipe.ShairportSync); err != nil {
+			return nil, err
+		}
+		port := 0
+		if cfg.Address != "" {
+			_, p, err := net.SplitHostPort(cfg.Address)
+			if err != nil {
+				p = strings.TrimPrefix(cfg.Address, ":")
+			}
+			if port, err = strconv.Atoi(p); err != nil || port < 1 || port > 65535 {
+				return nil, invalidCode("bad_port", nil)
+			}
+		}
+		return pipe.AirPlay2(pipe.AirPlay2Options{ID: s.ID, Name: s.Name, Port: port, Logger: f.log}), nil
 	case "upnp":
 		return upnp.NewServer(upnp.ServerOptions{ID: s.ID, Name: s.Name, Address: cfg.Address, Logger: f.log}), nil
 	case "radio":

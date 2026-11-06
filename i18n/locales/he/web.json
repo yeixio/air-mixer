@@ -43,7 +43,11 @@
     "pulseClient": "PipeWire או PulseAudio: נגן בכרטיס קול או ברמקול Bluetooth מוצמד",
     "snapcastClient": "Snapcast: נגן בסנכרון בכל לקוחות Snapcast",
     "upnpServer": "UPnP/DLNA: מופיע כרמקול באפליקציות DLNA כמו BubbleUPnP ומנגן את מה שהן שולחות",
-    "upnpClient": "UPnP/DLNA: נגן ב-Sonos, במקלטי AV, בטלוויזיות חכמות ובנגני DLNA אחרים"
+    "upnpClient": "UPnP/DLNA: נגן ב-Sonos, במקלטי AV, בטלוויזיות חכמות ובנגני DLNA אחרים",
+    "bluetoothServer": "Bluetooth: מופיע כרמקול Bluetooth שטלפונים ומחשבים ניידים מתאימים אליו",
+    "spotifyServer": "Spotify Connect: מופיע כרמקול באפליקציית Spotify",
+    "airplay2Server": "AirPlay 2: מופיע כרמקול AirPlay 2 ב-iPhone, ב-iPad וב-Mac, כולל ריבוי חדרים",
+    "needs": "{{name}}: דורש את {{program}}, שאינו מותקן"
   },
   "servers": {
     "title": "שרתי קלט",
@@ -158,7 +162,14 @@
     "listenHint": "הפורט שדרכו אפליקציות מגיעות לקלט הזה, למשל ‎:49494. השאר ריק לפורט פנוי.",
     "upnpAddressHint": "כתובת ה-URL של תיאור הנגן כפי ש'חיפוש מכשירים' נותן, או כתובת ה-IP של נגן Sonos.",
     "format": "פורמט הזרם (רשות)",
-    "formatHint": "wav או mp3. השאר ריק ל-MP3 ב-Sonos ו-WAV בכל השאר. MP3 דורש ffmpeg."
+    "formatHint": "wav או mp3. השאר ריק ל-MP3 ב-Sonos ו-WAV בכל השאר. MP3 דורש ffmpeg.",
+    "btDevice": "טלפון (רשות)",
+    "btDeviceHint": "הקלט רק את הטלפון הזה, לפי כתובת ה-Bluetooth. השאר ריק כדי להקליט את המכשיר שמנגן.",
+    "btAdapter": "מתאם Bluetooth (רשות)",
+    "btHidden": "מוסתר: רק טלפונים שכבר הותאמו יכולים להתחבר",
+    "bitrate": "קצב סיביות (רשות)",
+    "bitrateHint": "96, 160 או 320 קילוביט לשנייה. השאר ריק ל-320.",
+    "airplay2PortHint": "הפורט ש-AirPlay 2 מאזין עליו, למשל ‎:7000. תן לכל קלט AirPlay פורט משלו."
   },
   "pairing": {
     "title": "צימוד AirPlay",
