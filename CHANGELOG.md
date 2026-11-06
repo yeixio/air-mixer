@@ -22,6 +22,10 @@ generated from its pull requests.
 - UPnP/DLNA in both directions: an output for Sonos (MP3 through its
   radio scheme), AV receivers, smart TVs and other renderers, found with
   SSDP; and an input that is a DLNA media renderer apps can play to.
+- An experimental AirPlay 2 output for HomePods, Apple TVs and other
+  receivers that refuse classic AirPlay: HomeKit transient pairing, an
+  encrypted control channel and ChaCha20-Poly1305 audio, with discovery
+  over `_airplay._tcp`. Untested on Apple hardware.
 - A Bluetooth input: Air-Mixer shows up as a Bluetooth speaker that
   phones pair with, accepting pairings through BlueZ and recording
   through PipeWire or PulseAudio.

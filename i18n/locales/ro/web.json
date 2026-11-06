@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: apare ca boxă Bluetooth la care se împerechează telefoanele și laptopurile",
     "spotifyServer": "Spotify Connect: apare ca boxă în aplicația Spotify",
     "airplay2Server": "AirPlay 2: apare ca boxă AirPlay 2 pe iPhone, iPad și Mac, inclusiv multiroom",
-    "needs": "{{name}}: necesită {{program}}, care nu este instalat"
+    "needs": "{{name}}: necesită {{program}}, care nu este instalat",
+    "airplay2Client": "AirPlay 2 (experimental): redă pe HomePod, Apple TV și alte boxe AirPlay 2"
   },
   "servers": {
     "title": "Servere de intrare",
@@ -169,7 +170,8 @@
     "btHidden": "Ascuns: se pot conecta doar telefoanele deja împerecheate",
     "bitrate": "Rată de biți (opțional)",
     "bitrateHint": "96, 160 sau 320 kbit/s. Lasă gol pentru 320.",
-    "airplay2PortHint": "Portul pe care ascultă AirPlay 2, de exemplu :7000. Dă fiecărei intrări AirPlay propriul port."
+    "airplay2PortHint": "Portul pe care ascultă AirPlay 2, de exemplu :7000. Dă fiecărei intrări AirPlay propriul port.",
+    "airplay2AddressHint": "Adresa și portul receptorului, cum le dă Găsește dispozitive, de exemplu 192.168.1.60:7000. Trebuie să permită oricui din rețea să redea, fără parolă."
   },
   "pairing": {
     "title": "Asociere AirPlay",

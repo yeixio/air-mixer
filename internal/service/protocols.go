@@ -74,6 +74,9 @@ var protocolCatalog = []Protocol{
 	{Name: "airplay", Kind: "client", Title: "AirPlay", Description: "protocols.airplayClient", Discovery: true, Fields: []Field{
 		{Key: "address", Type: "text", Required: true, Label: "common.address", Hint: "clients.addressHint", Placeholder: "192.168.1.100:7000"},
 	}},
+	{Name: "airplay2", Kind: "client", Title: "AirPlay 2", Description: "protocols.airplay2Client", Discovery: true, Fields: []Field{
+		{Key: "address", Type: "text", Required: true, Label: "common.address", Hint: "fields.airplay2AddressHint", Placeholder: "192.168.1.60:7000"},
+	}},
 	{Name: "cast", Kind: "client", Title: "Google Cast", Description: "protocols.castClient", Discovery: true, Fields: []Field{
 		{Key: "address", Type: "text", Required: true, Label: "common.address", Hint: "fields.castAddressHint", Placeholder: "192.168.1.40:8009"},
 	}},

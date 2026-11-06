@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth : apparaît comme une enceinte Bluetooth à associer aux téléphones et ordinateurs portables",
     "spotifyServer": "Spotify Connect : apparaît comme une enceinte dans l'app Spotify",
     "airplay2Server": "AirPlay 2 : apparaît comme une enceinte AirPlay 2 sur iPhone, iPad et Mac, multiroom compris",
-    "needs": "{{name}} : nécessite {{program}}, qui n'est pas installé"
+    "needs": "{{name}} : nécessite {{program}}, qui n'est pas installé",
+    "airplay2Client": "AirPlay 2 (expérimental) : jouer sur les HomePod, Apple TV et autres enceintes AirPlay 2"
   },
   "servers": {
     "title": "Serveurs d’entrée",
@@ -169,7 +170,8 @@
     "btHidden": "Masqué : seuls les téléphones déjà associés peuvent se connecter",
     "bitrate": "Débit (facultatif)",
     "bitrateHint": "96, 160 ou 320 kbit/s. Laissez vide pour 320.",
-    "airplay2PortHint": "Le port d'écoute d'AirPlay 2, comme :7000. Donnez à chaque entrée AirPlay son propre port."
+    "airplay2PortHint": "Le port d'écoute d'AirPlay 2, comme :7000. Donnez à chaque entrée AirPlay son propre port.",
+    "airplay2AddressHint": "L'adresse et le port du récepteur, tels que Trouver des appareils les donne, comme 192.168.1.60:7000. Il doit laisser tout le réseau jouer, sans mot de passe."
   },
   "pairing": {
     "title": "Jumelage AirPlay",

@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: zobrazí se jako Bluetooth reproduktor, se kterým se spárují telefony a notebooky",
     "spotifyServer": "Spotify Connect: zobrazí se jako reproduktor v aplikaci Spotify",
     "airplay2Server": "AirPlay 2: zobrazí se jako reproduktor AirPlay 2 na iPhonu, iPadu a Macu, i pro multiroom",
-    "needs": "{{name}}: potřebuje {{program}}, který není nainstalovaný"
+    "needs": "{{name}}: potřebuje {{program}}, který není nainstalovaný",
+    "airplay2Client": "AirPlay 2 (experimentální): přehrávej na HomePodech, Apple TV a dalších reproduktorech AirPlay 2"
   },
   "servers": {
     "title": "Vstupní servery",
@@ -170,7 +171,8 @@
     "btHidden": "Skrytý: připojit se mohou jen už spárované telefony",
     "bitrate": "Datový tok (nepovinné)",
     "bitrateHint": "96, 160 nebo 320 kbit/s. Pro 320 nech prázdné.",
-    "airplay2PortHint": "Port, na kterém AirPlay 2 naslouchá, například :7000. Každý vstup AirPlay potřebuje vlastní port."
+    "airplay2PortHint": "Port, na kterém AirPlay 2 naslouchá, například :7000. Každý vstup AirPlay potřebuje vlastní port.",
+    "airplay2AddressHint": "Adresa a port přijímače, jak je vrátí Najít zařízení, například 192.168.1.60:7000. Musí dovolit přehrávat komukoli v síti bez hesla."
   },
   "pairing": {
     "title": "Párování AirPlay",

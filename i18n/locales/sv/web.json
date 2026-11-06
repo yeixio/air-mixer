@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: syns som en Bluetooth-högtalare som telefoner och datorer parkopplar med",
     "spotifyServer": "Spotify Connect: syns som en högtalare i Spotify-appen",
     "airplay2Server": "AirPlay 2: syns som en AirPlay 2-högtalare på iPhone, iPad och Mac, även för multirum",
-    "needs": "{{name}}: kräver {{program}}, som inte är installerat"
+    "needs": "{{name}}: kräver {{program}}, som inte är installerat",
+    "airplay2Client": "AirPlay 2 (experimentellt): spela på HomePod, Apple TV och andra AirPlay 2-högtalare"
   },
   "servers": {
     "title": "Ingångsservrar",
@@ -168,7 +169,8 @@
     "btHidden": "Dold: bara redan parkopplade telefoner kan ansluta",
     "bitrate": "Bithastighet (valfritt)",
     "bitrateHint": "96, 160 eller 320 kbit/s. Lämna tomt för 320.",
-    "airplay2PortHint": "Porten som AirPlay 2 lyssnar på, som :7000. Ge varje AirPlay-ingång en egen port."
+    "airplay2PortHint": "Porten som AirPlay 2 lyssnar på, som :7000. Ge varje AirPlay-ingång en egen port.",
+    "airplay2AddressHint": "Mottagarens adress och port, som Hitta enheter ger dem, som 192.168.1.60:7000. Den måste låta alla i nätverket spela utan lösenord."
   },
   "pairing": {
     "title": "AirPlay-parkoppling",

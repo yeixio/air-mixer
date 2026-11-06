@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: ایک Bluetooth اسپیکر کے طور پر دکھتا ہے جس سے فون اور لیپ ٹاپ پیئر ہوتے ہیں",
     "spotifyServer": "Spotify Connect: Spotify ایپ میں اسپیکر کے طور پر دکھتا ہے",
     "airplay2Server": "AirPlay 2: iPhone، iPad اور Mac پر AirPlay 2 اسپیکر کے طور پر دکھتا ہے، ملٹی روم سمیت",
-    "needs": "{{name}}: {{program}} چاہیے، جو انسٹال نہیں ہے"
+    "needs": "{{name}}: {{program}} چاہیے، جو انسٹال نہیں ہے",
+    "airplay2Client": "AirPlay 2 (تجرباتی): HomePod، Apple TV اور دوسرے AirPlay 2 اسپیکرز پر چلائیں"
   },
   "servers": {
     "title": "ان پٹ سرور",
@@ -168,7 +169,8 @@
     "btHidden": "چھپا ہوا: صرف پہلے سے پیئر شدہ فون جڑ سکتے ہیں",
     "bitrate": "بٹ ریٹ (اختیاری)",
     "bitrateHint": "96، 160 یا 320 kbit/s۔ 320 کے لیے خالی چھوڑیں۔",
-    "airplay2PortHint": "وہ پورٹ جس پر AirPlay 2 سنتا ہے، جیسے ‎:7000۔ ہر AirPlay ان پٹ کو اپنا پورٹ دیں۔"
+    "airplay2PortHint": "وہ پورٹ جس پر AirPlay 2 سنتا ہے، جیسے ‎:7000۔ ہر AirPlay ان پٹ کو اپنا پورٹ دیں۔",
+    "airplay2AddressHint": "ریسیور کا پتا اور پورٹ، جیسا کہ ڈیوائسز تلاش کریں دیتا ہے، جیسے 192.168.1.60:7000۔ اسے نیٹ ورک پر کسی کو بھی بغیر پاس ورڈ چلانے کی اجازت دینی چاہیے۔"
   },
   "pairing": {
     "title": "AirPlay پیئرنگ",

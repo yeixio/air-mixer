@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: muncul sebagai pembesar suara Bluetooth yang boleh dipasangkan dengan telefon dan komputer riba",
     "spotifyServer": "Spotify Connect: muncul sebagai pembesar suara dalam aplikasi Spotify",
     "airplay2Server": "AirPlay 2: muncul sebagai pembesar suara AirPlay 2 pada iPhone, iPad dan Mac, termasuk berbilang bilik",
-    "needs": "{{name}}: memerlukan {{program}}, yang tidak dipasang"
+    "needs": "{{name}}: memerlukan {{program}}, yang tidak dipasang",
+    "airplay2Client": "AirPlay 2 (percubaan): mainkan pada HomePod, Apple TV dan pembesar suara AirPlay 2 lain"
   },
   "servers": {
     "title": "Pelayan input",
@@ -167,7 +168,8 @@
     "btHidden": "Tersembunyi: hanya telefon yang sudah dipasangkan boleh bersambung",
     "bitrate": "Kadar bit (pilihan)",
     "bitrateHint": "96, 160 atau 320 kbit/s. Biarkan kosong untuk 320.",
-    "airplay2PortHint": "Port yang didengar oleh AirPlay 2, seperti :7000. Beri setiap input AirPlay port sendiri."
+    "airplay2PortHint": "Port yang didengar oleh AirPlay 2, seperti :7000. Beri setiap input AirPlay port sendiri.",
+    "airplay2AddressHint": "Alamat dan port penerima, seperti yang diberikan Cari Peranti, seperti 192.168.1.60:7000. Ia mesti membenarkan sesiapa dalam rangkaian bermain tanpa kata laluan."
   },
   "pairing": {
     "title": "Gandingan AirPlay",

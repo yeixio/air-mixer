@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth：顯示為可供手機和筆電配對的藍牙喇叭",
     "spotifyServer": "Spotify Connect：在 Spotify App 中顯示為喇叭",
     "airplay2Server": "AirPlay 2：在 iPhone、iPad 和 Mac 上顯示為 AirPlay 2 喇叭，支援多房間",
-    "needs": "{{name}}：需要 {{program}}，但尚未安裝"
+    "needs": "{{name}}：需要 {{program}}，但尚未安裝",
+    "airplay2Client": "AirPlay 2（實驗性）：在 HomePod、Apple TV 和其他 AirPlay 2 喇叭上播放"
   },
   "servers": {
     "title": "輸入伺服器",
@@ -167,7 +168,8 @@
     "btHidden": "隱藏：只有已配對的手機可以連線",
     "bitrate": "位元率（選填）",
     "bitrateHint": "96、160 或 320 kbit/s。留空則為 320。",
-    "airplay2PortHint": "AirPlay 2 監聽的連接埠，例如 :7000。每個 AirPlay 輸入使用不同的連接埠。"
+    "airplay2PortHint": "AirPlay 2 監聽的連接埠，例如 :7000。每個 AirPlay 輸入使用不同的連接埠。",
+    "airplay2AddressHint": "接收器的位址和連接埠（「尋找裝置」會提供），例如 192.168.1.60:7000。它必須允許網路上的任何人無須密碼即可播放。"
   },
   "pairing": {
     "title": "AirPlay 配對",

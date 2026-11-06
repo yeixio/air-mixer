@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth：显示为可供手机和笔记本电脑配对的蓝牙音箱",
     "spotifyServer": "Spotify Connect：在 Spotify 应用中显示为音箱",
     "airplay2Server": "AirPlay 2：在 iPhone、iPad 和 Mac 上显示为 AirPlay 2 音箱，支持多房间",
-    "needs": "{{name}}：需要 {{program}}，但尚未安装"
+    "needs": "{{name}}：需要 {{program}}，但尚未安装",
+    "airplay2Client": "AirPlay 2（实验性）：在 HomePod、Apple TV 和其他 AirPlay 2 音箱上播放"
   },
   "servers": {
     "title": "输入服务器",
@@ -167,7 +168,8 @@
     "btHidden": "隐藏：只有已配对的手机可以连接",
     "bitrate": "比特率（可选）",
     "bitrateHint": "96、160 或 320 kbit/s。留空则为 320。",
-    "airplay2PortHint": "AirPlay 2 监听的端口，如 :7000。每个 AirPlay 输入使用不同的端口。"
+    "airplay2PortHint": "AirPlay 2 监听的端口，如 :7000。每个 AirPlay 输入使用不同的端口。",
+    "airplay2AddressHint": "接收器的地址和端口（“查找设备”会给出），如 192.168.1.60:7000。它必须允许网络上的任何人无需密码即可播放。"
   },
   "pairing": {
     "title": "AirPlay 配对",

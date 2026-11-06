@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: näkyy Bluetooth-kaiuttimena, johon puhelimet ja kannettavat voi pariliittää",
     "spotifyServer": "Spotify Connect: näkyy kaiuttimena Spotify-sovelluksessa",
     "airplay2Server": "AirPlay 2: näkyy AirPlay 2 -kaiuttimena iPhonessa, iPadissa ja Macissa, myös monihuoneessa",
-    "needs": "{{name}}: tarvitsee ohjelman {{program}}, jota ei ole asennettu"
+    "needs": "{{name}}: tarvitsee ohjelman {{program}}, jota ei ole asennettu",
+    "airplay2Client": "AirPlay 2 (kokeellinen): toista HomePodeilla, Apple TV:illä ja muilla AirPlay 2 -kaiuttimilla"
   },
   "servers": {
     "title": "Tulopalvelimet",
@@ -168,7 +169,8 @@
     "btHidden": "Piilotettu: vain jo pariliitetyt puhelimet voivat yhdistää",
     "bitrate": "Bittinopeus (valinnainen)",
     "bitrateHint": "96, 160 tai 320 kbit/s. Jätä tyhjäksi, niin käytetään 320:tä.",
-    "airplay2PortHint": "Portti, jota AirPlay 2 kuuntelee, kuten :7000. Anna jokaiselle AirPlay-tulolle oma portti."
+    "airplay2PortHint": "Portti, jota AirPlay 2 kuuntelee, kuten :7000. Anna jokaiselle AirPlay-tulolle oma portti.",
+    "airplay2AddressHint": "Vastaanottimen osoite ja portti, jotka Etsi laitteita antaa, kuten 192.168.1.60:7000. Sen on sallittava toisto kaikille verkossa ilman salasanaa."
   },
   "pairing": {
     "title": "AirPlay-pariliitos",

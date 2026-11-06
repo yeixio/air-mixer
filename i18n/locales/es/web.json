@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: aparece como altavoz Bluetooth que los móviles y portátiles pueden emparejar",
     "spotifyServer": "Spotify Connect: aparece como altavoz en la app de Spotify",
     "airplay2Server": "AirPlay 2: aparece como altavoz AirPlay 2 en iPhone, iPad y Mac, también en multisala",
-    "needs": "{{name}}: necesita {{program}}, que no está instalado"
+    "needs": "{{name}}: necesita {{program}}, que no está instalado",
+    "airplay2Client": "AirPlay 2 (experimental): reproduce en HomePod, Apple TV y otros altavoces AirPlay 2"
   },
   "servers": {
     "title": "Servidores de entrada",
@@ -169,7 +170,8 @@
     "btHidden": "Oculto: solo pueden conectarse los teléfonos ya emparejados",
     "bitrate": "Tasa de bits (opcional)",
     "bitrateHint": "96, 160 o 320 kbit/s. Déjalo vacío para 320.",
-    "airplay2PortHint": "El puerto en el que escucha AirPlay 2, como :7000. Da a cada entrada AirPlay su propio puerto."
+    "airplay2PortHint": "El puerto en el que escucha AirPlay 2, como :7000. Da a cada entrada AirPlay su propio puerto.",
+    "airplay2AddressHint": "La dirección y el puerto del receptor, tal como los da Buscar dispositivos, como 192.168.1.60:7000. Debe permitir reproducir a cualquiera de la red, sin contraseña."
   },
   "pairing": {
     "title": "Emparejamiento AirPlay",

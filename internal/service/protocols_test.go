@@ -166,7 +166,7 @@ func TestReceiverPrograms(t *testing.T) {
 			t.Errorf("%s without its program = %v", name, err)
 		}
 		for _, p := range Protocols() {
-			if p.Name == name && p.Available {
+			if p.Kind == "server" && p.Name == name && p.Available {
 				t.Errorf("%s is available without its program", name)
 			}
 		}

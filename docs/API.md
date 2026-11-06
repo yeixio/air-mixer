@@ -129,6 +129,7 @@ reported by `/api/status`.
 | Protocol | `address` | `config` keys |
 |----------|-----------|---------------|
 | `airplay` | `host` or `host:port` (default port 5000) | `latency_ms` (default 2000), `disable_encryption` |
+| `airplay2` | `host` or `host:port` (default port 7000), as discovery gives it | `latency_ms` (default 2000) |
 | `local` | ignored | `delay_ms` |
 | `pulse` | ignored | `sink` (name, description or Bluetooth address; default sink if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`), `delay_ms` |
 | `cast` | the Cast device's `host` or `host:port` (default port 8009; speaker groups have their own port, which discovery gives) | none |
@@ -142,6 +143,17 @@ speakers with different latencies, such as several Bluetooth speakers in
 one room. A `pulse` client keeps retrying while its sink is missing, for
 example while a Bluetooth speaker is off, and reconnects by itself when
 the speaker drops off and comes back.
+
+An `airplay2` client is **experimental** and has not been tried on
+Apple hardware yet. It plays on receivers that refuse classic AirPlay,
+such as HomePods and recent Apple TVs: it pairs with HomeKit's transient
+pairing (the receiver must allow "Anyone on the same network", without a
+password), encrypts the RTSP connection with ChaCha20-Poly1305, and sends
+ALAC audio as a realtime stream, each packet sealed with the session key.
+It uses NTP timing, so receivers that only accept PTP, such as
+shairport-sync's AirPlay 2 mode, do not play; those speak classic AirPlay
+anyway. A receiver that wants a PIN fails with "refused transient
+pairing". Please report what works with the device report form.
 
 A `cast` client plays on a Google Cast device (Chromecast, Nest and
 Google Home speakers, speaker groups, TVs with Chromecast built in). It
@@ -359,7 +371,7 @@ named in `requires` is not installed, and creating that protocol fails.
   "adapters": [
     {"id": "client-1", "name": "Kitchen", "protocol": "airplay", "kind": "client", "state": "connected"},
     {"id": "client-2", "name": "Apple TV", "protocol": "airplay", "kind": "client", "state": "failed",
-     "error": "airplay: device requires AirPlay 2 pairing, which is not supported yet: unsupported device"}
+     "error": "airplay: device requires AirPlay 2; add it as an AirPlay 2 output instead: unsupported device"}
   ],
   "version": "v0.2.0",
   "timestamp": 1793037600

@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: hiện như một loa Bluetooth để điện thoại và máy tính xách tay ghép đôi",
     "spotifyServer": "Spotify Connect: hiện như một loa trong ứng dụng Spotify",
     "airplay2Server": "AirPlay 2: hiện như một loa AirPlay 2 trên iPhone, iPad và Mac, kể cả nhiều phòng",
-    "needs": "{{name}}: cần {{program}}, nhưng chưa được cài"
+    "needs": "{{name}}: cần {{program}}, nhưng chưa được cài",
+    "airplay2Client": "AirPlay 2 (thử nghiệm): phát trên HomePod, Apple TV và các loa AirPlay 2 khác"
   },
   "servers": {
     "title": "Máy chủ đầu vào",
@@ -167,7 +168,8 @@
     "btHidden": "Ẩn: chỉ điện thoại đã ghép đôi mới kết nối được",
     "bitrate": "Tốc độ bit (không bắt buộc)",
     "bitrateHint": "96, 160 hoặc 320 kbit/s. Để trống để dùng 320.",
-    "airplay2PortHint": "Cổng AirPlay 2 lắng nghe, như :7000. Mỗi đầu vào AirPlay cần một cổng riêng."
+    "airplay2PortHint": "Cổng AirPlay 2 lắng nghe, như :7000. Mỗi đầu vào AirPlay cần một cổng riêng.",
+    "airplay2AddressHint": "Địa chỉ và cổng của đầu thu, như Tìm thiết bị đưa ra, ví dụ 192.168.1.60:7000. Đầu thu phải cho phép mọi người trong mạng phát mà không cần mật khẩu."
   },
   "pairing": {
     "title": "Ghép đôi AirPlay",

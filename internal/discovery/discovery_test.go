@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -174,7 +175,24 @@ func TestService(t *testing.T) {
 	if _, err := failing.DiscoverAll(ctx, time.Millisecond); err == nil {
 		t.Error("total failure swallowed")
 	}
-	if got := NewService().Protocols(); len(got) != 4 || got[0] != "airplay" || got[1] != "cast" || got[2] != "snapcast" || got[3] != "upnp" {
+	if got := NewService().Protocols(); !slices.Equal(got, []string{"airplay", "airplay2", "cast", "snapcast", "upnp"}) {
 		t.Errorf("default protocols = %v", got)
+	}
+}
+
+func TestAirPlay2Discover(t *testing.T) {
+	a := &AirPlay2{browse: fakeBrowseService("_airplay._tcp", []*zeroconf.ServiceEntry{
+		entry("Bedroom HomePod", "192.168.1.30", 7000, "model=AudioAccessory5,1", "features=0x4A7FCA00,0xBC354BD0"),
+	}, nil)}
+	devices, err := a.Discover(context.Background(), 50*time.Millisecond)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(devices) != 1 {
+		t.Fatalf("got %d devices", len(devices))
+	}
+	d := devices[0]
+	if d.Protocol != "airplay2" || d.Name != "Bedroom HomePod" || d.Address != "192.168.1.30:7000" || d.Metadata["model"] != "AudioAccessory5,1" {
+		t.Errorf("device %+v", d)
 	}
 }

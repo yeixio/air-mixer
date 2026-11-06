@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: vises som en Bluetooth-højttaler, som telefoner og bærbare kan parre med",
     "spotifyServer": "Spotify Connect: vises som en højttaler i Spotify-appen",
     "airplay2Server": "AirPlay 2: vises som en AirPlay 2-højttaler på iPhone, iPad og Mac, også til multirum",
-    "needs": "{{name}}: kræver {{program}}, som ikke er installeret"
+    "needs": "{{name}}: kræver {{program}}, som ikke er installeret",
+    "airplay2Client": "AirPlay 2 (eksperimentel): afspil på HomePod, Apple TV og andre AirPlay 2-højttalere"
   },
   "servers": {
     "title": "Indgangsservere",
@@ -168,7 +169,8 @@
     "btHidden": "Skjult: kun telefoner, der allerede er parret, kan forbinde",
     "bitrate": "Bithastighed (valgfri)",
     "bitrateHint": "96, 160 eller 320 kbit/s. Lad feltet stå tomt for 320.",
-    "airplay2PortHint": "Porten, AirPlay 2 lytter på, f.eks. :7000. Giv hver AirPlay-indgang sin egen port."
+    "airplay2PortHint": "Porten, AirPlay 2 lytter på, f.eks. :7000. Giv hver AirPlay-indgang sin egen port.",
+    "airplay2AddressHint": "Modtagerens adresse og port, som Find enheder giver dem, f.eks. 192.168.1.60:7000. Den skal lade alle på netværket afspille uden adgangskode."
   },
   "pairing": {
     "title": "AirPlay-parring",

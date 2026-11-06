@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: telefonların ve dizüstülerin eşleştiği bir Bluetooth hoparlör olarak görünür",
     "spotifyServer": "Spotify Connect: Spotify uygulamasında hoparlör olarak görünür",
     "airplay2Server": "AirPlay 2: iPhone, iPad ve Mac'te çok odalı dahil AirPlay 2 hoparlör olarak görünür",
-    "needs": "{{name}}: yüklü olmayan {{program}} gerekir"
+    "needs": "{{name}}: yüklü olmayan {{program}} gerekir",
+    "airplay2Client": "AirPlay 2 (deneysel): HomePod, Apple TV ve diğer AirPlay 2 hoparlörlerde çal"
   },
   "servers": {
     "title": "Giriş sunucuları",
@@ -168,7 +169,8 @@
     "btHidden": "Gizli: yalnızca zaten eşleşmiş telefonlar bağlanabilir",
     "bitrate": "Bit hızı (isteğe bağlı)",
     "bitrateHint": "96, 160 veya 320 kbit/s. 320 için boş bırak.",
-    "airplay2PortHint": "AirPlay 2'nin dinlediği bağlantı noktası, örneğin :7000. Her AirPlay girişine ayrı bir bağlantı noktası ver."
+    "airplay2PortHint": "AirPlay 2'nin dinlediği bağlantı noktası, örneğin :7000. Her AirPlay girişine ayrı bir bağlantı noktası ver.",
+    "airplay2AddressHint": "Alıcının Cihazları bul ile gelen adresi ve bağlantı noktası, örneğin 192.168.1.60:7000. Ağdaki herkesin parolasız çalmasına izin vermeli."
   },
   "pairing": {
     "title": "AirPlay eşleştirme",

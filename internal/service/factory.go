@@ -235,7 +235,7 @@ func (f *factory) Client(c *db.Client) (protocols.Client, error) {
 		return nil, err
 	}
 	switch c.Protocol {
-	case "airplay":
+	case "airplay", "airplay2":
 		addr := c.Address
 		if addr == "" {
 			addr = cfg.Address
@@ -250,6 +250,7 @@ func (f *factory) Client(c *db.Client) (protocols.Client, error) {
 			ID: c.ID, Name: c.Name, Address: addr,
 			Latency:           time.Duration(cfg.LatencyMS) * time.Millisecond,
 			DisableEncryption: cfg.DisableEncryption,
+			AirPlay2:          c.Protocol == "airplay2",
 			Logger:            f.log,
 		}), nil
 	case "local", "pulse":

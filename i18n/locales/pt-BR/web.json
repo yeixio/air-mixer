@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: aparece como alto-falante Bluetooth para celulares e notebooks parearem",
     "spotifyServer": "Spotify Connect: aparece como alto-falante no app do Spotify",
     "airplay2Server": "AirPlay 2: aparece como alto-falante AirPlay 2 no iPhone, iPad e Mac, inclusive em multiroom",
-    "needs": "{{name}}: precisa do {{program}}, que não está instalado"
+    "needs": "{{name}}: precisa do {{program}}, que não está instalado",
+    "airplay2Client": "AirPlay 2 (experimental): toque em HomePods, Apple TVs e outros alto-falantes AirPlay 2"
   },
   "servers": {
     "title": "Servidores de entrada",
@@ -169,7 +170,8 @@
     "btHidden": "Oculto: só celulares já pareados podem se conectar",
     "bitrate": "Taxa de bits (opcional)",
     "bitrateHint": "96, 160 ou 320 kbit/s. Deixe vazio para 320.",
-    "airplay2PortHint": "A porta em que o AirPlay 2 escuta, como :7000. Dê a cada entrada AirPlay uma porta própria."
+    "airplay2PortHint": "A porta em que o AirPlay 2 escuta, como :7000. Dê a cada entrada AirPlay uma porta própria.",
+    "airplay2AddressHint": "O endereço e a porta do receptor, como Encontrar dispositivos mostra, como 192.168.1.60:7000. Ele precisa permitir que qualquer pessoa na rede toque, sem senha."
   },
   "pairing": {
     "title": "Pareamento AirPlay",

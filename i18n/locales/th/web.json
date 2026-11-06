@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: ปรากฏเป็นลำโพง Bluetooth ที่โทรศัพท์และแล็ปท็อปจับคู่ได้",
     "spotifyServer": "Spotify Connect: ปรากฏเป็นลำโพงในแอป Spotify",
     "airplay2Server": "AirPlay 2: ปรากฏเป็นลำโพง AirPlay 2 บน iPhone, iPad และ Mac รวมถึงแบบหลายห้อง",
-    "needs": "{{name}}: ต้องใช้ {{program}} ซึ่งยังไม่ได้ติดตั้ง"
+    "needs": "{{name}}: ต้องใช้ {{program}} ซึ่งยังไม่ได้ติดตั้ง",
+    "airplay2Client": "AirPlay 2 (ทดลอง): เล่นบน HomePod, Apple TV และลำโพง AirPlay 2 อื่นๆ"
   },
   "servers": {
     "title": "เซิร์ฟเวอร์ขาเข้า",
@@ -167,7 +168,8 @@
     "btHidden": "ซ่อน: เชื่อมต่อได้เฉพาะโทรศัพท์ที่จับคู่แล้ว",
     "bitrate": "บิตเรต (ไม่บังคับ)",
     "bitrateHint": "96, 160 หรือ 320 kbit/s เว้นว่างไว้เพื่อใช้ 320",
-    "airplay2PortHint": "พอร์ตที่ AirPlay 2 รอรับ เช่น :7000 ให้อินพุต AirPlay แต่ละตัวมีพอร์ตของตัวเอง"
+    "airplay2PortHint": "พอร์ตที่ AirPlay 2 รอรับ เช่น :7000 ให้อินพุต AirPlay แต่ละตัวมีพอร์ตของตัวเอง",
+    "airplay2AddressHint": "ที่อยู่และพอร์ตของเครื่องรับตามที่ค้นหาอุปกรณ์ให้มา เช่น 192.168.1.60:7000 เครื่องรับต้องอนุญาตให้ทุกคนในเครือข่ายเล่นได้โดยไม่ต้องใช้รหัสผ่าน"
   },
   "pairing": {
     "title": "การจับคู่ AirPlay",

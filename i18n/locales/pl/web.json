@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: widoczny jako głośnik Bluetooth, z którym parują się telefony i laptopy",
     "spotifyServer": "Spotify Connect: widoczny jako głośnik w aplikacji Spotify",
     "airplay2Server": "AirPlay 2: widoczny jako głośnik AirPlay 2 na iPhonie, iPadzie i Macu, także w multiroom",
-    "needs": "{{name}}: wymaga programu {{program}}, który nie jest zainstalowany"
+    "needs": "{{name}}: wymaga programu {{program}}, który nie jest zainstalowany",
+    "airplay2Client": "AirPlay 2 (eksperymentalne): odtwarzaj na HomePodach, Apple TV i innych głośnikach AirPlay 2"
   },
   "servers": {
     "title": "Serwery wejściowe",
@@ -170,7 +171,8 @@
     "btHidden": "Ukryty: połączyć mogą się tylko już sparowane telefony",
     "bitrate": "Bitrate (opcjonalny)",
     "bitrateHint": "96, 160 lub 320 kbit/s. Zostaw puste dla 320.",
-    "airplay2PortHint": "Port, na którym nasłuchuje AirPlay 2, np. :7000. Każde wejście AirPlay potrzebuje własnego portu."
+    "airplay2PortHint": "Port, na którym nasłuchuje AirPlay 2, np. :7000. Każde wejście AirPlay potrzebuje własnego portu.",
+    "airplay2AddressHint": "Adres i port odbiornika, jak podaje Znajdź urządzenia, np. 192.168.1.60:7000. Musi pozwalać każdemu w sieci odtwarzać bez hasła."
   },
   "pairing": {
     "title": "Parowanie AirPlay",

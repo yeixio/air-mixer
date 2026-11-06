@@ -28,10 +28,10 @@ protocol they speak.
 
 Today it receives classic AirPlay and AirPlay 2, Bluetooth, Spotify
 Connect, DLNA and internet radio, records any PulseAudio or PipeWire
-source, and plays on classic AirPlay speakers, the machine's own sound
-card, any PulseAudio or PipeWire sink including paired Bluetooth speakers,
-Google Cast devices, Sonos and other UPnP/DLNA renderers, and Snapcast.
-An AirPlay 2 output is on the [roadmap](ROADMAP.md).
+source, and plays on AirPlay speakers, the machine's own sound card, any
+PulseAudio or PipeWire sink including paired Bluetooth speakers, Google
+Cast devices, Sonos and other UPnP/DLNA renderers, and Snapcast. The
+AirPlay 2 output, for HomePods and recent Apple TVs, is experimental.
 
 <p align="center">
   <img src="docs/assets/web-ui.png" alt="The Air-Mixer web UI with AirPlay inputs, speakers and two routes" width="85%">
@@ -43,6 +43,9 @@ An AirPlay 2 output is on the [roadmap](ROADMAP.md).
   an AirPlay speaker. Pick it in Control Center and play.
 - **AirPlay sender.** Plays to AirPort Express, shairport-sync, most
   AV receivers and other classic AirPlay (RAOP) speakers.
+- **AirPlay 2 sender (experimental).** Plays to HomePods, Apple TVs and
+  other receivers that refuse classic AirPlay, using HomeKit's transient
+  pairing. Not yet tried on Apple hardware; reports are welcome.
 - **Internet radio input.** Plays a station, a PLS, M3U or HLS playlist
   or an audio file from a URL for as long as it is on, reconnecting when
   the station drops. AAC, Ogg, Opus and FLAC go through ffmpeg, which the
@@ -212,10 +215,10 @@ airmixer version    Print version information
 
 ## Current limitations
 
-- **AirPlay 2 output.** Air-Mixer sends classic AirPlay (RAOP). Devices
-  that only accept AirPlay 2, such as recent Apple TVs and HomePods, need
-  HomeKit pairing, which is not implemented yet; they show as `failed` in
-  `/api/status`.
+- **AirPlay 2 output.** The `airplay2` output is experimental and untested
+  on Apple hardware. It needs the receiver to allow anyone on the network
+  to play without a password, and uses NTP timing, so receivers that only
+  accept PTP don't play yet.
 - **Receiver programs.** The Spotify Connect and AirPlay 2 inputs run
   `librespot` and `shairport-sync` (built with AirPlay 2, with `nqptp`
   running), which are not in the Docker image yet. The web UI greys these

@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: shows up as a Bluetooth speaker that phones and laptops pair with",
     "spotifyServer": "Spotify Connect: shows up as a speaker in the Spotify app",
     "airplay2Server": "AirPlay 2: shows up as an AirPlay 2 speaker on iPhone, iPad and Mac, including multi-room",
-    "needs": "{{name}}: needs {{program}}, which isn't installed"
+    "needs": "{{name}}: needs {{program}}, which isn't installed",
+    "airplay2Client": "AirPlay 2 (experimental): play on HomePods, Apple TVs and other AirPlay 2 speakers"
   },
   "servers": {
     "title": "Input Servers",
@@ -168,7 +169,8 @@
     "btHidden": "Hidden: only phones already paired can connect",
     "bitrate": "Bitrate (optional)",
     "bitrateHint": "96, 160 or 320 kbit/s. Leave empty for 320.",
-    "airplay2PortHint": "The port AirPlay 2 listens on, such as :7000. Give each AirPlay input its own port."
+    "airplay2PortHint": "The port AirPlay 2 listens on, such as :7000. Give each AirPlay input its own port.",
+    "airplay2AddressHint": "The receiver's address and port, as Find Devices gives it, such as 192.168.1.60:7000. It must allow anyone on the network to play, without a password."
   },
   "pairing": {
     "title": "AirPlay Pairing",

@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: verschijnt als Bluetooth-speaker waarmee telefoons en laptops koppelen",
     "spotifyServer": "Spotify Connect: verschijnt als speaker in de Spotify-app",
     "airplay2Server": "AirPlay 2: verschijnt als AirPlay 2-speaker op iPhone, iPad en Mac, ook voor multiroom",
-    "needs": "{{name}}: heeft {{program}} nodig, dat niet is geïnstalleerd"
+    "needs": "{{name}}: heeft {{program}} nodig, dat niet is geïnstalleerd",
+    "airplay2Client": "AirPlay 2 (experimenteel): speel af op HomePods, Apple TV's en andere AirPlay 2-speakers"
   },
   "servers": {
     "title": "Invoerservers",
@@ -168,7 +169,8 @@
     "btHidden": "Verborgen: alleen al gekoppelde telefoons kunnen verbinden",
     "bitrate": "Bitrate (optioneel)",
     "bitrateHint": "96, 160 of 320 kbit/s. Laat leeg voor 320.",
-    "airplay2PortHint": "De poort waarop AirPlay 2 luistert, zoals :7000. Geef elke AirPlay-invoer een eigen poort."
+    "airplay2PortHint": "De poort waarop AirPlay 2 luistert, zoals :7000. Geef elke AirPlay-invoer een eigen poort.",
+    "airplay2AddressHint": "Het adres en de poort van de ontvanger, zoals Apparaten zoeken die geeft, zoals 192.168.1.60:7000. Iedereen op het netwerk moet er zonder wachtwoord op mogen afspelen."
   },
   "pairing": {
     "title": "AirPlay-koppeling",

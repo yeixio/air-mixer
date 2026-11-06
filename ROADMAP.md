@@ -34,7 +34,7 @@ longer.
 
 | Feature | Size | Notes |
 |---------|------|-------|
-| AirPlay 2 output | L | HomeKit pairing (SRP-6a, Ed25519, ChaCha20-Poly1305) and buffered audio, for HomePods and recent Apple TVs. The highest-demand item, and the largest. |
+| AirPlay 2 output, beyond experimental | L | The `airplay2` output does transient pairing, the encrypted channel and realtime audio with NTP timing. Still to do: confirm it on HomePods and Apple TVs, PTP timing (needed by some receivers), PIN pairing for receivers that require it, and buffered audio for multi-room sync. |
 | AirPlay 2 receiver, built in | L | The `airplay2` input runs shairport-sync. A built-in receiver would drop that dependency and the separate `nqptp` daemon. |
 | Receivers in the Docker image | S | Ship `librespot` and an AirPlay 2 build of `shairport-sync` with `nqptp`, in the image or a `-full` variant. Alpine's packages are AirPlay 1 only and librespot is in its testing repo. |
 | Cast volume and lower latency | M | Follow and set the Cast device's volume, and try a smaller buffer for the Default Media Receiver. The Cast output itself is done. |

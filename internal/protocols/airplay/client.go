@@ -12,6 +12,7 @@ import (
 	"net/textproto"
 	"strconv"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/yeixio/air-mixer/internal/audio"
@@ -20,13 +21,14 @@ import (
 )
 
 // ErrAirPlay2Required is returned when a device refuses classic AirPlay and
-// expects an AirPlay 2 session with HomeKit pairing, which is not supported
-// yet.
-var ErrAirPlay2Required = fmt.Errorf("airplay: device requires AirPlay 2 pairing, which is not supported yet: %w", protocols.ErrUnsupportedDevice)
+// expects an AirPlay 2 session with HomeKit pairing: add it as an airplay2
+// output instead.
+var ErrAirPlay2Required = fmt.Errorf("airplay: device requires AirPlay 2; add it as an AirPlay 2 output instead: %w", protocols.ErrUnsupportedDevice)
 
 const (
 	defaultPort    = 5000
-	framesPerPkt   = 352 // samples per channel in each RTP packet
+	defaultPort2   = 7000 // AirPlay 2 receivers' RTSP port
+	framesPerPkt   = 352  // samples per channel in each RTP packet
 	defaultLatency = 2 * time.Second
 	// handshakeTimeout bounds Connect when ctx has no deadline.
 	handshakeTimeout = 10 * time.Second
@@ -51,8 +53,14 @@ type ClientOptions struct {
 	// to 2 seconds, like iTunes.
 	Latency time.Duration
 	// DisableEncryption sends audio in the clear. Receivers accept both.
+	// It does not apply to AirPlay 2, which is always encrypted.
 	DisableEncryption bool
-	Logger            *slog.Logger
+	// AirPlay2 speaks AirPlay 2 instead of classic AirPlay: transient
+	// HomeKit pairing, an encrypted control connection and realtime
+	// audio, for HomePods, Apple TVs and other receivers that refuse
+	// classic AirPlay. Experimental.
+	AirPlay2 bool
+	Logger   *slog.Logger
 }
 
 // Client streams audio to an AirPlay (RAOP) receiver such as an AirPort
@@ -62,7 +70,9 @@ type Client struct {
 	log  *slog.Logger
 
 	mu        sync.Mutex
+	rtspMu    sync.Mutex // serialises requests on conn
 	connected bool
+	lost      atomic.Bool
 	conn      net.Conn
 	rtsp      *bufio.Reader
 	cseq      int
@@ -73,6 +83,7 @@ type Client struct {
 	stop      chan struct{}
 	wg        sync.WaitGroup
 	udp       []*net.UDPConn
+	events    net.Conn
 
 	stream *stream
 }
@@ -85,12 +96,21 @@ func NewClient(opts ClientOptions) *Client {
 	if opts.Latency <= 0 {
 		opts.Latency = defaultLatency
 	}
-	return &Client{opts: opts, log: opts.Logger.With("component", "airplay-client", "client", opts.ID)}
+	component := "airplay-client"
+	if opts.AirPlay2 {
+		component = "airplay2-client"
+	}
+	return &Client{opts: opts, log: opts.Logger.With("component", component, "client", opts.ID)}
 }
 
-func (c *Client) ID() string       { return c.opts.ID }
-func (c *Client) Name() string     { return c.opts.Name }
-func (c *Client) Protocol() string { return "airplay" }
+func (c *Client) ID() string   { return c.opts.ID }
+func (c *Client) Name() string { return c.opts.Name }
+func (c *Client) Protocol() string {
+	if c.opts.AirPlay2 {
+		return "airplay2"
+	}
+	return "airplay"
+}
 
 // Connected reports whether a session is established.
 func (c *Client) Connected() bool {
@@ -110,7 +130,11 @@ func (c *Client) Connect(ctx context.Context) (err error) {
 
 	addr := c.opts.Address
 	if _, _, err := net.SplitHostPort(addr); err != nil {
-		addr = net.JoinHostPort(addr, strconv.Itoa(defaultPort))
+		port := defaultPort
+		if c.opts.AirPlay2 {
+			port = defaultPort2
+		}
+		addr = net.JoinHostPort(addr, strconv.Itoa(port))
 	}
 	var d net.Dialer
 	conn, err := d.DialContext(ctx, "tcp", addr)
@@ -138,7 +162,11 @@ func (c *Client) Connect(ctx context.Context) (err error) {
 	c.headers.Set("Client-Instance", hex.EncodeToString(randBytes(8)))
 	c.headers.Set("DACP-ID", hex.EncodeToString(randBytes(8)))
 	c.headers.Set("Active-Remote", strconv.FormatUint(uint64(randUint32()), 10))
+	c.lost.Store(false)
 
+	if c.opts.AirPlay2 {
+		return c.connectAirPlay2(local, remote, sessionID, addr)
+	}
 	if err := c.options(); err != nil {
 		return err
 	}
@@ -243,8 +271,15 @@ func (c *Client) options() error {
 }
 
 func (c *Client) roundTrip(method string, h textproto.MIMEHeader, body []byte) (*response, error) {
+	return c.request(method, c.uri, h, body)
+}
+
+// request sends one RTSP request to uri and reads the answer.
+func (c *Client) request(method, uri string, h textproto.MIMEHeader, body []byte) (*response, error) {
+	c.rtspMu.Lock()
+	defer c.rtspMu.Unlock()
 	c.cseq++
-	req := &request{Method: method, URI: c.uri, Header: textproto.MIMEHeader{}, Body: body}
+	req := &request{Method: method, URI: uri, Header: textproto.MIMEHeader{}, Body: body}
 	for k, v := range c.headers {
 		req.Header[k] = v
 	}
@@ -272,6 +307,8 @@ func (c *Client) expectOK(resp *response, err error) error {
 	switch {
 	case err != nil:
 		return err
+	case c.opts.AirPlay2 && resp.StatusCode != 200:
+		return fmt.Errorf("airplay2: receiver answered %d %s", resp.StatusCode, resp.Reason)
 	case resp.StatusCode == 403 || resp.StatusCode == 401:
 		return ErrAirPlay2Required
 	case resp.StatusCode != 200:
@@ -303,6 +340,10 @@ func (c *Client) teardownLocked() {
 	if c.conn != nil {
 		c.conn.Close()
 	}
+	if c.events != nil {
+		c.events.Close()
+		c.events = nil
+	}
 	for _, u := range c.udp {
 		u.Close()
 	}
@@ -320,6 +361,9 @@ func (c *Client) Send(p protocols.Packet) error {
 	if !connected {
 		return protocols.ErrNotConnected
 	}
+	if c.lost.Load() {
+		return protocols.ErrConnectionLost
+	}
 	select {
 	case input <- p.Samples:
 		return nil
@@ -330,9 +374,12 @@ func (c *Client) Send(p protocols.Packet) error {
 
 // stream paces audio to the receiver in real time.
 type stream struct {
-	log     *slog.Logger
-	enc     *alac.Encoder
-	cipher  *aesCipher
+	log    *slog.Logger
+	enc    *alac.Encoder
+	cipher *aesCipher
+	// chacha encrypts AirPlay 2 audio, with nonce a packet counter.
+	chacha  aead
+	nonce   uint64
 	ssrc    uint32
 	seq     uint16
 	rtpTime uint32
@@ -429,8 +476,13 @@ func (s *stream) sendFrame(samples []float32, first bool) error {
 	if s.cipher != nil {
 		s.cipher.encrypt(payload, payload)
 	}
-	pkt := rtpHeader{Marker: first, PayloadType: ptAudio, Seq: s.seq, Timestamp: s.rtpTime, SSRC: s.ssrc}.append(make([]byte, 0, rtpHeaderLen+len(payload)))
-	pkt = append(pkt, payload...)
+	pkt := rtpHeader{Marker: first, PayloadType: ptAudio, Seq: s.seq, Timestamp: s.rtpTime, SSRC: s.ssrc}.append(make([]byte, 0, rtpHeaderLen+len(payload)+24))
+	if s.chacha != nil {
+		pkt = sealAudio(s.chacha, pkt, payload, s.nonce)
+		s.nonce++
+	} else {
+		pkt = append(pkt, payload...)
+	}
 
 	s.historyMu.Lock()
 	s.history[s.seq%historySize] = pkt

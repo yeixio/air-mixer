@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: מופיע כרמקול Bluetooth שטלפונים ומחשבים ניידים מתאימים אליו",
     "spotifyServer": "Spotify Connect: מופיע כרמקול באפליקציית Spotify",
     "airplay2Server": "AirPlay 2: מופיע כרמקול AirPlay 2 ב-iPhone, ב-iPad וב-Mac, כולל ריבוי חדרים",
-    "needs": "{{name}}: דורש את {{program}}, שאינו מותקן"
+    "needs": "{{name}}: דורש את {{program}}, שאינו מותקן",
+    "airplay2Client": "AirPlay 2 (ניסיוני): נגן ב-HomePod, ב-Apple TV וברמקולי AirPlay 2 אחרים"
   },
   "servers": {
     "title": "שרתי קלט",
@@ -169,7 +170,8 @@
     "btHidden": "מוסתר: רק טלפונים שכבר הותאמו יכולים להתחבר",
     "bitrate": "קצב סיביות (רשות)",
     "bitrateHint": "96, 160 או 320 קילוביט לשנייה. השאר ריק ל-320.",
-    "airplay2PortHint": "הפורט ש-AirPlay 2 מאזין עליו, למשל ‎:7000. תן לכל קלט AirPlay פורט משלו."
+    "airplay2PortHint": "הפורט ש-AirPlay 2 מאזין עליו, למשל ‎:7000. תן לכל קלט AirPlay פורט משלו.",
+    "airplay2AddressHint": "הכתובת והפורט של המקלט כפי ש'חיפוש מכשירים' נותן, למשל 192.168.1.60:7000. הוא חייב לאפשר לכל מי שברשת לנגן, בלי סיסמה."
   },
   "pairing": {
     "title": "צימוד AirPlay",

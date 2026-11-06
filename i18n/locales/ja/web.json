@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth：スマートフォンやノートPCとペアリングできる Bluetooth スピーカーとして表示",
     "spotifyServer": "Spotify Connect：Spotify アプリにスピーカーとして表示",
     "airplay2Server": "AirPlay 2：iPhone、iPad、Mac に AirPlay 2 スピーカーとして表示（マルチルーム対応）",
-    "needs": "{{name}}：{{program}} が必要ですが、インストールされていません"
+    "needs": "{{name}}：{{program}} が必要ですが、インストールされていません",
+    "airplay2Client": "AirPlay 2（試験的）：HomePod、Apple TV などの AirPlay 2 スピーカーで再生"
   },
   "servers": {
     "title": "入力サーバー",
@@ -167,7 +168,8 @@
     "btHidden": "非表示：ペアリング済みのスマートフォンだけが接続できます",
     "bitrate": "ビットレート（任意）",
     "bitrateHint": "96、160、320 kbit/s のいずれか。空欄なら 320 です。",
-    "airplay2PortHint": "AirPlay 2 が待ち受けるポート（例：:7000）。AirPlay 入力ごとに別のポートにしてください。"
+    "airplay2PortHint": "AirPlay 2 が待ち受けるポート（例：:7000）。AirPlay 入力ごとに別のポートにしてください。",
+    "airplay2AddressHint": "「デバイスを探す」で得られるレシーバーのアドレスとポート（例：192.168.1.60:7000）。ネットワーク上の誰でもパスワードなしで再生できる設定にしてください。"
   },
   "pairing": {
     "title": "AirPlay のペアリング",

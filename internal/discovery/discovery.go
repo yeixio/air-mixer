@@ -42,7 +42,7 @@ type Service struct {
 // built-in one if none are given.
 func NewService(ds ...Discoverer) *Service {
 	if len(ds) == 0 {
-		ds = []Discoverer{NewAirPlay(), NewCast(), NewSnapcast(), NewUPnP()}
+		ds = []Discoverer{NewAirPlay(), NewAirPlay2(), NewCast(), NewSnapcast(), NewUPnP()}
 	}
 	return &Service{discoverers: ds}
 }
@@ -171,6 +171,30 @@ func airplayDevice(e *zeroconf.ServiceEntry) (Device, bool) {
 		}
 	}
 	return d, true
+}
+
+// AirPlay2 discovers AirPlay 2 receivers (_airplay._tcp): HomePods,
+// Apple TVs and other speakers that need AirPlay 2.
+type AirPlay2 struct {
+	browse browseFunc
+}
+
+// NewAirPlay2 returns an AirPlay 2 discoverer.
+func NewAirPlay2() *AirPlay2 { return &AirPlay2{browse: zeroconf.Browse} }
+
+// Protocol returns "airplay2".
+func (*AirPlay2) Protocol() string { return "airplay2" }
+
+// Discover browses _airplay._tcp for timeout.
+func (a *AirPlay2) Discover(ctx context.Context, timeout time.Duration) ([]Device, error) {
+	return browseMDNS(ctx, a.browse, "_airplay._tcp", timeout, func(e *zeroconf.ServiceEntry, _ net.IP) Device {
+		d, ok := airplayDevice(e)
+		if ok {
+			d.Protocol = "airplay2"
+			d.Description = "AirPlay 2 device: " + d.Name
+		}
+		return d
+	})
 }
 
 // airplayName turns a RAOP instance name, "<MAC>@<name>", into the name.

@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: يظهر كسماعة Bluetooth تقترن بها الهواتف والحواسيب المحمولة",
     "spotifyServer": "Spotify Connect: يظهر كسماعة في تطبيق Spotify",
     "airplay2Server": "AirPlay 2: يظهر كسماعة AirPlay 2 على iPhone وiPad وMac، بما في ذلك تعدد الغرف",
-    "needs": "{{name}}: يحتاج إلى {{program}} وهو غير مثبّت"
+    "needs": "{{name}}: يحتاج إلى {{program}} وهو غير مثبّت",
+    "airplay2Client": "AirPlay 2 (تجريبي): شغّل على HomePod وApple TV وسماعات AirPlay 2 الأخرى"
   },
   "servers": {
     "title": "خوادم الإدخال",
@@ -172,7 +173,8 @@
     "btHidden": "مخفي: لا تتصل إلا الهواتف المقترنة مسبقًا",
     "bitrate": "معدل البت (اختياري)",
     "bitrateHint": "96 أو 160 أو 320 كيلوبت/ث. اتركه فارغًا لـ 320.",
-    "airplay2PortHint": "المنفذ الذي يستمع عليه AirPlay 2، مثل ‎:7000. أعطِ كل مدخل AirPlay منفذًا خاصًا به."
+    "airplay2PortHint": "المنفذ الذي يستمع عليه AirPlay 2، مثل ‎:7000. أعطِ كل مدخل AirPlay منفذًا خاصًا به.",
+    "airplay2AddressHint": "عنوان المستقبل ومنفذه كما يعطيهما البحث عن الأجهزة، مثل 192.168.1.60:7000. يجب أن يسمح لأي شخص على الشبكة بالتشغيل دون كلمة مرور."
   },
   "pairing": {
     "title": "إقران AirPlay",

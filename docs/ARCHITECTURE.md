@@ -63,6 +63,17 @@ Classic AirPlay (RAOP), both directions.
   every second, keeps the last 1024 packets to answer retransmit requests,
   and answers timing requests. Devices that demand AirPlay 2 pairing are
   reported with `ErrAirPlay2Required`.
+- **AirPlay 2 sender (`ClientOptions.AirPlay2`, experimental).** HomeKit
+  transient pair-setup (`hap.go`: TLV8, SRP-6a over the 3072-bit group
+  with SHA-512 and PIN 3939), then the RTSP connection is framed and
+  encrypted with ChaCha20-Poly1305 using HKDF-derived control keys.
+  `SETUP` bodies are binary plists (`bplist.go`): one for the session
+  (NTP timing, which opens the encrypted event channel) and one for a
+  realtime ALAC stream. Audio packets are sealed with the first 32 bytes of
+  the pairing secret, the RTP timestamp and SSRC as additional data; sync,
+  timing and retransmission are the classic ones. `POST /feedback` every
+  two seconds keeps the session alive, and two failures report
+  `ErrConnectionLost`.
 
 ### `internal/protocols/local` and `internal/protocols/pulse`
 

@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: एक Bluetooth स्पीकर के रूप में दिखता है जिससे फ़ोन और लैपटॉप पेयर होते हैं",
     "spotifyServer": "Spotify Connect: Spotify ऐप में स्पीकर के रूप में दिखता है",
     "airplay2Server": "AirPlay 2: iPhone, iPad और Mac पर AirPlay 2 स्पीकर के रूप में दिखता है, मल्टी-रूम सहित",
-    "needs": "{{name}}: {{program}} चाहिए, जो इंस्टॉल नहीं है"
+    "needs": "{{name}}: {{program}} चाहिए, जो इंस्टॉल नहीं है",
+    "airplay2Client": "AirPlay 2 (प्रायोगिक): HomePod, Apple TV और दूसरे AirPlay 2 स्पीकर पर चलाएँ"
   },
   "servers": {
     "title": "इनपुट सर्वर",
@@ -168,7 +169,8 @@
     "btHidden": "छिपा हुआ: सिर्फ़ पहले से पेयर किए फ़ोन जुड़ सकते हैं",
     "bitrate": "बिटरेट (वैकल्पिक)",
     "bitrateHint": "96, 160 या 320 kbit/s। 320 के लिए खाली छोड़ें।",
-    "airplay2PortHint": "वह पोर्ट जिस पर AirPlay 2 सुनता है, जैसे :7000। हर AirPlay इनपुट को अलग पोर्ट दें।"
+    "airplay2PortHint": "वह पोर्ट जिस पर AirPlay 2 सुनता है, जैसे :7000। हर AirPlay इनपुट को अलग पोर्ट दें।",
+    "airplay2AddressHint": "रिसीवर का पता और पोर्ट, जैसा डिवाइस खोजें देता है, जैसे 192.168.1.60:7000। उसे नेटवर्क पर किसी को भी बिना पासवर्ड चलाने देना चाहिए।"
   },
   "pairing": {
     "title": "AirPlay पेयरिंग",

@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: Bluetooth-hangszóróként jelenik meg, amelyhez telefonok és laptopok párosíthatók",
     "spotifyServer": "Spotify Connect: hangszóróként jelenik meg a Spotify appban",
     "airplay2Server": "AirPlay 2: AirPlay 2 hangszóróként jelenik meg iPhone-on, iPaden és Macen, több szobához is",
-    "needs": "{{name}}: kell hozzá a(z) {{program}}, ami nincs telepítve"
+    "needs": "{{name}}: kell hozzá a(z) {{program}}, ami nincs telepítve",
+    "airplay2Client": "AirPlay 2 (kísérleti): lejátszás HomePodon, Apple TV-n és más AirPlay 2 hangszórókon"
   },
   "servers": {
     "title": "Bemeneti szerverek",
@@ -168,7 +169,8 @@
     "btHidden": "Rejtett: csak a már párosított telefonok csatlakozhatnak",
     "bitrate": "Bitráta (nem kötelező)",
     "bitrateHint": "96, 160 vagy 320 kbit/s. Hagyd üresen a 320-hoz.",
-    "airplay2PortHint": "A port, amelyen az AirPlay 2 figyel, például :7000. Minden AirPlay-bemenet kapjon saját portot."
+    "airplay2PortHint": "A port, amelyen az AirPlay 2 figyel, például :7000. Minden AirPlay-bemenet kapjon saját portot.",
+    "airplay2AddressHint": "A vevő címe és portja, ahogy az Eszközök keresése megadja, például 192.168.1.60:7000. Engednie kell, hogy a hálózaton bárki jelszó nélkül játsszon le rajta."
   },
   "pairing": {
     "title": "AirPlay-párosítás",

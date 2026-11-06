@@ -47,7 +47,8 @@
     "bluetoothServer": "Bluetooth: 휴대폰과 노트북이 페어링할 수 있는 Bluetooth 스피커로 표시",
     "spotifyServer": "Spotify Connect: Spotify 앱에 스피커로 표시",
     "airplay2Server": "AirPlay 2: iPhone, iPad, Mac에 AirPlay 2 스피커로 표시(멀티룸 포함)",
-    "needs": "{{name}}: {{program}}이(가) 필요하지만 설치되어 있지 않습니다"
+    "needs": "{{name}}: {{program}}이(가) 필요하지만 설치되어 있지 않습니다",
+    "airplay2Client": "AirPlay 2(실험적): HomePod, Apple TV 및 기타 AirPlay 2 스피커에서 재생"
   },
   "servers": {
     "title": "입력 서버",
@@ -167,7 +168,8 @@
     "btHidden": "숨김: 이미 페어링된 휴대폰만 연결할 수 있습니다",
     "bitrate": "비트레이트(선택)",
     "bitrateHint": "96, 160 또는 320kbit/s입니다. 비워 두면 320입니다.",
-    "airplay2PortHint": "AirPlay 2가 수신하는 포트입니다(예: :7000). AirPlay 입력마다 다른 포트를 지정하세요."
+    "airplay2PortHint": "AirPlay 2가 수신하는 포트입니다(예: :7000). AirPlay 입력마다 다른 포트를 지정하세요.",
+    "airplay2AddressHint": "기기 찾기에서 얻은 수신기의 주소와 포트입니다(예: 192.168.1.60:7000). 네트워크의 누구나 암호 없이 재생할 수 있도록 허용해야 합니다."
   },
   "pairing": {
     "title": "AirPlay 페어링",
