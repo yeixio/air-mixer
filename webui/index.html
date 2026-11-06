@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="dark light">
     <meta name="theme-color" content="#100d12" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#f7f3ee" media="(prefers-color-scheme: light)">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg transform='rotate(-10 32 32)'%3E%3Cpath fill='%23ff6a55' d='M12 14H52a6 6 0 0 1 6 6v6a6 6 0 0 0 0 12v6a6 6 0 0 1-6 6H12a6 6 0 0 1-6-6v-6a6 6 0 0 0 0-12v-6a6 6 0 0 1 6-6Z'/%3E%3Cpath fill='%23100d12' d='M18 22h4v20h-4zM28 30h4v12h-4zM38 26h4v16h-4z'/%3E%3C/g%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='28' fill='%23100d12'/%3E%3Cg fill='none' stroke='%23ff6a55' stroke-width='11' stroke-linecap='round'%3E%3Cpath d='M18 34 C46 34 46 64 64 64 M18 64 H64 M18 94 C46 94 46 64 64 64'/%3E%3Cpath d='M78 46 A26 26 0 0 1 78 82'/%3E%3Cpath d='M92 34 A42 42 0 0 1 92 94' opacity='.6'/%3E%3C/g%3E%3Ccircle cx='64' cy='64' r='10' fill='%23f4efea'/%3E%3C/svg%3E">
     <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
     <title>Air-Mixer</title>
     <style>
@@ -249,9 +249,9 @@
             flex-shrink: 0;
         }
 
-        .logo .mark-ticket { fill: var(--accent); }
-        .logo .mark-cut { stroke: var(--ink); }
-        .logo .mark-fader { fill: var(--ink); }
+        .logo .mark-line { fill: none; stroke: var(--accent); stroke-width: 11; stroke-linecap: round; }
+        .logo .mark-far { opacity: .6; }
+        .logo .mark-dot { fill: var(--text); }
 
         /* The router's state, as a pill. */
         .status {
@@ -1272,15 +1272,13 @@
         <div class="topbar-inner">
             <div class="brand">
                 <span class="logo">
-                    <!-- Matinee's ticket stub, with a mixer's faders on it. -->
-                    <svg viewBox="0 0 64 64" aria-hidden="true">
-                        <g transform="rotate(-10 32 32)">
-                            <path class="mark-ticket" d="M12 14H52a6 6 0 0 1 6 6v6a6 6 0 0 0 0 12v6a6 6 0 0 1-6 6H12a6 6 0 0 1-6-6v-6a6 6 0 0 0 0-12v-6a6 6 0 0 1 6-6Z"/>
-                            <path class="mark-cut" d="M47 19v26" stroke-width="2.5" stroke-dasharray="3 3.5"/>
-                            <rect class="mark-fader" x="16" y="24" width="4.5" height="17" rx="2"/>
-                            <rect class="mark-fader" x="25" y="30" width="4.5" height="11" rx="2"/>
-                            <rect class="mark-fader" x="34" y="21" width="4.5" height="20" rx="2"/>
-                        </g>
+                    <!-- Three inputs merging into one point, playing out as sound
+                         waves: the logo in docs/assets/logo.svg, in the theme's accent. -->
+                    <svg viewBox="0 0 128 128" aria-hidden="true">
+                        <path class="mark-line" d="M18 34 C46 34 46 64 64 64 M18 64 H64 M18 94 C46 94 46 64 64 64"/>
+                        <path class="mark-line" d="M78 46 A26 26 0 0 1 78 82"/>
+                        <path class="mark-line mark-far" d="M92 34 A42 42 0 0 1 92 94"/>
+                        <circle class="mark-dot" cx="64" cy="64" r="10"/>
                     </svg>
                     air-mixer
                 </span>

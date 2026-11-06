@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Air-Mixer logo">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4fa3ff"/>
-      <stop offset="1" stop-color="#7c5cff"/>
+      <stop offset="0" stop-color="#ff6a55"/>
+      <stop offset="1" stop-color="#d33f2b"/>
     </linearGradient>
   </defs>
-  <rect width="128" height="128" rx="28" fill="#16181d"/>
+  <rect width="128" height="128" rx="28" fill="#100d12"/>
   <!-- three inputs merging into one stream -->
   <path d="M18 34 C46 34 46 64 64 64 M18 64 H64 M18 94 C46 94 46 64 64 64" fill="none" stroke="url(#g)" stroke-width="8" stroke-linecap="round"/>
   <!-- speaker waves -->
   <path d="M78 46 A26 26 0 0 1 78 82" fill="none" stroke="url(#g)" stroke-width="8" stroke-linecap="round"/>
   <path d="M92 34 A42 42 0 0 1 92 94" fill="none" stroke="url(#g)" stroke-width="8" stroke-linecap="round" opacity=".6"/>
-  <circle cx="64" cy="64" r="9" fill="#ffffff"/>
+  <circle cx="64" cy="64" r="9" fill="#f4efea"/>
 </svg>
