@@ -38,11 +38,11 @@ type Factory interface {
 
 // Defaults are the settings used when a stored adapter leaves them out.
 type Defaults struct {
-	AirPlayPort int    // first RTSP port for AirPlay receivers
+	AirPlayPort int // first RTSP port for AirPlay receivers
 	// AirPlayLastPort ends the range receivers without an address take
 	// ports from; 0 means AirPlayPort only.
 	AirPlayLastPort int
-	Interface   string // network interface to advertise on
+	Interface       string // network interface to advertise on
 
 	// DataDir is where adapters keep state, such as Spotify credentials.
 	DataDir string
