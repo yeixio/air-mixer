@@ -28,8 +28,7 @@
     "unexpected": "문제가 발생했습니다.",
     "httpStatus": "서버가 {{status}}(으)로 응답했습니다. 페이지를 새로고침하고 다시 시도하세요.",
     "loadFailed": "Air-Mixer에 연결할 수 없습니다. 실행 중인지 확인한 뒤 페이지를 새로고침하세요.",
-    "validation": "양식을 확인하세요",
-    "comingSoon": "{{protocol}}(곧 지원 예정)"
+    "validation": "양식을 확인하세요"
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone, iPad, Mac에서 오디오 받기",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: Matinee에 플레이어로 표시되고 보내온 소리를 재생합니다",
     "matineeClient": "Matinee: Matinee 플레이어에서 재생(주소: 플레이어 ID)",
     "streamClient": "스트림: VLC나 브라우저용 실시간 WAV 스트림",
-    "localClient": "로컬: 이 컴퓨터의 사운드 카드"
+    "localClient": "로컬: 이 컴퓨터의 사운드 카드",
+    "radioServer": "인터넷 라디오: URL에서 방송국, 재생 목록 또는 오디오 파일 재생",
+    "pulseServer": "PipeWire 또는 PulseAudio: 라인 입력, USB 오디오 인터페이스 또는 Bluetooth로 재생 중인 휴대폰을 녹음",
+    "pulseClient": "PipeWire 또는 PulseAudio: 사운드 카드나 페어링된 Bluetooth 스피커에서 재생",
+    "snapcastClient": "Snapcast: 모든 Snapcast 클라이언트에서 동기화해 재생"
   },
   "servers": {
     "title": "입력 서버",
@@ -130,6 +133,21 @@
     "selectFailed": "그 기기를 선택하지 못했습니다. 다시 찾거나 직접 설정하세요.",
     "manual": "직접 설정",
     "manualHint": "기기를 찾지 못했을 때 사용하세요."
+  },
+  "fields": {
+    "url": "스트림 URL",
+    "urlHint": "인터넷 라디오 방송국, 재생 목록(.pls, .m3u, .m3u8) 또는 오디오 파일입니다. 파일은 반복 재생됩니다.",
+    "source": "소스(선택)",
+    "sourceHint": "소스의 이름이나 설명, 이 컴퓨터로 재생 중인 휴대폰의 Bluetooth 주소, 또는 싱크 이름 뒤에 .monitor를 붙인 값입니다. 기본 소스를 쓰려면 비워 두세요.",
+    "sink": "싱크(선택)",
+    "sinkHint": "싱크의 이름이나 설명, 또는 AA:BB:CC:DD:EE:FF 같은 Bluetooth 스피커 주소입니다. 기본 싱크를 쓰려면 비워 두세요.",
+    "pulseServer": "PulseAudio 서버(선택)",
+    "pulseServerHint": "이 컴퓨터의 일반 서버를 쓰려면 비워 두세요.",
+    "delay": "지연(밀리초, 선택)",
+    "delayHint": "오디오를 늦춰 이 스피커를 더 느린 스피커와 맞춥니다.",
+    "sampleRate": "샘플 레이트(선택)",
+    "sampleRateHint": "snapserver 소스의 sampleformat에 있는 레이트입니다. snapserver 기본값인 48000을 쓰려면 비워 두세요.",
+    "snapcastAddressHint": "snapserver 호스트, 그리고 TCP 소스 포트가 4953이 아니면 그 포트입니다."
   },
   "pairing": {
     "title": "AirPlay 페어링",

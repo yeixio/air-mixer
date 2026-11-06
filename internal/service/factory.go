@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"net/url"
+	"slices"
 	"strconv"
 	"time"
 
@@ -15,6 +17,8 @@ import (
 	"github.com/yeixio/air-mixer/internal/protocols/local"
 	"github.com/yeixio/air-mixer/internal/protocols/matinee"
 	"github.com/yeixio/air-mixer/internal/protocols/pulse"
+	"github.com/yeixio/air-mixer/internal/protocols/radio"
+	"github.com/yeixio/air-mixer/internal/protocols/snapcast"
 )
 
 // Factory builds protocol adapters from stored configuration.
@@ -44,6 +48,15 @@ type ServerConfig struct {
 	Address string `json:"address,omitempty"`
 	// Interface overrides the interface the receiver is advertised on.
 	Interface string `json:"interface,omitempty"`
+	// URL is what a radio input plays.
+	URL string `json:"url,omitempty"`
+	// Source is what a pulse input records: a source's name or
+	// description, a phone's Bluetooth address, or "<sink>.monitor".
+	// Empty means the default source.
+	Source string `json:"source,omitempty"`
+	// Server is the PulseAudio server for a pulse input; empty means
+	// $PULSE_SERVER or the default.
+	Server string `json:"server,omitempty"`
 }
 
 // ClientConfig is the JSON stored in db.Client.Config.
@@ -65,10 +78,17 @@ type ClientConfig struct {
 	// Server is the PulseAudio server for a pulse output, such as
 	// "unix:/run/pulse/native". Empty means $PULSE_SERVER or the default.
 	Server string `json:"server,omitempty"`
+	// SampleRate is the rate a Snapcast output's source expects; 48000
+	// if 0, snapserver's default.
+	SampleRate int `json:"sample_rate,omitempty"`
 	// LibraryID is the Matinee music library a Matinee output's station
 	// goes in; 0 for the first one.
 	LibraryID int64 `json:"library_id,omitempty"`
 }
+
+// radioSchemes are the URL schemes a radio input plays; rtsp and rtmp
+// need ffmpeg.
+var radioSchemes = []string{"http", "https", "rtsp", "rtmp"}
 
 // maxDelayMS bounds delay_ms; more than this is a typo, not a calibration.
 const maxDelayMS = 5000
@@ -111,7 +131,21 @@ func (f *factory) Server(s *db.Server) (protocols.Server, error) {
 			ID: s.ID, Name: s.Name, Account: f.defaults.Matinee, Version: f.defaults.Version, Logger: f.log,
 		}), nil
 	}
-	if s.Protocol != "airplay" {
+	switch s.Protocol {
+	case "airplay":
+	case "pulse":
+		return pulse.NewSource(pulse.SourceOptions{
+			ID: s.ID, Name: s.Name, Server: cfg.Server, Source: cfg.Source, Logger: f.log,
+		}), nil
+	case "radio":
+		if cfg.URL == "" {
+			return nil, invalidCode("radio_needs_url", nil)
+		}
+		if u, err := url.Parse(cfg.URL); err != nil || u.Host == "" || !slices.Contains(radioSchemes, u.Scheme) {
+			return nil, invalidCode("radio_bad_url", nil)
+		}
+		return radio.New(radio.Options{ID: s.ID, Name: s.Name, URL: cfg.URL, Logger: f.log}), nil
+	default:
 		return nil, invalidCode("unsupported_server_protocol", map[string]any{"protocol": s.Protocol})
 	}
 	if cfg.Address == "" {
@@ -159,6 +193,22 @@ func (f *factory) Client(c *db.Client) (protocols.Client, error) {
 		return pulse.NewClient(pulse.Options{
 			ID: c.ID, Name: c.Name, Server: cfg.Server, Sink: cfg.Sink, Delay: delay, Logger: f.log,
 		}), nil
+	case "snapcast":
+		addr := c.Address
+		if addr == "" {
+			addr = cfg.Address
+		}
+		if addr == "" {
+			return nil, invalidCode("snapcast_needs_address", nil)
+		}
+		if cfg.SampleRate != 0 && (cfg.SampleRate < 8000 || cfg.SampleRate > 192000) {
+			return nil, invalidCode("sample_rate_range", nil)
+		}
+		sc, err := snapcast.New(snapcast.Options{ID: c.ID, Name: c.Name, Address: addr, SampleRate: cfg.SampleRate, Logger: f.log})
+		if err != nil {
+			return nil, err
+		}
+		return sc, nil
 	case "stream":
 		return httpstream.New(c.ID, c.Name, f.defaults.Streams, f.log), nil
 	case "matinee":

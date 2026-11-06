@@ -24,6 +24,7 @@ import (
 	"time"
 
 	"github.com/yeixio/air-mixer/internal/audio"
+	"github.com/yeixio/air-mixer/internal/audio/decode"
 	"github.com/yeixio/air-mixer/internal/router"
 )
 
@@ -368,7 +369,7 @@ func uniq(names []string) []string {
 
 // open fetches url and returns a decoder for it. reqCtx bounds the request
 // until the response headers arrive; bodyCtx bounds reading the body.
-func (p *Player) open(reqCtx, bodyCtx context.Context, rawURL string) (decoder, func(), error) {
+func (p *Player) open(reqCtx, bodyCtx context.Context, rawURL string) (decode.Decoder, func(), error) {
 	ctx, cancel := context.WithCancel(bodyCtx)
 	stop := context.AfterFunc(reqCtx, cancel)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, rawURL, nil)
@@ -389,17 +390,23 @@ func (p *Player) open(reqCtx, bodyCtx context.Context, rawURL string) (decoder, 
 		return nil, nil, &FetchError{fmt.Errorf("fetch %s: %s", redact(rawURL), resp.Status)}
 	}
 	body := io.LimitReader(resp.Body, p.maxBytes)
-	dec, err := newDecoder(body, resp.Header.Get("Content-Type"))
+	dec, err := decode.New(body, resp.Header.Get("Content-Type"))
 	stop() // from here on only bodyCtx ends the download
 	if err != nil {
 		resp.Body.Close()
 		cancel()
 		return nil, nil, &FetchError{err}
 	}
-	return dec, func() { resp.Body.Close(); cancel() }, nil
+	return dec, func() {
+		resp.Body.Close()
+		if c, ok := dec.(io.Closer); ok {
+			c.Close() //nolint:errcheck,gosec // an error reading was already reported by Read
+		}
+		cancel()
+	}, nil
 }
 
-func (p *Player) run(ctx context.Context, pl *playing, rawURL string, dec decoder, closeDec func(), stream chan []float32) {
+func (p *Player) run(ctx context.Context, pl *playing, rawURL string, dec decode.Decoder, closeDec func(), stream chan []float32) {
 	defer p.wg.Done()
 	defer close(pl.done)
 
@@ -466,7 +473,7 @@ func (p *Player) run(ctx context.Context, pl *playing, rawURL string, dec decode
 
 // stream decodes dec in real time into the router and returns how much
 // audio it sent. start and offset place it on the playback's timeline.
-func (p *Player) stream(ctx context.Context, pl *playing, dec decoder, start time.Time, offset time.Duration, out chan<- []float32) (time.Duration, error) {
+func (p *Player) stream(ctx context.Context, pl *playing, dec decode.Decoder, start time.Time, offset time.Duration, out chan<- []float32) (time.Duration, error) {
 	f := dec.Format()
 	conv, err := audio.NewConverter(f, audio.Internal)
 	if err != nil {

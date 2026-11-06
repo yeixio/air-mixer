@@ -77,6 +77,28 @@ plays on its sink; when PulseAudio moves it because the sink went away,
 it closes the stream and reports `ErrConnectionLost`, and the Manager
 reconnects it once the sink is back.
 
+### `internal/protocols/radio`, `snapcast` and the pulse input
+
+- **radio** plays a URL as an input. It follows PLS and M3U playlists to
+  their first stream, hands HLS, RTSP and RTMP to ffmpeg, decodes the rest
+  with `internal/audio/decode`, and paces files to real time (live
+  stations already are). A station that drops is reconnected with
+  backoff; a file starts again when it ends.
+- **snapcast** converts the output's audio to snapserver's rate and
+  writes it as 16-bit PCM to a snapserver TCP source. A failed write
+  reports `ErrConnectionLost`, so the Manager reconnects.
+- **pulse** also records: `pulse.Source` opens a record stream on a
+  source matched like a sink (name, description, Bluetooth address, never
+  a speaker's monitor for an address), retries every two seconds while it
+  is missing, and checks that PulseAudio hasn't moved the stream to
+  another source.
+
+### `internal/audio/decode`
+
+Turns encoded audio into samples for playback and radio inputs: MP3 and
+WAV in pure Go, anything else through an `ffmpeg` process when one is on
+`$PATH`.
+
 ### `internal/audio/alac`
 
 A pure-Go Apple Lossless codec. The decoder is a port of David Hammerton's

@@ -28,8 +28,7 @@
     "unexpected": "Jokin meni vikaan.",
     "httpStatus": "Palvelin vastasi {{status}}. Päivitä sivu ja yritä uudelleen.",
     "loadFailed": "Air-Mixeriin ei saada yhteyttä. Tarkista, että se on käynnissä, ja päivitä sivu.",
-    "validation": "Tarkista lomake",
-    "comingSoon": "{{protocol}} (tulossa pian)"
+    "validation": "Tarkista lomake"
   },
   "protocols": {
     "airplayServer": "AirPlay: vastaanota ääntä iPhonesta, iPadista ja Macista",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: näkyy Matineessa soittimena ja toistaa sille lähetetyn äänen",
     "matineeClient": "Matinee: toista Matinee-soittimella (osoite: soittimen tunnus)",
     "streamClient": "Stream: suora WAV-virta VLC:lle tai selaimelle",
-    "localClient": "Paikallinen: tämän koneen äänikortti"
+    "localClient": "Paikallinen: tämän koneen äänikortti",
+    "radioServer": "Nettiradio: toista asema, soittolista tai äänitiedosto URL-osoitteesta",
+    "pulseServer": "PipeWire tai PulseAudio: tallenna linjatulo, USB-äänikortti tai Bluetoothilla soittava puhelin",
+    "pulseClient": "PipeWire tai PulseAudio: toista äänikortilla tai paritetulla Bluetooth-kaiuttimella",
+    "snapcastClient": "Snapcast: toista tahdissa jokaisella Snapcast-asiakkaalla"
   },
   "servers": {
     "title": "Tulopalvelimet",
@@ -131,6 +134,21 @@
     "selectFailed": "Laitetta ei voitu valita. Etsi uudelleen tai määritä se käsin.",
     "manual": "Määritä käsin",
     "manualHint": "Käytä tätä, jos laitettasi ei löytynyt."
+  },
+  "fields": {
+    "url": "Striimin URL",
+    "urlHint": "Nettiradioasema, soittolista (.pls, .m3u, .m3u8) tai äänitiedosto. Tiedostoa toistetaan uudelleen ja uudelleen.",
+    "source": "Lähde (valinnainen)",
+    "sourceHint": "Lähteen nimi tai kuvaus, tälle koneelle soittavan puhelimen Bluetooth-osoite tai sinkin nimi ja perään .monitor. Jätä tyhjäksi oletuslähdettä varten.",
+    "sink": "Sink (valinnainen)",
+    "sinkHint": "Sinkin nimi tai kuvaus tai Bluetooth-kaiuttimen osoite, kuten AA:BB:CC:DD:EE:FF. Jätä tyhjäksi oletussinkkiä varten.",
+    "pulseServer": "PulseAudio-palvelin (valinnainen)",
+    "pulseServerHint": "Jätä tyhjäksi, niin käytetään tämän koneen tavallista.",
+    "delay": "Viive millisekunteina (valinnainen)",
+    "delayHint": "Pidättää ääntä, jotta tämä kaiutin pysyy hitaampien tahdissa.",
+    "sampleRate": "Näytteenottotaajuus (valinnainen)",
+    "sampleRateHint": "snapserver-lähteen sampleformat-asetuksen taajuus. Jätä tyhjäksi, niin käytetään snapserverin oletusta 48000.",
+    "snapcastAddressHint": "snapserverin isäntä ja sen TCP-lähteen portti, jos se ei ole 4953."
   },
   "pairing": {
     "title": "AirPlay-pariliitos",

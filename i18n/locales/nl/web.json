@@ -28,8 +28,7 @@
     "unexpected": "Er ging iets mis.",
     "httpStatus": "De server antwoordde {{status}}. Vernieuw de pagina en probeer het opnieuw.",
     "loadFailed": "Air-Mixer is niet bereikbaar. Controleer of het draait en vernieuw de pagina.",
-    "validation": "Controleer het formulier",
-    "comingSoon": "{{protocol}} (binnenkort)"
+    "validation": "Controleer het formulier"
   },
   "protocols": {
     "airplayServer": "AirPlay: ontvang audio van iPhone, iPad en Mac",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: verschijnt in Matinee als speler en speelt af wat hij krijgt",
     "matineeClient": "Matinee: afspelen op een Matinee-speler (adres: de ID van de speler)",
     "streamClient": "Stream: een live WAV-stream voor VLC of een browser",
-    "localClient": "Lokaal: de geluidskaart van deze computer"
+    "localClient": "Lokaal: de geluidskaart van deze computer",
+    "radioServer": "Internetradio: speel een zender, afspeellijst of audiobestand af vanaf een URL",
+    "pulseServer": "PipeWire of PulseAudio: neem een line-in, een USB-audio-interface of een telefoon op die via Bluetooth afspeelt",
+    "pulseClient": "PipeWire of PulseAudio: speel af op een geluidskaart of een gekoppelde Bluetooth-speaker",
+    "snapcastClient": "Snapcast: speel synchroon af op elke Snapcast-client"
   },
   "servers": {
     "title": "Invoerservers",
@@ -131,6 +134,21 @@
     "selectFailed": "Kan dat apparaat niet kiezen. Zoek opnieuw of stel het met de hand in.",
     "manual": "Met de hand instellen",
     "manualHint": "Gebruik dit als je apparaat niet is gevonden."
+  },
+  "fields": {
+    "url": "Stream-URL",
+    "urlHint": "Een internetradiozender, een afspeellijst (.pls, .m3u, .m3u8) of een audiobestand. Een bestand wordt steeds herhaald.",
+    "source": "Bron (optioneel)",
+    "sourceHint": "De naam of beschrijving van een bron, het Bluetooth-adres van een telefoon die naar deze computer afspeelt, of de naam van een sink gevolgd door .monitor. Laat leeg voor de standaardbron.",
+    "sink": "Sink (optioneel)",
+    "sinkHint": "De naam of beschrijving van een sink, of het adres van een Bluetooth-speaker zoals AA:BB:CC:DD:EE:FF. Laat leeg voor de standaardsink.",
+    "pulseServer": "PulseAudio-server (optioneel)",
+    "pulseServerHint": "Laat leeg voor de gewone op deze computer.",
+    "delay": "Vertraging in milliseconden (optioneel)",
+    "delayHint": "Houdt audio vast om deze speaker gelijk te laten lopen met tragere.",
+    "sampleRate": "Samplefrequentie (optioneel)",
+    "sampleRateHint": "De frequentie in het sampleformat van de snapserver-bron. Laat leeg voor 48000, de standaard van snapserver.",
+    "snapcastAddressHint": "De snapserver-host, en de poort van zijn TCP-bron als die niet 4953 is."
   },
   "pairing": {
     "title": "AirPlay-koppeling",

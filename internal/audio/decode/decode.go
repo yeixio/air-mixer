@@ -1,4 +1,7 @@
-package playback
+// Package decode turns encoded audio into samples: MP3 and WAV in pure
+// Go, and anything else (AAC, FLAC, Ogg, Opus and more) through ffmpeg
+// when it is installed.
+package decode
 
 import (
 	"bufio"
@@ -17,39 +20,54 @@ import (
 // ErrUnsupportedFormat is returned for audio Air-Mixer cannot decode.
 var ErrUnsupportedFormat = errors.New("unsupported audio format")
 
-// decoder reads interleaved float32 samples from an encoded stream.
-type decoder interface {
+// Decoder reads interleaved float32 samples from an encoded stream.
+type Decoder interface {
 	Format() audio.Format
 	// Read fills buf with whole frames and returns the number of samples
 	// written. It returns io.EOF at the end of the stream.
 	Read(buf []float32) (int, error)
 }
 
-// newDecoder detects the encoding of r from its first bytes, falling back
-// to contentType, and returns a decoder for it. MP3 and WAV are supported.
-func newDecoder(r io.Reader, contentType string) (decoder, error) {
+// New detects the encoding of r from its first bytes, falling back to
+// contentType, and returns a Decoder for it. MP3 and WAV are decoded in
+// Go; other formats go through ffmpeg if FFmpeg is set. A decoder that
+// runs ffmpeg also implements io.Closer, and must be closed.
+func New(r io.Reader, contentType string) (Decoder, error) {
 	br := bufio.NewReaderSize(r, 64<<10)
 	head, _ := br.Peek(12)
 	ct := strings.ToLower(contentType)
+	var name string
 	switch {
 	case len(head) >= 12 && string(head[0:4]) == "RIFF" && string(head[8:12]) == "WAVE":
 		return newWAVDecoder(br)
 	case len(head) >= 3 && string(head[0:3]) == "ID3",
-		len(head) >= 2 && head[0] == 0xFF && head[1]&0xE0 == 0xE0:
+		len(head) >= 2 && head[0] == 0xFF && head[1]&0xE6 == 0xE2: // MPEG audio layer III, not ADTS AAC
 		return newMP3Decoder(br)
 	case len(head) >= 4 && string(head[0:4]) == "fLaC":
-		return nil, fmt.Errorf("%w: FLAC (use MP3 or WAV)", ErrUnsupportedFormat)
+		name = "FLAC"
 	case len(head) >= 4 && string(head[0:4]) == "OggS":
-		return nil, fmt.Errorf("%w: Ogg (use MP3 or WAV)", ErrUnsupportedFormat)
-	case strings.Contains(ct, "mpeg") || strings.Contains(ct, "mp3"):
+		name = "Ogg"
+	case len(head) >= 2 && head[0] == 0xFF && head[1]&0xF6 == 0xF0:
+		name = "AAC"
+	case len(head) >= 8 && string(head[4:8]) == "ftyp":
+		name = "MP4"
+	case strings.Contains(ct, "mpeg") && !strings.Contains(ct, "mpegurl") || strings.Contains(ct, "mp3"):
 		return newMP3Decoder(br)
 	case len(head) == 0:
 		return nil, fmt.Errorf("%w: empty stream", ErrUnsupportedFormat)
+	case strings.HasPrefix(ct, "audio/"), strings.HasPrefix(ct, "video/"), strings.Contains(ct, "ogg"):
+		name = ct
 	}
-	if ct == "" {
-		ct = "unknown content type"
+	if name != "" && FFmpeg != "" {
+		return newFFmpegDecoder(br)
 	}
-	return nil, fmt.Errorf("%w: %s (use MP3 or WAV)", ErrUnsupportedFormat, ct)
+	if name == "" {
+		name = ct
+		if name == "" {
+			name = "unknown content type"
+		}
+	}
+	return nil, fmt.Errorf("%w: %s (use MP3 or WAV, or install ffmpeg)", ErrUnsupportedFormat, name)
 }
 
 // mp3Decoder wraps go-mp3, which always produces 16-bit stereo.
@@ -58,7 +76,7 @@ type mp3Decoder struct {
 	buf []byte
 }
 
-func newMP3Decoder(r io.Reader) (decoder, error) {
+func newMP3Decoder(r io.Reader) (Decoder, error) {
 	d, err := mp3.NewDecoder(r)
 	if err != nil {
 		return nil, fmt.Errorf("%w: MP3: %w", ErrUnsupportedFormat, err)
@@ -107,7 +125,7 @@ const (
 	wavExtensible = 0xFFFE
 )
 
-func newWAVDecoder(r io.Reader) (decoder, error) {
+func newWAVDecoder(r io.Reader) (Decoder, error) {
 	bad := func(msg string) error { return fmt.Errorf("%w: WAV: %s", ErrUnsupportedFormat, msg) }
 	var riff [12]byte
 	if _, err := io.ReadFull(r, riff[:]); err != nil {

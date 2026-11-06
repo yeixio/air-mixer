@@ -24,8 +24,12 @@ func entry(instance string, ip string, port int, txt ...string) *zeroconf.Servic
 }
 
 func fakeBrowse(entries []*zeroconf.ServiceEntry, err error) browseFunc {
+	return fakeBrowseService("_raop._tcp", entries, err)
+}
+
+func fakeBrowseService(want string, entries []*zeroconf.ServiceEntry, err error) browseFunc {
 	return func(ctx context.Context, service, _ string, out chan<- *zeroconf.ServiceEntry, _ ...zeroconf.ClientOption) error {
-		if service != "_raop._tcp" {
+		if service != want {
 			return errors.New("wrong service " + service)
 		}
 		if err != nil {
@@ -70,6 +74,19 @@ func TestAirPlayDiscover(t *testing.T) {
 	}
 }
 
+func TestSnapcastDiscover(t *testing.T) {
+	s := &Snapcast{browse: fakeBrowseService("_snapcast._tcp", []*zeroconf.ServiceEntry{
+		entry(`Snapcast`, "192.168.1.30", 1704),
+	}, nil)}
+	devices, err := s.Discover(context.Background(), 50*time.Millisecond)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(devices) != 1 || devices[0].Address != "192.168.1.30:4953" || devices[0].Protocol != "snapcast" {
+		t.Fatalf("devices %+v", devices)
+	}
+}
+
 type stubDiscoverer struct {
 	protocol string
 	devices  []Device
@@ -106,7 +123,7 @@ func TestService(t *testing.T) {
 	if _, err := failing.DiscoverAll(ctx, time.Millisecond); err == nil {
 		t.Error("total failure swallowed")
 	}
-	if got := NewService().Protocols(); len(got) != 1 || got[0] != "airplay" {
+	if got := NewService().Protocols(); len(got) != 2 || got[0] != "airplay" || got[1] != "snapcast" {
 		t.Errorf("default protocols = %v", got)
 	}
 }

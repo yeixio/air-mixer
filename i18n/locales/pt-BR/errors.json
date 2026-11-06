@@ -30,5 +30,9 @@
   "matinee_needs_player": "Um cliente Matinee precisa do ID do player como endereço (veja /api/matinee/players)",
   "matinee_not_signed_in": "O Air-Mixer ainda não está conectado ao Matinee",
   "matinee_link_failed": "Não foi possível obter um código do Matinee: {{detail}}",
-  "matinee_players_failed": "Não foi possível obter os players do Matinee: {{detail}}"
+  "matinee_players_failed": "Não foi possível obter os players do Matinee: {{detail}}",
+  "radio_needs_url": "Uma entrada de rádio pela internet precisa de uma url",
+  "radio_bad_url": "A url precisa ser um endereço http, https, rtsp ou rtmp",
+  "snapcast_needs_address": "Um cliente Snapcast precisa do endereço do snapserver",
+  "sample_rate_range": "sample_rate precisa estar entre 8000 e 192000"
 }

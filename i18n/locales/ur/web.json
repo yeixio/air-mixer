@@ -28,8 +28,7 @@
     "unexpected": "کچھ غلط ہو گیا۔",
     "httpStatus": "سرور نے {{status}} جواب دیا۔ صفحہ ریفریش کر کے دوبارہ کوشش کریں۔",
     "loadFailed": "Air-Mixer سے رابطہ نہیں ہو سکا۔ دیکھیں کہ یہ چل رہا ہے، پھر صفحہ ریفریش کریں۔",
-    "validation": "فارم چیک کریں",
-    "comingSoon": "{{protocol}} (جلد آ رہا ہے)"
+    "validation": "فارم چیک کریں"
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone، iPad اور Mac سے آڈیو وصول کریں",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: Matinee میں پلیئر کے طور پر نظر آتا ہے اور جو بھیجا جائے وہ چلاتا ہے",
     "matineeClient": "Matinee: Matinee پلیئر پر چلائیں (پتا: پلیئر کی ID)",
     "streamClient": "اسٹریم: VLC یا براؤزر کے لیے لائیو WAV اسٹریم",
-    "localClient": "مقامی: اس مشین کا ساؤنڈ کارڈ"
+    "localClient": "مقامی: اس مشین کا ساؤنڈ کارڈ",
+    "radioServer": "انٹرنیٹ ریڈیو: کسی URL سے اسٹیشن، پلے لسٹ یا آڈیو فائل چلائیں",
+    "pulseServer": "PipeWire یا PulseAudio: لائن اِن، USB آڈیو انٹرفیس یا Bluetooth پر چلنے والا فون ریکارڈ کریں",
+    "pulseClient": "PipeWire یا PulseAudio: ساؤنڈ کارڈ یا جوڑے گئے Bluetooth اسپیکر پر چلائیں",
+    "snapcastClient": "Snapcast: ہر Snapcast کلائنٹ پر ایک ساتھ چلائیں"
   },
   "servers": {
     "title": "ان پٹ سرور",
@@ -131,6 +134,21 @@
     "selectFailed": "وہ آلہ چنا نہیں جا سکا۔ دوبارہ تلاش کریں یا خود سیٹ اپ کریں۔",
     "manual": "خود سیٹ اپ کریں",
     "manualHint": "اگر آپ کا آلہ نہیں ملا تو یہ استعمال کریں۔"
+  },
+  "fields": {
+    "url": "اسٹریم URL",
+    "urlHint": "کوئی انٹرنیٹ ریڈیو اسٹیشن، پلے لسٹ (.pls، .m3u، .m3u8) یا آڈیو فائل۔ فائل بار بار چلتی ہے۔",
+    "source": "ماخذ (اختیاری)",
+    "sourceHint": "کسی ماخذ کا نام یا تفصیل، اس مشین پر چلانے والے فون کا Bluetooth پتا، یا کسی sink کا نام اور اس کے بعد .monitor۔ ڈیفالٹ ماخذ کے لیے خالی چھوڑیں۔",
+    "sink": "Sink (اختیاری)",
+    "sinkHint": "کسی sink کا نام یا تفصیل، یا AA:BB:CC:DD:EE:FF جیسا Bluetooth اسپیکر کا پتا۔ ڈیفالٹ sink کے لیے خالی چھوڑیں۔",
+    "pulseServer": "PulseAudio سرور (اختیاری)",
+    "pulseServerHint": "اس مشین کے معمول کے سرور کے لیے خالی چھوڑیں۔",
+    "delay": "ملی سیکنڈ میں تاخیر (اختیاری)",
+    "delayHint": "آواز کو روک کر اس اسپیکر کو سست اسپیکروں کے ساتھ ملاتا ہے۔",
+    "sampleRate": "سیمپل ریٹ (اختیاری)",
+    "sampleRateHint": "snapserver ماخذ کے sampleformat کی ریٹ۔ snapserver کی ڈیفالٹ 48000 کے لیے خالی چھوڑیں۔",
+    "snapcastAddressHint": "snapserver ہوسٹ، اور اس کے TCP ماخذ کا پورٹ اگر وہ 4953 نہیں ہے۔"
   },
   "pairing": {
     "title": "AirPlay پیئرنگ",

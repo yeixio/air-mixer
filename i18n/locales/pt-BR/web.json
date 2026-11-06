@@ -28,8 +28,7 @@
     "unexpected": "Algo deu errado.",
     "httpStatus": "O servidor respondeu {{status}}. Recarregue a página e tente de novo.",
     "loadFailed": "Não foi possível acessar o Air-Mixer. Verifique se ele está em execução e recarregue a página.",
-    "validation": "Revise o formulário",
-    "comingSoon": "{{protocol}} (em breve)"
+    "validation": "Revise o formulário"
   },
   "protocols": {
     "airplayServer": "AirPlay: receba áudio do iPhone, iPad e Mac",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: aparece no Matinee como player e toca o que recebe",
     "matineeClient": "Matinee: tocar em um player do Matinee (endereço: o ID do player)",
     "streamClient": "Stream: um stream WAV ao vivo para VLC ou um navegador",
-    "localClient": "Local: a placa de som desta máquina"
+    "localClient": "Local: a placa de som desta máquina",
+    "radioServer": "Rádio pela internet: toque uma estação, playlist ou arquivo de áudio de uma URL",
+    "pulseServer": "PipeWire ou PulseAudio: grave uma entrada de linha, uma interface de áudio USB ou um celular tocando por Bluetooth",
+    "pulseClient": "PipeWire ou PulseAudio: toque em uma placa de som ou em um alto-falante Bluetooth pareado",
+    "snapcastClient": "Snapcast: toque em sincronia em todos os clientes Snapcast"
   },
   "servers": {
     "title": "Servidores de entrada",
@@ -132,6 +135,21 @@
     "selectFailed": "Não foi possível escolher esse dispositivo. Procure de novo ou configure-o manualmente.",
     "manual": "Configurar manualmente",
     "manualHint": "Use isto se o seu dispositivo não foi encontrado."
+  },
+  "fields": {
+    "url": "URL do stream",
+    "urlHint": "Uma estação de rádio pela internet, uma playlist (.pls, .m3u, .m3u8) ou um arquivo de áudio. Um arquivo toca em repetição.",
+    "source": "Fonte (opcional)",
+    "sourceHint": "O nome ou a descrição de uma fonte, o endereço Bluetooth de um celular tocando nesta máquina, ou o nome de um sink seguido de .monitor. Deixe vazio para a fonte padrão.",
+    "sink": "Sink (opcional)",
+    "sinkHint": "O nome ou a descrição de um sink, ou o endereço de um alto-falante Bluetooth como AA:BB:CC:DD:EE:FF. Deixe vazio para o sink padrão.",
+    "pulseServer": "Servidor PulseAudio (opcional)",
+    "pulseServerHint": "Deixe vazio para usar o de sempre nesta máquina.",
+    "delay": "Atraso em milissegundos (opcional)",
+    "delayHint": "Segura o áudio para alinhar este alto-falante com outros mais lentos.",
+    "sampleRate": "Taxa de amostragem (opcional)",
+    "sampleRateHint": "A taxa no sampleformat da fonte do snapserver. Deixe vazio para 48000, o padrão do snapserver.",
+    "snapcastAddressHint": "O host do snapserver e a porta da fonte TCP dele, se não for 4953."
   },
   "pairing": {
     "title": "Pareamento AirPlay",

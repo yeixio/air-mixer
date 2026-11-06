@@ -28,8 +28,7 @@
     "unexpected": "出了点问题。",
     "httpStatus": "服务器返回 {{status}}。请刷新页面后重试。",
     "loadFailed": "无法连接 Air-Mixer。请确认它正在运行，然后刷新页面。",
-    "validation": "请检查表单",
-    "comingSoon": "{{protocol}}（即将推出）"
+    "validation": "请检查表单"
   },
   "protocols": {
     "airplayServer": "AirPlay：接收来自 iPhone、iPad 和 Mac 的音频",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee：在 Matinee 中显示为播放器，播放发送给它的内容",
     "matineeClient": "Matinee：在 Matinee 播放器上播放（地址：播放器 ID）",
     "streamClient": "流：供 VLC 或浏览器使用的实时 WAV 流",
-    "localClient": "本地：这台机器的声卡"
+    "localClient": "本地：这台机器的声卡",
+    "radioServer": "网络电台：从 URL 播放电台、播放列表或音频文件",
+    "pulseServer": "PipeWire 或 PulseAudio：录制线路输入、USB 音频接口或通过蓝牙播放的手机",
+    "pulseClient": "PipeWire 或 PulseAudio：在声卡或已配对的蓝牙音箱上播放",
+    "snapcastClient": "Snapcast：在每个 Snapcast 客户端上同步播放"
   },
   "servers": {
     "title": "输入服务器",
@@ -130,6 +133,21 @@
     "selectFailed": "无法选择该设备。请重新查找或手动设置。",
     "manual": "手动设置",
     "manualHint": "如果没有找到你的设备，请使用此项。"
+  },
+  "fields": {
+    "url": "流 URL",
+    "urlHint": "网络电台、播放列表（.pls、.m3u、.m3u8）或音频文件。文件会循环播放。",
+    "source": "音源（可选）",
+    "sourceHint": "音源的名称或描述、正在向本机播放的手机的蓝牙地址，或在 sink 名称后加 .monitor。留空则使用默认音源。",
+    "sink": "Sink（可选）",
+    "sinkHint": "sink 的名称或描述，或蓝牙音箱的地址，如 AA:BB:CC:DD:EE:FF。留空则使用默认 sink。",
+    "pulseServer": "PulseAudio 服务器（可选）",
+    "pulseServerHint": "留空则使用本机常用的服务器。",
+    "delay": "延迟（毫秒，可选）",
+    "delayHint": "延后音频，让这个音箱与较慢的音箱对齐。",
+    "sampleRate": "采样率（可选）",
+    "sampleRateHint": "snapserver 音源 sampleformat 中的采样率。留空则使用 snapserver 默认的 48000。",
+    "snapcastAddressHint": "snapserver 主机；如果 TCP 音源端口不是 4953，再加上端口。"
   },
   "pairing": {
     "title": "AirPlay 配对",

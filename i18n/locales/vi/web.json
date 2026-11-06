@@ -28,8 +28,7 @@
     "unexpected": "Đã xảy ra lỗi.",
     "httpStatus": "Máy chủ trả lời {{status}}. Hãy tải lại trang và thử lại.",
     "loadFailed": "Không kết nối được với Air-Mixer. Hãy kiểm tra xem nó có đang chạy không, rồi tải lại trang.",
-    "validation": "Kiểm tra lại biểu mẫu",
-    "comingSoon": "{{protocol}} (sắp có)"
+    "validation": "Kiểm tra lại biểu mẫu"
   },
   "protocols": {
     "airplayServer": "AirPlay: nhận âm thanh từ iPhone, iPad và Mac",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: hiện trong Matinee như một trình phát và phát những gì được gửi tới",
     "matineeClient": "Matinee: phát trên một trình phát Matinee (địa chỉ: ID của trình phát)",
     "streamClient": "Luồng: luồng WAV trực tiếp cho VLC hoặc trình duyệt",
-    "localClient": "Cục bộ: card âm thanh của máy này"
+    "localClient": "Cục bộ: card âm thanh của máy này",
+    "radioServer": "Radio internet: phát một đài, danh sách phát hoặc tệp âm thanh từ URL",
+    "pulseServer": "PipeWire hoặc PulseAudio: thu âm line-in, giao diện âm thanh USB hoặc điện thoại đang phát qua Bluetooth",
+    "pulseClient": "PipeWire hoặc PulseAudio: phát trên card âm thanh hoặc loa Bluetooth đã ghép đôi",
+    "snapcastClient": "Snapcast: phát đồng bộ trên mọi máy khách Snapcast"
   },
   "servers": {
     "title": "Máy chủ đầu vào",
@@ -130,6 +133,21 @@
     "selectFailed": "Không chọn được thiết bị đó. Hãy tìm lại hoặc thiết lập thủ công.",
     "manual": "Thiết lập thủ công",
     "manualHint": "Dùng mục này nếu không tìm thấy thiết bị của bạn."
+  },
+  "fields": {
+    "url": "URL luồng",
+    "urlHint": "Một đài radio internet, danh sách phát (.pls, .m3u, .m3u8) hoặc tệp âm thanh. Tệp sẽ được phát lặp lại.",
+    "source": "Nguồn (không bắt buộc)",
+    "sourceHint": "Tên hoặc mô tả của một nguồn, địa chỉ Bluetooth của điện thoại đang phát tới máy này, hoặc tên một sink kèm .monitor. Để trống để dùng nguồn mặc định.",
+    "sink": "Sink (không bắt buộc)",
+    "sinkHint": "Tên hoặc mô tả của một sink, hoặc địa chỉ loa Bluetooth như AA:BB:CC:DD:EE:FF. Để trống để dùng sink mặc định.",
+    "pulseServer": "Máy chủ PulseAudio (không bắt buộc)",
+    "pulseServerHint": "Để trống để dùng máy chủ thông thường trên máy này.",
+    "delay": "Độ trễ tính bằng mili giây (không bắt buộc)",
+    "delayHint": "Giữ âm thanh lại để loa này khớp với các loa chậm hơn.",
+    "sampleRate": "Tần số lấy mẫu (không bắt buộc)",
+    "sampleRateHint": "Tần số trong sampleformat của nguồn snapserver. Để trống để dùng 48000, mặc định của snapserver.",
+    "snapcastAddressHint": "Máy chủ snapserver, và cổng của nguồn TCP nếu không phải 4953."
   },
   "pairing": {
     "title": "Ghép đôi AirPlay",

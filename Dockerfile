@@ -20,7 +20,8 @@ RUN GOOS=${TARGETOS:-$(go env GOOS)} GOARCH=${TARGETARCH:-$(go env GOARCH)} GOAR
     -o /out/airmixer ./cmd/airmixer
 
 FROM alpine:3.22
-RUN apk add --no-cache ca-certificates tzdata \
+# ffmpeg decodes AAC, Ogg, Opus, FLAC and HLS for radio inputs and playback.
+RUN apk add --no-cache ca-certificates tzdata ffmpeg \
     && adduser -D -u 1000 airmixer \
     && mkdir -p /data && chown airmixer:airmixer /data
 COPY --from=build /out/airmixer /usr/local/bin/airmixer

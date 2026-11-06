@@ -30,5 +30,9 @@
   "matinee_needs_player": "לקוח Matinee צריך את המזהה של הנגן ככתובת (ראו ‎/api/matinee/players)",
   "matinee_not_signed_in": "Air-Mixer עדיין לא מחובר ל-Matinee",
   "matinee_link_failed": "לא ניתן היה לקבל קוד מ-Matinee: {{detail}}",
-  "matinee_players_failed": "לא ניתן היה לקבל את הנגנים מ-Matinee: {{detail}}"
+  "matinee_players_failed": "לא ניתן היה לקבל את הנגנים מ-Matinee: {{detail}}",
+  "radio_needs_url": "קלט רדיו אינטרנט צריך url",
+  "radio_bad_url": "url חייב להיות כתובת http, https, rtsp או rtmp",
+  "snapcast_needs_address": "לקוח Snapcast צריך את הכתובת של snapserver",
+  "sample_rate_range": "sample_rate חייב להיות בין 8000 ל-192000"
 }

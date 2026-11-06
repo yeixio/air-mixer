@@ -28,8 +28,7 @@
     "unexpected": "Terjadi kesalahan.",
     "httpStatus": "Server menjawab {{status}}. Muat ulang halaman dan coba lagi.",
     "loadFailed": "Tidak dapat menghubungi Air-Mixer. Pastikan Air-Mixer berjalan, lalu muat ulang halaman.",
-    "validation": "Periksa formulir",
-    "comingSoon": "{{protocol}} (segera hadir)"
+    "validation": "Periksa formulir"
   },
   "protocols": {
     "airplayServer": "AirPlay: terima audio dari iPhone, iPad, dan Mac",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: muncul di Matinee sebagai pemutar dan memutar apa yang dikirim",
     "matineeClient": "Matinee: putar di pemutar Matinee (alamat: ID pemutar)",
     "streamClient": "Stream: stream WAV langsung untuk VLC atau browser",
-    "localClient": "Lokal: kartu suara mesin ini"
+    "localClient": "Lokal: kartu suara mesin ini",
+    "radioServer": "Radio internet: putar stasiun, playlist, atau file audio dari URL",
+    "pulseServer": "PipeWire atau PulseAudio: rekam line-in, antarmuka audio USB, atau ponsel yang memutar lewat Bluetooth",
+    "pulseClient": "PipeWire atau PulseAudio: putar di kartu suara atau speaker Bluetooth yang dipasangkan",
+    "snapcastClient": "Snapcast: putar serempak di setiap klien Snapcast"
   },
   "servers": {
     "title": "Server input",
@@ -130,6 +133,21 @@
     "selectFailed": "Tidak dapat memilih perangkat itu. Cari lagi, atau atur secara manual.",
     "manual": "Atur secara manual",
     "manualHint": "Gunakan ini jika perangkat Anda tidak ditemukan."
+  },
+  "fields": {
+    "url": "URL stream",
+    "urlHint": "Stasiun radio internet, playlist (.pls, .m3u, .m3u8), atau file audio. File diputar berulang-ulang.",
+    "source": "Sumber (opsional)",
+    "sourceHint": "Nama atau deskripsi sumber, alamat Bluetooth ponsel yang memutar ke mesin ini, atau nama sink diikuti .monitor. Kosongkan untuk sumber bawaan.",
+    "sink": "Sink (opsional)",
+    "sinkHint": "Nama atau deskripsi sink, atau alamat speaker Bluetooth seperti AA:BB:CC:DD:EE:FF. Kosongkan untuk sink bawaan.",
+    "pulseServer": "Server PulseAudio (opsional)",
+    "pulseServerHint": "Kosongkan untuk memakai yang biasa di mesin ini.",
+    "delay": "Jeda dalam milidetik (opsional)",
+    "delayHint": "Menahan audio agar speaker ini selaras dengan yang lebih lambat.",
+    "sampleRate": "Laju sampel (opsional)",
+    "sampleRateHint": "Laju pada sampleformat sumber snapserver. Kosongkan untuk 48000, bawaan snapserver.",
+    "snapcastAddressHint": "Host snapserver, dan port sumber TCP-nya jika bukan 4953."
   },
   "pairing": {
     "title": "Pemasangan AirPlay",

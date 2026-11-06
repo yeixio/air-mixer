@@ -28,8 +28,7 @@
     "unexpected": "कुछ गड़बड़ हो गई।",
     "httpStatus": "सर्वर ने {{status}} जवाब दिया। पेज रीफ़्रेश करके फिर कोशिश करें।",
     "loadFailed": "Air-Mixer से संपर्क नहीं हो सका। जाँचें कि यह चल रहा है, फिर पेज रीफ़्रेश करें।",
-    "validation": "फ़ॉर्म जाँचें",
-    "comingSoon": "{{protocol}} (जल्द आ रहा है)"
+    "validation": "फ़ॉर्म जाँचें"
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone, iPad और Mac से ऑडियो पाएँ",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: Matinee में प्लेयर के रूप में दिखता है और जो भेजा जाए उसे चलाता है",
     "matineeClient": "Matinee: Matinee प्लेयर पर चलाएँ (पता: प्लेयर की ID)",
     "streamClient": "स्ट्रीम: VLC या ब्राउज़र के लिए लाइव WAV स्ट्रीम",
-    "localClient": "स्थानीय: इस मशीन का साउंड कार्ड"
+    "localClient": "स्थानीय: इस मशीन का साउंड कार्ड",
+    "radioServer": "इंटरनेट रेडियो: किसी URL से स्टेशन, प्लेलिस्ट या ऑडियो फ़ाइल चलाएँ",
+    "pulseServer": "PipeWire या PulseAudio: लाइन-इन, USB ऑडियो इंटरफ़ेस या Bluetooth पर चल रहे फ़ोन को रिकॉर्ड करें",
+    "pulseClient": "PipeWire या PulseAudio: साउंड कार्ड या पेयर किए गए Bluetooth स्पीकर पर चलाएँ",
+    "snapcastClient": "Snapcast: हर Snapcast क्लाइंट पर एक साथ चलाएँ"
   },
   "servers": {
     "title": "इनपुट सर्वर",
@@ -131,6 +134,21 @@
     "selectFailed": "वह डिवाइस नहीं चुना जा सका। फिर से खोजें या खुद सेट अप करें।",
     "manual": "खुद सेट अप करें",
     "manualHint": "अगर आपका डिवाइस नहीं मिला, तो इसका इस्तेमाल करें।"
+  },
+  "fields": {
+    "url": "स्ट्रीम URL",
+    "urlHint": "कोई इंटरनेट रेडियो स्टेशन, प्लेलिस्ट (.pls, .m3u, .m3u8) या ऑडियो फ़ाइल। फ़ाइल बार-बार चलती है।",
+    "source": "स्रोत (वैकल्पिक)",
+    "sourceHint": "किसी स्रोत का नाम या विवरण, इस मशीन पर चला रहे फ़ोन का Bluetooth पता, या किसी sink का नाम और उसके बाद .monitor। डिफ़ॉल्ट स्रोत के लिए खाली छोड़ें।",
+    "sink": "Sink (वैकल्पिक)",
+    "sinkHint": "किसी sink का नाम या विवरण, या AA:BB:CC:DD:EE:FF जैसा Bluetooth स्पीकर का पता। डिफ़ॉल्ट sink के लिए खाली छोड़ें।",
+    "pulseServer": "PulseAudio सर्वर (वैकल्पिक)",
+    "pulseServerHint": "इस मशीन के सामान्य सर्वर के लिए खाली छोड़ें।",
+    "delay": "मिलीसेकंड में देरी (वैकल्पिक)",
+    "delayHint": "ऑडियो को रोककर इस स्पीकर को धीमे स्पीकरों के साथ मिलाता है।",
+    "sampleRate": "सैंपल रेट (वैकल्पिक)",
+    "sampleRateHint": "snapserver स्रोत के sampleformat में दी गई रेट। snapserver की डिफ़ॉल्ट 48000 के लिए खाली छोड़ें।",
+    "snapcastAddressHint": "snapserver होस्ट, और उसके TCP स्रोत का पोर्ट अगर वह 4953 नहीं है।"
   },
   "pairing": {
     "title": "AirPlay पेयरिंग",

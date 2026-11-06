@@ -28,8 +28,7 @@
     "unexpected": "Noget gik galt.",
     "httpStatus": "Serveren svarede {{status}}. Genindlæs siden, og prøv igen.",
     "loadFailed": "Kan ikke få forbindelse til Air-Mixer. Tjek, at det kører, og genindlæs siden.",
-    "validation": "Tjek formularen",
-    "comingSoon": "{{protocol}} (kommer snart)"
+    "validation": "Tjek formularen"
   },
   "protocols": {
     "airplayServer": "AirPlay: modtag lyd fra iPhone, iPad og Mac",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: vises i Matinee som en afspiller og afspiller det, den får",
     "matineeClient": "Matinee: afspil på en Matinee-afspiller (adresse: afspillerens ID)",
     "streamClient": "Stream: en live WAV-stream til VLC eller en browser",
-    "localClient": "Lokal: denne maskines lydkort"
+    "localClient": "Lokal: denne maskines lydkort",
+    "radioServer": "Netradio: afspil en station, en playliste eller en lydfil fra en URL",
+    "pulseServer": "PipeWire eller PulseAudio: optag en linjeindgang, et USB-lydkort eller en telefon, der afspiller via Bluetooth",
+    "pulseClient": "PipeWire eller PulseAudio: afspil på et lydkort eller en parret Bluetooth-højttaler",
+    "snapcastClient": "Snapcast: afspil synkront på alle Snapcast-klienter"
   },
   "servers": {
     "title": "Indgangsservere",
@@ -131,6 +134,21 @@
     "selectFailed": "Kunne ikke vælge den enhed. Søg igen, eller opsæt den manuelt.",
     "manual": "Opsæt manuelt",
     "manualHint": "Brug dette, hvis din enhed ikke blev fundet."
+  },
+  "fields": {
+    "url": "Streamens URL",
+    "urlHint": "En netradiostation, en playliste (.pls, .m3u, .m3u8) eller en lydfil. En fil gentages igen og igen.",
+    "source": "Kilde (valgfri)",
+    "sourceHint": "Navnet eller beskrivelsen af en kilde, Bluetooth-adressen på en telefon, der afspiller til denne maskine, eller navnet på en sink efterfulgt af .monitor. Lad feltet stå tomt for standardkilden.",
+    "sink": "Sink (valgfri)",
+    "sinkHint": "Navnet eller beskrivelsen af en sink, eller adressen på en Bluetooth-højttaler som AA:BB:CC:DD:EE:FF. Lad feltet stå tomt for standardsinken.",
+    "pulseServer": "PulseAudio-server (valgfri)",
+    "pulseServerHint": "Lad feltet stå tomt for den sædvanlige på denne maskine.",
+    "delay": "Forsinkelse i millisekunder (valgfri)",
+    "delayHint": "Holder lyden tilbage, så højttaleren følger langsommere højttalere.",
+    "sampleRate": "Samplingsfrekvens (valgfri)",
+    "sampleRateHint": "Frekvensen i snapserver-kildens sampleformat. Lad feltet stå tomt for 48000, snapservers standard.",
+    "snapcastAddressHint": "snapserver-værten og porten på dens TCP-kilde, hvis den ikke er 4953."
   },
   "pairing": {
     "title": "AirPlay-parring",

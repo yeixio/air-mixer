@@ -30,5 +30,9 @@
   "matinee_needs_player": "Bir Matinee istemcisi adres olarak oynatıcının kimliğine ihtiyaç duyar (bkz. /api/matinee/players)",
   "matinee_not_signed_in": "Air-Mixer henüz Matinee'de oturum açmadı",
   "matinee_link_failed": "Matinee'den kod alınamadı: {{detail}}",
-  "matinee_players_failed": "Oynatıcılar Matinee'den alınamadı: {{detail}}"
+  "matinee_players_failed": "Oynatıcılar Matinee'den alınamadı: {{detail}}",
+  "radio_needs_url": "İnternet radyosu girişi için url gerekir",
+  "radio_bad_url": "url bir http, https, rtsp veya rtmp adresi olmalı",
+  "snapcast_needs_address": "Snapcast istemcisi için snapserver adresi gerekir",
+  "sample_rate_range": "sample_rate 8000 ile 192000 arasında olmalı"
 }

@@ -54,13 +54,25 @@ On create, `id` is generated when omitted and `enabled` defaults to
 example the port is taken) nothing is saved and the error is returned.
 
 `config` may be sent as a JSON string, as stored, or as an object.
-A `matinee` server takes no config: it shows up in Matinee as a player
-named after the server (see [Matinee](#matinee)). AirPlay servers accept:
 
-| Key | Default | |
-|-----|---------|-|
-| `address` | `:<airplay_port>` | RTSP listen address. Each receiver needs its own port. |
-| `interface` | `server.interface` | Interface to advertise on |
+| Protocol | `config` keys |
+|----------|---------------|
+| `airplay` | `address` (RTSP listen address, default `:<airplay_port>`; each receiver needs its own port), `interface` (interface to advertise on, default `server.interface`) |
+| `radio` | `url` (required): an internet radio station, a PLS or M3U playlist, an HLS stream (`.m3u8`) or an audio file, over http, https, rtsp or rtmp |
+| `pulse` | `source` (name, description, a phone's Bluetooth address, or `<sink>.monitor`; default source if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`) |
+| `matinee` | none: it shows up in Matinee as a player named after the server (see [Matinee](#matinee)) |
+
+A `radio` server plays its URL for as long as it is on. A station that
+drops is reconnected with backoff (1 s, doubling up to a minute) and a
+file starts again when it ends. MP3 and WAV are decoded in Go; AAC, Ogg,
+Opus, FLAC, HLS, RTSP and RTMP need `ffmpeg` on the server's `$PATH`,
+which the Docker image includes.
+
+A `pulse` server records from a PulseAudio or PipeWire source: a line-in,
+a USB audio interface, the monitor of a sink, or a phone playing to the
+host over Bluetooth (pair it with the host and give its address). It waits
+while the source is missing, such as while no phone is connected, and
+starts again when the source comes back.
 
 ## Clients (outputs)
 
@@ -86,6 +98,7 @@ reported by `/api/status`.
 | `airplay` | `host` or `host:port` (default port 5000) | `latency_ms` (default 2000), `disable_encryption` |
 | `local` | ignored | `delay_ms` |
 | `pulse` | ignored | `sink` (name, description or Bluetooth address; default sink if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`), `delay_ms` |
+| `snapcast` | snapserver's `host` or `host:port` of its TCP source (default port 4953) | `sample_rate` (default 48000, snapserver's default) |
 | `stream` | ignored | none; see [Streams](#streams) |
 | `matinee` | the Matinee player's id, from `/api/matinee/players` | `library_id`: the music library its station goes in (default: the first) |
 
@@ -94,6 +107,18 @@ speakers with different latencies, such as several Bluetooth speakers in
 one room. A `pulse` client keeps retrying while its sink is missing, for
 example while a Bluetooth speaker is off, and reconnects by itself when
 the speaker drops off and comes back.
+
+A `snapcast` client writes 16-bit stereo PCM into a TCP source on
+snapserver, which every Snapcast client then plays in sync. Add the source
+to `snapserver.conf`:
+
+```ini
+[stream]
+source = tcp://0.0.0.0:4953?name=Air-Mixer&mode=server
+```
+
+and set `sample_rate` if the source names another rate with
+`sampleformat`.
 
 `POST /api/clients/{id}/pair` returns 501: AirPlay 2 pairing is not
 implemented yet.
@@ -228,6 +253,36 @@ curl -X POST http://airmixer.local:9001/api/play \
   -d '{"url": "http://nas.local/sounds/doorbell.wav", "outputs": ["Kitchen", "Den"]}'
 ```
 
+## Protocols
+
+`GET /api/protocols` lists the protocols this build supports, inputs
+(`"kind": "server"`) first, with the fields each takes, so a client can
+build its forms. `label`, `hint` and `placeholder_key` are keys in the web
+UI's translations (`i18n/locales/<lang>/web.json`); `placeholder` is shown
+as it is. A field with `"key": "address"` is a client's `address`; every
+other key goes in `config`.
+
+```json
+[
+  {
+    "name": "radio", "kind": "server", "title": "Internet radio",
+    "description": "protocols.radioServer",
+    "fields": [
+      {"key": "url", "type": "url", "required": true, "label": "fields.url",
+       "hint": "fields.urlHint", "placeholder": "https://stream.example.com/radio.mp3"}
+    ]
+  },
+  {
+    "name": "snapcast", "kind": "client", "title": "Snapcast",
+    "description": "protocols.snapcastClient", "discovery": true,
+    "fields": [
+      {"key": "address", "type": "text", "required": true, "label": "common.address", "placeholder": "snapserver.local:4953"},
+      {"key": "sample_rate", "type": "number", "label": "fields.sampleRate", "placeholder": "48000"}
+    ]
+  }
+]
+```
+
 ## Status and health
 
 `GET /api/status`
@@ -257,7 +312,9 @@ the database is unavailable.
 
 `GET /api/discovery?timeout=5s` browses every protocol;
 `GET /api/discovery/{protocol}` browses one. `timeout` is optional, at
-most 30s.
+most 30s. AirPlay speakers (`_raop._tcp`) and Snapcast servers
+(`_snapcast._tcp`, given with the TCP source port 4953) are found over
+mDNS, over IPv4 alone on hosts without IPv6.
 
 ```json
 {

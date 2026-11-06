@@ -28,8 +28,7 @@
     "unexpected": "Něco se pokazilo.",
     "httpStatus": "Server odpověděl {{status}}. Obnovte stránku a zkuste to znovu.",
     "loadFailed": "Nelze se spojit s Air-Mixer. Zkontrolujte, že běží, a obnovte stránku.",
-    "validation": "Zkontrolujte formulář",
-    "comingSoon": "{{protocol}} (brzy)"
+    "validation": "Zkontrolujte formulář"
   },
   "protocols": {
     "airplayServer": "AirPlay: přijímat zvuk z iPhonu, iPadu a Macu",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: zobrazí se v Matinee jako přehrávač a přehrává, co dostane",
     "matineeClient": "Matinee: přehrávat na přehrávači Matinee (adresa: ID přehrávače)",
     "streamClient": "Stream: živý WAV stream pro VLC nebo prohlížeč",
-    "localClient": "Místní: zvuková karta tohoto počítače"
+    "localClient": "Místní: zvuková karta tohoto počítače",
+    "radioServer": "Internetové rádio: přehrávej stanici, playlist nebo zvukový soubor z URL",
+    "pulseServer": "PipeWire nebo PulseAudio: nahrávej linkový vstup, USB zvukové rozhraní nebo telefon hrající přes Bluetooth",
+    "pulseClient": "PipeWire nebo PulseAudio: přehrávej na zvukové kartě nebo spárovaném Bluetooth reproduktoru",
+    "snapcastClient": "Snapcast: přehrávej synchronně na všech klientech Snapcast"
   },
   "servers": {
     "title": "Vstupní servery",
@@ -133,6 +136,21 @@
     "selectFailed": "Toto zařízení se nepodařilo vybrat. Hledejte znovu, nebo ho nastavte ručně.",
     "manual": "Nastavit ručně",
     "manualHint": "Použijte, pokud se vaše zařízení nenašlo."
+  },
+  "fields": {
+    "url": "URL streamu",
+    "urlHint": "Stanice internetového rádia, playlist (.pls, .m3u, .m3u8) nebo zvukový soubor. Soubor se přehrává stále dokola.",
+    "source": "Zdroj (nepovinné)",
+    "sourceHint": "Název nebo popis zdroje, Bluetooth adresa telefonu, který hraje do tohoto počítače, nebo název sinku s příponou .monitor. Pro výchozí zdroj nech prázdné.",
+    "sink": "Sink (nepovinné)",
+    "sinkHint": "Název nebo popis sinku, nebo adresa Bluetooth reproduktoru, například AA:BB:CC:DD:EE:FF. Pro výchozí sink nech prázdné.",
+    "pulseServer": "Server PulseAudio (nepovinné)",
+    "pulseServerHint": "Nech prázdné pro obvyklý server na tomto počítači.",
+    "delay": "Zpoždění v milisekundách (nepovinné)",
+    "delayHint": "Zadrží zvuk, aby tento reproduktor hrál v souladu s pomalejšími.",
+    "sampleRate": "Vzorkovací frekvence (nepovinné)",
+    "sampleRateHint": "Frekvence v sampleformat zdroje snapserveru. Nech prázdné pro 48000, výchozí hodnotu snapserveru.",
+    "snapcastAddressHint": "Hostitel snapserveru a port jeho TCP zdroje, pokud to není 4953."
   },
   "pairing": {
     "title": "Párování AirPlay",

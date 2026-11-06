@@ -39,7 +39,7 @@ type Service struct {
 // built-in one if none are given.
 func NewService(ds ...Discoverer) *Service {
 	if len(ds) == 0 {
-		ds = []Discoverer{NewAirPlay()}
+		ds = []Discoverer{NewAirPlay(), NewSnapcast()}
 	}
 	return &Service{discoverers: ds}
 }
@@ -130,35 +130,10 @@ func (*AirPlay) Protocol() string { return "airplay" }
 
 // Discover browses _raop._tcp for timeout.
 func (a *AirPlay) Discover(ctx context.Context, timeout time.Duration) ([]Device, error) {
-	ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
-	entries := make(chan *zeroconf.ServiceEntry, 16)
-	errc := make(chan error, 1)
-	go func() { errc <- a.browse(ctx, "_raop._tcp", "local.", entries) }()
-
-	devices := []Device{}
-	seen := make(map[string]bool)
-	for {
-		select {
-		case e, ok := <-entries:
-			if !ok {
-				return devices, nil
-			}
-			d, ok := airplayDevice(e)
-			if ok && !seen[d.Address] {
-				seen[d.Address] = true
-				devices = append(devices, d)
-			}
-		case err := <-errc:
-			if err != nil {
-				return nil, fmt.Errorf("mDNS browse: %w", err)
-			}
-			errc = nil // browsing ended; keep reading until the timeout
-		case <-ctx.Done():
-			return devices, nil
-		}
-	}
+	return browseMDNS(ctx, a.browse, "_raop._tcp", timeout, func(e *zeroconf.ServiceEntry, _ net.IP) Device {
+		d, _ := airplayDevice(e)
+		return d
+	})
 }
 
 func airplayDevice(e *zeroconf.ServiceEntry) (Device, bool) {
@@ -201,4 +176,90 @@ func airplayName(instance string) string {
 		instance = name
 	}
 	return strings.ReplaceAll(instance, `\`, "")
+}
+
+// Snapcast discovers Snapcast servers over mDNS (_snapcast._tcp). Their
+// address points at the TCP source port Air-Mixer writes to (4953 by
+// convention, see package snapcast), not the advertised client port.
+type Snapcast struct {
+	browse browseFunc
+}
+
+// NewSnapcast returns a Snapcast discoverer.
+func NewSnapcast() *Snapcast { return &Snapcast{browse: zeroconf.Browse} }
+
+// Protocol returns "snapcast".
+func (*Snapcast) Protocol() string { return "snapcast" }
+
+// Discover browses _snapcast._tcp for timeout.
+func (s *Snapcast) Discover(ctx context.Context, timeout time.Duration) ([]Device, error) {
+	return browseMDNS(ctx, s.browse, "_snapcast._tcp", timeout, func(e *zeroconf.ServiceEntry, ip net.IP) Device {
+		name := strings.ReplaceAll(e.Instance, `\`, "")
+		return Device{
+			Name:        name,
+			Protocol:    "snapcast",
+			Address:     net.JoinHostPort(ip.String(), "4953"),
+			Port:        4953,
+			Description: "Snapcast server: " + name,
+			Metadata:    map[string]string{"hostname": e.HostName, "client_port": strconv.Itoa(e.Port)},
+		}
+	})
+}
+
+// browseMDNS browses one mDNS service for timeout and turns each answer
+// with an address into a Device, once per address.
+func browseMDNS(ctx context.Context, browse browseFunc, service string, timeout time.Duration, device func(*zeroconf.ServiceEntry, net.IP) Device) ([]Device, error) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	entries := make(chan *zeroconf.ServiceEntry, 16)
+	errc := make(chan error, 1)
+	go func() {
+		err := browse(ctx, service, "local.", entries)
+		if err != nil && ctx.Err() == nil {
+			// Hosts and pods without IPv6 can't open the IPv6 socket;
+			// browse over IPv4 alone instead.
+			err = browse(ctx, service, "local.", entries, zeroconf.SelectIPTraffic(zeroconf.IPv4))
+		}
+		errc <- err
+	}()
+
+	devices := []Device{}
+	seen := make(map[string]bool)
+	for {
+		select {
+		case e, ok := <-entries:
+			if !ok {
+				return devices, nil
+			}
+			ip := entryIP(e)
+			if ip == nil {
+				continue
+			}
+			d := device(e, ip)
+			if !seen[d.Address] {
+				seen[d.Address] = true
+				devices = append(devices, d)
+			}
+		case err := <-errc:
+			if err != nil {
+				return nil, fmt.Errorf("mDNS browse: %w", err)
+			}
+			errc = nil // browsing ended; keep reading until the timeout
+		case <-ctx.Done():
+			return devices, nil
+		}
+	}
+}
+
+func entryIP(e *zeroconf.ServiceEntry) net.IP {
+	switch {
+	case e == nil:
+		return nil
+	case len(e.AddrIPv4) > 0:
+		return e.AddrIPv4[0]
+	case len(e.AddrIPv6) > 0:
+		return e.AddrIPv6[0]
+	}
+	return nil
 }

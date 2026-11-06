@@ -10,6 +10,17 @@ generated from its pull requests.
 
 ### Added
 
+- `GET /api/protocols`, listing each protocol with the fields it takes;
+  the web UI builds its protocol menus and settings from it, so PipeWire
+  and Bluetooth outputs can be set up there now.
+- An internet radio input: a station, playlist, HLS stream or audio file
+  from a URL, kept playing and reconnected when it drops.
+- A PulseAudio/PipeWire input that records a line-in, a USB interface, a
+  sink's monitor, or a phone playing to the host over Bluetooth.
+- A Snapcast output that feeds a snapserver TCP source, and discovery of
+  Snapcast servers.
+- AAC, Ogg, Opus and FLAC through ffmpeg for playback and radio, when
+  ffmpeg is installed; the Docker image includes it.
 - A PulseAudio/PipeWire output that can drive paired Bluetooth speakers,
   with a per-output delay, and declarative setup from the config file.
 - A Helm chart with a per-room speaker agent, and multi-arch images on
@@ -32,6 +43,7 @@ generated from its pull requests.
 
 ### Changed
 
+- Discovery falls back to IPv4 alone on hosts and pods without IPv6.
 - The web UI wears Matinee's look: its warm dark theme with the coral
   accent, or its Light theme when the system asks for light, Inter and
   Fraunces (served by Air-Mixer, no internet needed), Matinee's cards,

@@ -1424,21 +1424,12 @@
                 </div>
                 <div class="form-group">
                     <label data-i18n="common.protocol">Protocol</label>
-                    <select name="protocol" required>
+                    <select name="protocol" required onchange="renderProtocolFields('server')">
                         <option value="airplay" data-i18n="protocols.airplayServer">AirPlay: receive audio from iPhone, iPad and Mac</option>
-                        <option value="matinee" data-i18n="protocols.matineeServer">Matinee: shows up in Matinee as a player and plays what it's sent</option>
-                        <option value="bluetooth" disabled data-i18n="common.comingSoon" data-i18n-protocol="Bluetooth">Bluetooth (coming soon)</option>
-                        <option value="chromecast" disabled data-i18n="common.comingSoon" data-i18n-protocol="Google Cast">Google Cast (coming soon)</option>
-                        <option value="upnp" disabled data-i18n="common.comingSoon" data-i18n-protocol="UPnP/DLNA">UPnP/DLNA (coming soon)</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label data-i18n="servers.interface">Network interface (optional)</label>
-                    <input type="text" name="interface" placeholder="auto (detect it)" data-i18n-placeholder="servers.interfacePlaceholder" id="serverInterface">
-                    <small class="hint" data-i18n="servers.interfaceHint">
-                        Leave empty or write "auto" to detect it. Name an interface, such as en0 or eth0, if detection picks the wrong one.
-                    </small>
-                </div>
+                <!-- The protocol's own settings, from GET /api/protocols. -->
+                <div class="protocol-fields"></div>
                 <div class="form-group">
                     <label><span data-i18n="common.id">ID</span> <span class="hint" data-i18n="common.idHint">(optional, made up if empty)</span></label>
                     <input type="text" name="id" placeholder="Leave empty to make one up" data-i18n-placeholder="common.idPlaceholder">
@@ -1482,20 +1473,16 @@
                         </div>
                         <div class="form-group">
                             <label data-i18n="common.protocol">Protocol</label>
-                            <select name="protocol" required>
+                            <select name="protocol" required onchange="renderProtocolFields('client')">
                                 <option value="airplay" data-i18n="protocols.airplayClient">AirPlay: send audio to AirPlay speakers</option>
-                                <option value="matinee" data-i18n="protocols.matineeClient">Matinee: play on a Matinee player (address: the player's id)</option>
-                                <option value="stream" data-i18n="protocols.streamClient">Stream: a live WAV stream for VLC or a browser</option>
-                                <option value="local" data-i18n="protocols.localClient">Local: this machine's sound card</option>
-                                <option value="bluetooth" disabled data-i18n="common.comingSoon" data-i18n-protocol="Bluetooth">Bluetooth (coming soon)</option>
-                                <option value="chromecast" disabled data-i18n="common.comingSoon" data-i18n-protocol="Google Cast">Google Cast (coming soon)</option>
-                                <option value="upnp" disabled data-i18n="common.comingSoon" data-i18n-protocol="UPnP/DLNA">UPnP/DLNA (coming soon)</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" data-fallback-address>
                             <label><span data-i18n="common.address">Address</span> <span class="hint" data-i18n="clients.addressHint">(IP:port or device identifier)</span></label>
-                            <input type="text" name="address" placeholder="192.168.1.100:49152" dir="ltr">
+                            <input type="text" name="address" placeholder="192.168.1.100:7000" dir="ltr">
                         </div>
+                        <!-- The protocol's own settings, from GET /api/protocols. -->
+                        <div class="protocol-fields"></div>
                         <div class="form-group">
                             <label><span data-i18n="common.id">ID</span> <span class="hint" data-i18n="common.idHint">(optional, made up if empty)</span></label>
                             <input type="text" name="id" placeholder="Leave empty to make one up" data-i18n-placeholder="common.idPlaceholder">
@@ -1870,6 +1857,7 @@
         // Load data on page load
         window.onload = async function() {
             await initLanguage();
+            loadProtocols();
             loadMatinee();
             // Load status first to check if server is ready
             loadStatus().then(() => {
@@ -2140,6 +2128,114 @@
             }
         }
 
+        // ---- Protocols ----
+        // The protocols the server supports, with each one's settings, so
+        // the add forms show only what the picked protocol takes.
+        let protocolCatalog = [];
+
+        async function loadProtocols() {
+            try {
+                const res = await fetch(`${API_BASE}/protocols`);
+                if (res.ok) protocolCatalog = await res.json();
+            } catch (err) {
+                console.warn('[Protocols] Could not load the protocol list:', err);
+            }
+            fillProtocolSelect('server');
+            fillProtocolSelect('client');
+        }
+
+        function protocolForm(kind) {
+            return document.getElementById(kind === 'server' ? 'serverForm' : 'clientForm');
+        }
+
+        function fillProtocolSelect(kind) {
+            const select = protocolForm(kind).querySelector('select[name="protocol"]');
+            const list = protocolCatalog.filter(p => p.kind === kind);
+            if (list.length) {
+                const current = select.value;
+                select.innerHTML = '';
+                for (const p of list) {
+                    const option = document.createElement('option');
+                    option.value = p.name;
+                    option.dataset.i18n = p.description;
+                    select.appendChild(option);
+                }
+                if (list.some(p => p.name === current)) select.value = current;
+                translatePage(select);
+            }
+            renderProtocolFields(kind);
+        }
+
+        // Shows the fields of the protocol picked in a form.
+        function renderProtocolFields(kind) {
+            const form = protocolForm(kind);
+            const box = form.querySelector('.protocol-fields');
+            const name = form.querySelector('select[name="protocol"]').value;
+            const p = protocolCatalog.find(p => p.kind === kind && p.name === name);
+            const fallback = form.querySelector('[data-fallback-address]');
+            if (fallback) {
+                // Without the list, every output keeps the plain address field.
+                fallback.hidden = !!p;
+                fallback.querySelector('input').disabled = !!p;
+            }
+            box.innerHTML = '';
+            if (!p) return;
+            for (const f of p.fields) {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                input.name = f.key === 'address' ? 'address' : 'config.' + f.key;
+                input.dataset.type = f.type;
+                if (f.type === 'bool') {
+                    input.type = 'checkbox';
+                    label.appendChild(input);
+                    const text = document.createElement('span');
+                    text.dataset.i18n = f.label;
+                    label.appendChild(text);
+                    group.appendChild(label);
+                } else {
+                    label.dataset.i18n = f.label;
+                    input.type = f.type === 'number' ? 'number' : f.type === 'url' ? 'url' : 'text';
+                    if (f.type === 'number') input.min = '0';
+                    input.dir = 'ltr';
+                    input.required = !!f.required;
+                    if (f.placeholder_key) input.dataset.i18nPlaceholder = f.placeholder_key;
+                    else if (f.placeholder) input.placeholder = f.placeholder;
+                    group.appendChild(label);
+                    group.appendChild(input);
+                }
+                if (f.hint) {
+                    const hint = document.createElement('small');
+                    hint.className = 'hint';
+                    hint.dataset.i18n = f.hint;
+                    group.appendChild(hint);
+                }
+                box.appendChild(group);
+            }
+            translatePage(box);
+        }
+
+        // Moves the protocol's fields (config.<key>) into data.config, the
+        // JSON the API stores, leaving out empty ones.
+        function collectConfig(kind, data) {
+            const config = {};
+            for (const key of Object.keys(data)) {
+                if (!key.startsWith('config.')) continue;
+                const value = String(data[key]).trim();
+                delete data[key];
+                const name = key.slice('config.'.length);
+                const input = protocolForm(kind).querySelector(`[name="${key}"]`);
+                const type = input ? input.dataset.type : 'text';
+                if (type === 'bool') {
+                    if (input.checked) config[name] = true;
+                } else if (value !== '' && !(name === 'interface' && value.toLowerCase() === 'auto')) {
+                    config[name] = type === 'number' ? Number(value) : value;
+                }
+            }
+            if (Object.keys(config).length) data.config = JSON.stringify(config);
+        }
+
         function showAddServerModal() {
             document.getElementById('serverModal').style.display = 'block';
         }
@@ -2304,16 +2400,7 @@
             // Ensure enabled is set to true for new servers
             data.enabled = true;
             
-            // Handle interface field - if empty or "auto", set to empty string (backend will auto-detect)
-            if (!data.interface || data.interface.trim() === '' || data.interface.trim().toLowerCase() === 'auto') {
-                data.interface = '';
-            }
-            
-            // Build config object if interface is specified
-            if (data.interface && data.interface.trim() !== '') {
-                data.config = JSON.stringify({ interface: data.interface.trim() });
-            }
-            delete data.interface; // Remove from top level since it goes in config
+            collectConfig('server', data);
 
             try {
                 const res = await fetch(`${API_BASE}/servers`, {
@@ -2354,6 +2441,7 @@
             } else {
                 const formData = new FormData(e.target);
                 data = Object.fromEntries(formData);
+                collectConfig('client', data);
                 
                 if (!data.id || data.id.trim() === '') {
                     data.id = 'client-' + Date.now();
@@ -3090,6 +3178,10 @@
                 
                 const nameInput = modal.querySelector('input[name="name"]');
                 const protocolSelect = modal.querySelector('select[name="protocol"]');
+                if (protocolSelect) {
+                    protocolSelect.value = device.protocol || 'airplay';
+                    renderProtocolFields('client');
+                }
                 const addressInput = modal.querySelector('input[name="address"]');
                 
                 console.log('[Device Selection] Form elements found:', {
@@ -3104,13 +3196,6 @@
                     console.log('[Device Selection] Set name to:', cleanedName);
                 } else {
                     console.warn('[Device Selection] Name input not found');
-                }
-                
-                if (protocolSelect) {
-                    protocolSelect.value = device.protocol || 'airplay';
-                    console.log('[Device Selection] Set protocol to:', device.protocol || 'airplay');
-                } else {
-                    console.warn('[Device Selection] Protocol select not found');
                 }
                 
                 if (addressInput) {

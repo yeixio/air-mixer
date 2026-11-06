@@ -28,8 +28,7 @@
     "unexpected": "Valami hiba történt.",
     "httpStatus": "A szerver ezt válaszolta: {{status}}. Frissítsd az oldalt, és próbáld újra.",
     "loadFailed": "Az Air-Mixer nem érhető el. Ellenőrizd, hogy fut-e, majd frissítsd az oldalt.",
-    "validation": "Ellenőrizd az űrlapot",
-    "comingSoon": "{{protocol}} (hamarosan)"
+    "validation": "Ellenőrizd az űrlapot"
   },
   "protocols": {
     "airplayServer": "AirPlay: hang fogadása iPhone-ról, iPadről és Macről",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: lejátszóként jelenik meg a Matinee-ben, és lejátssza, amit kap",
     "matineeClient": "Matinee: lejátszás Matinee-lejátszón (cím: a lejátszó azonosítója)",
     "streamClient": "Stream: élő WAV-stream VLC-hez vagy böngészőhöz",
-    "localClient": "Helyi: a gép hangkártyája"
+    "localClient": "Helyi: a gép hangkártyája",
+    "radioServer": "Internetes rádió: állomás, lejátszási lista vagy hangfájl lejátszása URL-ről",
+    "pulseServer": "PipeWire vagy PulseAudio: vonalbemenet, USB-s hangkártya vagy Bluetooth-on lejátszó telefon felvétele",
+    "pulseClient": "PipeWire vagy PulseAudio: lejátszás hangkártyán vagy párosított Bluetooth-hangszórón",
+    "snapcastClient": "Snapcast: szinkron lejátszás minden Snapcast-kliensen"
   },
   "servers": {
     "title": "Bemeneti szerverek",
@@ -131,6 +134,21 @@
     "selectFailed": "Nem sikerült kiválasztani ezt az eszközt. Keress újra, vagy állítsd be kézzel.",
     "manual": "Beállítás kézzel",
     "manualHint": "Használd ezt, ha az eszközöd nem található."
+  },
+  "fields": {
+    "url": "Stream URL-je",
+    "urlHint": "Internetes rádióállomás, lejátszási lista (.pls, .m3u, .m3u8) vagy hangfájl. A fájl ismétlődve szól.",
+    "source": "Forrás (nem kötelező)",
+    "sourceHint": "Egy forrás neve vagy leírása, egy erre a gépre lejátszó telefon Bluetooth-címe, vagy egy sink neve .monitor végződéssel. Hagyd üresen az alapértelmezett forráshoz.",
+    "sink": "Sink (nem kötelező)",
+    "sinkHint": "Egy sink neve vagy leírása, vagy egy Bluetooth-hangszóró címe, például AA:BB:CC:DD:EE:FF. Hagyd üresen az alapértelmezett sinkhez.",
+    "pulseServer": "PulseAudio-szerver (nem kötelező)",
+    "pulseServerHint": "Hagyd üresen a gép szokásos szerveréhez.",
+    "delay": "Késleltetés ezredmásodpercben (nem kötelező)",
+    "delayHint": "Visszatartja a hangot, hogy ez a hangszóró együtt szóljon a lassabbakkal.",
+    "sampleRate": "Mintavételezési frekvencia (nem kötelező)",
+    "sampleRateHint": "A snapserver-forrás sampleformat beállításában szereplő frekvencia. Hagyd üresen a snapserver alapértelmezett 48000 értékéhez.",
+    "snapcastAddressHint": "A snapserver gépe, és TCP-forrásának portja, ha az nem 4953."
   },
   "pairing": {
     "title": "AirPlay-párosítás",

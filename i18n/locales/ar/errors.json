@@ -30,5 +30,9 @@
   "matinee_needs_player": "يحتاج عميل Matinee إلى معرّف المشغّل عنوانًا له (راجع ‎/api/matinee/players)",
   "matinee_not_signed_in": "لم يسجّل Air-Mixer الدخول إلى Matinee بعد",
   "matinee_link_failed": "تعذّر الحصول على رمز من Matinee: {{detail}}",
-  "matinee_players_failed": "تعذّر الحصول على المشغّلات من Matinee: {{detail}}"
+  "matinee_players_failed": "تعذّر الحصول على المشغّلات من Matinee: {{detail}}",
+  "radio_needs_url": "يحتاج مدخل راديو الإنترنت إلى url",
+  "radio_bad_url": "يجب أن يكون url عنوان http أو https أو rtsp أو rtmp",
+  "snapcast_needs_address": "يحتاج عميل Snapcast إلى عنوان snapserver",
+  "sample_rate_range": "يجب أن تكون قيمة sample_rate بين 8000 و192000"
 }

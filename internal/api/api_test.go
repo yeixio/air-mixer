@@ -228,6 +228,24 @@ func TestRoutes(t *testing.T) {
 	a.expect("DELETE", "/api/routes/"+r.ID, "", 404, nil)
 }
 
+func TestProtocols(t *testing.T) {
+	a := newTestAPI(t, nil)
+	var list []service.Protocol
+	a.expect("GET", "/api/protocols", "", 200, &list)
+	kinds := map[string]bool{}
+	for _, p := range list {
+		kinds[p.Kind+"/"+p.Name] = true
+		if p.Fields == nil || p.Title == "" || p.Description == "" {
+			t.Errorf("incomplete protocol %+v", p)
+		}
+	}
+	for _, want := range []string{"server/airplay", "server/radio", "server/pulse", "client/snapcast", "client/pulse"} {
+		if !kinds[want] {
+			t.Errorf("%s missing from %v", want, kinds)
+		}
+	}
+}
+
 func TestStatusAndHealth(t *testing.T) {
 	a := newTestAPI(t, nil)
 	a.expect("POST", "/api/servers", `{"id":"s","name":"S","protocol":"fake"}`, 201, nil)

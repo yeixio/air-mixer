@@ -30,5 +30,9 @@
   "matinee_needs_player": "ไคลเอนต์ Matinee ต้องใช้ ID ของเครื่องเล่นเป็นที่อยู่ (ดู /api/matinee/players)",
   "matinee_not_signed_in": "Air-Mixer ยังไม่ได้ลงชื่อเข้าใช้ Matinee",
   "matinee_link_failed": "ขอรหัสจาก Matinee ไม่ได้: {{detail}}",
-  "matinee_players_failed": "ขอรายการเครื่องเล่นจาก Matinee ไม่ได้: {{detail}}"
+  "matinee_players_failed": "ขอรายการเครื่องเล่นจาก Matinee ไม่ได้: {{detail}}",
+  "radio_needs_url": "อินพุตวิทยุอินเทอร์เน็ตต้องมี url",
+  "radio_bad_url": "url ต้องเป็นที่อยู่ http, https, rtsp หรือ rtmp",
+  "snapcast_needs_address": "ไคลเอนต์ Snapcast ต้องมีที่อยู่ของ snapserver",
+  "sample_rate_range": "sample_rate ต้องอยู่ระหว่าง 8000 ถึง 192000"
 }

@@ -28,8 +28,7 @@
     "unexpected": "Sesuatu tidak kena.",
     "httpStatus": "Pelayan menjawab {{status}}. Muat semula halaman dan cuba lagi.",
     "loadFailed": "Tidak dapat menghubungi Air-Mixer. Pastikan ia sedang berjalan, kemudian muat semula halaman.",
-    "validation": "Semak borang",
-    "comingSoon": "{{protocol}} (akan datang)"
+    "validation": "Semak borang"
   },
   "protocols": {
     "airplayServer": "AirPlay: terima audio daripada iPhone, iPad dan Mac",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: muncul dalam Matinee sebagai pemain dan memainkan apa yang dihantar",
     "matineeClient": "Matinee: main pada pemain Matinee (alamat: ID pemain)",
     "streamClient": "Strim: strim WAV langsung untuk VLC atau pelayar",
-    "localClient": "Setempat: kad bunyi mesin ini"
+    "localClient": "Setempat: kad bunyi mesin ini",
+    "radioServer": "Radio internet: mainkan stesen, senarai main atau fail audio dari URL",
+    "pulseServer": "PipeWire atau PulseAudio: rakam line-in, antara muka audio USB atau telefon yang memainkan melalui Bluetooth",
+    "pulseClient": "PipeWire atau PulseAudio: mainkan pada kad bunyi atau pembesar suara Bluetooth yang dipasangkan",
+    "snapcastClient": "Snapcast: mainkan serentak pada setiap klien Snapcast"
   },
   "servers": {
     "title": "Pelayan input",
@@ -130,6 +133,21 @@
     "selectFailed": "Tidak dapat memilih peranti itu. Cari lagi, atau sediakannya secara manual.",
     "manual": "Sediakan secara manual",
     "manualHint": "Gunakan ini jika peranti anda tidak dijumpai."
+  },
+  "fields": {
+    "url": "URL strim",
+    "urlHint": "Stesen radio internet, senarai main (.pls, .m3u, .m3u8) atau fail audio. Fail dimainkan berulang kali.",
+    "source": "Sumber (pilihan)",
+    "sourceHint": "Nama atau perihalan sumber, alamat Bluetooth telefon yang memainkan ke mesin ini, atau nama sink diikuti .monitor. Biarkan kosong untuk sumber lalai.",
+    "sink": "Sink (pilihan)",
+    "sinkHint": "Nama atau perihalan sink, atau alamat pembesar suara Bluetooth seperti AA:BB:CC:DD:EE:FF. Biarkan kosong untuk sink lalai.",
+    "pulseServer": "Pelayan PulseAudio (pilihan)",
+    "pulseServerHint": "Biarkan kosong untuk yang biasa pada mesin ini.",
+    "delay": "Lengahan dalam milisaat (pilihan)",
+    "delayHint": "Menahan audio supaya pembesar suara ini selari dengan yang lebih perlahan.",
+    "sampleRate": "Kadar sampel (pilihan)",
+    "sampleRateHint": "Kadar dalam sampleformat sumber snapserver. Biarkan kosong untuk 48000, lalai snapserver.",
+    "snapcastAddressHint": "Hos snapserver, dan port sumber TCP-nya jika bukan 4953."
   },
   "pairing": {
     "title": "Gandingan AirPlay",

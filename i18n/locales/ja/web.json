@@ -28,8 +28,7 @@
     "unexpected": "問題が発生しました。",
     "httpStatus": "サーバーの応答は {{status}} でした。ページを再読み込みして、もう一度お試しください。",
     "loadFailed": "Air-Mixer に接続できません。実行中か確認してから、ページを再読み込みしてください。",
-    "validation": "入力内容を確認してください",
-    "comingSoon": "{{protocol}}(近日対応)"
+    "validation": "入力内容を確認してください"
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone、iPad、Mac からオーディオを受信",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: Matinee にプレーヤーとして表示され、送られた音声を再生します",
     "matineeClient": "Matinee: Matinee のプレーヤーで再生（アドレス：プレーヤーの ID）",
     "streamClient": "ストリーム: VLC やブラウザ向けのライブ WAV ストリーム",
-    "localClient": "ローカル: このマシンのサウンドカード"
+    "localClient": "ローカル: このマシンのサウンドカード",
+    "radioServer": "インターネットラジオ：URL から局、プレイリスト、オーディオファイルを再生",
+    "pulseServer": "PipeWire または PulseAudio：ライン入力、USB オーディオインターフェイス、Bluetooth で再生中のスマートフォンを録音",
+    "pulseClient": "PipeWire または PulseAudio：サウンドカードやペアリング済みの Bluetooth スピーカーで再生",
+    "snapcastClient": "Snapcast：すべての Snapcast クライアントで同期して再生"
   },
   "servers": {
     "title": "入力サーバー",
@@ -130,6 +133,21 @@
     "selectFailed": "そのデバイスを選択できませんでした。もう一度探すか、手動で設定してください。",
     "manual": "手動で設定",
     "manualHint": "デバイスが見つからなかったときに使います。"
+  },
+  "fields": {
+    "url": "ストリーム URL",
+    "urlHint": "インターネットラジオ局、プレイリスト（.pls、.m3u、.m3u8）、またはオーディオファイル。ファイルは繰り返し再生されます。",
+    "source": "ソース（任意）",
+    "sourceHint": "ソースの名前か説明、このマシンに再生しているスマートフォンの Bluetooth アドレス、またはシンク名の後に .monitor を付けたもの。空欄ならデフォルトのソースです。",
+    "sink": "シンク（任意）",
+    "sinkHint": "シンクの名前か説明、または AA:BB:CC:DD:EE:FF のような Bluetooth スピーカーのアドレス。空欄ならデフォルトのシンクです。",
+    "pulseServer": "PulseAudio サーバー（任意）",
+    "pulseServerHint": "空欄ならこのマシンの通常のサーバーを使います。",
+    "delay": "遅延（ミリ秒、任意）",
+    "delayHint": "音を遅らせて、このスピーカーを遅いスピーカーにそろえます。",
+    "sampleRate": "サンプルレート（任意）",
+    "sampleRateHint": "snapserver ソースの sampleformat のレート。空欄なら snapserver のデフォルトの 48000 です。",
+    "snapcastAddressHint": "snapserver のホスト。TCP ソースのポートが 4953 でなければそのポートも。"
   },
   "pairing": {
     "title": "AirPlay のペアリング",

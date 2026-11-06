@@ -28,8 +28,7 @@
     "unexpected": "Ceva n-a mers bine.",
     "httpStatus": "Serverul a răspuns {{status}}. Reîncarcă pagina și încearcă din nou.",
     "loadFailed": "Nu se poate ajunge la Air-Mixer. Verifică dacă rulează, apoi reîncarcă pagina.",
-    "validation": "Verifică formularul",
-    "comingSoon": "{{protocol}} (în curând)"
+    "validation": "Verifică formularul"
   },
   "protocols": {
     "airplayServer": "AirPlay: primește sunet de pe iPhone, iPad și Mac",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: apare în Matinee ca player și redă ce primește",
     "matineeClient": "Matinee: redă pe un player Matinee (adresa: ID-ul playerului)",
     "streamClient": "Stream: un stream WAV live pentru VLC sau un browser",
-    "localClient": "Local: placa de sunet a acestui calculator"
+    "localClient": "Local: placa de sunet a acestui calculator",
+    "radioServer": "Radio pe internet: redă un post, un playlist sau un fișier audio de la un URL",
+    "pulseServer": "PipeWire sau PulseAudio: înregistrează o intrare line-in, o interfață audio USB sau un telefon care redă prin Bluetooth",
+    "pulseClient": "PipeWire sau PulseAudio: redă pe o placă de sunet sau pe o boxă Bluetooth asociată",
+    "snapcastClient": "Snapcast: redă sincronizat pe fiecare client Snapcast"
   },
   "servers": {
     "title": "Servere de intrare",
@@ -132,6 +135,21 @@
     "selectFailed": "Dispozitivul nu a putut fi ales. Caută din nou sau configurează-l manual.",
     "manual": "Configurare manuală",
     "manualHint": "Folosește asta dacă dispozitivul tău nu a fost găsit."
+  },
+  "fields": {
+    "url": "URL-ul stream-ului",
+    "urlHint": "Un post de radio pe internet, un playlist (.pls, .m3u, .m3u8) sau un fișier audio. Un fișier se redă în buclă.",
+    "source": "Sursă (opțional)",
+    "sourceHint": "Numele sau descrierea unei surse, adresa Bluetooth a unui telefon care redă pe acest calculator sau numele unui sink urmat de .monitor. Lasă gol pentru sursa implicită.",
+    "sink": "Sink (opțional)",
+    "sinkHint": "Numele sau descrierea unui sink, sau adresa unei boxe Bluetooth, cum ar fi AA:BB:CC:DD:EE:FF. Lasă gol pentru sink-ul implicit.",
+    "pulseServer": "Server PulseAudio (opțional)",
+    "pulseServerHint": "Lasă gol pentru cel obișnuit de pe acest calculator.",
+    "delay": "Întârziere în milisecunde (opțional)",
+    "delayHint": "Reține sunetul ca boxa să fie aliniată cu altele mai lente.",
+    "sampleRate": "Rată de eșantionare (opțional)",
+    "sampleRateHint": "Rata din sampleformat a sursei snapserver. Lasă gol pentru 48000, valoarea implicită a snapserver.",
+    "snapcastAddressHint": "Gazda snapserver și portul sursei sale TCP, dacă nu este 4953."
   },
   "pairing": {
     "title": "Asociere AirPlay",

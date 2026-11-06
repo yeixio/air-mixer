@@ -28,8 +28,7 @@
     "unexpected": "Bir şeyler ters gitti.",
     "httpStatus": "Sunucu {{status}} yanıtını verdi. Sayfayı yenileyip tekrar deneyin.",
     "loadFailed": "Air-Mixer'a ulaşılamıyor. Çalıştığını kontrol edin, sonra sayfayı yenileyin.",
-    "validation": "Formu kontrol edin",
-    "comingSoon": "{{protocol}} (yakında)"
+    "validation": "Formu kontrol edin"
   },
   "protocols": {
     "airplayServer": "AirPlay: iPhone, iPad ve Mac'ten ses alın",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: Matinee'de oynatıcı olarak görünür ve gönderileni çalar",
     "matineeClient": "Matinee: bir Matinee oynatıcısında çal (adres: oynatıcının kimliği)",
     "streamClient": "Akış: VLC veya bir tarayıcı için canlı WAV akışı",
-    "localClient": "Yerel: bu makinenin ses kartı"
+    "localClient": "Yerel: bu makinenin ses kartı",
+    "radioServer": "İnternet radyosu: bir URL'den istasyon, çalma listesi veya ses dosyası çal",
+    "pulseServer": "PipeWire veya PulseAudio: hat girişini, USB ses arabirimini veya Bluetooth ile çalan bir telefonu kaydet",
+    "pulseClient": "PipeWire veya PulseAudio: bir ses kartında veya eşleştirilmiş bir Bluetooth hoparlörde çal",
+    "snapcastClient": "Snapcast: her Snapcast istemcisinde senkronize çal"
   },
   "servers": {
     "title": "Giriş sunucuları",
@@ -131,6 +134,21 @@
     "selectFailed": "Bu cihaz seçilemedi. Yeniden arayın veya elle kurun.",
     "manual": "Elle kur",
     "manualHint": "Cihazınız bulunamadıysa bunu kullanın."
+  },
+  "fields": {
+    "url": "Yayın URL'si",
+    "urlHint": "Bir internet radyo istasyonu, çalma listesi (.pls, .m3u, .m3u8) veya ses dosyası. Dosya sürekli tekrarlanır.",
+    "source": "Kaynak (isteğe bağlı)",
+    "sourceHint": "Bir kaynağın adı veya açıklaması, bu makineye çalan bir telefonun Bluetooth adresi ya da sonuna .monitor eklenmiş bir sink adı. Varsayılan kaynak için boş bırak.",
+    "sink": "Sink (isteğe bağlı)",
+    "sinkHint": "Bir sink'in adı veya açıklaması ya da AA:BB:CC:DD:EE:FF gibi bir Bluetooth hoparlör adresi. Varsayılan sink için boş bırak.",
+    "pulseServer": "PulseAudio sunucusu (isteğe bağlı)",
+    "pulseServerHint": "Bu makinedeki olağan sunucu için boş bırak.",
+    "delay": "Milisaniye cinsinden gecikme (isteğe bağlı)",
+    "delayHint": "Bu hoparlörü daha yavaş olanlarla hizalamak için sesi geciktirir.",
+    "sampleRate": "Örnekleme hızı (isteğe bağlı)",
+    "sampleRateHint": "snapserver kaynağının sampleformat değerindeki hız. snapserver'ın varsayılanı olan 48000 için boş bırak.",
+    "snapcastAddressHint": "snapserver ana makinesi ve 4953 değilse TCP kaynağının bağlantı noktası."
   },
   "pairing": {
     "title": "AirPlay eşleştirme",

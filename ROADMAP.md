@@ -39,9 +39,8 @@ longer.
 | Google Cast output | L | Cast to Chromecast Audio, Nest speakers and Cast-enabled TVs by serving a live stream to the default media receiver. |
 | UPnP/DLNA renderer output | M | Push a stream to Sonos (via UPnP) and other DLNA renderers. Includes SSDP discovery. |
 | UPnP/DLNA renderer input | M | Appear as a renderer so DLNA apps can play to Air-Mixer. |
-| Bluetooth input | M | Appear as an A2DP speaker so phones can play to Air-Mixer over Bluetooth. Output to Bluetooth speakers already works through the `pulse` output. |
-| Snapcast and Spotify Connect | M | Snapcast as an output for open-source multi-room setups; Spotify Connect input through librespot. |
-| Internet radio and file sources | S | Play a stream URL or a local file as a persistent input. One-off playback of MP3 and WAV URLs is done (`/api/play`); more formats (FLAC, Ogg, AAC) would help both. |
+| Bluetooth input | M | Appear as an A2DP speaker (make the host discoverable and accept pairing through BlueZ) so phones can pair from their Bluetooth settings. A phone already paired with the host can be recorded with the `pulse` input, and output to Bluetooth speakers works through the `pulse` output. |
+| Spotify Connect | M | Spotify Connect input through librespot. The Snapcast output is done. |
 
 ## Platform
 
@@ -59,8 +58,6 @@ Small, self-contained tasks for a first contribution:
 
 - Show adapter state and errors in the web UI's client and server tables.
 - Remove the AirPlay 2 pairing dialog and its code from `webui/index.html`.
-- Add `GET /api/protocols` listing supported protocols and their config
-  keys, and use it to build the UI's protocol dropdowns.
 - Add a `--data-dir` flag that overrides `server.data_dir`.
 - Add a Prometheus `/metrics` endpoint, starting with the dropped-audio
   counters the router already keeps per subscriber.

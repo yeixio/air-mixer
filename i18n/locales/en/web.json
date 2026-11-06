@@ -28,8 +28,7 @@
     "unexpected": "Something went wrong.",
     "httpStatus": "The server answered {{status}}. Refresh the page and try again.",
     "loadFailed": "Couldn't reach Air-Mixer. Check that it's running, then refresh the page.",
-    "validation": "Check the form",
-    "comingSoon": "{{protocol}} (coming soon)"
+    "validation": "Check the form"
   },
   "protocols": {
     "airplayServer": "AirPlay: receive audio from iPhone, iPad and Mac",
@@ -37,7 +36,11 @@
     "matineeServer": "Matinee: shows up in Matinee as a player and plays what it's sent",
     "matineeClient": "Matinee: play on a Matinee player (address: the player's id)",
     "streamClient": "Stream: a live WAV stream for VLC or a browser",
-    "localClient": "Local: this machine's sound card"
+    "localClient": "Local: this machine's sound card",
+    "radioServer": "Internet radio: play a station, playlist or audio file from a URL",
+    "pulseServer": "PipeWire or PulseAudio: record a line-in, a USB audio interface or a phone playing over Bluetooth",
+    "pulseClient": "PipeWire or PulseAudio: play on a sound card or a paired Bluetooth speaker",
+    "snapcastClient": "Snapcast: play in sync on every Snapcast client"
   },
   "servers": {
     "title": "Input Servers",
@@ -131,6 +134,21 @@
     "selectFailed": "Couldn't pick that device. Find devices again, or set it up by hand.",
     "manual": "Set Up by Hand",
     "manualHint": "Use this if your device wasn't found."
+  },
+  "fields": {
+    "url": "Stream URL",
+    "urlHint": "An internet radio station, a playlist (.pls, .m3u, .m3u8) or an audio file. A file plays on repeat.",
+    "source": "Source (optional)",
+    "sourceHint": "A source's name or description, the Bluetooth address of a phone playing to this machine, or a sink's name followed by .monitor. Leave empty for the default source.",
+    "sink": "Sink (optional)",
+    "sinkHint": "A sink's name or description, or a Bluetooth speaker's address such as AA:BB:CC:DD:EE:FF. Leave empty for the default sink.",
+    "pulseServer": "PulseAudio server (optional)",
+    "pulseServerHint": "Leave empty for the usual one on this machine.",
+    "delay": "Delay in milliseconds (optional)",
+    "delayHint": "Holds audio back to line this speaker up with slower ones.",
+    "sampleRate": "Sample rate (optional)",
+    "sampleRateHint": "The rate in the snapserver source's sampleformat. Leave empty for 48000, snapserver's default.",
+    "snapcastAddressHint": "The snapserver host, and the port of its TCP source if it isn't 4953."
   },
   "pairing": {
     "title": "AirPlay Pairing",
