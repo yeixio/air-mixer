@@ -10,6 +10,9 @@ generated from its pull requests.
 
 ### Fixed
 
+- Speaker discovery no longer lists Air-Mixer's own sources (its AirPlay
+  and DLNA inputs, from this or any other Air-Mixer instance, and
+  shairport-sync inputs on the same host) as speakers.
 - Several AirPlay inputs on one host all showed up on iPhones and Macs as
   only the newest one, because they advertised the same MAC address. Each
   receiver now advertises a stable address of its own.
