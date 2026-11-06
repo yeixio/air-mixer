@@ -13,6 +13,7 @@ import (
 	"strings"
 	"sync"
 	"sync/atomic"
+	"syscall"
 
 	"github.com/libp2p/zeroconf/v2"
 
@@ -27,6 +28,10 @@ type ServerOptions struct {
 	Name string // shown to senders
 	// Address is the RTSP listen address, for example ":49152".
 	Address string
+	// LastPort, if above Address's port, lets the receiver take the next
+	// free port up to it when that one is taken, so receivers without a
+	// port of their own share a predictable range.
+	LastPort int
 	// Interface is the network interface to advertise on, or "auto".
 	Interface string
 	// DisableAdvertising turns off mDNS; senders must be pointed at the
@@ -90,8 +95,7 @@ func (s *Server) Start(ctx context.Context) error {
 	if s.listener != nil || s.stopped {
 		return errors.New("airplay: server already started")
 	}
-	var lc net.ListenConfig
-	ln, err := lc.Listen(ctx, "tcp", s.opts.Address)
+	ln, err := s.listen(ctx)
 	if err != nil {
 		return fmt.Errorf("airplay: listen: %w", err)
 	}
@@ -107,6 +111,29 @@ func (s *Server) Start(ctx context.Context) error {
 	go s.accept(ln)
 	s.log.Info("AirPlay receiver listening", "name", s.opts.Name, "addr", ln.Addr())
 	return nil
+}
+
+func (s *Server) listen(ctx context.Context) (net.Listener, error) {
+	var lc net.ListenConfig
+	ln, err := lc.Listen(ctx, "tcp", s.opts.Address)
+	if err == nil || s.opts.LastPort == 0 || !errors.Is(err, syscall.EADDRINUSE) {
+		return ln, err
+	}
+	host, p, serr := net.SplitHostPort(s.opts.Address)
+	port, perr := strconv.Atoi(p)
+	if serr != nil || perr != nil || port == 0 {
+		return nil, err
+	}
+	for next := port + 1; next <= s.opts.LastPort; next++ {
+		ln, lerr := lc.Listen(ctx, "tcp", net.JoinHostPort(host, strconv.Itoa(next)))
+		if lerr == nil {
+			return ln, nil
+		}
+		if !errors.Is(lerr, syscall.EADDRINUSE) {
+			return nil, lerr
+		}
+	}
+	return nil, fmt.Errorf("every port from %d to %d is in use: %w", port, s.opts.LastPort, err)
 }
 
 // txtRecord is what shairport-sync advertises for a classic AirPlay (RAOP)

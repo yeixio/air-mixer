@@ -2218,7 +2218,7 @@
                 group.className = 'form-group';
                 const label = document.createElement('label');
                 const input = document.createElement('input');
-                input.name = f.key === 'address' ? 'address' : 'config.' + f.key;
+                input.name = f.key === 'address' && kind === 'client' ? 'address' : 'config.' + f.key;
                 input.dataset.type = f.type;
                 if (f.type === 'bool') {
                     input.type = 'checkbox';

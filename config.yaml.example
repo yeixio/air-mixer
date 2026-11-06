@@ -16,10 +16,14 @@ server:
   # Web UI and API port.
   web_port: 9001
 
-  # Default RTSP port for AirPlay receivers that do not set their own
-  # address. Give each additional receiver its own address in its config,
-  # for example {"address": ":49153"}.
+  # AirPlay receivers that don't set their own address take the first free
+  # TCP port in this range, in the order they start: the first gets 49152,
+  # the second 49153 and so on. Audio then uses dynamic UDP ports.
+  # airplay_port_range defaults to 48 ports from airplay_port
+  # (49152-49199), which stops short of the Helm chart's room agents at
+  # 49200. A receiver can still pin its own, such as {"address": ":49300"}.
   airplay_port: 49152
+  # airplay_port_range: "49152-49199"
 
   # Directory for the database and other state.
   data_dir: "./data"

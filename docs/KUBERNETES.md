@@ -182,6 +182,7 @@ has all of them with comments.
 |-------|---------|---------|
 | `image.repository` | `ghcr.io/yeixio/air-mixer` | Multi-arch image (amd64, arm64, armv7) |
 | `controller.hostNetwork` | `true` | Needed to advertise AirPlay receivers and discover speakers over mDNS |
+| `controller.airplayPortRange` | 48 ports from `controller.airplayPort` (49152-49199) | TCP ports the controller's AirPlay inputs take, in order, as `first-last` |
 | `controller.setup` | `{}` | Servers, clients and routes for the controller, as in the config file's `setup` section |
 | `controller.persistence.size` | `1Gi` | The database volume; kept on uninstall |
 | `controller.hostAudio.enabled` | `false` | Mount the host's PipeWire/PulseAudio socket, for `pulse` and `bluetooth` inputs; the controller then runs as `hostAudio.uid` |

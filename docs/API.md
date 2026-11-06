@@ -57,7 +57,7 @@ example the port is taken) nothing is saved and the error is returned.
 
 | Protocol | `config` keys |
 |----------|---------------|
-| `airplay` | `address` (RTSP listen address, default `:<airplay_port>`; each receiver needs its own port), `interface` (interface to advertise on, default `server.interface`) |
+| `airplay` | `address` (RTSP listen address; default: the first free port in `server.airplay_port_range`, 49152-49199 unless set), `interface` (interface to advertise on, default `server.interface`) |
 | `radio` | `url` (required): an internet radio station, a PLS or M3U playlist, an HLS stream (`.m3u8`) or an audio file, over http, https, rtsp or rtmp |
 | `pulse` | `source` (name, description, a phone's Bluetooth address, or `<sink>.monitor`; default source if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`) |
 | `bluetooth` | `device` (a phone's Bluetooth address: record only that phone; default whichever device plays), `adapter` (default `hci0`), `hidden` (`true`: stay out of scans, for phones already paired), `server` (PulseAudio server string) |
@@ -327,7 +327,7 @@ curl -X POST http://airmixer.local:9001/api/play \
 (`"kind": "server"`) first, with the fields each takes, so a client can
 build its forms. `label`, `hint` and `placeholder_key` are keys in the web
 UI's translations (`i18n/locales/<lang>/web.json`); `placeholder` is shown
-as it is. A field with `"key": "address"` is a client's `address`; every
+as it is. A client field with `"key": "address"` is the client's `address`; every
 other key goes in `config`. `available` is `false` when the program
 named in `requires` is not installed, and creating that protocol fails.
 
