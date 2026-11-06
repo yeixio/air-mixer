@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device deve essere un indirizzo Bluetooth, come 11:22:33:44:55:66",
   "spotify_bitrate": "bitrate deve essere 96, 160 o 320",
   "program_missing": "{{program}} non è installato su questa macchina",
-  "bad_port": "address deve essere una porta da 1 a 65535, come :7000"
+  "bad_port": "address deve essere una porta da 1 a 65535, come :7000",
+  "source_unknown": "Non c'è nessuna sorgente chiamata \"{{source}}\"",
+  "source_required": "source è obbligatorio: il nome di una sorgente, o \"\" per non riprodurre nulla",
+  "volume_required": "volume è obbligatorio, da 0 a 1"
 }

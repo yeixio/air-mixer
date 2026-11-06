@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device 必须是蓝牙地址，如 11:22:33:44:55:66",
   "spotify_bitrate": "bitrate 必须是 96、160 或 320",
   "program_missing": "此机器上未安装 {{program}}",
-  "bad_port": "address 必须是 1 到 65535 之间的端口，如 :7000"
+  "bad_port": "address 必须是 1 到 65535 之间的端口，如 :7000",
+  "source_unknown": "没有名为“{{source}}”的音源",
+  "source_required": "需要 source：音源名称，或用 \"\" 表示不播放",
+  "volume_required": "需要 volume，范围 0 到 1"
 }

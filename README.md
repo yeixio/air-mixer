@@ -34,7 +34,7 @@ Cast devices, Sonos and other UPnP/DLNA renderers, and Snapcast. The
 AirPlay 2 output, for HomePods and recent Apple TVs, is experimental.
 
 <p align="center">
-  <img src="docs/assets/web-ui.png" alt="The Air-Mixer web UI with AirPlay inputs, speakers and two routes" width="85%">
+  <img src="docs/assets/web-ui.png" alt="The Air-Mixer web UI: a card per speaker with what it plays, and the sources beside them" width="85%">
 </p>
 
 ## What it does
@@ -106,9 +106,12 @@ AirPlay 2 output, for HomePods and recent Apple TVs, is experimental.
 
 ## How it works
 
-Inputs (called **servers**) receive audio, **routes** send it to one or
-more outputs (called **clients**), and every output mixes the routes that
-feed it, each at its own volume.
+**Sources** receive audio, **speakers** play it, and **routes** connect
+them: each route sends one source to one or more speakers, and every
+speaker mixes the routes that feed it, each at its own volume. The web UI
+shows a card per speaker where you pick what it plays, and keeps the
+routes under Advanced for mixing. The API and config file call sources
+**servers** and speakers **clients**.
 
 ```mermaid
 flowchart LR
@@ -185,12 +188,13 @@ service. Headless servers that only bridge AirPlay devices do not need one.
 ### First steps
 
 1. Open the web UI at <http://localhost:9001>.
-2. Add an **input server** (protocol `airplay`). It shows up as a speaker
-   on your Apple devices.
-3. Add one or more **output clients**: AirPlay speakers (use Discover to
-   find them), `local` for the server's sound card, or `pulse` for a
-   Bluetooth speaker or other PulseAudio sink.
-4. Create a **route** from the input to the outputs, then play something.
+2. Add a **source** (protocol AirPlay). It shows up as a speaker on your
+   Apple devices.
+3. Add one or more **speakers**: AirPlay speakers (Add Speaker finds
+   them), the computer's own sound card, or a Bluetooth speaker or other
+   PulseAudio sink.
+4. On each speaker's card, pick the source, then play something. Picking
+   the same source on several speakers plays them together.
 
 ## Configuration
 

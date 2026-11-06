@@ -207,8 +207,9 @@ route's own volume, and changes without reconnecting the speaker. New
 clients start at 1; `POST` and `PUT /api/clients` ignore the field.
 
 Picking a source edits the stored routes, so the routes table always
-shows what plays where. The speaker leaves every route from another
-source, and a route left with no speakers is deleted. It then joins an
+shows what plays where. The speaker leaves every enabled route from
+another source, and a route left with no speakers is deleted; routes
+that are switched off are left alone. It then joins an
 enabled route from the new source, or a new route named after the
 source when there is none, so speakers that pick the same source share
 one route and play together. A speaker mixing several routes ends up in

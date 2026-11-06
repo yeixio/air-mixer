@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device एक Bluetooth पता होना चाहिए, जैसे 11:22:33:44:55:66",
   "spotify_bitrate": "bitrate 96, 160 या 320 होना चाहिए",
   "program_missing": "{{program}} इस मशीन पर इंस्टॉल नहीं है",
-  "bad_port": "address 1 से 65535 तक का पोर्ट होना चाहिए, जैसे :7000"
+  "bad_port": "address 1 से 65535 तक का पोर्ट होना चाहिए, जैसे :7000",
+  "source_unknown": "\"{{source}}\" नाम का कोई स्रोत नहीं है",
+  "source_required": "source ज़रूरी है: किसी स्रोत का नाम, या कुछ न चलाने के लिए \"\"",
+  "volume_required": "volume ज़रूरी है, 0 से 1 तक"
 }

@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "A device értéke Bluetooth-cím legyen, például 11:22:33:44:55:66",
   "spotify_bitrate": "A bitrate értéke 96, 160 vagy 320 lehet",
   "program_missing": "A(z) {{program}} nincs telepítve ezen a gépen",
-  "bad_port": "Az address értéke 1 és 65535 közötti port legyen, például :7000"
+  "bad_port": "Az address értéke 1 és 65535 közötti port legyen, például :7000",
+  "source_unknown": "Nincs „{{source}}” nevű forrás",
+  "source_required": "a source kötelező: egy forrás neve, vagy \"\", ha semmi ne szóljon",
+  "volume_required": "a volume kötelező, 0 és 1 között"
 }

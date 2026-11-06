@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "يجب أن تكون قيمة device عنوان Bluetooth، مثل 11:22:33:44:55:66",
   "spotify_bitrate": "يجب أن تكون قيمة bitrate هي 96 أو 160 أو 320",
   "program_missing": "{{program}} غير مثبّت على هذا الجهاز",
-  "bad_port": "يجب أن تكون قيمة address منفذًا من 1 إلى 65535، مثل ‎:7000"
+  "bad_port": "يجب أن تكون قيمة address منفذًا من 1 إلى 65535، مثل ‎:7000",
+  "source_unknown": "لا يوجد مصدر باسم «{{source}}»",
+  "source_required": "الحقل source مطلوب: اسم مصدر، أو \"\" لعدم تشغيل شيء",
+  "volume_required": "الحقل volume مطلوب، من 0 إلى 1"
 }

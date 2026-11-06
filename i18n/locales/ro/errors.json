@@ -41,5 +41,8 @@
   "bluetooth_bad_device": "device trebuie să fie o adresă Bluetooth, de exemplu 11:22:33:44:55:66",
   "spotify_bitrate": "bitrate trebuie să fie 96, 160 sau 320",
   "program_missing": "{{program}} nu este instalat pe această mașină",
-  "bad_port": "address trebuie să fie un port între 1 și 65535, de exemplu :7000"
+  "bad_port": "address trebuie să fie un port între 1 și 65535, de exemplu :7000",
+  "source_unknown": "Nu există nicio sursă numită „{{source}}”",
+  "source_required": "source este obligatoriu: numele unei surse sau \"\" ca să nu se redea nimic",
+  "volume_required": "volume este obligatoriu, de la 0 la 1"
 }

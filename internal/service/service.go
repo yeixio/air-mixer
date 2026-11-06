@@ -302,8 +302,8 @@ func (s *Service) SetClientVolume(ctx context.Context, id string, volume float64
 
 // SetClientSource makes a speaker play one source, named as its server is,
 // or nothing when source is empty. It edits the stored routes the way a
-// person would in the routes table: the speaker leaves every route from
-// another source, which is deleted once it has no speakers left, and
+// person would in the routes table: the speaker leaves every enabled route
+// from another source, which is deleted once it has no speakers left, and
 // joins an enabled route from the new source, or a new route named after
 // the source when there is none. Speakers that pick the same source so
 // share one route, which is how speakers are grouped.
@@ -330,10 +330,10 @@ func (s *Service) SetClientSource(ctx context.Context, id, source string) error 
 	}
 	joined := false
 	for _, v := range routes {
-		if !slices.Contains(v.DestNames, c.Name) {
-			continue
+		if !v.Enabled || !slices.Contains(v.DestNames, c.Name) {
+			continue // a route that is off plays nothing: leave it be
 		}
-		if !joined && source != "" && v.SourceName == source && v.Enabled {
+		if !joined && source != "" && v.SourceName == source {
 			joined = true // already playing it: keep this one
 			continue
 		}

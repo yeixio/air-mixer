@@ -10,6 +10,15 @@ generated from its pull requests.
 
 ### Added
 
+- A speaker-first web UI: a card for each speaker shows what it's playing
+  and lets you pick its source and volume, or select several speakers and
+  play one source on all of them. Routes moved to an Advanced tab and the
+  Matinee connection to a Settings tab, sources, speakers and routes can
+  be edited in place, and the UI says "sources" and "speakers" for servers
+  and clients.
+- `PUT /api/clients/{id}/source` and `PUT /api/clients/{id}/volume`: pick
+  what a speaker plays (the routes are edited for you) and set a speaker's
+  own volume, which scales every route into it.
 - `GET /api/protocols`, listing each protocol with the fields it takes;
   the web UI builds its protocol menus and settings from it, so PipeWire
   and Bluetooth outputs can be set up there now.

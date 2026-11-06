@@ -145,6 +145,14 @@ func TestSetClientSourceSkipsDisabledRoutes(t *testing.T) {
 	if len(e.svc.Routes()) != 2 {
 		t.Fatalf("want a new route beside the disabled one, got %+v", e.svc.Routes())
 	}
+	// Den plays nothing, and its switched-off route is kept for later.
+	if err := e.svc.SetClientSource(ctx, ids["Den"], ""); err != nil {
+		t.Fatal(err)
+	}
+	routes, _ := e.db.ListRoutes(ctx)
+	if !slices.ContainsFunc(routes, func(r *db.Route) bool { return r.Name == "Off" && slices.Equal(r.DestNames, []string{"Den"}) }) {
+		t.Fatalf("the switched-off route changed: %+v", routes)
+	}
 }
 
 func TestRenameKeepsRoutes(t *testing.T) {
