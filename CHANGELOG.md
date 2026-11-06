@@ -32,6 +32,11 @@ generated from its pull requests.
 
 ### Changed
 
+- The web UI wears Matinee's look: its warm dark theme with the coral
+  accent, or its Light theme when the system asks for light, Inter and
+  Fraunces (served by Air-Mixer, no internet needed), Matinee's cards,
+  buttons, toggles and dialogs, and Box Office's ticket edge under the
+  top bar.
 - Rewrote Air-Mixer as a single CGO-free Go binary with an embedded web UI,
   SQLite storage, a documented REST API, classic AirPlay in both
   directions and local playback. AirPlay 2 pairing, which never worked,

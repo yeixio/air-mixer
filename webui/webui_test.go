@@ -115,3 +115,22 @@ func TestKeysExist(t *testing.T) {
 		}
 	}
 }
+
+// Every font the page names is embedded and served; nothing else is.
+func TestFontsServed(t *testing.T) {
+	uses := regexp.MustCompile(`/fonts/([\w-]+\.woff2)`).FindAllStringSubmatch(string(index), -1)
+	if len(uses) == 0 {
+		t.Fatal("index.html names no fonts")
+	}
+	for _, m := range uses {
+		rec := get(t, m[0], "")
+		if rec.Code != http.StatusOK || rec.Header().Get("Content-Type") != "font/woff2" || rec.Body.Len() == 0 {
+			t.Errorf("%s: status %d, type %q", m[0], rec.Code, rec.Header().Get("Content-Type"))
+		}
+	}
+	for _, path := range []string{"/fonts/", "/fonts/LICENSE-Inter.txt", "/fonts/missing.woff2", "/fonts/../webui.go"} {
+		if rec := get(t, path, ""); rec.Code != http.StatusNotFound {
+			t.Errorf("%s: status %d, want 404", path, rec.Code)
+		}
+	}
+}
