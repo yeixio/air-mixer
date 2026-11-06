@@ -33,3 +33,12 @@ AirPlay (RAOP) protocol (internal/protocols/airplay)
   those projects is included. The RSA key in keys.go is the AirPort
   Express key that has been public since 2011 and is used by every
   third-party AirPlay receiver; it is not a secret.
+
+Inter and Fraunces typefaces (webui/fonts)
+  Inter: Copyright 2016 The Inter Project Authors
+  (https://github.com/rsms/inter). Fraunces: Copyright 2020 The Fraunces
+  Project Authors (https://github.com/undercasetype/Fraunces). Both are
+  licensed under the SIL Open Font License, Version 1.1; the full text is
+  in webui/fonts/LICENSE-Inter.txt and webui/fonts/LICENSE-Fraunces.txt.
+  The files are the latin, latin-ext, cyrillic, greek and vietnamese
+  subsets published by Fontsource.
