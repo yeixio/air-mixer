@@ -98,6 +98,7 @@ reported by `/api/status`.
 | `airplay` | `host` or `host:port` (default port 5000) | `latency_ms` (default 2000), `disable_encryption` |
 | `local` | ignored | `delay_ms` |
 | `pulse` | ignored | `sink` (name, description or Bluetooth address; default sink if empty), `server` (PulseAudio server string; default `$PULSE_SERVER`), `delay_ms` |
+| `cast` | the Cast device's `host` or `host:port` (default port 8009; speaker groups have their own port, which discovery gives) | none |
 | `snapcast` | snapserver's `host` or `host:port` of its TCP source (default port 4953) | `sample_rate` (default 48000, snapserver's default) |
 | `stream` | ignored | none; see [Streams](#streams) |
 | `matinee` | the Matinee player's id, from `/api/matinee/players` | `library_id`: the music library its station goes in (default: the first) |
@@ -107,6 +108,17 @@ speakers with different latencies, such as several Bluetooth speakers in
 one room. A `pulse` client keeps retrying while its sink is missing, for
 example while a Bluetooth speaker is off, and reconnects by itself when
 the speaker drops off and comes back.
+
+A `cast` client plays on a Google Cast device (Chromecast, Nest and
+Google Home speakers, speaker groups, TVs with Chromecast built in). It
+serves its audio as a stream (see [Streams](#streams)) and has the device
+play it in Google's Default Media Receiver. The receiver starts when
+audio starts and stops after a minute of silence. If someone casts
+something else in between, Air-Mixer leaves it alone until its own audio
+stops and starts again. Cast devices buffer a live stream for a few
+seconds, so give the outputs that play alongside one a `delay_ms` to
+match. The device must be able to reach Air-Mixer's web port; set
+`server.public_url` if it can't be worked out.
 
 A `snapcast` client writes 16-bit stereo PCM into a TCP source on
 snapserver, which every Snapcast client then plays in sync. Add the source
@@ -312,7 +324,8 @@ the database is unavailable.
 
 `GET /api/discovery?timeout=5s` browses every protocol;
 `GET /api/discovery/{protocol}` browses one. `timeout` is optional, at
-most 30s. AirPlay speakers (`_raop._tcp`) and Snapcast servers
+most 30s. AirPlay speakers (`_raop._tcp`), Google Cast devices and groups
+(`_googlecast._tcp`, named as in the Google Home app) and Snapcast servers
 (`_snapcast._tcp`, given with the TCP source port 4953) are found over
 mDNS, over IPv4 alone on hosts without IPv6.
 

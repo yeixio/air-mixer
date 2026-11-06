@@ -34,5 +34,6 @@
   "radio_needs_url": "Vstup internetového rádia potřebuje url",
   "radio_bad_url": "url musí být adresa http, https, rtsp nebo rtmp",
   "snapcast_needs_address": "Klient Snapcast potřebuje adresu snapserveru",
-  "sample_rate_range": "sample_rate musí být mezi 8000 a 192000"
+  "sample_rate_range": "sample_rate musí být mezi 8000 a 192000",
+  "cast_needs_address": "Klient Google Cast potřebuje adresu zařízení"
 }

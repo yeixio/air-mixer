@@ -39,6 +39,7 @@
     "localClient": "Yerel: bu makinenin ses kartı",
     "radioServer": "İnternet radyosu: bir URL'den istasyon, çalma listesi veya ses dosyası çal",
     "pulseServer": "PipeWire veya PulseAudio: hat girişini, USB ses arabirimini veya Bluetooth ile çalan bir telefonu kaydet",
+    "castClient": "Google Cast: Chromecast'te, Nest ve Google Home hoparlörlerde, hoparlör gruplarında ve Cast destekli TV'lerde çal",
     "pulseClient": "PipeWire veya PulseAudio: bir ses kartında veya eşleştirilmiş bir Bluetooth hoparlörde çal",
     "snapcastClient": "Snapcast: her Snapcast istemcisinde senkronize çal"
   },
@@ -148,7 +149,8 @@
     "delayHint": "Bu hoparlörü daha yavaş olanlarla hizalamak için sesi geciktirir.",
     "sampleRate": "Örnekleme hızı (isteğe bağlı)",
     "sampleRateHint": "snapserver kaynağının sampleformat değerindeki hız. snapserver'ın varsayılanı olan 48000 için boş bırak.",
-    "snapcastAddressHint": "snapserver ana makinesi ve 4953 değilse TCP kaynağının bağlantı noktası."
+    "snapcastAddressHint": "snapserver ana makinesi ve 4953 değilse TCP kaynağının bağlantı noktası.",
+    "castAddressHint": "Cihazın IP adresi ve 8009 değilse bağlantı noktası (hoparlör grupları başka bir bağlantı noktası kullanır). Cast cihazları birkaç saniye geç çalar; diğer hoparlörleri buna göre geciktir."
   },
   "pairing": {
     "title": "AirPlay eşleştirme",

@@ -39,6 +39,7 @@
     "localClient": "로컬: 이 컴퓨터의 사운드 카드",
     "radioServer": "인터넷 라디오: URL에서 방송국, 재생 목록 또는 오디오 파일 재생",
     "pulseServer": "PipeWire 또는 PulseAudio: 라인 입력, USB 오디오 인터페이스 또는 Bluetooth로 재생 중인 휴대폰을 녹음",
+    "castClient": "Google Cast: Chromecast, Nest 및 Google Home 스피커, 스피커 그룹, Cast 지원 TV에서 재생",
     "pulseClient": "PipeWire 또는 PulseAudio: 사운드 카드나 페어링된 Bluetooth 스피커에서 재생",
     "snapcastClient": "Snapcast: 모든 Snapcast 클라이언트에서 동기화해 재생"
   },
@@ -147,7 +148,8 @@
     "delayHint": "오디오를 늦춰 이 스피커를 더 느린 스피커와 맞춥니다.",
     "sampleRate": "샘플 레이트(선택)",
     "sampleRateHint": "snapserver 소스의 sampleformat에 있는 레이트입니다. snapserver 기본값인 48000을 쓰려면 비워 두세요.",
-    "snapcastAddressHint": "snapserver 호스트, 그리고 TCP 소스 포트가 4953이 아니면 그 포트입니다."
+    "snapcastAddressHint": "snapserver 호스트, 그리고 TCP 소스 포트가 4953이 아니면 그 포트입니다.",
+    "castAddressHint": "기기의 IP 주소, 그리고 포트가 8009가 아니면 그 포트입니다(스피커 그룹은 다른 포트를 씁니다). Cast 기기는 몇 초 늦게 재생되므로 다른 스피커에도 그만큼 지연을 주세요."
   },
   "pairing": {
     "title": "AirPlay 페어링",

@@ -93,6 +93,18 @@ reconnects it once the sink is back.
   is missing, and checks that PulseAudio hasn't moved the stream to
   another source.
 
+### `internal/protocols/cast`
+
+Google Cast output. Each output serves a live WAV stream and keeps a Cast
+v2 control connection to the device: TLS to port 8009 carrying
+length-prefixed protobuf `CastMessage`s with JSON payloads, encoded by
+hand in `message.go`. It answers and sends heartbeats, launches the
+Default Media Receiver when sound arrives, `LOAD`s the stream into it,
+stops it after a minute of silence, and steps aside when a
+`RECEIVER_STATUS` shows another app took the device. A dropped connection
+or a device that stops answering for 20 seconds reports
+`ErrConnectionLost`.
+
 ### `internal/audio/decode`
 
 Turns encoded audio into samples for playback and radio inputs: MP3 and

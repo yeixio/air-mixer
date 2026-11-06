@@ -39,6 +39,7 @@
     "localClient": "محلی: کارت صدای این دستگاه",
     "radioServer": "رادیو اینترنتی: پخش یک ایستگاه، فهرست پخش یا فایل صوتی از یک URL",
     "pulseServer": "PipeWire یا PulseAudio: ضبط ورودی لاین، رابط صوتی USB یا گوشی‌ای که از طریق Bluetooth پخش می‌کند",
+    "castClient": "Google Cast: پخش روی Chromecast، بلندگوهای Nest و Google Home، گروه‌های بلندگو و تلویزیون‌های دارای Cast",
     "pulseClient": "PipeWire یا PulseAudio: پخش روی کارت صدا یا بلندگوی Bluetooth جفت‌شده",
     "snapcastClient": "Snapcast: پخش هم‌زمان روی همهٔ کلاینت‌های Snapcast"
   },
@@ -148,7 +149,8 @@
     "delayHint": "صدا را نگه می‌دارد تا این بلندگو با بلندگوهای کندتر هماهنگ شود.",
     "sampleRate": "نرخ نمونه‌برداری (اختیاری)",
     "sampleRateHint": "نرخِ sampleformat منبع snapserver. برای 48000، پیش‌فرض snapserver، خالی بگذارید.",
-    "snapcastAddressHint": "میزبان snapserver، و درگاه منبع TCP آن اگر 4953 نیست."
+    "snapcastAddressHint": "میزبان snapserver، و درگاه منبع TCP آن اگر 4953 نیست.",
+    "castAddressHint": "نشانی IP دستگاه، و درگاه آن اگر 8009 نیست (گروه‌های بلندگو درگاه دیگری دارند). دستگاه‌های Cast چند ثانیه دیرتر پخش می‌کنند، پس بلندگوهای دیگر را به همان اندازه تأخیر دهید."
   },
   "pairing": {
     "title": "جفت‌سازی AirPlay",

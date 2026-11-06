@@ -55,6 +55,9 @@ var protocolCatalog = []Protocol{
 	{Name: "airplay", Kind: "client", Title: "AirPlay", Description: "protocols.airplayClient", Discovery: true, Fields: []Field{
 		{Key: "address", Type: "text", Required: true, Label: "common.address", Hint: "clients.addressHint", Placeholder: "192.168.1.100:7000"},
 	}},
+	{Name: "cast", Kind: "client", Title: "Google Cast", Description: "protocols.castClient", Discovery: true, Fields: []Field{
+		{Key: "address", Type: "text", Required: true, Label: "common.address", Hint: "fields.castAddressHint", Placeholder: "192.168.1.40:8009"},
+	}},
 	{Name: "pulse", Kind: "client", Title: "PipeWire / PulseAudio", Description: "protocols.pulseClient", Fields: []Field{
 		{Key: "sink", Type: "text", Label: "fields.sink", Hint: "fields.sinkHint", Placeholder: "AA:BB:CC:DD:EE:FF"},
 		fieldPulseServer, fieldDelay,

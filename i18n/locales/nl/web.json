@@ -39,6 +39,7 @@
     "localClient": "Lokaal: de geluidskaart van deze computer",
     "radioServer": "Internetradio: speel een zender, afspeellijst of audiobestand af vanaf een URL",
     "pulseServer": "PipeWire of PulseAudio: neem een line-in, een USB-audio-interface of een telefoon op die via Bluetooth afspeelt",
+    "castClient": "Google Cast: speel af op Chromecast, Nest- en Google Home-speakers, speakergroepen en Cast-tv's",
     "pulseClient": "PipeWire of PulseAudio: speel af op een geluidskaart of een gekoppelde Bluetooth-speaker",
     "snapcastClient": "Snapcast: speel synchroon af op elke Snapcast-client"
   },
@@ -148,7 +149,8 @@
     "delayHint": "Houdt audio vast om deze speaker gelijk te laten lopen met tragere.",
     "sampleRate": "Samplefrequentie (optioneel)",
     "sampleRateHint": "De frequentie in het sampleformat van de snapserver-bron. Laat leeg voor 48000, de standaard van snapserver.",
-    "snapcastAddressHint": "De snapserver-host, en de poort van zijn TCP-bron als die niet 4953 is."
+    "snapcastAddressHint": "De snapserver-host, en de poort van zijn TCP-bron als die niet 4953 is.",
+    "castAddressHint": "Het IP-adres van het apparaat, en de poort als die niet 8009 is (speakergroepen gebruiken een andere). Cast-apparaten spelen een paar seconden later, dus vertraag andere speakers net zoveel."
   },
   "pairing": {
     "title": "AirPlay-koppeling",

@@ -34,5 +34,6 @@
   "radio_needs_url": "Az internetes rádió bemenethez url kell",
   "radio_bad_url": "Az url csak http, https, rtsp vagy rtmp cím lehet",
   "snapcast_needs_address": "A Snapcast-klienshez kell a snapserver címe",
-  "sample_rate_range": "A sample_rate értéke 8000 és 192000 között legyen"
+  "sample_rate_range": "A sample_rate értéke 8000 és 192000 között legyen",
+  "cast_needs_address": "A Google Cast-klienshez kell az eszköz címe"
 }

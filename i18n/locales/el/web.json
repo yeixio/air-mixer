@@ -39,6 +39,7 @@
     "localClient": "Τοπικό: η κάρτα ήχου αυτού του υπολογιστή",
     "radioServer": "Διαδικτυακό ραδιόφωνο: παίξε σταθμό, λίστα ή αρχείο ήχου από URL",
     "pulseServer": "PipeWire ή PulseAudio: ηχογράφησε είσοδο line-in, κάρτα ήχου USB ή τηλέφωνο που παίζει μέσω Bluetooth",
+    "castClient": "Google Cast: παίξε σε Chromecast, ηχεία Nest και Google Home, ομάδες ηχείων και τηλεοράσεις με Cast",
     "pulseClient": "PipeWire ή PulseAudio: παίξε σε κάρτα ήχου ή σε συζευγμένο ηχείο Bluetooth",
     "snapcastClient": "Snapcast: παίξε συγχρονισμένα σε κάθε πελάτη Snapcast"
   },
@@ -148,7 +149,8 @@
     "delayHint": "Κρατά πίσω τον ήχο για να συγχρονιστεί αυτό το ηχείο με πιο αργά.",
     "sampleRate": "Ρυθμός δειγματοληψίας (προαιρετικό)",
     "sampleRateHint": "Ο ρυθμός στο sampleformat της πηγής του snapserver. Άφησέ το κενό για 48000, την προεπιλογή του snapserver.",
-    "snapcastAddressHint": "Ο κεντρικός υπολογιστής του snapserver και η θύρα της πηγής TCP του, αν δεν είναι 4953."
+    "snapcastAddressHint": "Ο κεντρικός υπολογιστής του snapserver και η θύρα της πηγής TCP του, αν δεν είναι 4953.",
+    "castAddressHint": "Η διεύθυνση IP της συσκευής και η θύρα της, αν δεν είναι 8009 (οι ομάδες ηχείων χρησιμοποιούν άλλη). Οι συσκευές Cast παίζουν λίγα δευτερόλεπτα αργότερα, οπότε καθυστέρησε αντίστοιχα τα άλλα ηχεία."
   },
   "pairing": {
     "title": "Σύζευξη AirPlay",

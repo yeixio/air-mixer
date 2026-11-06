@@ -34,5 +34,6 @@
   "radio_needs_url": "网络电台输入需要 url",
   "radio_bad_url": "url 必须是 http、https、rtsp 或 rtmp 地址",
   "snapcast_needs_address": "Snapcast 客户端需要 snapserver 的地址",
-  "sample_rate_range": "sample_rate 必须在 8000 到 192000 之间"
+  "sample_rate_range": "sample_rate 必须在 8000 到 192000 之间",
+  "cast_needs_address": "Google Cast 客户端需要设备的地址"
 }

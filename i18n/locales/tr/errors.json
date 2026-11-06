@@ -34,5 +34,6 @@
   "radio_needs_url": "İnternet radyosu girişi için url gerekir",
   "radio_bad_url": "url bir http, https, rtsp veya rtmp adresi olmalı",
   "snapcast_needs_address": "Snapcast istemcisi için snapserver adresi gerekir",
-  "sample_rate_range": "sample_rate 8000 ile 192000 arasında olmalı"
+  "sample_rate_range": "sample_rate 8000 ile 192000 arasında olmalı",
+  "cast_needs_address": "Google Cast istemcisi için cihazın adresi gerekir"
 }

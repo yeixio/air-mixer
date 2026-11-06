@@ -39,6 +39,7 @@
     "localClient": "Local: placa de sunet a acestui calculator",
     "radioServer": "Radio pe internet: redă un post, un playlist sau un fișier audio de la un URL",
     "pulseServer": "PipeWire sau PulseAudio: înregistrează o intrare line-in, o interfață audio USB sau un telefon care redă prin Bluetooth",
+    "castClient": "Google Cast: redă pe Chromecast, boxe Nest și Google Home, grupuri de boxe și televizoare cu Cast",
     "pulseClient": "PipeWire sau PulseAudio: redă pe o placă de sunet sau pe o boxă Bluetooth asociată",
     "snapcastClient": "Snapcast: redă sincronizat pe fiecare client Snapcast"
   },
@@ -149,7 +150,8 @@
     "delayHint": "Reține sunetul ca boxa să fie aliniată cu altele mai lente.",
     "sampleRate": "Rată de eșantionare (opțional)",
     "sampleRateHint": "Rata din sampleformat a sursei snapserver. Lasă gol pentru 48000, valoarea implicită a snapserver.",
-    "snapcastAddressHint": "Gazda snapserver și portul sursei sale TCP, dacă nu este 4953."
+    "snapcastAddressHint": "Gazda snapserver și portul sursei sale TCP, dacă nu este 4953.",
+    "castAddressHint": "Adresa IP a dispozitivului și portul, dacă nu este 8009 (grupurile de boxe folosesc altul). Dispozitivele Cast redau cu câteva secunde mai târziu, așa că întârzie celelalte boxe la fel."
   },
   "pairing": {
     "title": "Asociere AirPlay",

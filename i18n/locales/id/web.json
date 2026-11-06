@@ -39,6 +39,7 @@
     "localClient": "Lokal: kartu suara mesin ini",
     "radioServer": "Radio internet: putar stasiun, playlist, atau file audio dari URL",
     "pulseServer": "PipeWire atau PulseAudio: rekam line-in, antarmuka audio USB, atau ponsel yang memutar lewat Bluetooth",
+    "castClient": "Google Cast: putar di Chromecast, speaker Nest dan Google Home, grup speaker, dan TV dengan Cast",
     "pulseClient": "PipeWire atau PulseAudio: putar di kartu suara atau speaker Bluetooth yang dipasangkan",
     "snapcastClient": "Snapcast: putar serempak di setiap klien Snapcast"
   },
@@ -147,7 +148,8 @@
     "delayHint": "Menahan audio agar speaker ini selaras dengan yang lebih lambat.",
     "sampleRate": "Laju sampel (opsional)",
     "sampleRateHint": "Laju pada sampleformat sumber snapserver. Kosongkan untuk 48000, bawaan snapserver.",
-    "snapcastAddressHint": "Host snapserver, dan port sumber TCP-nya jika bukan 4953."
+    "snapcastAddressHint": "Host snapserver, dan port sumber TCP-nya jika bukan 4953.",
+    "castAddressHint": "Alamat IP perangkat, dan port-nya jika bukan 8009 (grup speaker memakai port lain). Perangkat Cast berbunyi beberapa detik lebih lambat, jadi tunda speaker lain agar selaras."
   },
   "pairing": {
     "title": "Pemasangan AirPlay",

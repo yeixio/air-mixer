@@ -39,6 +39,7 @@
     "localClient": "Paikallinen: tämän koneen äänikortti",
     "radioServer": "Nettiradio: toista asema, soittolista tai äänitiedosto URL-osoitteesta",
     "pulseServer": "PipeWire tai PulseAudio: tallenna linjatulo, USB-äänikortti tai Bluetoothilla soittava puhelin",
+    "castClient": "Google Cast: toista Chromecastilla, Nest- ja Google Home -kaiuttimilla, kaiutinryhmillä ja Cast-televisioilla",
     "pulseClient": "PipeWire tai PulseAudio: toista äänikortilla tai paritetulla Bluetooth-kaiuttimella",
     "snapcastClient": "Snapcast: toista tahdissa jokaisella Snapcast-asiakkaalla"
   },
@@ -148,7 +149,8 @@
     "delayHint": "Pidättää ääntä, jotta tämä kaiutin pysyy hitaampien tahdissa.",
     "sampleRate": "Näytteenottotaajuus (valinnainen)",
     "sampleRateHint": "snapserver-lähteen sampleformat-asetuksen taajuus. Jätä tyhjäksi, niin käytetään snapserverin oletusta 48000.",
-    "snapcastAddressHint": "snapserverin isäntä ja sen TCP-lähteen portti, jos se ei ole 4953."
+    "snapcastAddressHint": "snapserverin isäntä ja sen TCP-lähteen portti, jos se ei ole 4953.",
+    "castAddressHint": "Laitteen IP-osoite ja portti, jos se ei ole 8009 (kaiutinryhmät käyttävät toista). Cast-laitteet soittavat muutaman sekunnin myöhässä, joten viivästä muita kaiuttimia saman verran."
   },
   "pairing": {
     "title": "AirPlay-pariliitos",

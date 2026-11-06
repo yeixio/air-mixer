@@ -39,6 +39,7 @@
     "localClient": "מקומי: כרטיס הקול של המחשב הזה",
     "radioServer": "רדיו אינטרנט: נגן תחנה, רשימת השמעה או קובץ שמע מכתובת URL",
     "pulseServer": "PipeWire או PulseAudio: הקלט כניסת קו, ממשק שמע USB או טלפון שמנגן דרך Bluetooth",
+    "castClient": "Google Cast: נגן ב-Chromecast, ברמקולי Nest ו-Google Home, בקבוצות רמקולים ובטלוויזיות עם Cast",
     "pulseClient": "PipeWire או PulseAudio: נגן בכרטיס קול או ברמקול Bluetooth מוצמד",
     "snapcastClient": "Snapcast: נגן בסנכרון בכל לקוחות Snapcast"
   },
@@ -149,7 +150,8 @@
     "delayHint": "מעכב את השמע כדי שהרמקול הזה יתאים לרמקולים איטיים יותר.",
     "sampleRate": "קצב דגימה (רשות)",
     "sampleRateHint": "הקצב ב-sampleformat של מקור snapserver. השאר ריק ל-48000, ברירת המחדל של snapserver.",
-    "snapcastAddressHint": "המארח של snapserver, ופורט מקור ה-TCP שלו אם הוא לא 4953."
+    "snapcastAddressHint": "המארח של snapserver, ופורט מקור ה-TCP שלו אם הוא לא 4953.",
+    "castAddressHint": "כתובת ה-IP של המכשיר, והפורט שלו אם הוא לא 8009 (קבוצות רמקולים משתמשות בפורט אחר). מכשירי Cast מנגנים באיחור של כמה שניות, לכן השהה את שאר הרמקולים בהתאם."
   },
   "pairing": {
     "title": "צימוד AirPlay",

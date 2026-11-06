@@ -87,6 +87,27 @@ func TestSnapcastDiscover(t *testing.T) {
 	}
 }
 
+func TestCastDiscover(t *testing.T) {
+	c := &Cast{browse: fakeBrowseService("_googlecast._tcp", []*zeroconf.ServiceEntry{
+		entry("Google-Nest-Mini-0123abcd", "192.168.1.40", 8009, "fn=Kitchen speaker", "md=Google Nest Mini", "id=0123abcd"),
+		entry("Google-Cast-Group-77", "192.168.1.40", 32187, "fn=Downstairs"),
+	}, nil)}
+	devices, err := c.Discover(context.Background(), 50*time.Millisecond)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(devices) != 2 {
+		t.Fatalf("devices %+v", devices)
+	}
+	d := devices[0]
+	if d.Name != "Kitchen speaker" || d.Address != "192.168.1.40:8009" || d.Protocol != "cast" || d.Description != "Google Cast device: Google Nest Mini" {
+		t.Errorf("device %+v", d)
+	}
+	if devices[1].Name != "Downstairs" || devices[1].Port != 32187 {
+		t.Errorf("group %+v", devices[1])
+	}
+}
+
 type stubDiscoverer struct {
 	protocol string
 	devices  []Device
@@ -123,7 +144,7 @@ func TestService(t *testing.T) {
 	if _, err := failing.DiscoverAll(ctx, time.Millisecond); err == nil {
 		t.Error("total failure swallowed")
 	}
-	if got := NewService().Protocols(); len(got) != 2 || got[0] != "airplay" || got[1] != "snapcast" {
+	if got := NewService().Protocols(); len(got) != 3 || got[0] != "airplay" || got[1] != "cast" || got[2] != "snapcast" {
 		t.Errorf("default protocols = %v", got)
 	}
 }

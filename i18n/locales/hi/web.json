@@ -39,6 +39,7 @@
     "localClient": "स्थानीय: इस मशीन का साउंड कार्ड",
     "radioServer": "इंटरनेट रेडियो: किसी URL से स्टेशन, प्लेलिस्ट या ऑडियो फ़ाइल चलाएँ",
     "pulseServer": "PipeWire या PulseAudio: लाइन-इन, USB ऑडियो इंटरफ़ेस या Bluetooth पर चल रहे फ़ोन को रिकॉर्ड करें",
+    "castClient": "Google Cast: Chromecast, Nest और Google Home स्पीकर, स्पीकर ग्रुप और Cast वाले टीवी पर चलाएँ",
     "pulseClient": "PipeWire या PulseAudio: साउंड कार्ड या पेयर किए गए Bluetooth स्पीकर पर चलाएँ",
     "snapcastClient": "Snapcast: हर Snapcast क्लाइंट पर एक साथ चलाएँ"
   },
@@ -148,7 +149,8 @@
     "delayHint": "ऑडियो को रोककर इस स्पीकर को धीमे स्पीकरों के साथ मिलाता है।",
     "sampleRate": "सैंपल रेट (वैकल्पिक)",
     "sampleRateHint": "snapserver स्रोत के sampleformat में दी गई रेट। snapserver की डिफ़ॉल्ट 48000 के लिए खाली छोड़ें।",
-    "snapcastAddressHint": "snapserver होस्ट, और उसके TCP स्रोत का पोर्ट अगर वह 4953 नहीं है।"
+    "snapcastAddressHint": "snapserver होस्ट, और उसके TCP स्रोत का पोर्ट अगर वह 4953 नहीं है।",
+    "castAddressHint": "डिवाइस का IP पता, और उसका पोर्ट अगर वह 8009 नहीं है (स्पीकर ग्रुप दूसरा पोर्ट इस्तेमाल करते हैं)। Cast डिवाइस कुछ सेकंड देर से बजते हैं, इसलिए बाकी स्पीकरों में उतनी देरी जोड़ें।"
   },
   "pairing": {
     "title": "AirPlay पेयरिंग",

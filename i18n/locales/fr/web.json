@@ -39,6 +39,7 @@
     "localClient": "Local : la carte son de cette machine",
     "radioServer": "Radio internet : lire une station, une playlist ou un fichier audio depuis une URL",
     "pulseServer": "PipeWire ou PulseAudio : enregistrer une entrée ligne, une interface audio USB ou un téléphone qui joue en Bluetooth",
+    "castClient": "Google Cast : jouer sur Chromecast, les enceintes Nest et Google Home, les groupes d'enceintes et les téléviseurs Cast",
     "pulseClient": "PipeWire ou PulseAudio : jouer sur une carte son ou une enceinte Bluetooth appairée",
     "snapcastClient": "Snapcast : jouer en synchro sur tous les clients Snapcast"
   },
@@ -149,7 +150,8 @@
     "delayHint": "Retient l'audio pour caler cette enceinte sur des enceintes plus lentes.",
     "sampleRate": "Fréquence d'échantillonnage (facultatif)",
     "sampleRateHint": "La fréquence du sampleformat de la source snapserver. Laissez vide pour 48000, la valeur par défaut de snapserver.",
-    "snapcastAddressHint": "L'hôte snapserver, et le port de sa source TCP s'il n'est pas 4953."
+    "snapcastAddressHint": "L'hôte snapserver, et le port de sa source TCP s'il n'est pas 4953.",
+    "castAddressHint": "L'adresse IP de l'appareil, et son port s'il n'est pas 8009 (les groupes d'enceintes en utilisent un autre). Les appareils Cast jouent quelques secondes en retard : retardez les autres enceintes d'autant."
   },
   "pairing": {
     "title": "Jumelage AirPlay",

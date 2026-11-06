@@ -34,5 +34,6 @@
   "radio_needs_url": "يحتاج مدخل راديو الإنترنت إلى url",
   "radio_bad_url": "يجب أن يكون url عنوان http أو https أو rtsp أو rtmp",
   "snapcast_needs_address": "يحتاج عميل Snapcast إلى عنوان snapserver",
-  "sample_rate_range": "يجب أن تكون قيمة sample_rate بين 8000 و192000"
+  "sample_rate_range": "يجب أن تكون قيمة sample_rate بين 8000 و192000",
+  "cast_needs_address": "يحتاج عميل Google Cast إلى عنوان الجهاز"
 }

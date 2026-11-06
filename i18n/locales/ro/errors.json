@@ -34,5 +34,6 @@
   "radio_needs_url": "O intrare de radio pe internet are nevoie de un url",
   "radio_bad_url": "url trebuie să fie o adresă http, https, rtsp sau rtmp",
   "snapcast_needs_address": "Un client Snapcast are nevoie de adresa snapserver-ului",
-  "sample_rate_range": "sample_rate trebuie să fie între 8000 și 192000"
+  "sample_rate_range": "sample_rate trebuie să fie între 8000 și 192000",
+  "cast_needs_address": "Un client Google Cast are nevoie de adresa dispozitivului"
 }

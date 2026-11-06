@@ -39,6 +39,7 @@
     "localClient": "Lokal: den här datorns ljudkort",
     "radioServer": "Internetradio: spela en station, spellista eller ljudfil från en URL",
     "pulseServer": "PipeWire eller PulseAudio: spela in en linjeingång, ett USB-ljudkort eller en telefon som spelar via Bluetooth",
+    "castClient": "Google Cast: spela på Chromecast, Nest- och Google Home-högtalare, högtalargrupper och tv-apparater med Cast",
     "pulseClient": "PipeWire eller PulseAudio: spela på ett ljudkort eller en parkopplad Bluetooth-högtalare",
     "snapcastClient": "Snapcast: spela synkroniserat på alla Snapcast-klienter"
   },
@@ -148,7 +149,8 @@
     "delayHint": "Håller tillbaka ljudet så att högtalaren går i takt med långsammare.",
     "sampleRate": "Samplingsfrekvens (valfritt)",
     "sampleRateHint": "Frekvensen i snapserver-källans sampleformat. Lämna tomt för 48000, snapservers standard.",
-    "snapcastAddressHint": "snapserver-värden, och porten för dess TCP-källa om den inte är 4953."
+    "snapcastAddressHint": "snapserver-värden, och porten för dess TCP-källa om den inte är 4953.",
+    "castAddressHint": "Enhetens IP-adress, och porten om den inte är 8009 (högtalargrupper använder en annan). Cast-enheter spelar några sekunder senare, så fördröj andra högtalare lika mycket."
   },
   "pairing": {
     "title": "AirPlay-parkoppling",

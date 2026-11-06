@@ -39,6 +39,7 @@
     "localClient": "مقامی: اس مشین کا ساؤنڈ کارڈ",
     "radioServer": "انٹرنیٹ ریڈیو: کسی URL سے اسٹیشن، پلے لسٹ یا آڈیو فائل چلائیں",
     "pulseServer": "PipeWire یا PulseAudio: لائن اِن، USB آڈیو انٹرفیس یا Bluetooth پر چلنے والا فون ریکارڈ کریں",
+    "castClient": "Google Cast: Chromecast، Nest اور Google Home اسپیکرز، اسپیکر گروپس اور Cast والے ٹی وی پر چلائیں",
     "pulseClient": "PipeWire یا PulseAudio: ساؤنڈ کارڈ یا جوڑے گئے Bluetooth اسپیکر پر چلائیں",
     "snapcastClient": "Snapcast: ہر Snapcast کلائنٹ پر ایک ساتھ چلائیں"
   },
@@ -148,7 +149,8 @@
     "delayHint": "آواز کو روک کر اس اسپیکر کو سست اسپیکروں کے ساتھ ملاتا ہے۔",
     "sampleRate": "سیمپل ریٹ (اختیاری)",
     "sampleRateHint": "snapserver ماخذ کے sampleformat کی ریٹ۔ snapserver کی ڈیفالٹ 48000 کے لیے خالی چھوڑیں۔",
-    "snapcastAddressHint": "snapserver ہوسٹ، اور اس کے TCP ماخذ کا پورٹ اگر وہ 4953 نہیں ہے۔"
+    "snapcastAddressHint": "snapserver ہوسٹ، اور اس کے TCP ماخذ کا پورٹ اگر وہ 4953 نہیں ہے۔",
+    "castAddressHint": "ڈیوائس کا IP پتا، اور اس کا پورٹ اگر وہ 8009 نہیں ہے (اسپیکر گروپس دوسرا پورٹ استعمال کرتے ہیں)۔ Cast ڈیوائسز چند سیکنڈ دیر سے بجتی ہیں، اس لیے باقی اسپیکرز میں اتنی ہی تاخیر رکھیں۔"
   },
   "pairing": {
     "title": "AirPlay پیئرنگ",

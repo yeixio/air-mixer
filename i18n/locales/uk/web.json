@@ -39,6 +39,7 @@
     "localClient": "Локально: звукова карта цього комп'ютера",
     "radioServer": "Інтернет-радіо: відтворювати станцію, плейлист або аудіофайл за URL",
     "pulseServer": "PipeWire або PulseAudio: записувати лінійний вхід, USB-аудіоінтерфейс або телефон, що грає через Bluetooth",
+    "castClient": "Google Cast: відтворювати на Chromecast, колонках Nest і Google Home, групах колонок і телевізорах із Cast",
     "pulseClient": "PipeWire або PulseAudio: відтворювати на звуковій карті або підключеній Bluetooth-колонці",
     "snapcastClient": "Snapcast: синхронно відтворювати на всіх клієнтах Snapcast"
   },
@@ -150,7 +151,8 @@
     "delayHint": "Затримує звук, щоб ця колонка грала разом із повільнішими.",
     "sampleRate": "Частота дискретизації (необов'язково)",
     "sampleRateHint": "Частота з sampleformat джерела snapserver. Залиште порожнім для 48000, типового значення snapserver.",
-    "snapcastAddressHint": "Хост snapserver і порт його TCP-джерела, якщо це не 4953."
+    "snapcastAddressHint": "Хост snapserver і порт його TCP-джерела, якщо це не 4953.",
+    "castAddressHint": "IP-адреса пристрою та його порт, якщо це не 8009 (групи колонок використовують інший). Пристрої Cast грають на кілька секунд пізніше, тож затримайте інші колонки на стільки ж."
   },
   "pairing": {
     "title": "Створення пари AirPlay",

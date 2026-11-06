@@ -39,6 +39,7 @@
     "localClient": "Local: la tarjeta de sonido de este equipo",
     "radioServer": "Radio por internet: reproduce una emisora, una lista o un archivo de audio desde una URL",
     "pulseServer": "PipeWire o PulseAudio: graba una entrada de línea, una interfaz de audio USB o un teléfono que reproduce por Bluetooth",
+    "castClient": "Google Cast: reproduce en Chromecast, altavoces Nest y Google Home, grupos de altavoces y televisores con Cast",
     "pulseClient": "PipeWire o PulseAudio: reproduce en una tarjeta de sonido o en un altavoz Bluetooth emparejado",
     "snapcastClient": "Snapcast: reproduce sincronizado en todos los clientes de Snapcast"
   },
@@ -149,7 +150,8 @@
     "delayHint": "Retiene el audio para alinear este altavoz con otros más lentos.",
     "sampleRate": "Frecuencia de muestreo (opcional)",
     "sampleRateHint": "La frecuencia del sampleformat de la fuente de snapserver. Déjalo vacío para 48000, el valor predeterminado de snapserver.",
-    "snapcastAddressHint": "El host de snapserver y el puerto de su fuente TCP si no es 4953."
+    "snapcastAddressHint": "El host de snapserver y el puerto de su fuente TCP si no es 4953.",
+    "castAddressHint": "La dirección IP del dispositivo y su puerto si no es 8009 (los grupos de altavoces usan otro). Los dispositivos Cast suenan unos segundos más tarde, así que retrasa los demás altavoces para igualarlos."
   },
   "pairing": {
     "title": "Emparejamiento AirPlay",

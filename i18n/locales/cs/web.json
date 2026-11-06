@@ -39,6 +39,7 @@
     "localClient": "Místní: zvuková karta tohoto počítače",
     "radioServer": "Internetové rádio: přehrávej stanici, playlist nebo zvukový soubor z URL",
     "pulseServer": "PipeWire nebo PulseAudio: nahrávej linkový vstup, USB zvukové rozhraní nebo telefon hrající přes Bluetooth",
+    "castClient": "Google Cast: přehrávej na Chromecastu, reproduktorech Nest a Google Home, skupinách reproduktorů a televizích s Cast",
     "pulseClient": "PipeWire nebo PulseAudio: přehrávej na zvukové kartě nebo spárovaném Bluetooth reproduktoru",
     "snapcastClient": "Snapcast: přehrávej synchronně na všech klientech Snapcast"
   },
@@ -150,7 +151,8 @@
     "delayHint": "Zadrží zvuk, aby tento reproduktor hrál v souladu s pomalejšími.",
     "sampleRate": "Vzorkovací frekvence (nepovinné)",
     "sampleRateHint": "Frekvence v sampleformat zdroje snapserveru. Nech prázdné pro 48000, výchozí hodnotu snapserveru.",
-    "snapcastAddressHint": "Hostitel snapserveru a port jeho TCP zdroje, pokud to není 4953."
+    "snapcastAddressHint": "Hostitel snapserveru a port jeho TCP zdroje, pokud to není 4953.",
+    "castAddressHint": "IP adresa zařízení a jeho port, pokud to není 8009 (skupiny reproduktorů používají jiný). Zařízení Cast hrají o pár sekund později, proto ostatní reproduktory odpovídajícím způsobem zpozdi."
   },
   "pairing": {
     "title": "Párování AirPlay",

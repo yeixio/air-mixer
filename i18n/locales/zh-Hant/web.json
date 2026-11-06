@@ -39,6 +39,7 @@
     "localClient": "本機：這台電腦的音效卡",
     "radioServer": "網路電台：從 URL 播放電台、播放清單或音訊檔案",
     "pulseServer": "PipeWire 或 PulseAudio：錄製線路輸入、USB 音訊介面或透過藍牙播放的手機",
+    "castClient": "Google Cast：在 Chromecast、Nest 和 Google Home 喇叭、喇叭群組以及支援 Cast 的電視上播放",
     "pulseClient": "PipeWire 或 PulseAudio：在音效卡或已配對的藍牙喇叭上播放",
     "snapcastClient": "Snapcast：在每個 Snapcast 用戶端上同步播放"
   },
@@ -147,7 +148,8 @@
     "delayHint": "延後音訊，讓這個喇叭與較慢的喇叭對齊。",
     "sampleRate": "取樣率（選填）",
     "sampleRateHint": "snapserver 音源 sampleformat 中的取樣率。留空則使用 snapserver 預設的 48000。",
-    "snapcastAddressHint": "snapserver 主機；如果 TCP 音源連接埠不是 4953，再加上連接埠。"
+    "snapcastAddressHint": "snapserver 主機；如果 TCP 音源連接埠不是 4953，再加上連接埠。",
+    "castAddressHint": "裝置的 IP 位址；如果連接埠不是 8009，再加上連接埠（喇叭群組使用其他連接埠）。Cast 裝置會晚幾秒發聲，請替其他喇叭設定相同的延遲。"
   },
   "pairing": {
     "title": "AirPlay 配對",

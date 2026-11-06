@@ -13,6 +13,7 @@ import (
 	"github.com/yeixio/air-mixer/internal/db"
 	"github.com/yeixio/air-mixer/internal/protocols"
 	"github.com/yeixio/air-mixer/internal/protocols/airplay"
+	"github.com/yeixio/air-mixer/internal/protocols/cast"
 	"github.com/yeixio/air-mixer/internal/protocols/httpstream"
 	"github.com/yeixio/air-mixer/internal/protocols/local"
 	"github.com/yeixio/air-mixer/internal/protocols/matinee"
@@ -192,6 +193,18 @@ func (f *factory) Client(c *db.Client) (protocols.Client, error) {
 		}
 		return pulse.NewClient(pulse.Options{
 			ID: c.ID, Name: c.Name, Server: cfg.Server, Sink: cfg.Sink, Delay: delay, Logger: f.log,
+		}), nil
+	case "cast":
+		addr := c.Address
+		if addr == "" {
+			addr = cfg.Address
+		}
+		if addr == "" {
+			return nil, invalidCode("cast_needs_address", nil)
+		}
+		return cast.New(cast.Options{
+			ID: c.ID, Name: c.Name, Address: addr, Streams: f.defaults.Streams,
+			PublicURL: f.defaults.PublicURL, WebPort: f.defaults.WebPort, Logger: f.log,
 		}), nil
 	case "snapcast":
 		addr := c.Address

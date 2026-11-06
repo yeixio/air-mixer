@@ -34,5 +34,6 @@
   "radio_needs_url": "Đầu vào radio internet cần có url",
   "radio_bad_url": "url phải là địa chỉ http, https, rtsp hoặc rtmp",
   "snapcast_needs_address": "Máy khách Snapcast cần địa chỉ của snapserver",
-  "sample_rate_range": "sample_rate phải nằm trong khoảng 8000 đến 192000"
+  "sample_rate_range": "sample_rate phải nằm trong khoảng 8000 đến 192000",
+  "cast_needs_address": "Máy khách Google Cast cần địa chỉ của thiết bị"
 }

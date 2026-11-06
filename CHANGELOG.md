@@ -17,6 +17,8 @@ generated from its pull requests.
   from a URL, kept playing and reconnected when it drops.
 - A PulseAudio/PipeWire input that records a line-in, a USB interface, a
   sink's monitor, or a phone playing to the host over Bluetooth.
+- A Google Cast output for Chromecast, Nest and Google Home speakers,
+  speaker groups and Cast TVs, with discovery.
 - A Snapcast output that feeds a snapserver TCP source, and discovery of
   Snapcast servers.
 - AAC, Ogg, Opus and FLAC through ffmpeg for playback and radio, when

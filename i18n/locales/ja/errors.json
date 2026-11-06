@@ -34,5 +34,6 @@
   "radio_needs_url": "インターネットラジオ入力には url が必要です",
   "radio_bad_url": "url は http、https、rtsp、rtmp のアドレスにしてください",
   "snapcast_needs_address": "Snapcast クライアントには snapserver のアドレスが必要です",
-  "sample_rate_range": "sample_rate は 8000 から 192000 の間にしてください"
+  "sample_rate_range": "sample_rate は 8000 から 192000 の間にしてください",
+  "cast_needs_address": "Google Cast クライアントにはデバイスのアドレスが必要です"
 }

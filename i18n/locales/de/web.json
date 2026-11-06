@@ -39,6 +39,7 @@
     "localClient": "Lokal: die Soundkarte dieses Rechners",
     "radioServer": "Internetradio: einen Sender, eine Playlist oder eine Audiodatei von einer URL abspielen",
     "pulseServer": "PipeWire oder PulseAudio: einen Line-in, ein USB-Audiointerface oder ein Handy aufnehmen, das über Bluetooth abspielt",
+    "castClient": "Google Cast: auf Chromecast, Nest- und Google-Home-Lautsprechern, Lautsprechergruppen und Cast-Fernsehern abspielen",
     "pulseClient": "PipeWire oder PulseAudio: auf einer Soundkarte oder einem gekoppelten Bluetooth-Lautsprecher abspielen",
     "snapcastClient": "Snapcast: synchron auf jedem Snapcast-Client abspielen"
   },
@@ -148,7 +149,8 @@
     "delayHint": "Hält Audio zurück, damit dieser Lautsprecher mit langsameren gleichauf spielt.",
     "sampleRate": "Abtastrate (optional)",
     "sampleRateHint": "Die Rate im sampleformat der snapserver-Quelle. Leer lassen für 48000, den Standard von snapserver.",
-    "snapcastAddressHint": "Der snapserver-Host und der Port seiner TCP-Quelle, falls er nicht 4953 ist."
+    "snapcastAddressHint": "Der snapserver-Host und der Port seiner TCP-Quelle, falls er nicht 4953 ist.",
+    "castAddressHint": "Die IP-Adresse des Geräts und sein Port, falls er nicht 8009 ist (Lautsprechergruppen nutzen einen anderen). Cast-Geräte spielen ein paar Sekunden später, verzögere andere Lautsprecher entsprechend."
   },
   "pairing": {
     "title": "AirPlay-Kopplung",

@@ -34,5 +34,6 @@
   "radio_needs_url": "קלט רדיו אינטרנט צריך url",
   "radio_bad_url": "url חייב להיות כתובת http, https, rtsp או rtmp",
   "snapcast_needs_address": "לקוח Snapcast צריך את הכתובת של snapserver",
-  "sample_rate_range": "sample_rate חייב להיות בין 8000 ל-192000"
+  "sample_rate_range": "sample_rate חייב להיות בין 8000 ל-192000",
+  "cast_needs_address": "לקוח Google Cast צריך את כתובת המכשיר"
 }

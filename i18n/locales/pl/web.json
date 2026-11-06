@@ -39,6 +39,7 @@
     "localClient": "Lokalne: karta dźwiękowa tego komputera",
     "radioServer": "Radio internetowe: odtwarzaj stację, playlistę lub plik audio z adresu URL",
     "pulseServer": "PipeWire lub PulseAudio: nagrywaj wejście liniowe, interfejs audio USB lub telefon odtwarzający przez Bluetooth",
+    "castClient": "Google Cast: odtwarzaj na Chromecaście, głośnikach Nest i Google Home, grupach głośników i telewizorach z Cast",
     "pulseClient": "PipeWire lub PulseAudio: odtwarzaj na karcie dźwiękowej lub sparowanym głośniku Bluetooth",
     "snapcastClient": "Snapcast: odtwarzaj synchronicznie na każdym kliencie Snapcast"
   },
@@ -150,7 +151,8 @@
     "delayHint": "Wstrzymuje dźwięk, by zgrać ten głośnik z wolniejszymi.",
     "sampleRate": "Częstotliwość próbkowania (opcjonalna)",
     "sampleRateHint": "Częstotliwość z sampleformat źródła snapservera. Zostaw puste dla 48000, domyślnej wartości snapservera.",
-    "snapcastAddressHint": "Host snapservera oraz port jego źródła TCP, jeśli nie jest to 4953."
+    "snapcastAddressHint": "Host snapservera oraz port jego źródła TCP, jeśli nie jest to 4953.",
+    "castAddressHint": "Adres IP urządzenia i jego port, jeśli nie jest to 8009 (grupy głośników używają innego). Urządzenia Cast grają kilka sekund później, więc opóźnij pozostałe głośniki tak samo."
   },
   "pairing": {
     "title": "Parowanie AirPlay",

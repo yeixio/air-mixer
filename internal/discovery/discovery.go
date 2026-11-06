@@ -39,7 +39,7 @@ type Service struct {
 // built-in one if none are given.
 func NewService(ds ...Discoverer) *Service {
 	if len(ds) == 0 {
-		ds = []Discoverer{NewAirPlay(), NewSnapcast()}
+		ds = []Discoverer{NewAirPlay(), NewCast(), NewSnapcast()}
 	}
 	return &Service{discoverers: ds}
 }
@@ -262,4 +262,44 @@ func entryIP(e *zeroconf.ServiceEntry) net.IP {
 		return e.AddrIPv6[0]
 	}
 	return nil
+}
+
+// Cast discovers Google Cast devices and speaker groups over mDNS
+// (_googlecast._tcp).
+type Cast struct {
+	browse browseFunc
+}
+
+// NewCast returns a Google Cast discoverer.
+func NewCast() *Cast { return &Cast{browse: zeroconf.Browse} }
+
+// Protocol returns "cast".
+func (*Cast) Protocol() string { return "cast" }
+
+// Discover browses _googlecast._tcp for timeout.
+func (c *Cast) Discover(ctx context.Context, timeout time.Duration) ([]Device, error) {
+	return browseMDNS(ctx, c.browse, "_googlecast._tcp", timeout, func(e *zeroconf.ServiceEntry, ip net.IP) Device {
+		meta := map[string]string{"service_name": e.Instance, "hostname": e.HostName}
+		for _, txt := range e.Text {
+			if k, v, ok := strings.Cut(txt, "="); ok {
+				meta[k] = v
+			}
+		}
+		name := meta["fn"] // the name people gave it in Google Home
+		if name == "" {
+			name = strings.ReplaceAll(e.Instance, `\`, "")
+		}
+		desc := "Google Cast device"
+		if md := meta["md"]; md != "" {
+			desc += ": " + md
+		}
+		return Device{
+			Name:        name,
+			Protocol:    "cast",
+			Address:     net.JoinHostPort(ip.String(), strconv.Itoa(e.Port)),
+			Port:        e.Port,
+			Description: desc,
+			Metadata:    meta,
+		}
+	})
 }

@@ -39,6 +39,7 @@
     "localClient": "Local: a placa de som desta máquina",
     "radioServer": "Rádio pela internet: toque uma estação, playlist ou arquivo de áudio de uma URL",
     "pulseServer": "PipeWire ou PulseAudio: grave uma entrada de linha, uma interface de áudio USB ou um celular tocando por Bluetooth",
+    "castClient": "Google Cast: toque em Chromecast, alto-falantes Nest e Google Home, grupos de alto-falantes e TVs com Cast",
     "pulseClient": "PipeWire ou PulseAudio: toque em uma placa de som ou em um alto-falante Bluetooth pareado",
     "snapcastClient": "Snapcast: toque em sincronia em todos os clientes Snapcast"
   },
@@ -149,7 +150,8 @@
     "delayHint": "Segura o áudio para alinhar este alto-falante com outros mais lentos.",
     "sampleRate": "Taxa de amostragem (opcional)",
     "sampleRateHint": "A taxa no sampleformat da fonte do snapserver. Deixe vazio para 48000, o padrão do snapserver.",
-    "snapcastAddressHint": "O host do snapserver e a porta da fonte TCP dele, se não for 4953."
+    "snapcastAddressHint": "O host do snapserver e a porta da fonte TCP dele, se não for 4953.",
+    "castAddressHint": "O endereço IP do dispositivo e a porta dele, se não for 8009 (grupos de alto-falantes usam outra). Dispositivos Cast tocam alguns segundos atrasados, então atrase os outros alto-falantes para acompanhar."
   },
   "pairing": {
     "title": "Pareamento AirPlay",

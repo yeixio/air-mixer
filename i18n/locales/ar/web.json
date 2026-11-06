@@ -39,6 +39,7 @@
     "localClient": "محلي: بطاقة الصوت في هذا الجهاز",
     "radioServer": "راديو الإنترنت: شغّل محطة أو قائمة تشغيل أو ملفًا صوتيًا من عنوان URL",
     "pulseServer": "PipeWire أو PulseAudio: سجّل مدخل الخط أو واجهة صوت USB أو هاتفًا يشغّل عبر Bluetooth",
+    "castClient": "Google Cast: شغّل على Chromecast وسماعات Nest وGoogle Home ومجموعات السماعات وأجهزة التلفزيون التي تدعم Cast",
     "pulseClient": "PipeWire أو PulseAudio: شغّل على بطاقة صوت أو سماعة Bluetooth مقترنة",
     "snapcastClient": "Snapcast: شغّل بتزامن على كل عملاء Snapcast"
   },
@@ -152,7 +153,8 @@
     "delayHint": "يؤخّر الصوت لتتوافق هذه السماعة مع السماعات الأبطأ.",
     "sampleRate": "معدل العينات (اختياري)",
     "sampleRateHint": "المعدل في sampleformat لمصدر snapserver. اتركه فارغًا لـ 48000، القيمة الافتراضية في snapserver.",
-    "snapcastAddressHint": "مضيف snapserver، ومنفذ مصدر TCP الخاص به إن لم يكن 4953."
+    "snapcastAddressHint": "مضيف snapserver، ومنفذ مصدر TCP الخاص به إن لم يكن 4953.",
+    "castAddressHint": "عنوان IP للجهاز، ومنفذه إن لم يكن 8009 (تستخدم مجموعات السماعات منفذًا آخر). تعمل أجهزة Cast متأخرة بضع ثوانٍ، لذا أخّر السماعات الأخرى بالقدر نفسه."
   },
   "pairing": {
     "title": "إقران AirPlay",

@@ -36,7 +36,7 @@ longer.
 |---------|------|-------|
 | AirPlay 2 output | L | HomeKit pairing (SRP-6a, Ed25519, ChaCha20-Poly1305) and buffered audio, for HomePods and recent Apple TVs. The highest-demand item, and the largest. |
 | AirPlay 2 receiver | L | Appear as an AirPlay 2 speaker, so Apple devices can include Air-Mixer in their own multi-room groups. |
-| Google Cast output | L | Cast to Chromecast Audio, Nest speakers and Cast-enabled TVs by serving a live stream to the default media receiver. |
+| Cast volume and lower latency | M | Follow and set the Cast device's volume, and try a smaller buffer for the Default Media Receiver. The Cast output itself is done. |
 | UPnP/DLNA renderer output | M | Push a stream to Sonos (via UPnP) and other DLNA renderers. Includes SSDP discovery. |
 | UPnP/DLNA renderer input | M | Appear as a renderer so DLNA apps can play to Air-Mixer. |
 | Bluetooth input | M | Appear as an A2DP speaker (make the host discoverable and accept pairing through BlueZ) so phones can pair from their Bluetooth settings. A phone already paired with the host can be recorded with the `pulse` input, and output to Bluetooth speakers works through the `pulse` output. |

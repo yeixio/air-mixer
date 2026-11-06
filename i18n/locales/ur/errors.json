@@ -34,5 +34,6 @@
   "radio_needs_url": "انٹرنیٹ ریڈیو ان پٹ کو url چاہیے",
   "radio_bad_url": "url کو http، https، rtsp یا rtmp پتا ہونا چاہیے",
   "snapcast_needs_address": "Snapcast کلائنٹ کو snapserver کا پتا چاہیے",
-  "sample_rate_range": "sample_rate کو 8000 اور 192000 کے درمیان ہونا چاہیے"
+  "sample_rate_range": "sample_rate کو 8000 اور 192000 کے درمیان ہونا چاہیے",
+  "cast_needs_address": "Google Cast کلائنٹ کو ڈیوائس کا پتا چاہیے"
 }

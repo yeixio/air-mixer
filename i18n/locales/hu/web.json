@@ -39,6 +39,7 @@
     "localClient": "Helyi: a gép hangkártyája",
     "radioServer": "Internetes rádió: állomás, lejátszási lista vagy hangfájl lejátszása URL-ről",
     "pulseServer": "PipeWire vagy PulseAudio: vonalbemenet, USB-s hangkártya vagy Bluetooth-on lejátszó telefon felvétele",
+    "castClient": "Google Cast: lejátszás Chromecaston, Nest és Google Home hangszórókon, hangszórócsoportokon és Cast-os tévéken",
     "pulseClient": "PipeWire vagy PulseAudio: lejátszás hangkártyán vagy párosított Bluetooth-hangszórón",
     "snapcastClient": "Snapcast: szinkron lejátszás minden Snapcast-kliensen"
   },
@@ -148,7 +149,8 @@
     "delayHint": "Visszatartja a hangot, hogy ez a hangszóró együtt szóljon a lassabbakkal.",
     "sampleRate": "Mintavételezési frekvencia (nem kötelező)",
     "sampleRateHint": "A snapserver-forrás sampleformat beállításában szereplő frekvencia. Hagyd üresen a snapserver alapértelmezett 48000 értékéhez.",
-    "snapcastAddressHint": "A snapserver gépe, és TCP-forrásának portja, ha az nem 4953."
+    "snapcastAddressHint": "A snapserver gépe, és TCP-forrásának portja, ha az nem 4953.",
+    "castAddressHint": "Az eszköz IP-címe, és a portja, ha az nem 8009 (a hangszórócsoportok másikat használnak). A Cast-eszközök néhány másodperccel később szólnak, ezért késleltesd ennyivel a többi hangszórót."
   },
   "pairing": {
     "title": "AirPlay-párosítás",

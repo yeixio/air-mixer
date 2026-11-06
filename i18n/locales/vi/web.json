@@ -39,6 +39,7 @@
     "localClient": "Cục bộ: card âm thanh của máy này",
     "radioServer": "Radio internet: phát một đài, danh sách phát hoặc tệp âm thanh từ URL",
     "pulseServer": "PipeWire hoặc PulseAudio: thu âm line-in, giao diện âm thanh USB hoặc điện thoại đang phát qua Bluetooth",
+    "castClient": "Google Cast: phát trên Chromecast, loa Nest và Google Home, nhóm loa và TV có Cast",
     "pulseClient": "PipeWire hoặc PulseAudio: phát trên card âm thanh hoặc loa Bluetooth đã ghép đôi",
     "snapcastClient": "Snapcast: phát đồng bộ trên mọi máy khách Snapcast"
   },
@@ -147,7 +148,8 @@
     "delayHint": "Giữ âm thanh lại để loa này khớp với các loa chậm hơn.",
     "sampleRate": "Tần số lấy mẫu (không bắt buộc)",
     "sampleRateHint": "Tần số trong sampleformat của nguồn snapserver. Để trống để dùng 48000, mặc định của snapserver.",
-    "snapcastAddressHint": "Máy chủ snapserver, và cổng của nguồn TCP nếu không phải 4953."
+    "snapcastAddressHint": "Máy chủ snapserver, và cổng của nguồn TCP nếu không phải 4953.",
+    "castAddressHint": "Địa chỉ IP của thiết bị, và cổng nếu không phải 8009 (nhóm loa dùng cổng khác). Thiết bị Cast phát trễ vài giây, nên hãy đặt độ trễ cho các loa khác cho khớp."
   },
   "pairing": {
     "title": "Ghép đôi AirPlay",

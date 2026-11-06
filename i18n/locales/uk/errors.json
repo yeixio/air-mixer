@@ -34,5 +34,6 @@
   "radio_needs_url": "Для входу інтернет-радіо потрібен url",
   "radio_bad_url": "url має бути адресою http, https, rtsp або rtmp",
   "snapcast_needs_address": "Клієнту Snapcast потрібна адреса snapserver",
-  "sample_rate_range": "sample_rate має бути від 8000 до 192000"
+  "sample_rate_range": "sample_rate має бути від 8000 до 192000",
+  "cast_needs_address": "Клієнту Google Cast потрібна адреса пристрою"
 }

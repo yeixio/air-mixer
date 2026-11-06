@@ -34,5 +34,6 @@
   "radio_needs_url": "Uma entrada de rádio pela internet precisa de uma url",
   "radio_bad_url": "A url precisa ser um endereço http, https, rtsp ou rtmp",
   "snapcast_needs_address": "Um cliente Snapcast precisa do endereço do snapserver",
-  "sample_rate_range": "sample_rate precisa estar entre 8000 e 192000"
+  "sample_rate_range": "sample_rate precisa estar entre 8000 e 192000",
+  "cast_needs_address": "Um cliente Google Cast precisa do endereço do dispositivo"
 }

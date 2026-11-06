@@ -34,5 +34,6 @@
   "radio_needs_url": "En netradioindgang skal have en url",
   "radio_bad_url": "url skal være en http-, https-, rtsp- eller rtmp-adresse",
   "snapcast_needs_address": "En Snapcast-klient skal have snapserverens adresse",
-  "sample_rate_range": "sample_rate skal være mellem 8000 og 192000"
+  "sample_rate_range": "sample_rate skal være mellem 8000 og 192000",
+  "cast_needs_address": "En Google Cast-klient skal have enhedens adresse"
 }
