@@ -4,14 +4,14 @@ go 1.26.0
 
 require (
 	github.com/ebitengine/oto/v3 v3.5.1
-	github.com/godbus/dbus/v5 v5.1.0
+	github.com/godbus/dbus/v5 v5.2.4
 	github.com/hajimehoshi/go-mp3 v0.3.4
 	github.com/jfreymuth/pulse v0.1.3
 	github.com/libp2p/zeroconf/v2 v2.2.0
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0
 	golang.org/x/crypto v0.58.0
-	modernc.org/sqlite v1.61.0
+	modernc.org/sqlite v1.61.1
 )
 
 require (
